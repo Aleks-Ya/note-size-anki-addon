@@ -1,3 +1,9 @@
-anki~=24.4.1
-aqt~=24.4.1
+anki==24.4.1
+aqt==24.4.1
+PyQt6==6.6.1
+PyQt6-Qt6==6.6.1
+PyQt6-WebEngine==6.6.0
+PyQt6-WebEngine-Qt6==6.6.1
+pydantic==2.6.4
 setuptools
+tox

@@ -2,3 +2,4 @@
 *.log
 *.egg-info
 __pycache__
+.tox

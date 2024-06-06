@@ -2,4 +2,4 @@
 
 ## Unit tests
 
-Run: `python setup.py test`
+Run: `tox`
