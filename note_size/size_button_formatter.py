@@ -1,4 +1,5 @@
 import logging
+import textwrap
 from logging import Logger
 
 from .size_calculator import SizeCalculator
@@ -18,7 +19,7 @@ class SizeButtonFormatter:
         files_sizes_str: list[str] = SizeFormatter.file_sizes_to_human_strings(file_sizes)
         files_str: str = '</li><li style="white-space:nowrap">'.join(files_sizes_str) \
             if len(files_sizes_str) > 0 else "<no-files>"
-        detailed: str = f"""
+        detailed: str = textwrap.dedent(f"""
                             <h3>Total note size: {total_size}</h3>
                             <ul>
                                 <li>Texts size: {total_texts_size}</li>
@@ -28,5 +29,5 @@ class SizeButtonFormatter:
                                         <li style="white-space:nowrap">{files_str}</li>
                                     </ol>
                             </ul>
-                            """
+                            """)
         return detailed
