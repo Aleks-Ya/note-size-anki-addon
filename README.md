@@ -1,1 +1,1 @@
-# note-size-anki-addon
+# Note Size Anki addon
