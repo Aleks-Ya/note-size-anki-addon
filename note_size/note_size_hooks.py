@@ -12,7 +12,8 @@ from aqt.browser import ItemId, CellRow
 from aqt.editor import Editor
 from aqt.utils import showInfo
 
-from .note_size import NoteSize
+from .size_calculator import SizeCalculator
+from .size_formatter import SizeFormatter
 
 log: Logger = logging.getLogger(__name__)
 
@@ -59,18 +60,18 @@ class NoteSizeHooks:
             else:
                 card: Card = mw.col.get_card(card_or_note_id)
                 note: Note = card.note()
-            size: int = NoteSize.calculate_note_size(note)
-            cell.text = NoteSize.bytes_to_human_str(size)
+            size: int = SizeCalculator.calculate_note_size(note)
+            cell.text = SizeFormatter.bytes_to_human_str(size)
 
     @staticmethod
     def _on_size_button_click(editor: Editor):
         log.info("Size button was clicked")
         if editor.note:
-            total_size: str = NoteSize.bytes_to_human_str(NoteSize.calculate_note_size(editor.note))
-            total_texts_size: str = NoteSize.bytes_to_human_str(NoteSize.total_text_size(editor.note))
-            total_files_size: str = NoteSize.bytes_to_human_str(NoteSize.total_file_size(editor.note))
-            file_sizes: dict[str, int] = NoteSize.sort_by_size_desc(NoteSize.file_sizes(editor.note))
-            files_sizes_str: list[str] = NoteSize.file_sizes_to_human_strings(file_sizes)
+            total_size: str = SizeFormatter.bytes_to_human_str(SizeCalculator.calculate_note_size(editor.note))
+            total_texts_size: str = SizeFormatter.bytes_to_human_str(SizeCalculator.total_text_size(editor.note))
+            total_files_size: str = SizeFormatter.bytes_to_human_str(SizeCalculator.total_file_size(editor.note))
+            file_sizes: dict[str, int] = SizeCalculator.sort_by_size_desc(SizeCalculator.file_sizes(editor.note))
+            files_sizes_str: list[str] = SizeFormatter.file_sizes_to_human_strings(file_sizes)
             files_str: str = '</li><li style="white-space:nowrap">'.join(files_sizes_str) \
                 if len(files_sizes_str) > 0 else "<no-files>"
             detailed: str = f"""
@@ -99,7 +100,7 @@ class NoteSizeHooks:
         self._refresh_size_button()
 
     def _refresh_size_button(self):
-        size: str = NoteSize.bytes_to_human_str(NoteSize.calculate_note_size(self.editor.note)) \
+        size: str = SizeFormatter.bytes_to_human_str(SizeCalculator.calculate_note_size(self.editor.note)) \
             if self.editor.note else "-"
         self.editor.web.eval(f"document.getElementById('size_button').textContent = 'Size: {size}'")
         log.info("Size button was refreshed")
@@ -126,4 +127,4 @@ class NoteSizeHooks:
         if not note:
             note_id: NoteId = mw.col.get_card(item_id).nid
             note: Note = mw.col.get_note(note_id)
-        return NoteSize.calculate_note_size(note)
+        return SizeCalculator.calculate_note_size(note)

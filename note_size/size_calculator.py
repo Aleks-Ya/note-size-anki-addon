@@ -1,19 +1,13 @@
 import os
 
 from anki.notes import Note
-from pydantic import ByteSize
 
 
-class NoteSize:
-
-    @staticmethod
-    def bytes_to_human_str(bytes_size: int) -> str:
-        byte_size: ByteSize = ByteSize(bytes_size)
-        return byte_size.human_readable(True)
+class SizeCalculator:
 
     @staticmethod
     def calculate_note_size(note: Note) -> int:
-        return NoteSize.total_text_size(note) + NoteSize.total_file_size(note)
+        return SizeCalculator.total_text_size(note) + SizeCalculator.total_file_size(note)
 
     @staticmethod
     def total_text_size(note: Note):
@@ -21,7 +15,7 @@ class NoteSize:
 
     @staticmethod
     def total_file_size(note: Note) -> int:
-        return sum([size for size in NoteSize.file_sizes(note).values()])
+        return sum([size for size in SizeCalculator.file_sizes(note).values()])
 
     @staticmethod
     def file_sizes(note: Note) -> dict[str, int]:
@@ -35,7 +29,3 @@ class NoteSize:
     @staticmethod
     def sort_by_size_desc(file_sizes: dict[str, int]) -> dict[str, int]:
         return dict(sorted(file_sizes.items(), key=lambda item: item[1], reverse=True))
-
-    @staticmethod
-    def file_sizes_to_human_strings(file_sizes: dict[str, int]) -> list[str]:
-        return [f"{key}: {NoteSize.bytes_to_human_str(value)}" for key, value in file_sizes.items()]
