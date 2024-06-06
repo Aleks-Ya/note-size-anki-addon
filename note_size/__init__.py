@@ -3,7 +3,8 @@ import os
 from logging import Logger, FileHandler
 from pathlib import Path
 
-from .note_size_hooks import NoteSizeHooks
+from note_size.size_button_hooks import SizeButtonHooks
+from note_size.size_column_hooks import SizeColumnHooks
 
 
 def configure_logging():
@@ -22,5 +23,7 @@ def configure_logging():
 
 
 configure_logging()
-note_size_hooks: NoteSizeHooks = NoteSizeHooks()
-note_size_hooks.setup_hooks()
+size_column_hooks: SizeColumnHooks = SizeColumnHooks()
+size_column_hooks.setup_hooks()
+size_button_hooks: SizeButtonHooks = SizeButtonHooks()
+size_button_hooks.setup_hooks()
