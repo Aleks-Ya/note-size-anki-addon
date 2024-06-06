@@ -1,2 +1,3 @@
 anki~=24.4.1
 aqt~=24.4.1
+setuptools
