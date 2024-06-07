@@ -1,6 +1,6 @@
-import os
 import shutil
 import subprocess
+from pathlib import Path
 
 import setuptools
 
@@ -28,27 +28,27 @@ class MakeDistributionCommand(Command):
             raise SystemExit(result.returncode)
 
         print("Packaging...")
-        project_dir: str = os.path.abspath(os.path.dirname(__file__))
-        build_dir: str = os.path.join(project_dir, 'dist')
-        if os.path.exists(build_dir):
+        project_dir: Path = Path(__file__).parent
+        build_dir: Path = Path(project_dir, 'dist')
+        if build_dir.exists():
             shutil.rmtree(build_dir)
         note_size_dir: str = 'note_size'
-        note_size_package_dir: str = os.path.join(project_dir, note_size_dir)
-        dest_subdir: str = os.path.join(build_dir, note_size_dir)
+        note_size_package_dir: Path = Path(project_dir, note_size_dir)
+        dest_subdir: Path = Path(build_dir, note_size_dir)
         shutil.copytree(note_size_package_dir, dest_subdir, ignore=shutil.ignore_patterns("*.log"))
 
         license_filename: str = "LICENSE"
-        license_file_src: str = os.path.join(project_dir, license_filename)
-        license_file_dest: str = os.path.join(dest_subdir, license_filename)
+        license_file_src: Path = Path(project_dir, license_filename)
+        license_file_dest: Path = Path(dest_subdir, license_filename)
         shutil.copyfile(license_file_src, license_file_dest)
 
         readme_filename: str = "README.md"
-        readme_file_src: str = os.path.join(project_dir, readme_filename)
-        readme_file_dest: str = os.path.join(dest_subdir, readme_filename)
+        readme_file_src: Path = Path(project_dir, readme_filename)
+        readme_file_dest: Path = Path(dest_subdir, readme_filename)
         shutil.copyfile(readme_file_src, readme_file_dest)
 
-        output_zip: str = os.path.join(build_dir, f'note-size-{version}')
-        actual_output_zip: str = shutil.make_archive(output_zip, 'zip', dest_subdir)
+        output_zip: Path = Path(build_dir, f'note-size-{version}')
+        actual_output_zip: str = shutil.make_archive(str(output_zip), 'zip', dest_subdir)
         print(f'Output ZIP: {actual_output_zip}')
 
 
