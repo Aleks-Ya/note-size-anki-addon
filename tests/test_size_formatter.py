@@ -21,9 +21,18 @@ class SizeFormatterTestCase(unittest.TestCase):
 
     def test_file_sizes_to_human_str(self):
         file_sizes: dict[str, int] = {'picture.jpg': 7, 'sound.mp3': 5, 'animation.gif': 9}
-        act_human_strings: list[str] = SizeFormatter.file_sizes_to_human_strings(file_sizes)
+        act_human_strings: list[str] = SizeFormatter.file_sizes_to_human_strings(file_sizes, 50)
         exp_human_strings: list[str] = ['picture.jpg: 7B', 'sound.mp3: 5B', 'animation.gif: 9B']
         self.assertListEqual(exp_human_strings, act_human_strings)
+
+    def test_prune_long_file_names(self):
+        file_sizes: dict[str, int] = {'long_long_long_long_long_long.jpg': 17, 'short_short.jpg': 7}
+        max_length: int = 30
+        act_human_strings: list[str] = SizeFormatter.file_sizes_to_human_strings(file_sizes, max_length)
+        exp_human_strings: list[str] = ['long_long_l...ng_long.jpg: 17B', 'short_short.jpg: 7B']
+        self.assertListEqual(exp_human_strings, act_human_strings)
+        for act_human_string in act_human_strings:
+            self.assertLessEqual(len(act_human_string), max_length)
 
     def tearDown(self):
         self.col.close()

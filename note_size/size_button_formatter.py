@@ -17,7 +17,7 @@ class SizeButtonFormatter:
         total_texts_size: str = SizeFormatter.bytes_to_human_str(SizeCalculator.total_text_size(note))
         total_files_size: str = SizeFormatter.bytes_to_human_str(SizeCalculator.total_file_size(note))
         file_sizes: dict[str, int] = SizeCalculator.sort_by_size_desc(SizeCalculator.file_sizes(note))
-        files_sizes_str: list[str] = SizeFormatter.file_sizes_to_human_strings(file_sizes)
+        files_sizes_str: list[str] = SizeFormatter.file_sizes_to_human_strings(file_sizes, 100)
 
         soup: BeautifulSoup = BeautifulSoup()
 
