@@ -10,8 +10,7 @@ from .size_column_hooks import SizeColumnHooks
 
 
 def configure_logging(addon_folder: Path) -> Logger:
-    addon_name: str = addon_folder.name
-    log_file: str = os.path.join(addon_folder, f"{addon_name}.log")
+    log_file: str = os.path.join(addon_folder, "note_size.log")
     root: Logger = logging.getLogger()
     handler: FileHandler = logging.FileHandler(log_file)
     handler.setLevel(logging.DEBUG)
