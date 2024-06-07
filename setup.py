@@ -5,19 +5,26 @@ from pathlib import Path
 
 import setuptools
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+with open("README.md", "r") as f:
+    long_description = f.read()
 
 from setuptools import Command
 
-version = "1.0.1"
+version_file: str = os.path.join(os.path.dirname(__file__), 'note_size', 'version.txt')
+with open(version_file, 'r') as f:
+    version = f.read().strip()
 
 
 class MakeDistributionCommand(Command):
     user_options = []
+    project_dir: Path
+    build_dir: Path
 
     def initialize_options(self):
-        pass
+        self.project_dir: Path = Path(__file__).parent
+        self.build_dir: Path = Path(self.project_dir, 'dist')
+        if self.build_dir.exists():
+            shutil.rmtree(self.build_dir)
 
     def finalize_options(self):
         pass
@@ -29,30 +36,24 @@ class MakeDistributionCommand(Command):
             raise SystemExit(result.returncode)
 
         print("Packaging...")
-        project_dir: Path = Path(__file__).parent
-        build_dir: Path = Path(project_dir, 'dist')
-        if build_dir.exists():
-            shutil.rmtree(build_dir)
         note_size_dir: str = 'note_size'
-        note_size_package_dir: Path = Path(project_dir, note_size_dir)
-        dest_subdir: Path = Path(build_dir, note_size_dir)
+        note_size_package_dir: Path = Path(self.project_dir, note_size_dir)
+        dest_subdir: Path = Path(self.build_dir, note_size_dir)
         shutil.copytree(note_size_package_dir, dest_subdir, ignore=shutil.ignore_patterns("*.log"))
 
-        license_filename: str = "LICENSE"
-        license_file_src: Path = Path(project_dir, license_filename)
-        license_file_dest: Path = Path(dest_subdir, license_filename)
-        shutil.copyfile(license_file_src, license_file_dest)
+        self._copy_file_to_build("LICENSE", dest_subdir)
+        self._copy_file_to_build("README.md", dest_subdir)
 
-        readme_filename: str = "README.md"
-        readme_file_src: Path = Path(project_dir, readme_filename)
-        readme_file_dest: Path = Path(dest_subdir, readme_filename)
-        shutil.copyfile(readme_file_src, readme_file_dest)
-
-        output_zip: Path = Path(build_dir, f'note-size-{version}')
+        output_zip: Path = Path(self.build_dir, f'note-size-{version}')
         actual_output_zip: Path = Path(shutil.make_archive(str(output_zip), 'zip', dest_subdir))
         renamed_output_zip: Path = Path(actual_output_zip.parent, f"{actual_output_zip.stem}.ankiaddon")
         os.rename(actual_output_zip, renamed_output_zip)
         print(f'Output ZIP: {renamed_output_zip}')
+
+    def _copy_file_to_build(self, filename: str, dest_subdir):
+        src: Path = Path(self.project_dir, filename)
+        dest: Path = Path(dest_subdir, filename)
+        shutil.copyfile(src, dest)
 
 
 setuptools.setup(

@@ -9,22 +9,25 @@ from note_size.size_calculator import SizeCalculator
 from note_size.size_column_hooks import SizeColumnHooks
 
 
-def configure_logging():
-    init_py_file: Path = Path(__file__)
-    addon_dir: Path = init_py_file.parent
-    addon_name: str = addon_dir.name
-    log_file: str = os.path.join(addon_dir, f"{addon_name}.log")
+def configure_logging(addon_folder: Path) -> Logger:
+    addon_name: str = addon_folder.name
+    log_file: str = os.path.join(addon_folder, f"{addon_name}.log")
     root: Logger = logging.getLogger()
     handler: FileHandler = logging.FileHandler(log_file)
     handler.setLevel(logging.DEBUG)
     handler.setFormatter(logging.Formatter('%(asctime)s %(name)s %(funcName)s %(levelname)s %(message)s'))
     root.addHandler(handler)
-    log: Logger = logging.getLogger(__name__)
-    log.setLevel(logging.DEBUG)
-    log.info(f"\n\n{'#' * 100}\nLogger was configured: file={log_file}")
+    logger: Logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+    logger.info(f"\n\n{'#' * 100}\nLogger was configured: file={log_file}")
+    return logger
 
 
-configure_logging()
+addon_dir: Path = Path(__file__).parent
+log: Logger = configure_logging(addon_dir)
+with open(Path(addon_dir, 'version.txt'), 'r') as file:
+    version = file.read()
+log.info(f"NoteSize addon version: {version}")
 size_calculator: SizeCalculator = SizeCalculator()
 size_column_hooks: SizeColumnHooks = SizeColumnHooks(size_calculator)
 size_column_hooks.setup_hooks()
