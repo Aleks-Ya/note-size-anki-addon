@@ -48,8 +48,8 @@ class MakeDistributionCommand(Command):
         shutil.copyfile(readme_file_src, readme_file_dest)
 
         output_zip: str = os.path.join(build_dir, f'note-size-{version}')
-        shutil.make_archive(output_zip, 'zip', dest_subdir)
-        print(f'Output ZIP: {output_zip}')
+        actual_output_zip: str = shutil.make_archive(output_zip, 'zip', dest_subdir)
+        print(f'Output ZIP: {actual_output_zip}')
 
 
 setuptools.setup(

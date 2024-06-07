@@ -6,7 +6,7 @@ Run: `tox`
 
 ## Build
 
-Build ZIP: `python setup.py distribution_command` (output `./dist/note-size-1.0.zip`)
+Build ZIP: `python setup.py distribution_command` (output `./dist/note-size-1.0-0.zip`)
 
 ## Release
 1. Increment version:
