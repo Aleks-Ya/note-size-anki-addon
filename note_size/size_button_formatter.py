@@ -10,10 +10,12 @@ log: Logger = logging.getLogger(__name__)
 
 
 class SizeButtonFormatter:
+    def __init__(self, size_calculator: SizeCalculator):
+        self.size_calculator: SizeCalculator = size_calculator
 
-    @staticmethod
-    def format_note_detailed_text(note):
-        total_size: str = SizeFormatter.bytes_to_human_str(SizeCalculator.calculate_note_size(note))
+    def format_note_detailed_text(self, note):
+        note_size: int = self.size_calculator.calculate_note_size(note, use_cache=False)
+        total_size: str = SizeFormatter.bytes_to_human_str(note_size)
         total_texts_size: str = SizeFormatter.bytes_to_human_str(SizeCalculator.total_text_size(note))
         total_files_size: str = SizeFormatter.bytes_to_human_str(SizeCalculator.total_file_size(note))
         file_sizes: dict[str, int] = SizeCalculator.sort_by_size_desc(SizeCalculator.file_sizes(note))

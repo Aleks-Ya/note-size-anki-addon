@@ -5,6 +5,7 @@ from anki.collection import Collection
 from anki.notes import Note
 from bs4 import BeautifulSoup
 
+from note_size import SizeCalculator
 from note_size.size_button_formatter import SizeButtonFormatter
 from tests.data import TestData
 
@@ -15,6 +16,8 @@ class SizeButtonFormatterTestCase(unittest.TestCase):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
         self.td: TestData = TestData()
         self.note: Note = self.td.create_note(self.col)
+        size_calculator: SizeCalculator = SizeCalculator()
+        self.size_button_formatter: SizeButtonFormatter = SizeButtonFormatter(size_calculator)
 
     def test_total_text_size(self):
         exp_html: str = """
@@ -29,7 +32,7 @@ class SizeButtonFormatterTestCase(unittest.TestCase):
                     </ol>
                     """
         soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
-        act_text: str = SizeButtonFormatter.format_note_detailed_text(self.note)
+        act_text: str = self.size_button_formatter.format_note_detailed_text(self.note)
         exp_text: str = str(soup.prettify())
         self.assertEqual(exp_text, act_text)
 

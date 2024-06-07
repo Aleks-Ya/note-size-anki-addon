@@ -20,6 +20,9 @@ class SizeColumnHooks:
     column_key: str = "note-size"
     column_label: str = "Size"
 
+    def __init__(self, size_calculator: SizeCalculator):
+        self.size_calculator: SizeCalculator = size_calculator
+
     def setup_hooks(self):
         gui_hooks.browser_did_fetch_columns.append(self._add_custom_column)
         gui_hooks.browser_did_fetch_row.append(self._modify_row)
@@ -50,7 +53,7 @@ class SizeColumnHooks:
             else:
                 card: Card = mw.col.get_card(card_or_note_id)
                 note: Note = card.note()
-            size: int = SizeCalculator.calculate_note_size(note)
+            size: int = self.size_calculator.calculate_note_size(note, use_cache=True)
             cell.text = SizeFormatter.bytes_to_human_str(size)
 
     def _on_browser_will_search(self, context: SearchContext) -> None:
@@ -65,8 +68,7 @@ class SizeColumnHooks:
         if context.ids and isinstance(context.order, Column) and context.order.notes_mode_label == self.column_label:
             context.ids = sorted(context.ids, key=lambda item_id: self.get_size_key(item_id))
 
-    @staticmethod
-    def get_size_key(item_id: ItemId) -> int:
+    def get_size_key(self, item_id: ItemId) -> int:
         note: Optional[Note]
         try:
             note = mw.col.get_note(item_id)
@@ -75,4 +77,4 @@ class SizeColumnHooks:
         if not note:
             note_id: NoteId = mw.col.get_card(item_id).nid
             note: Note = mw.col.get_note(note_id)
-        return SizeCalculator.calculate_note_size(note)
+        return self.size_calculator.calculate_note_size(note, use_cache=True)
