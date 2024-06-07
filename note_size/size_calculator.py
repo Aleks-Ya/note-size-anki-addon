@@ -1,6 +1,10 @@
+import logging
 import os
+from logging import Logger
 
 from anki.notes import Note, NoteId
+
+log: Logger = logging.getLogger(__name__)
 
 
 class SizeCalculator:
@@ -30,7 +34,14 @@ class SizeCalculator:
         all_files: dict[str, int] = dict[str, int]()
         for field in note.fields:
             files: list[str] = note.col.media.files_in_str(note.mid, field)
-            sizes = {file: os.path.getsize(os.path.join(note.col.media.dir(), file)) for file in files}
+            sizes: dict[str, int] = {}
+            for file in files:
+                full_path: str = os.path.join(note.col.media.dir(), file)
+                if os.path.exists(full_path):
+                    sizes[file] = os.path.getsize(full_path)
+                else:
+                    log.warning(f"File absents: {full_path}")
+                    sizes[file] = 0
             all_files.update(sizes)
         return all_files
 

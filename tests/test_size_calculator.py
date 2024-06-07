@@ -46,6 +46,14 @@ class SizeCalculatorTestCase(unittest.TestCase):
         self.assertEqual(act_size_2, exp_size_1)
         self.assertEqual(act_size_3, exp_size_3)
 
+    def test_calculate_note_size_missing_file(self):
+        content = 'Missing file: <img src="absents.png">'
+        self.note[self.td.front_field_name] = content
+        act_size: int = self.size_calculator.calculate_note_size(self.note)
+        exp_size: int = (len(content) + len(self.td.back_field_content) + len(self.td.content1)
+                         + len(self.td.content3))
+        self.assertEqual(exp_size, act_size)
+
     def test_file_sizes(self):
         act_file_sizes: dict[str, int] = SizeCalculator.file_sizes(self.note)
         exp_file_sizes: dict[str, int] = {self.td.filename1: len(self.td.content1),
