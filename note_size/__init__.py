@@ -3,10 +3,10 @@ import os
 from logging import Logger, FileHandler
 from pathlib import Path
 
-from note_size.size_button_formatter import SizeButtonFormatter
-from note_size.size_button_hooks import SizeButtonHooks
-from note_size.size_calculator import SizeCalculator
-from note_size.size_column_hooks import SizeColumnHooks
+from .size_button_formatter import SizeButtonFormatter
+from .size_button_hooks import SizeButtonHooks
+from .size_calculator import SizeCalculator
+from .size_column_hooks import SizeColumnHooks
 
 
 def configure_logging(addon_folder: Path) -> Logger:

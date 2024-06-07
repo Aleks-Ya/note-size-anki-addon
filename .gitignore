@@ -4,3 +4,4 @@
 __pycache__
 .tox
 dist
+meta.json
