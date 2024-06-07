@@ -25,28 +25,25 @@ class SizeButtonFormatter:
 
         total_note_size_h3: Tag = soup.new_tag('h3')
         total_note_size_h3.string = f"Total note size: {total_size}"
+        soup.append(total_note_size_h3)
+
         text_size_li: Tag = soup.new_tag('li')
         text_size_li.string = f"Texts size: {total_texts_size}"
+        soup.append(text_size_li)
+
         file_size_li: Tag = soup.new_tag('li')
         file_size_li.string = f"Files size: {total_files_size}"
+        soup.append(file_size_li)
+
         files_li: Tag = soup.new_tag('li')
         files_li.string = "Files (big to small):"
+        soup.append(files_li)
 
         files_ol: Tag = soup.new_tag('ol')
         for files_str in files_sizes_str:
             li: Tag = soup.new_tag('li', attrs={"style": "white-space:nowrap"})
             li.string = files_str
             files_ol.append(li)
-
-        ul: Tag = soup.new_tag('ul')
-        ul.append(text_size_li)
-        ul.append(file_size_li)
-        ul.append(files_li)
-
-        soup.append(total_note_size_h3)
-        soup.append(text_size_li)
-        soup.append(file_size_li)
-        soup.append(files_li)
         soup.append(files_ol)
 
         return str(soup.prettify())
