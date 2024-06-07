@@ -59,7 +59,7 @@ class SizeColumnHooks:
     def _on_browser_will_search(self, context: SearchContext) -> None:
         log.debug("Browser will search")
         if isinstance(context.order, Column) and context.order.key == self.column_key:
-            sort_col = mw.col.get_browser_column("noteFld")
+            sort_col: Optional[Column] = mw.col.get_browser_column("noteFld")
             sort_col.notes_mode_label = self.column_label
             context.order = sort_col
 
@@ -69,12 +69,9 @@ class SizeColumnHooks:
             context.ids = sorted(context.ids, key=lambda item_id: self.get_size_key(item_id), reverse=True)
 
     def get_size_key(self, item_id: ItemId) -> int:
-        note: Optional[Note]
         try:
-            note = mw.col.get_note(item_id)
+            note: Note = mw.col.get_note(item_id)
         except NotFoundError:
-            note = None
-        if not note:
             note_id: NoteId = mw.col.get_card(item_id).nid
             note: Note = mw.col.get_note(note_id)
         return self.size_calculator.calculate_note_size(note, use_cache=True)
