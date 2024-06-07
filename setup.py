@@ -63,6 +63,6 @@ setuptools.setup(
     packages=list(),
     test_suite="tests",
     cmdclass={
-        'distribution_command': MakeDistributionCommand,
+        'dist': MakeDistributionCommand,
     },
 )
