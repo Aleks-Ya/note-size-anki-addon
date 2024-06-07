@@ -35,8 +35,8 @@ class SizeColumnHooks:
             key=self.column_key,
             cards_mode_label=self.column_label,
             notes_mode_label=self.column_label,
-            sorting_cards=BrowserColumns.SORTING_ASCENDING,
-            sorting_notes=BrowserColumns.SORTING_ASCENDING,
+            sorting_cards=BrowserColumns.SORTING_DESCENDING,
+            sorting_notes=BrowserColumns.SORTING_DESCENDING,
             uses_cell_font=True,
             alignment=BrowserColumns.ALIGNMENT_START,
             cards_mode_tooltip="",
@@ -66,7 +66,7 @@ class SizeColumnHooks:
     def _on_browser_did_search(self, context: SearchContext) -> None:
         log.debug("Browser did search")
         if context.ids and isinstance(context.order, Column) and context.order.notes_mode_label == self.column_label:
-            context.ids = sorted(context.ids, key=lambda item_id: self.get_size_key(item_id))
+            context.ids = sorted(context.ids, key=lambda item_id: self.get_size_key(item_id), reverse=True)
 
     def get_size_key(self, item_id: ItemId) -> int:
         note: Optional[Note]
