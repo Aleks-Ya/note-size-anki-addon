@@ -35,15 +35,18 @@ class SizeButtonFormatter:
         file_size_li.string = f"Files size: {total_files_size}"
         soup.append(file_size_li)
 
+        is_empty_files: bool = len(files_sizes_str) == 0
+
         files_li: Tag = soup.new_tag('li')
-        files_li.string = "Files (big to small):"
+        files_li.string = "Files (big to small):" if not is_empty_files else "Files: (no files)"
         soup.append(files_li)
 
-        files_ol: Tag = soup.new_tag('ol')
-        for files_str in files_sizes_str:
-            li: Tag = soup.new_tag('li', attrs={"style": "white-space:nowrap"})
-            li.string = files_str
-            files_ol.append(li)
-        soup.append(files_ol)
+        if not is_empty_files:
+            files_ol: Tag = soup.new_tag('ol')
+            for files_str in files_sizes_str:
+                li: Tag = soup.new_tag('li', attrs={"style": "white-space:nowrap"})
+                li.string = files_str
+                files_ol.append(li)
+            soup.append(files_ol)
 
         return str(soup.prettify())
