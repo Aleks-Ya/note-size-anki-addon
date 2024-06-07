@@ -6,3 +6,4 @@ PyQt6-WebEngine==6.6.0
 PyQt6-WebEngine-Qt6==6.6.1
 setuptools
 tox
+bs4
