@@ -9,7 +9,7 @@ with open("README.md", "r") as fh:
 
 from setuptools import Command
 
-version = "1.0"
+version = "1.0.0"
 
 
 class MakeDistributionCommand(Command):
