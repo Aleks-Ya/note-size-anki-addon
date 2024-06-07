@@ -1,3 +1,4 @@
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -48,8 +49,10 @@ class MakeDistributionCommand(Command):
         shutil.copyfile(readme_file_src, readme_file_dest)
 
         output_zip: Path = Path(build_dir, f'note-size-{version}')
-        actual_output_zip: str = shutil.make_archive(str(output_zip), 'zip', dest_subdir)
-        print(f'Output ZIP: {actual_output_zip}')
+        actual_output_zip: Path = Path(shutil.make_archive(str(output_zip), 'zip', dest_subdir))
+        renamed_output_zip: Path = Path(actual_output_zip.parent, f"{actual_output_zip.stem}.ankiaddon")
+        os.rename(actual_output_zip, renamed_output_zip)
+        print(f'Output ZIP: {renamed_output_zip}')
 
 
 setuptools.setup(
