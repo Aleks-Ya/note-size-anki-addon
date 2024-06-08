@@ -17,9 +17,10 @@ class SizeFormatter:
         return f'{num:0.1f}{final_unit}'
 
     @staticmethod
-    def file_sizes_to_human_strings(file_sizes: dict[str, int], max_length: int) -> list[str]:
-        return [SizeFormatter._prune_string(key, SizeFormatter.bytes_to_human_str(value), max_length)
-                for key, value in file_sizes.items()]
+    def file_size_to_human_string(file: str, size: int, max_length: int) -> tuple[str, str]:
+        size_text: str = SizeFormatter.bytes_to_human_str(size)
+        file_text: str = SizeFormatter._prune_string(file, size_text, max_length)
+        return file_text, size_text
 
     @staticmethod
     def _prune_string(file: str, size: str, max_length: int) -> str:
@@ -27,4 +28,4 @@ class SizeFormatter:
         if len(file) > file_max_length:
             part_length: int = (file_max_length - 3) // 2
             file = file[:part_length] + "..." + file[-part_length:]
-        return f"{file}: {size}"
+        return file

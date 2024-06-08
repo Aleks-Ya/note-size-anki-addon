@@ -19,20 +19,19 @@ class SizeFormatterTestCase(unittest.TestCase):
         self.assertEqual("1.7GB", SizeFormatter.bytes_to_human_str(1_784_600_456))
         self.assertEqual("1626.8GB", SizeFormatter.bytes_to_human_str(1_746_784_600_456))
 
-    def test_file_sizes_to_human_str(self):
-        file_sizes: dict[str, int] = {'picture.jpg': 7, 'sound.mp3': 5, 'animation.gif': 9}
-        act_human_strings: list[str] = SizeFormatter.file_sizes_to_human_strings(file_sizes, 50)
-        exp_human_strings: list[str] = ['picture.jpg: 7B', 'sound.mp3: 5B', 'animation.gif: 9B']
-        self.assertListEqual(exp_human_strings, act_human_strings)
+    def test_file_size_to_human_string(self):
+        act_file_str, act_size_str = SizeFormatter.file_size_to_human_string('picture.jpg', 50, 50)
+        self.assertEqual('picture.jpg', act_file_str)
+        self.assertEqual('50B', act_size_str)
 
-    def test_prune_long_file_names(self):
-        file_sizes: dict[str, int] = {'long_long_long_long_long_long.jpg': 17, 'short_short.jpg': 7}
+    def test_file_size_to_human_string_prune_long_file_name(self):
         max_length: int = 30
-        act_human_strings: list[str] = SizeFormatter.file_sizes_to_human_strings(file_sizes, max_length)
-        exp_human_strings: list[str] = ['long_long_l...ng_long.jpg: 17B', 'short_short.jpg: 7B']
-        self.assertListEqual(exp_human_strings, act_human_strings)
-        for act_human_string in act_human_strings:
-            self.assertLessEqual(len(act_human_string), max_length)
+        file: str = 'long_long_long_long_long_long.jpg'
+        size: int = 17
+        act_file_str, act_size_str = SizeFormatter.file_size_to_human_string(file, size, max_length)
+        self.assertEqual('long_long_l...ng_long.jpg', act_file_str)
+        self.assertEqual('17B', act_size_str)
+        self.assertLessEqual(len(f"{act_size_str}: {act_size_str}"), max_length)
 
     def tearDown(self):
         self.col.close()

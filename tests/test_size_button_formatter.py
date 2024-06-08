@@ -21,14 +21,14 @@ class SizeButtonFormatterTestCase(unittest.TestCase):
     def test_format_note_detailed_text(self):
         self.note: Note = self.td.create_note_with_files(self.col)
         exp_html: str = """
-                    <h3>Total note size: 129B</h3>
-                    <li>Texts size: 108B</li>
-                    <li>Files size: 21B</li>
+                    <h3>Total note size: <code>129B</code></h3>
+                    <li>Texts size: <code>108B</code></li>
+                    <li>Files size: <code>21B</code></li>
                     <li>Files (big to small):</li>
                     <ol>
-                        <li style="white-space:nowrap">animation.gif: 9B</li>
-                        <li style="white-space:nowrap">picture.jpg: 7B</li>
-                        <li style="white-space:nowrap">sound.mp3: 5B</li>
+                        <li style="white-space:nowrap">animation.gif: <code>9B</code></li>
+                        <li style="white-space:nowrap">picture.jpg: <code>7B</code></li>
+                        <li style="white-space:nowrap">sound.mp3: <code>5B</code></li>
                     </ol>
                     """
         soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
@@ -39,9 +39,9 @@ class SizeButtonFormatterTestCase(unittest.TestCase):
     def test_format_no_files(self):
         self.note: Note = self.td.create_note_without_files(self.col)
         exp_html: str = """
-                    <h3>Total note size: 57B</h3>
-                    <li>Texts size: 57B</li>
-                    <li>Files size: 0B</li>
+                    <h3>Total note size: <code>57B</code></h3>
+                    <li>Texts size: <code>57B</code></li>
+                    <li>Files size: <code>0B</code></li>
                     <li>Files: (no files)</li>
                     """
         soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
@@ -53,12 +53,12 @@ class SizeButtonFormatterTestCase(unittest.TestCase):
         self.note: Note = self.td.create_note_without_files(self.col)
         self.note[self.td.front_field_name] = 'Missing file: <img src="absents.png">'
         exp_html: str = """
-                        <h3>Total note size: 67B</h3>
-                        <li>Texts size: 67B</li>
-                        <li>Files size: 0B</li>
+                        <h3>Total note size: <code>67B</code></h3>
+                        <li>Texts size: <code>67B</code></li>
+                        <li>Files size: <code>0B</code></li>
                         <li>Files (big to small):</li>
                         <ol>
-                            <li style="white-space:nowrap">absents.png: 0B</li>
+                            <li style="white-space:nowrap">absents.png: <code>0B</code></li>
                         </ol>
                         """
         soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
