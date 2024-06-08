@@ -2,10 +2,10 @@ class SizeFormatter:
 
     @staticmethod
     def bytes_to_human_str(bytes_size: int) -> str:
-        divisor = 1024
-        units = 'B', 'KB', 'MB'
-        final_unit = 'GB'
-        num = float(bytes_size)
+        divisor: int = 1024
+        units: tuple[str, str, str] = 'B', 'KB', 'MB'
+        final_unit: str = 'GB'
+        num: float = float(bytes_size)
         for unit in units:
             if abs(num) < divisor:
                 if unit == 'B':
@@ -25,6 +25,6 @@ class SizeFormatter:
     def _prune_string(file: str, size: str, max_length: int) -> str:
         file_max_length: int = max_length - len(size) - 2
         if len(file) > file_max_length:
-            part_length = (file_max_length - 3) // 2
+            part_length: int = (file_max_length - 3) // 2
             file = file[:part_length] + "..." + file[-part_length:]
         return f"{file}: {size}"
