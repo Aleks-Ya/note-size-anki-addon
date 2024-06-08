@@ -66,9 +66,9 @@ class SizeColumnHooks:
     def _on_browser_did_search(self, context: SearchContext) -> None:
         log.debug("Browser did search")
         if context.ids and isinstance(context.order, Column) and context.order.notes_mode_label == self.column_label:
-            context.ids = sorted(context.ids, key=lambda item_id: self.get_size_key(item_id), reverse=True)
+            context.ids = sorted(context.ids, key=self._get_item_size, reverse=True)
 
-    def get_size_key(self, item_id: ItemId) -> int:
+    def _get_item_size(self, item_id: ItemId) -> int:
         try:
             note: Note = mw.col.get_note(item_id)
         except NotFoundError:
