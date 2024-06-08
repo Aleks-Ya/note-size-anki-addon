@@ -44,14 +44,14 @@ class SizeColumnHooks:
         )
         log.info("Column was added")
 
-    def _modify_row(self, card_or_note_id: ItemId, is_note: bool, row: CellRow, columns: Sequence[str]) -> None:
+    def _modify_row(self, item_id: ItemId, is_note: bool, row: CellRow, columns: Sequence[str]) -> None:
         if self.column_key in columns:
             column_index: int = columns.index(self.column_key)
             cell: Cell = row.cells[column_index]
             if is_note:
-                note: Note = mw.col.get_note(card_or_note_id)
+                note: Note = mw.col.get_note(item_id)
             else:
-                card: Card = mw.col.get_card(card_or_note_id)
+                card: Card = mw.col.get_card(item_id)
                 note: Note = card.note()
             size: int = self.size_calculator.calculate_note_size(note, use_cache=True)
             cell.text = self.size_formatter.bytes_to_human_str(size)
