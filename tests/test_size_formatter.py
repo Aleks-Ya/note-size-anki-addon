@@ -1,4 +1,5 @@
 import tempfile
+import time
 import unittest
 
 from anki.collection import Collection
@@ -33,6 +34,22 @@ class SizeFormatterTestCase(unittest.TestCase):
         self.assertEqual('long_long_l...ng_long.jpg', act_file_str)
         self.assertEqual('17B', act_size_str)
         self.assertLessEqual(len(f"{act_size_str}: {act_size_str}"), max_length)
+
+    def test_bytes_to_human_str_performance(self):
+        start_time: float = time.time()
+        for i in range(0, 1_000_000):
+            self.size_formatter.bytes_to_human_str(i)
+        end_time: float = time.time()
+        duration_sec: float = end_time - start_time
+        self.assertLessEqual(duration_sec, 2)
+
+    def test_file_size_to_human_string_performance(self):
+        start_time: float = time.time()
+        for i in range(0, 1_000_000):
+            self.size_formatter.file_size_to_human_string('long_long_long_long_long_long.jpg', i, 10)
+        end_time: float = time.time()
+        duration_sec: float = end_time - start_time
+        self.assertLessEqual(duration_sec, 2)
 
     def tearDown(self):
         self.col.close()

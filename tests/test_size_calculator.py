@@ -1,4 +1,5 @@
 import tempfile
+import time
 import unittest
 
 from anki.collection import Collection
@@ -28,13 +29,16 @@ class SizeCalculatorTestCase(unittest.TestCase):
 
     def test_calculate_note_size(self):
         act_size: int = self.size_calculator.calculate_note_size(self.note)
-        exp_size: int = (len(self.td.front_field_content_with_files) + len(self.td.back_field_content_with_files) + len(self.td.content1)
+        exp_size: int = (len(self.td.front_field_content_with_files) + len(self.td.back_field_content_with_files) + len(
+            self.td.content1)
                          + len(self.td.content2) + len(self.td.content3))
         self.assertEqual(exp_size, act_size)
 
     def test_calculate_note_size_caching(self):
-        exp_size_1: int = (len(self.td.front_field_content_with_files) + len(self.td.back_field_content_with_files) + len(self.td.content1)
-                           + len(self.td.content2) + len(self.td.content3))
+        exp_size_1: int = (
+                len(self.td.front_field_content_with_files) + len(self.td.back_field_content_with_files) + len(
+            self.td.content1)
+                + len(self.td.content2) + len(self.td.content3))
         act_size_1: int = self.size_calculator.calculate_note_size(self.note, use_cache=True)
         new_text: str = "shorter text"
         self.note[self.td.front_field_name] = new_text
@@ -68,6 +72,22 @@ class SizeCalculatorTestCase(unittest.TestCase):
         self.assertEqual("{'picture.jpg': 7, 'sound.mp3': 5, 'animation.gif': 9}", str(unsorted_dict))
         sorted_dict: dict[str, int] = SizeCalculator.sort_by_size_desc(unsorted_dict)
         self.assertEqual("{'animation.gif': 9, 'picture.jpg': 7, 'sound.mp3': 5}", str(sorted_dict))
+
+    def test_calculate_note_size_performance_no_cache(self):
+        duration_sec = self._calculate_note_size_performance(False, 100_000)
+        self.assertLessEqual(duration_sec, 7)
+
+    def test_calculate_note_size_performance_cached(self):
+        duration_sec = self._calculate_note_size_performance(True, 100_000)
+        self.assertLessEqual(duration_sec, 0.1)
+
+    def _calculate_note_size_performance(self, cached, repetitions):
+        start_time: float = time.time()
+        for _ in range(repetitions):
+            self.size_calculator.calculate_note_size(self.note, use_cache=cached)
+        end_time: float = time.time()
+        duration_sec: float = end_time - start_time
+        return duration_sec
 
     def tearDown(self):
         self.col.close()
