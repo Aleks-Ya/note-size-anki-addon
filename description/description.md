@@ -1,5 +1,3 @@
-# "Note Size" Anki addon
-
 "Note Size" addon displays size of Notes including attachments.
 You can easily identify the largest notes to reduce collection size.
 

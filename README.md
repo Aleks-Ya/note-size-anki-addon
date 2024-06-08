@@ -6,8 +6,7 @@ See [Addon Description](description/description.md)
 
 ## Logs
 
-- From filesystem: `{anki_dir}/addons21/1188705668/note_size.log`
-- From Anki main window: `Tools` -> `Add-ons` -> `Note Size...` -> `Files` -> `1188705668` -> `note_size.log`
+`Tools` -> `Add-ons` -> `Note Size - Sort notes by size` -> `Files` -> `1188705668` -> `note_size.log`
 
 ## Unit tests
 
@@ -15,7 +14,8 @@ Run: `tox`
 
 ## Build
 
-Build ZIP: `python setup.py dist` (output `./dist/note-size-1.0-0.zip`)
+1. Build ZIP: `python setup.py dist` (includes unit-tests)
+2. Output: `./dist/note-size-X.X-X.zip`
 
 ## Release
 
