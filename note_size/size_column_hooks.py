@@ -4,7 +4,6 @@ from typing import Sequence, Optional
 
 from anki.cards import Card
 from anki.collection import BrowserColumns
-from anki.errors import NotFoundError
 from anki.notes import Note, NoteId
 from aqt import gui_hooks, mw
 from aqt.browser import Column, Cell, SearchContext
@@ -66,12 +65,21 @@ class SizeColumnHooks:
     def _on_browser_did_search(self, context: SearchContext) -> None:
         log.debug("Browser did search")
         if context.ids and isinstance(context.order, Column) and context.order.notes_mode_label == self.column_label:
-            context.ids = sorted(context.ids, key=self._get_item_size, reverse=True)
+            is_notes_mode: bool = self._is_notes_mode(context)
+            log.debug(f"Is notes mode: {is_notes_mode}")
+            context.ids = sorted(context.ids, key=lambda item_id: self._get_item_size(item_id, is_notes_mode),
+                                 reverse=True)
 
-    def _get_item_size(self, item_id: ItemId) -> int:
-        try:
+    @staticmethod
+    def _is_notes_mode(context: SearchContext) -> bool:
+        # Method "aqt.browser.table.table.Table.is_notes_mode" doesn't show correct state after toggling the switch
+        # noinspection PyProtectedMember
+        return context.browser._switch.isChecked()
+
+    def _get_item_size(self, item_id: ItemId, is_note: bool) -> int:
+        if is_note:
             note: Note = mw.col.get_note(item_id)
-        except NotFoundError:
+        else:
             note_id: NoteId = mw.col.get_card(item_id).nid
             note: Note = mw.col.get_note(note_id)
         return self.size_calculator.calculate_note_size(note, use_cache=True)
