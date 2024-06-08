@@ -1,0 +1,39 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+package Anki {
+    class Collection
+    class MediaManager
+}
+
+package NoteSize {
+    together {
+        class SizeButtonHooks
+        class SizeColumnHooks
+    }
+    class SizeButtonFormatter
+    class SizeCalculator
+    class SizeFormatter
+    class SizeItemIdCache
+    class Init
+}
+
+Init --> SizeColumnHooks
+Init --> SizeButtonHooks
+
+
+SizeButtonFormatter --> SizeItemIdCache
+
+SizeButtonHooks --> SizeButtonFormatter
+
+SizeCalculator --> MediaManager
+
+SizeColumnHooks --> Collection
+SizeColumnHooks --> SizeItemIdCache
+
+SizeItemIdCache --> Collection
+SizeItemIdCache --> SizeCalculator
+SizeItemIdCache --> SizeFormatter
+
+
+@enduml

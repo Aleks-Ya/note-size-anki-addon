@@ -2,15 +2,13 @@ import logging
 from logging import Logger
 from typing import Sequence, Optional
 
-from anki.cards import Card
 from anki.collection import BrowserColumns
-from anki.notes import Note, NoteId
+from anki.notes import NoteId
 from aqt import gui_hooks, mw
 from aqt.browser import Column, Cell, SearchContext
 from aqt.browser import ItemId, CellRow
 
-from .size_calculator import SizeCalculator
-from .size_formatter import SizeFormatter
+from .size_item_id_cache import SizeItemIdCache
 
 log: Logger = logging.getLogger(__name__)
 
@@ -19,9 +17,8 @@ class SizeColumnHooks:
     column_key: str = "note-size"
     column_label: str = "Size"
 
-    def __init__(self, size_calculator: SizeCalculator, size_formatter: SizeFormatter):
-        self.size_calculator: SizeCalculator = size_calculator
-        self.size_formatter: SizeFormatter = size_formatter
+    def __init__(self, size_item_id_cache: SizeItemIdCache):
+        self.size_item_id_cache: SizeItemIdCache = size_item_id_cache
 
     def setup_hooks(self):
         gui_hooks.browser_did_fetch_columns.append(self._add_custom_column)
@@ -48,13 +45,8 @@ class SizeColumnHooks:
         if self.column_key in columns:
             column_index: int = columns.index(self.column_key)
             cell: Cell = row.cells[column_index]
-            if is_note:
-                note: Note = mw.col.get_note(item_id)
-            else:
-                card: Card = mw.col.get_card(item_id)
-                note: Note = card.note()
-            size: int = self.size_calculator.calculate_note_size(note, use_cache=True)
-            cell.text = self.size_formatter.bytes_to_human_str(size)
+            note_id: NoteId = item_id if is_note else self.size_item_id_cache.get_note_id_by_card_id(item_id)
+            cell.text = self.size_item_id_cache.get_note_human_str(note_id, use_cache=True)
 
     def _on_browser_will_search(self, context: SearchContext) -> None:
         log.debug("Browser will search")
@@ -78,9 +70,5 @@ class SizeColumnHooks:
         return context.browser._switch.isChecked()
 
     def _get_item_size(self, item_id: ItemId, is_note: bool) -> int:
-        if is_note:
-            note: Note = mw.col.get_note(item_id)
-        else:
-            note_id: NoteId = mw.col.get_card(item_id).nid
-            note: Note = mw.col.get_note(note_id)
-        return self.size_calculator.calculate_note_size(note, use_cache=True)
+        note_id: NoteId = item_id if is_note else self.size_item_id_cache.get_note_id_by_card_id(item_id)
+        return self.size_item_id_cache.get_note_size(note_id, use_cache=True)

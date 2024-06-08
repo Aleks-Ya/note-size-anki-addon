@@ -1,18 +1,21 @@
 import logging
 from logging import Logger
 
+from anki.notes import NoteId
 from bs4 import BeautifulSoup, Tag
 
 from .size_calculator import SizeCalculator
-from .size_formatter import SizeFormatter
+from .size_item_id_cache import SizeItemIdCache
 
 log: Logger = logging.getLogger(__name__)
 
 
 class SizeButtonFormatter:
-    def __init__(self, size_calculator: SizeCalculator, size_formatter: SizeFormatter):
-        self.size_calculator: SizeCalculator = size_calculator
-        self.size_formatter: SizeFormatter = size_formatter
+    def __init__(self, size_item_id_cache: SizeItemIdCache):
+        self.size_item_id_cache: SizeItemIdCache = size_item_id_cache
+
+    def get_note_human_str(self, note_id: NoteId) -> str:
+        return self.size_item_id_cache.get_note_human_str(note_id, use_cache=False)
 
     def format_note_detailed_text(self, note):
         soup: BeautifulSoup = BeautifulSoup()
@@ -23,30 +26,26 @@ class SizeButtonFormatter:
         return str(soup.prettify())
 
     def _add_total_note_size(self, note, soup):
-        note_size: int = self.size_calculator.calculate_note_size(note, use_cache=False)
-        total_size: str = self.size_formatter.bytes_to_human_str(note_size)
         h3: Tag = soup.new_tag('h3')
         h3.string = f"Total note size: "
         code: Tag = soup.new_tag('code')
-        code.string = total_size
+        code.string = self.size_item_id_cache.get_note_human_str(note.id, use_cache=False)
         h3.append(code)
         soup.append(h3)
 
     def _add_total_texts_size(self, note, soup):
-        size: str = self.size_formatter.bytes_to_human_str(SizeCalculator.total_text_size(note))
         li: Tag = soup.new_tag('li')
         li.string = f"Texts size: "
         code: Tag = soup.new_tag('code')
-        code.string = size
+        code.string = self.size_item_id_cache.total_text_size_str(note)
         li.append(code)
         soup.append(li)
 
     def _add_total_file_size(self, note, soup):
-        size: str = self.size_formatter.bytes_to_human_str(SizeCalculator.total_file_size(note))
         li: Tag = soup.new_tag('li')
         li.string = f"Files size: "
         code: Tag = soup.new_tag('code')
-        code.string = size
+        code.string = self.size_item_id_cache.total_file_size_str(note)
         li.append(code)
         soup.append(li)
 
@@ -59,7 +58,7 @@ class SizeButtonFormatter:
         if not is_empty_files:
             ol: Tag = soup.new_tag('ol')
             for file, size in file_sizes.items():
-                file_text, size_text = self.size_formatter.file_size_to_human_string(file, size, 100)
+                file_text, size_text = self.size_item_id_cache.file_size_to_human_string(file, size, 100)
                 li: Tag = soup.new_tag('li', attrs={"style": "white-space:nowrap"})
                 li.string = f"{file_text}: "
                 code: Tag = soup.new_tag('code')

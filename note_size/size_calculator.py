@@ -2,24 +2,16 @@ import logging
 import os
 from logging import Logger
 
-from anki.notes import Note, NoteId
+from anki.notes import Note
 
 log: Logger = logging.getLogger(__name__)
 
 
 class SizeCalculator:
-    size_cache: dict[NoteId, int] = {}
 
-    def calculate_note_size(self, note: Note, use_cache: bool = False) -> int:
-        if use_cache and note.id in self.size_cache:
-            return self.size_cache[note.id]
-        else:
-            return self._recalculate_total_size(note)
-
-    def _recalculate_total_size(self, note: Note) -> int:
-        total_size: int = SizeCalculator.total_text_size(note) + SizeCalculator.total_file_size(note)
-        self.size_cache[note.id] = total_size
-        return total_size
+    @staticmethod
+    def calculate_note_size(note: Note) -> int:
+        return SizeCalculator.total_text_size(note) + SizeCalculator.total_file_size(note)
 
     @staticmethod
     def total_text_size(note: Note) -> int:

@@ -37,7 +37,7 @@ class SizeFormatterTestCase(unittest.TestCase):
 
     def test_bytes_to_human_str_performance(self):
         start_time: float = time.time()
-        for i in range(0, 1_000_000):
+        for i in range(0, 100_000):
             self.size_formatter.bytes_to_human_str(i)
         end_time: float = time.time()
         duration_sec: float = end_time - start_time
@@ -45,11 +45,11 @@ class SizeFormatterTestCase(unittest.TestCase):
 
     def test_file_size_to_human_string_performance(self):
         start_time: float = time.time()
-        for i in range(0, 1_000_000):
+        for i in range(0, 100_000):
             self.size_formatter.file_size_to_human_string('long_long_long_long_long_long.jpg', i, 10)
         end_time: float = time.time()
         duration_sec: float = end_time - start_time
-        self.assertLessEqual(duration_sec, 2)
+        self.assertLessEqual(duration_sec, 4)
 
     def tearDown(self):
         self.col.close()

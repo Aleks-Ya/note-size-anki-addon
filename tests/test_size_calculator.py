@@ -15,7 +15,6 @@ class SizeCalculatorTestCase(unittest.TestCase):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
         self.td: TestData = TestData()
         self.note: Note = self.td.create_note_with_files(self.col)
-        self.size_calculator: SizeCalculator = SizeCalculator()
 
     def test_total_text_size(self):
         act_size: int = SizeCalculator.total_text_size(self.note)
@@ -28,32 +27,15 @@ class SizeCalculatorTestCase(unittest.TestCase):
         self.assertEqual(exp_size, act_size)
 
     def test_calculate_note_size(self):
-        act_size: int = self.size_calculator.calculate_note_size(self.note)
-        exp_size: int = (len(self.td.front_field_content_with_files) + len(self.td.back_field_content_with_files) + len(
-            self.td.content1)
-                         + len(self.td.content2) + len(self.td.content3))
+        act_size: int = SizeCalculator.calculate_note_size(self.note)
+        exp_size: int = (len(self.td.front_field_content_with_files) + len(self.td.back_field_content_with_files)
+                         + len(self.td.content1) + len(self.td.content2) + len(self.td.content3))
         self.assertEqual(exp_size, act_size)
-
-    def test_calculate_note_size_caching(self):
-        exp_size_1: int = (
-                len(self.td.front_field_content_with_files) + len(self.td.back_field_content_with_files) + len(
-            self.td.content1)
-                + len(self.td.content2) + len(self.td.content3))
-        act_size_1: int = self.size_calculator.calculate_note_size(self.note, use_cache=True)
-        new_text: str = "shorter text"
-        self.note[self.td.front_field_name] = new_text
-        exp_size_3: int = (len(new_text) + len(self.td.back_field_content_with_files) + len(self.td.content1)
-                           + len(self.td.content3))
-        act_size_2: int = self.size_calculator.calculate_note_size(self.note, use_cache=True)
-        act_size_3: int = self.size_calculator.calculate_note_size(self.note, use_cache=False)
-        self.assertEqual(act_size_1, exp_size_1)
-        self.assertEqual(act_size_2, exp_size_1)
-        self.assertEqual(act_size_3, exp_size_3)
 
     def test_calculate_note_size_missing_file(self):
         content: str = 'Missing file: <img src="absents.png">'
         self.note[self.td.front_field_name] = content
-        act_size: int = self.size_calculator.calculate_note_size(self.note)
+        act_size: int = SizeCalculator.calculate_note_size(self.note)
         exp_size: int = (len(content) + len(self.td.back_field_content_with_files) + len(self.td.content1)
                          + len(self.td.content3))
         self.assertEqual(exp_size, act_size)
@@ -73,18 +55,10 @@ class SizeCalculatorTestCase(unittest.TestCase):
         sorted_dict: dict[str, int] = SizeCalculator.sort_by_size_desc(unsorted_dict)
         self.assertEqual("{'animation.gif': 9, 'picture.jpg': 7, 'sound.mp3': 5}", str(sorted_dict))
 
-    def test_calculate_note_size_performance_no_cache(self):
-        duration_sec = self._calculate_note_size_performance(False, 100_000)
-        self.assertLessEqual(duration_sec, 7)
-
-    def test_calculate_note_size_performance_cached(self):
-        duration_sec = self._calculate_note_size_performance(True, 100_000)
-        self.assertLessEqual(duration_sec, 0.1)
-
     def _calculate_note_size_performance(self, cached, repetitions):
         start_time: float = time.time()
         for _ in range(repetitions):
-            self.size_calculator.calculate_note_size(self.note, use_cache=cached)
+            SizeCalculator.calculate_note_size(self.note)
         end_time: float = time.time()
         duration_sec: float = end_time - start_time
         return duration_sec

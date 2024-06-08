@@ -5,7 +5,7 @@ from anki.collection import Collection
 from anki.notes import Note
 from bs4 import BeautifulSoup
 
-from note_size import SizeCalculator, SizeFormatter
+from note_size import SizeItemIdCache
 from note_size.size_button_formatter import SizeButtonFormatter
 from tests.data import TestData
 
@@ -15,9 +15,8 @@ class SizeButtonFormatterTestCase(unittest.TestCase):
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
         self.td: TestData = TestData()
-        size_calculator: SizeCalculator = SizeCalculator()
-        size_formatter: SizeFormatter = SizeFormatter()
-        self.size_button_formatter: SizeButtonFormatter = SizeButtonFormatter(size_calculator, size_formatter)
+        item_id_cache: SizeItemIdCache = SizeItemIdCache(self.col)
+        self.size_button_formatter: SizeButtonFormatter = SizeButtonFormatter(item_id_cache)
 
     def test_format_note_detailed_text(self):
         self.note: Note = self.td.create_note_with_files(self.col)
@@ -53,6 +52,7 @@ class SizeButtonFormatterTestCase(unittest.TestCase):
     def test_format_note_with_single_missing_file(self):
         self.note: Note = self.td.create_note_without_files(self.col)
         self.note[self.td.front_field_name] = 'Missing file: <img src="absents.png">'
+        self.col.update_note(self.note)
         exp_html: str = """
                         <h3>Total note size: <code>67B</code></h3>
                         <li>Texts size: <code>67B</code></li>
