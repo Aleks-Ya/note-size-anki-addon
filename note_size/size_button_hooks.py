@@ -16,9 +16,11 @@ log: Logger = logging.getLogger(__name__)
 class SizeButtonHooks:
     editor: Editor
 
-    def __init__(self, size_calculator: SizeCalculator, size_button_formatter: SizeButtonFormatter):
+    def __init__(self, size_calculator: SizeCalculator, size_button_formatter: SizeButtonFormatter,
+                 size_formatter: SizeFormatter):
         self.size_calculator: SizeCalculator = size_calculator
         self.size_button_formatter: SizeButtonFormatter = size_button_formatter
+        self.size_formatter: SizeFormatter = size_formatter
 
     def setup_hooks(self):
         gui_hooks.editor_did_init.append(self._on_init)
@@ -50,6 +52,6 @@ class SizeButtonHooks:
 
     def _refresh_size_button(self):
         note_size: int = self.size_calculator.calculate_note_size(self.editor.note, use_cache=False)
-        size: str = SizeFormatter.bytes_to_human_str(note_size) if self.editor.note else "-"
+        size: str = self.size_formatter.bytes_to_human_str(note_size) if self.editor.note else "-"
         self.editor.web.eval(f"document.getElementById('size_button').textContent = 'Size: {size}'")
         log.info("Size button was refreshed")

@@ -19,8 +19,9 @@ class SizeColumnHooks:
     column_key: str = "note-size"
     column_label: str = "Size"
 
-    def __init__(self, size_calculator: SizeCalculator):
+    def __init__(self, size_calculator: SizeCalculator, size_formatter: SizeFormatter):
         self.size_calculator: SizeCalculator = size_calculator
+        self.size_formatter: SizeFormatter = size_formatter
 
     def setup_hooks(self):
         gui_hooks.browser_did_fetch_columns.append(self._add_custom_column)
@@ -53,7 +54,7 @@ class SizeColumnHooks:
                 card: Card = mw.col.get_card(card_or_note_id)
                 note: Note = card.note()
             size: int = self.size_calculator.calculate_note_size(note, use_cache=True)
-            cell.text = SizeFormatter.bytes_to_human_str(size)
+            cell.text = self.size_formatter.bytes_to_human_str(size)
 
     def _on_browser_will_search(self, context: SearchContext) -> None:
         log.debug("Browser will search")

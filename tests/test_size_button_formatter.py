@@ -5,7 +5,7 @@ from anki.collection import Collection
 from anki.notes import Note
 from bs4 import BeautifulSoup
 
-from note_size import SizeCalculator
+from note_size import SizeCalculator, SizeFormatter
 from note_size.size_button_formatter import SizeButtonFormatter
 from tests.data import TestData
 
@@ -16,7 +16,8 @@ class SizeButtonFormatterTestCase(unittest.TestCase):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
         self.td: TestData = TestData()
         size_calculator: SizeCalculator = SizeCalculator()
-        self.size_button_formatter: SizeButtonFormatter = SizeButtonFormatter(size_calculator)
+        size_formatter: SizeFormatter = SizeFormatter()
+        self.size_button_formatter: SizeButtonFormatter = SizeButtonFormatter(size_calculator, size_formatter)
 
     def test_format_note_detailed_text(self):
         self.note: Note = self.td.create_note_with_files(self.col)

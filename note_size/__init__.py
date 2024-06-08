@@ -7,6 +7,7 @@ from .size_button_formatter import SizeButtonFormatter
 from .size_button_hooks import SizeButtonHooks
 from .size_calculator import SizeCalculator
 from .size_column_hooks import SizeColumnHooks
+from .size_formatter import SizeFormatter
 
 
 def configure_logging(addon_folder: Path) -> Logger:
@@ -28,8 +29,9 @@ with open(Path(addon_dir, 'version.txt'), 'r') as file:
     version = file.read()
 log.info(f"NoteSize addon version: {version}")
 size_calculator: SizeCalculator = SizeCalculator()
-size_column_hooks: SizeColumnHooks = SizeColumnHooks(size_calculator)
+size_formatter: SizeFormatter = SizeFormatter()
+size_column_hooks: SizeColumnHooks = SizeColumnHooks(size_calculator, size_formatter)
 size_column_hooks.setup_hooks()
-size_button_formatter: SizeButtonFormatter = SizeButtonFormatter(size_calculator)
-size_button_hooks: SizeButtonHooks = SizeButtonHooks(size_calculator, size_button_formatter)
+size_button_formatter: SizeButtonFormatter = SizeButtonFormatter(size_calculator, size_formatter)
+size_button_hooks: SizeButtonHooks = SizeButtonHooks(size_calculator, size_button_formatter, size_formatter)
 size_button_hooks.setup_hooks()
