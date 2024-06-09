@@ -1,5 +1,5 @@
 import tempfile
-import time
+import timeit
 import unittest
 
 from anki.collection import Collection
@@ -50,20 +50,18 @@ class SizeFormatterTestCase(unittest.TestCase):
         self.assertEqual(exp_size_1, act_size_2)
 
     def test_get_note_size_performance_no_cache(self):
-        start_time: float = time.time()
-        for _ in range(0, 100_000):
-            self.size_item_id_cache.get_note_size(self.note.id, use_cache=False)
-        end_time: float = time.time()
-        duration_sec: float = end_time - start_time
-        self.assertLessEqual(duration_sec, 8)
+        execution_time: float = timeit.timeit(
+            lambda: self.size_item_id_cache.get_note_size(self.note.id, use_cache=False), number=100_000)
+        self.assertLessEqual(execution_time, 8)
 
     def test_get_note_size_performance_use_cache(self):
-        start_time: float = time.time()
+        execution_time: float = timeit.timeit(
+            lambda: self.size_item_id_cache.get_note_size(self.note.id, use_cache=True), number=100_000)
+        self.assertLessEqual(execution_time, 0.5)
+
+    def _run_get_note_size(self, use_cache: bool):
         for _ in range(0, 100_000):
-            self.size_item_id_cache.get_note_size(self.note.id, use_cache=True)
-        end_time: float = time.time()
-        duration_sec: float = end_time - start_time
-        self.assertLessEqual(duration_sec, 0.5)
+            self.size_item_id_cache.get_note_size(self.note.id, use_cache=use_cache)
 
     def test_get_note_human_str_no_cache(self):
         note_id: NoteId = self.note.id

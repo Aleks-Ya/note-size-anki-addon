@@ -1,5 +1,5 @@
 import tempfile
-import time
+import timeit
 import unittest
 
 from anki.collection import Collection
@@ -39,21 +39,21 @@ class SizeFormatterTestCase(unittest.TestCase):
         self.assertLessEqual(len(f"{act_size_str}: {act_size_str}"), max_length)
 
     def test_bytes_to_human_str_performance(self):
-        start_time: float = time.time()
-        for i in range(0, 100_000):
-            self.size_formatter.bytes_to_human_str(SizeBytes(i))
-        end_time: float = time.time()
-        duration_sec: float = end_time - start_time
-        self.assertLessEqual(duration_sec, 2)
+        execution_time: float = timeit.timeit(self._run_bytes_to_human_str, number=1)
+        self.assertLessEqual(execution_time, 0.5)
 
     def test_file_size_to_human_string_performance(self):
-        start_time: float = time.time()
+        execution_time: float = timeit.timeit(self._run_file_size_to_human_string, number=1)
+        self.assertLessEqual(execution_time, 0.5)
+
+    def _run_bytes_to_human_str(self):
+        for i in range(0, 100_000):
+            self.size_formatter.bytes_to_human_str(SizeBytes(i))
+
+    def _run_file_size_to_human_string(self):
         file: MediaFile = MediaFile('long_long_long_long_long_long.jpg')
         for i in range(0, 100_000):
             self.size_formatter.file_size_to_human_string(file, SizeBytes(i), 10)
-        end_time: float = time.time()
-        duration_sec: float = end_time - start_time
-        self.assertLessEqual(duration_sec, 4)
 
     def tearDown(self):
         self.col.close()
