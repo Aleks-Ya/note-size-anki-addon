@@ -4,7 +4,8 @@ import unittest
 
 from anki.collection import Collection
 
-from note_size.size_formatter import SizeFormatter
+from note_size.size_calculator import SizeBytes
+from note_size.size_formatter import SizeFormatter, SizeStr
 
 
 class SizeFormatterTestCase(unittest.TestCase):
@@ -14,22 +15,22 @@ class SizeFormatterTestCase(unittest.TestCase):
         self.size_formatter: SizeFormatter = SizeFormatter()
 
     def test_bytes_to_human_str(self):
-        self.assertEqual("0B", self.size_formatter.bytes_to_human_str(0))
-        self.assertEqual("456B", self.size_formatter.bytes_to_human_str(456))
-        self.assertEqual("1.4KB", self.size_formatter.bytes_to_human_str(1_456))
-        self.assertEqual("1.5MB", self.size_formatter.bytes_to_human_str(1_600_456))
-        self.assertEqual("1.7GB", self.size_formatter.bytes_to_human_str(1_784_600_456))
-        self.assertEqual("1626.8GB", self.size_formatter.bytes_to_human_str(1_746_784_600_456))
+        self.assertEqual(SizeStr("0B"), self.size_formatter.bytes_to_human_str(SizeBytes(0)))
+        self.assertEqual(SizeStr("456B"), self.size_formatter.bytes_to_human_str(SizeBytes(456)))
+        self.assertEqual(SizeStr("1.4KB"), self.size_formatter.bytes_to_human_str(SizeBytes(1_456)))
+        self.assertEqual(SizeStr("1.5MB"), self.size_formatter.bytes_to_human_str(SizeBytes(1_600_456)))
+        self.assertEqual(SizeStr("1.7GB"), self.size_formatter.bytes_to_human_str(SizeBytes(1_784_600_456)))
+        self.assertEqual(SizeStr("1626.8GB"), self.size_formatter.bytes_to_human_str(SizeBytes(1_746_784_600_456)))
 
     def test_file_size_to_human_string(self):
-        act_file_str, act_size_str = self.size_formatter.file_size_to_human_string('picture.jpg', 50, 50)
+        act_file_str, act_size_str = self.size_formatter.file_size_to_human_string('picture.jpg', SizeBytes(50), 50)
         self.assertEqual('picture.jpg', act_file_str)
         self.assertEqual('50B', act_size_str)
 
     def test_file_size_to_human_string_prune_long_file_name(self):
         max_length: int = 30
         file: str = 'long_long_long_long_long_long.jpg'
-        size: int = 17
+        size: SizeBytes = SizeBytes(17)
         act_file_str, act_size_str = self.size_formatter.file_size_to_human_string(file, size, max_length)
         self.assertEqual('long_long_l...ng_long.jpg', act_file_str)
         self.assertEqual('17B', act_size_str)
@@ -38,7 +39,7 @@ class SizeFormatterTestCase(unittest.TestCase):
     def test_bytes_to_human_str_performance(self):
         start_time: float = time.time()
         for i in range(0, 100_000):
-            self.size_formatter.bytes_to_human_str(i)
+            self.size_formatter.bytes_to_human_str(SizeBytes(i))
         end_time: float = time.time()
         duration_sec: float = end_time - start_time
         self.assertLessEqual(duration_sec, 2)
@@ -46,7 +47,7 @@ class SizeFormatterTestCase(unittest.TestCase):
     def test_file_size_to_human_string_performance(self):
         start_time: float = time.time()
         for i in range(0, 100_000):
-            self.size_formatter.file_size_to_human_string('long_long_long_long_long_long.jpg', i, 10)
+            self.size_formatter.file_size_to_human_string('long_long_long_long_long_long.jpg', SizeBytes(i), 10)
         end_time: float = time.time()
         duration_sec: float = end_time - start_time
         self.assertLessEqual(duration_sec, 4)

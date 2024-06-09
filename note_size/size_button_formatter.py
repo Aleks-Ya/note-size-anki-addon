@@ -4,7 +4,7 @@ from logging import Logger
 from anki.notes import NoteId
 from bs4 import BeautifulSoup, Tag
 
-from .size_calculator import SizeCalculator
+from .size_calculator import SizeCalculator, SizeBytes
 from .item_id_cache import ItemIdCache
 from .size_formatter import SizeStr
 
@@ -51,7 +51,7 @@ class SizeButtonFormatter:
         soup.append(li)
 
     def _add_files(self, note, soup):
-        file_sizes: dict[str, int] = SizeCalculator.sort_by_size_desc(SizeCalculator.file_sizes(note))
+        file_sizes: dict[str, SizeBytes] = SizeCalculator.sort_by_size_desc(SizeCalculator.file_sizes(note))
         is_empty_files: bool = len(file_sizes) == 0
         files_li: Tag = soup.new_tag('li')
         files_li.string = "Files (big to small):" if not is_empty_files else "Files: (no files)"

@@ -5,7 +5,7 @@ from anki.cards import CardId
 from anki.collection import Collection
 from anki.notes import Note, NoteId
 
-from .size_calculator import SizeCalculator
+from .size_calculator import SizeCalculator, SizeBytes
 from .size_formatter import SizeFormatter, SizeStr
 
 log: Logger = logging.getLogger(__name__)
@@ -13,7 +13,7 @@ log: Logger = logging.getLogger(__name__)
 
 class ItemIdCache:
     id_cache: dict[CardId, NoteId] = {}
-    note_size_cache: dict[NoteId, int] = {}
+    note_size_cache: dict[NoteId, SizeBytes] = {}
     note_human_str_cache: dict[NoteId, SizeStr] = {}
 
     def __init__(self, col: Collection):
@@ -38,7 +38,7 @@ class ItemIdCache:
             self.id_cache[card_id] = self.col.get_card(card_id).nid
         return self.id_cache[card_id]
 
-    def get_note_size(self, note_id: NoteId, use_cache: bool) -> int:
+    def get_note_size(self, note_id: NoteId, use_cache: bool) -> SizeBytes:
         if use_cache and note_id in self.note_size_cache:
             return self.note_size_cache[note_id]
         else:
@@ -50,7 +50,7 @@ class ItemIdCache:
         if use_cache and note_id in self.note_human_str_cache:
             return self.note_human_str_cache[note_id]
         else:
-            size: int = self.get_note_size(note_id, use_cache)
+            size: SizeBytes = self.get_note_size(note_id, use_cache)
             self.note_human_str_cache[note_id] = SizeFormatter.bytes_to_human_str(size)
             return self.note_human_str_cache[note_id]
 
@@ -60,5 +60,5 @@ class ItemIdCache:
     def total_file_size_str(self, note: Note) -> SizeStr:
         return SizeFormatter.bytes_to_human_str(SizeCalculator.total_file_size(note))
 
-    def file_size_to_human_string(self, file: str, size: int, max_length: int) -> tuple[str, SizeStr]:
+    def file_size_to_human_string(self, file: str, size: SizeBytes, max_length: int) -> tuple[str, SizeStr]:
         return SizeFormatter.file_size_to_human_string(file, size, max_length)

@@ -1,12 +1,14 @@
 from typing import NewType
 
+from note_size.size_calculator import SizeBytes
+
 SizeStr = NewType("SizeStr", str)
 
 
 class SizeFormatter:
 
     @staticmethod
-    def bytes_to_human_str(bytes_size: int) -> SizeStr:
+    def bytes_to_human_str(bytes_size: SizeBytes) -> SizeStr:
         divisor: int = 1024
         units: tuple[str, str, str] = 'B', 'KB', 'MB'
         final_unit: str = 'GB'
@@ -21,7 +23,7 @@ class SizeFormatter:
         return SizeStr(f'{num:0.1f}{final_unit}')
 
     @staticmethod
-    def file_size_to_human_string(file: str, size: int, max_length: int) -> tuple[str, SizeStr]:
+    def file_size_to_human_string(file: str, size: SizeBytes, max_length: int) -> tuple[str, SizeStr]:
         size_text: SizeStr = SizeFormatter.bytes_to_human_str(size)
         file_text: str = SizeFormatter._prune_string(file, size_text, max_length)
         return file_text, size_text
