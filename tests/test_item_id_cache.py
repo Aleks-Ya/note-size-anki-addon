@@ -6,6 +6,7 @@ from anki.collection import Collection
 from anki.notes import Note, NoteId
 
 from note_size import ItemIdCache
+from note_size.size_formatter import SizeStr
 from tests.data import TestData
 
 
@@ -63,25 +64,25 @@ class SizeFormatterTestCase(unittest.TestCase):
 
     def test_get_note_human_str_no_cache(self):
         note_id: NoteId = self.note.id
-        act_str_1: str = self.size_item_id_cache.get_note_human_str(note_id, use_cache=False)
-        self.assertEqual("129B", act_str_1)
+        act_size_1: SizeStr = self.size_item_id_cache.get_note_human_str(note_id, use_cache=False)
+        self.assertEqual("129B", act_size_1)
 
         content: str = 'updated'
         self.note[self.td.front_field_name] = content
         self.col.update_note(self.note)
-        act_str_2: str = self.size_item_id_cache.get_note_human_str(note_id, use_cache=False)
-        self.assertEqual("79B", act_str_2)
+        act_size_2: SizeStr = self.size_item_id_cache.get_note_human_str(note_id, use_cache=False)
+        self.assertEqual("79B", act_size_2)
 
     def test_get_note_human_str_use_cache(self):
         note_id: NoteId = self.note.id
-        act_str_1: str = self.size_item_id_cache.get_note_human_str(note_id, use_cache=False)
-        self.assertEqual("129B", act_str_1)
+        act_size_1: SizeStr = self.size_item_id_cache.get_note_human_str(note_id, use_cache=False)
+        self.assertEqual("129B", act_size_1)
 
         content: str = 'updated'
         self.note[self.td.front_field_name] = content
         self.col.update_note(self.note)
-        act_str_2: str = self.size_item_id_cache.get_note_human_str(note_id, use_cache=True)
-        self.assertEqual("129B", act_str_2)
+        act_size_2: SizeStr = self.size_item_id_cache.get_note_human_str(note_id, use_cache=True)
+        self.assertEqual("129B", act_size_2)
 
     def tearDown(self):
         self.col.close()

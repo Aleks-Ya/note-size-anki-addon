@@ -7,6 +7,7 @@ from aqt.editor import Editor
 from aqt.utils import showInfo
 
 from .size_button_formatter import SizeButtonFormatter
+from .size_formatter import SizeStr
 
 log: Logger = logging.getLogger(__name__)
 
@@ -47,7 +48,7 @@ class SizeButtonHooks:
 
     def _refresh_size_button(self):
         if self.editor.web:
-            size_str: str = self.size_button_formatter.get_note_human_str(self.editor.note.id) \
+            size_str: SizeStr = self.size_button_formatter.get_note_human_str(self.editor.note.id) \
                 if self.editor.note else "-"
             self.editor.web.eval(f"document.getElementById('size_button').textContent = 'Size: {size_str}'")
             log.info("Size button was refreshed")

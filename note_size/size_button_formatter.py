@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup, Tag
 
 from .size_calculator import SizeCalculator
 from .item_id_cache import ItemIdCache
+from .size_formatter import SizeStr
 
 log: Logger = logging.getLogger(__name__)
 
@@ -14,7 +15,7 @@ class SizeButtonFormatter:
     def __init__(self, size_item_id_cache: ItemIdCache):
         self.size_item_id_cache: ItemIdCache = size_item_id_cache
 
-    def get_note_human_str(self, note_id: NoteId) -> str:
+    def get_note_human_str(self, note_id: NoteId) -> SizeStr:
         return self.size_item_id_cache.get_note_human_str(note_id, use_cache=False)
 
     def format_note_detailed_text(self, note):
