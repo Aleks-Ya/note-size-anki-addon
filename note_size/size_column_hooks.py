@@ -9,6 +9,7 @@ from aqt.browser import Column, Cell, SearchContext
 from aqt.browser import ItemId, CellRow
 
 from .item_id_cache import ItemIdCache
+from .size_calculator import SizeBytes
 
 log: Logger = logging.getLogger(__name__)
 
@@ -69,6 +70,6 @@ class SizeColumnHooks:
         # noinspection PyProtectedMember
         return context.browser._switch.isChecked()
 
-    def _get_item_size(self, item_id: ItemId, is_note: bool) -> int:
+    def _get_item_size(self, item_id: ItemId, is_note: bool) -> SizeBytes:
         note_id: NoteId = item_id if is_note else self.size_item_id_cache.get_note_id_by_card_id(item_id)
         return self.size_item_id_cache.get_note_size(note_id, use_cache=True)

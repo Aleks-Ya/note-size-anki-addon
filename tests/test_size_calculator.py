@@ -4,7 +4,7 @@ import unittest
 from anki.collection import Collection
 from anki.notes import Note
 
-from note_size.size_calculator import SizeCalculator, SizeBytes
+from note_size.size_calculator import SizeCalculator, SizeBytes, MediaFile
 from tests.data import TestData
 
 
@@ -42,18 +42,18 @@ class SizeCalculatorTestCase(unittest.TestCase):
         self.assertEqual(exp_size, act_size)
 
     def test_file_sizes(self):
-        act_file_sizes: dict[str, SizeBytes] = SizeCalculator.file_sizes(self.note)
-        exp_file_sizes: dict[str, SizeBytes] = {self.td.filename1: SizeBytes(len(self.td.content1)),
-                                                self.td.filename2: SizeBytes(len(self.td.content2)),
-                                                self.td.filename3: SizeBytes(len(self.td.content3))}
+        act_file_sizes: dict[MediaFile, SizeBytes] = SizeCalculator.file_sizes(self.note)
+        exp_file_sizes: dict[MediaFile, SizeBytes] = {self.td.filename1: SizeBytes(len(self.td.content1)),
+                                                      self.td.filename2: SizeBytes(len(self.td.content2)),
+                                                      self.td.filename3: SizeBytes(len(self.td.content3))}
         self.assertDictEqual(exp_file_sizes, act_file_sizes)
 
     def test_sort_by_size_desc(self):
-        unsorted_dict: dict[str, SizeBytes] = {self.td.filename1: SizeBytes(len(self.td.content1)),
-                                               self.td.filename2: SizeBytes(len(self.td.content2)),
-                                               self.td.filename3: SizeBytes(len(self.td.content3))}
+        unsorted_dict: dict[MediaFile, SizeBytes] = {self.td.filename1: SizeBytes(len(self.td.content1)),
+                                                     self.td.filename2: SizeBytes(len(self.td.content2)),
+                                                     self.td.filename3: SizeBytes(len(self.td.content3))}
         self.assertEqual("{'picture.jpg': 7, 'sound.mp3': 5, 'animation.gif': 9}", str(unsorted_dict))
-        sorted_dict: dict[str, SizeBytes] = SizeCalculator.sort_by_size_desc(unsorted_dict)
+        sorted_dict: dict[MediaFile, SizeBytes] = SizeCalculator.sort_by_size_desc(unsorted_dict)
         self.assertEqual("{'animation.gif': 9, 'picture.jpg': 7, 'sound.mp3': 5}", str(sorted_dict))
 
     def tearDown(self):

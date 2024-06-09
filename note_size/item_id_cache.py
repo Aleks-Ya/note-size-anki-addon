@@ -5,7 +5,7 @@ from anki.cards import CardId
 from anki.collection import Collection
 from anki.notes import Note, NoteId
 
-from .size_calculator import SizeCalculator, SizeBytes
+from .size_calculator import SizeCalculator, SizeBytes, MediaFile
 from .size_formatter import SizeFormatter, SizeStr
 
 log: Logger = logging.getLogger(__name__)
@@ -60,5 +60,5 @@ class ItemIdCache:
     def total_file_size_str(self, note: Note) -> SizeStr:
         return SizeFormatter.bytes_to_human_str(SizeCalculator.total_file_size(note))
 
-    def file_size_to_human_string(self, file: str, size: SizeBytes, max_length: int) -> tuple[str, SizeStr]:
+    def file_size_to_human_string(self, file: MediaFile, size: SizeBytes, max_length: int) -> tuple[str, SizeStr]:
         return SizeFormatter.file_size_to_human_string(file, size, max_length)

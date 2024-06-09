@@ -4,7 +4,7 @@ from logging import Logger
 from anki.notes import NoteId
 from bs4 import BeautifulSoup, Tag
 
-from .size_calculator import SizeCalculator, SizeBytes
+from .size_calculator import SizeCalculator, SizeBytes, MediaFile
 from .item_id_cache import ItemIdCache
 from .size_formatter import SizeStr
 
@@ -18,7 +18,7 @@ class SizeButtonFormatter:
     def get_note_human_str(self, note_id: NoteId) -> SizeStr:
         return self.size_item_id_cache.get_note_human_str(note_id, use_cache=False)
 
-    def format_note_detailed_text(self, note):
+    def format_note_detailed_text(self, note) -> str:
         soup: BeautifulSoup = BeautifulSoup()
         self._add_total_note_size(note, soup)
         self._add_total_texts_size(note, soup)
@@ -26,7 +26,7 @@ class SizeButtonFormatter:
         self._add_files(note, soup)
         return str(soup.prettify())
 
-    def _add_total_note_size(self, note, soup):
+    def _add_total_note_size(self, note, soup) -> None:
         h3: Tag = soup.new_tag('h3')
         h3.string = f"Total note size: "
         code: Tag = soup.new_tag('code')
@@ -34,7 +34,7 @@ class SizeButtonFormatter:
         h3.append(code)
         soup.append(h3)
 
-    def _add_total_texts_size(self, note, soup):
+    def _add_total_texts_size(self, note, soup) -> None:
         li: Tag = soup.new_tag('li')
         li.string = f"Texts size: "
         code: Tag = soup.new_tag('code')
@@ -42,7 +42,7 @@ class SizeButtonFormatter:
         li.append(code)
         soup.append(li)
 
-    def _add_total_file_size(self, note, soup):
+    def _add_total_file_size(self, note, soup) -> None:
         li: Tag = soup.new_tag('li')
         li.string = f"Files size: "
         code: Tag = soup.new_tag('code')
@@ -50,8 +50,8 @@ class SizeButtonFormatter:
         li.append(code)
         soup.append(li)
 
-    def _add_files(self, note, soup):
-        file_sizes: dict[str, SizeBytes] = SizeCalculator.sort_by_size_desc(SizeCalculator.file_sizes(note))
+    def _add_files(self, note, soup) -> None:
+        file_sizes: dict[MediaFile, SizeBytes] = SizeCalculator.sort_by_size_desc(SizeCalculator.file_sizes(note))
         is_empty_files: bool = len(file_sizes) == 0
         files_li: Tag = soup.new_tag('li')
         files_li.string = "Files (big to small):" if not is_empty_files else "Files: (no files)"
