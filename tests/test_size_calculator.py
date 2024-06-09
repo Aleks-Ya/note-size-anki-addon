@@ -1,5 +1,4 @@
 import tempfile
-import time
 import unittest
 
 from anki.collection import Collection
@@ -54,14 +53,6 @@ class SizeCalculatorTestCase(unittest.TestCase):
         self.assertEqual("{'picture.jpg': 7, 'sound.mp3': 5, 'animation.gif': 9}", str(unsorted_dict))
         sorted_dict: dict[str, int] = SizeCalculator.sort_by_size_desc(unsorted_dict)
         self.assertEqual("{'animation.gif': 9, 'picture.jpg': 7, 'sound.mp3': 5}", str(sorted_dict))
-
-    def _calculate_note_size_performance(self, cached, repetitions):
-        start_time: float = time.time()
-        for _ in range(repetitions):
-            SizeCalculator.calculate_note_size(self.note)
-        end_time: float = time.time()
-        duration_sec: float = end_time - start_time
-        return duration_sec
 
     def tearDown(self):
         self.col.close()
