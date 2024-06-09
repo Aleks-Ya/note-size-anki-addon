@@ -11,7 +11,7 @@ from .size_formatter import SizeFormatter
 log: Logger = logging.getLogger(__name__)
 
 
-class SizeItemIdCache:
+class ItemIdCache:
     id_cache: dict[CardId, NoteId] = {}
     note_size_cache: dict[NoteId, int] = {}
     note_human_str_cache: dict[NoteId, str] = {}

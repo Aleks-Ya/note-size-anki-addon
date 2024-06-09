@@ -8,7 +8,7 @@ from aqt import gui_hooks, mw
 from aqt.browser import Column, Cell, SearchContext
 from aqt.browser import ItemId, CellRow
 
-from .size_item_id_cache import SizeItemIdCache
+from .item_id_cache import ItemIdCache
 
 log: Logger = logging.getLogger(__name__)
 
@@ -17,8 +17,8 @@ class SizeColumnHooks:
     column_key: str = "note-size"
     column_label: str = "Size"
 
-    def __init__(self, size_item_id_cache: SizeItemIdCache):
-        self.size_item_id_cache: SizeItemIdCache = size_item_id_cache
+    def __init__(self, size_item_id_cache: ItemIdCache):
+        self.size_item_id_cache: ItemIdCache = size_item_id_cache
 
     def setup_hooks(self):
         gui_hooks.browser_did_fetch_columns.append(self._add_custom_column)

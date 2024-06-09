@@ -14,7 +14,7 @@ package NoteSize {
     class SizeButtonFormatter
     class SizeCalculator
     class SizeFormatter
-    class SizeItemIdCache
+    class ItemIdCache
     class Init
 }
 
@@ -22,18 +22,18 @@ Init --> SizeColumnHooks
 Init --> SizeButtonHooks
 
 
-SizeButtonFormatter --> SizeItemIdCache
+SizeButtonFormatter --> ItemIdCache
 
 SizeButtonHooks --> SizeButtonFormatter
 
 SizeCalculator --> MediaManager
 
 SizeColumnHooks --> Collection
-SizeColumnHooks --> SizeItemIdCache
+SizeColumnHooks --> ItemIdCache
 
-SizeItemIdCache --> Collection
-SizeItemIdCache --> SizeCalculator
-SizeItemIdCache --> SizeFormatter
+ItemIdCache --> Collection
+ItemIdCache --> SizeCalculator
+ItemIdCache --> SizeFormatter
 
 
 @enduml

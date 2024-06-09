@@ -5,14 +5,14 @@ from anki.notes import NoteId
 from bs4 import BeautifulSoup, Tag
 
 from .size_calculator import SizeCalculator
-from .size_item_id_cache import SizeItemIdCache
+from .item_id_cache import ItemIdCache
 
 log: Logger = logging.getLogger(__name__)
 
 
 class SizeButtonFormatter:
-    def __init__(self, size_item_id_cache: SizeItemIdCache):
-        self.size_item_id_cache: SizeItemIdCache = size_item_id_cache
+    def __init__(self, size_item_id_cache: ItemIdCache):
+        self.size_item_id_cache: ItemIdCache = size_item_id_cache
 
     def get_note_human_str(self, note_id: NoteId) -> str:
         return self.size_item_id_cache.get_note_human_str(note_id, use_cache=False)

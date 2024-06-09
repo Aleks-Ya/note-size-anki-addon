@@ -5,7 +5,7 @@ import unittest
 from anki.collection import Collection
 from anki.notes import Note, NoteId
 
-from note_size import SizeItemIdCache
+from note_size import ItemIdCache
 from tests.data import TestData
 
 
@@ -13,7 +13,7 @@ class SizeFormatterTestCase(unittest.TestCase):
 
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
-        self.size_item_id_cache: SizeItemIdCache = SizeItemIdCache(self.col)
+        self.size_item_id_cache: ItemIdCache = ItemIdCache(self.col)
         self.td: TestData = TestData()
         self.note: Note = self.td.create_note_with_files(self.col)
 

@@ -5,7 +5,7 @@ from anki.collection import Collection
 from anki.notes import Note
 from bs4 import BeautifulSoup
 
-from note_size import SizeItemIdCache
+from note_size import ItemIdCache
 from note_size.size_button_formatter import SizeButtonFormatter
 from tests.data import TestData
 
@@ -15,7 +15,7 @@ class SizeButtonFormatterTestCase(unittest.TestCase):
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
         self.td: TestData = TestData()
-        item_id_cache: SizeItemIdCache = SizeItemIdCache(self.col)
+        item_id_cache: ItemIdCache = ItemIdCache(self.col)
         self.size_button_formatter: SizeButtonFormatter = SizeButtonFormatter(item_id_cache)
 
     def test_format_note_detailed_text(self):

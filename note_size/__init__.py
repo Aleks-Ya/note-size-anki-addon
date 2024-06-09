@@ -11,7 +11,7 @@ from .size_button_hooks import SizeButtonHooks
 from .size_calculator import SizeCalculator
 from .size_column_hooks import SizeColumnHooks
 from .size_formatter import SizeFormatter
-from .size_item_id_cache import SizeItemIdCache
+from .item_id_cache import ItemIdCache
 
 
 def configure_logging(addon_folder: Path) -> Logger:
@@ -35,7 +35,7 @@ log.info(f"NoteSize addon version: {version}")
 
 
 def initialize():
-    item_id_cache: SizeItemIdCache = SizeItemIdCache(mw.col)
+    item_id_cache: ItemIdCache = ItemIdCache(mw.col)
     column_hooks: SizeColumnHooks = SizeColumnHooks(item_id_cache)
     column_hooks.setup_hooks()
     button_formatter: SizeButtonFormatter = SizeButtonFormatter(item_id_cache)
