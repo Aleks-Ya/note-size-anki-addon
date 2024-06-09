@@ -2,6 +2,7 @@ import logging
 import os
 from logging import Logger, FileHandler
 from pathlib import Path
+from threading import Thread
 
 from aqt import mw, gui_hooks
 
@@ -18,7 +19,7 @@ def configure_logging(addon_folder: Path) -> Logger:
     root: Logger = logging.getLogger()
     handler: FileHandler = logging.FileHandler(log_file)
     handler.setLevel(logging.DEBUG)
-    handler.setFormatter(logging.Formatter('%(asctime)s %(name)s %(funcName)s %(levelname)s %(message)s'))
+    handler.setFormatter(logging.Formatter('%(asctime)s %(name)s %(funcName)s %(threadName)s %(levelname)s %(message)s'))
     root.addHandler(handler)
     logger: Logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
@@ -40,6 +41,8 @@ def initialize():
     button_formatter: SizeButtonFormatter = SizeButtonFormatter(item_id_cache)
     button_hooks: SizeButtonHooks = SizeButtonHooks(button_formatter)
     button_hooks.setup_hooks()
+    thread = Thread(target=item_id_cache.warm_up_cache)
+    thread.start()
 
 
 gui_hooks.profile_did_open.append(initialize)

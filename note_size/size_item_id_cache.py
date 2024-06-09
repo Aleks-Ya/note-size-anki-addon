@@ -19,6 +19,20 @@ class SizeItemIdCache:
     def __init__(self, col: Collection):
         self.col: Collection = col
 
+    def warm_up_cache(self):
+        try:
+            log.info("Warming up cache...")
+            all_note_ids = self.col.find_notes("deck:*")
+            for note_id in all_note_ids:
+                self.get_note_size(note_id, use_cache=True)
+                self.get_note_human_str(note_id, use_cache=True)
+            all_card_ids = self.col.find_cards("deck:*")
+            for card_id in all_card_ids:
+                self.get_note_id_by_card_id(card_id)
+            log.info(f"Cache warming up finished: notes={len(all_note_ids)}, cards={len(all_card_ids)}")
+        except Exception:
+            log.exception("Cache warm-up failed")
+
     def get_note_id_by_card_id(self, card_id: CardId) -> NoteId:
         if card_id not in self.id_cache:
             self.id_cache[card_id] = self.col.get_card(card_id).nid
