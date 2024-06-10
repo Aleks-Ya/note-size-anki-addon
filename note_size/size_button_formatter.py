@@ -1,7 +1,7 @@
 import logging
 from logging import Logger
 
-from anki.notes import NoteId
+from anki.notes import NoteId, Note
 from bs4 import BeautifulSoup, Tag
 
 from .size_calculator import SizeCalculator, SizeBytes, MediaFile
@@ -17,6 +17,10 @@ class SizeButtonFormatter:
 
     def get_note_human_str(self, note_id: NoteId) -> SizeStr:
         return self.size_item_id_cache.get_note_human_str(note_id, use_cache=False)
+
+    @staticmethod
+    def get_note_size(note: Note) -> SizeStr:
+        return ItemIdCache.get_note_size_str(note)
 
     def format_note_detailed_text(self, note) -> str:
         soup: BeautifulSoup = BeautifulSoup()

@@ -55,6 +55,10 @@ class ItemIdCache:
             return self.note_human_str_cache[note_id]
 
     @staticmethod
+    def get_note_size_str(note: Note) -> SizeStr:
+        return SizeFormatter.bytes_to_human_str(SizeCalculator.calculate_note_size(note))
+
+    @staticmethod
     def get_total_text_size(note: Note) -> SizeStr:
         return SizeFormatter.bytes_to_human_str(SizeCalculator.total_text_size(note))
 

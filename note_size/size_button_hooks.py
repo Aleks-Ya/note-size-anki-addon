@@ -48,7 +48,11 @@ class SizeButtonHooks:
 
     def _refresh_size_button(self):
         if self.editor.web:
-            size_str: SizeStr = self.size_button_formatter.get_note_human_str(self.editor.note.id) \
-                if self.editor.note and not self.editor.addMode else "-"
-            self.editor.web.eval(f"document.getElementById('size_button').textContent = 'Size: {size_str}'")
+            size: SizeStr = SizeStr("-")
+            if self.editor.note:
+                if self.editor.addMode:
+                    size: SizeStr = SizeButtonFormatter.get_note_size(self.editor.note)
+                else:
+                    size: SizeStr = self.size_button_formatter.get_note_human_str(self.editor.note.id)
+            self.editor.web.eval(f"document.getElementById('size_button').textContent = 'Size: {size}'")
             log.info("Size button was refreshed")
