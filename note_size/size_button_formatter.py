@@ -22,7 +22,7 @@ class SizeButtonFormatter:
     def get_note_size(note: Note) -> SizeStr:
         return ItemIdCache.get_note_size_str(note)
 
-    def format_note_detailed_text(self, note) -> str:
+    def format_note_detailed_text(self, note: Note) -> str:
         soup: BeautifulSoup = BeautifulSoup()
         self._add_total_note_size(note, soup)
         SizeButtonFormatter._add_total_texts_size(note, soup)
@@ -30,7 +30,7 @@ class SizeButtonFormatter:
         SizeButtonFormatter._add_files(note, soup)
         return str(soup.prettify())
 
-    def _add_total_note_size(self, note, soup) -> None:
+    def _add_total_note_size(self, note: Note, soup: BeautifulSoup) -> None:
         h3: Tag = soup.new_tag('h3')
         h3.string = f"Total note size: "
         code: Tag = soup.new_tag('code')
@@ -39,7 +39,7 @@ class SizeButtonFormatter:
         soup.append(h3)
 
     @staticmethod
-    def _add_total_texts_size(note, soup) -> None:
+    def _add_total_texts_size(note: Note, soup: BeautifulSoup) -> None:
         li: Tag = soup.new_tag('li')
         li.string = f"Texts size: "
         code: Tag = soup.new_tag('code')
@@ -48,7 +48,7 @@ class SizeButtonFormatter:
         soup.append(li)
 
     @staticmethod
-    def _add_total_file_size(note, soup) -> None:
+    def _add_total_file_size(note: Note, soup: BeautifulSoup) -> None:
         li: Tag = soup.new_tag('li')
         li.string = f"Files size: "
         code: Tag = soup.new_tag('code')
@@ -57,7 +57,7 @@ class SizeButtonFormatter:
         soup.append(li)
 
     @staticmethod
-    def _add_files(note, soup) -> None:
+    def _add_files(note: Note, soup: BeautifulSoup) -> None:
         file_sizes: dict[MediaFile, SizeBytes] = SizeCalculator.sort_by_size_desc(SizeCalculator.file_sizes(note))
         is_empty_files: bool = len(file_sizes) == 0
         files_li: Tag = soup.new_tag('li')
