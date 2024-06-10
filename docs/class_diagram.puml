@@ -2,20 +2,57 @@
 'https://plantuml.com/class-diagram
 
 package Anki {
-    class Collection
-    class MediaManager
+    class Collection {
+        find_notes()
+        find_cards()
+        get_note()
+        get_card()
+        get_browser_column()
+    }
+    class MediaManager {
+        files_in_str()
+        dir()
+    }
 }
 
 package NoteSize {
     together {
-        class SizeButtonHooks
-        class SizeColumnHooks
+        class SizeButtonHooks {
+            setup_hooks()
+        }
+        class SizeColumnHooks {
+            setup_hooks()
+        }
     }
-    class SizeButtonFormatter
-    class SizeCalculator
-    class SizeFormatter
-    class ItemIdCache
-    class Init
+    class SizeButtonFormatter {
+        get_note_size(Note): SizeStr
+        format_note_detailed_text(Note): str
+    }
+    class SizeCalculator {
+        calculate_note_size(Note): SizeBytes
+        total_text_size(Note): SizeBytes
+        total_file_size(Note): SizeBytes
+        file_sizes(Note): dict[MediaFile, SizeBytes]
+        sort_by_size_desc(dict[MediaFile, SizeBytes]): dict[MediaFile, SizeBytes]
+    }
+    class SizeFormatter {
+        bytes_to_human_str(SizeBytes): SizeStr
+        file_size_to_human_string(MediaFile, SizeBytes, max_length): tuple[ShortFilename, SizeStr]
+    }
+    class ItemIdCache {
+        warm_up_cache()
+        get_note_id_by_card_id(CardId): NoteId
+        get_note_size(NoteId, use_cache): SizeBytes
+        get_note_human_str(NoteId, use_cache): SizeStr
+        get_note_size_str(Note): SizeStr
+        get_total_text_size(Note): SizeStr
+        get_total_file_size(Note): SizeStr
+        file_size_to_str(MediaFile, SizeBytes, max_length): tuple[ShortFilename, SizeStr]
+    }
+    class Init {
+        configure_logging(addon_folder)
+        initialize()
+    }
 }
 
 Init --> SizeColumnHooks
