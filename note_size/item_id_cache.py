@@ -54,11 +54,14 @@ class ItemIdCache:
             self.note_human_str_cache[note_id] = SizeFormatter.bytes_to_human_str(size)
             return self.note_human_str_cache[note_id]
 
-    def total_text_size_str(self, note: Note) -> SizeStr:
+    @staticmethod
+    def get_total_text_size(note: Note) -> SizeStr:
         return SizeFormatter.bytes_to_human_str(SizeCalculator.total_text_size(note))
 
-    def total_file_size_str(self, note: Note) -> SizeStr:
+    @staticmethod
+    def get_total_file_size(note: Note) -> SizeStr:
         return SizeFormatter.bytes_to_human_str(SizeCalculator.total_file_size(note))
 
-    def file_size_to_human_string(self, file: MediaFile, size: SizeBytes, max_length: int) -> tuple[str, SizeStr]:
+    @staticmethod
+    def file_size_to_str(file: MediaFile, size: SizeBytes, max_length: int) -> tuple[str, SizeStr]:
         return SizeFormatter.file_size_to_human_string(file, size, max_length)

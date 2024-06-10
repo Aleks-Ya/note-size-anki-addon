@@ -21,9 +21,9 @@ class SizeButtonFormatter:
     def format_note_detailed_text(self, note) -> str:
         soup: BeautifulSoup = BeautifulSoup()
         self._add_total_note_size(note, soup)
-        self._add_total_texts_size(note, soup)
-        self._add_total_file_size(note, soup)
-        self._add_files(note, soup)
+        SizeButtonFormatter._add_total_texts_size(note, soup)
+        SizeButtonFormatter._add_total_file_size(note, soup)
+        SizeButtonFormatter._add_files(note, soup)
         return str(soup.prettify())
 
     def _add_total_note_size(self, note, soup) -> None:
@@ -34,23 +34,26 @@ class SizeButtonFormatter:
         h3.append(code)
         soup.append(h3)
 
-    def _add_total_texts_size(self, note, soup) -> None:
+    @staticmethod
+    def _add_total_texts_size(note, soup) -> None:
         li: Tag = soup.new_tag('li')
         li.string = f"Texts size: "
         code: Tag = soup.new_tag('code')
-        code.string = self.size_item_id_cache.total_text_size_str(note)
+        code.string = ItemIdCache.get_total_text_size(note)
         li.append(code)
         soup.append(li)
 
-    def _add_total_file_size(self, note, soup) -> None:
+    @staticmethod
+    def _add_total_file_size(note, soup) -> None:
         li: Tag = soup.new_tag('li')
         li.string = f"Files size: "
         code: Tag = soup.new_tag('code')
-        code.string = self.size_item_id_cache.total_file_size_str(note)
+        code.string = ItemIdCache.get_total_file_size(note)
         li.append(code)
         soup.append(li)
 
-    def _add_files(self, note, soup) -> None:
+    @staticmethod
+    def _add_files(note, soup) -> None:
         file_sizes: dict[MediaFile, SizeBytes] = SizeCalculator.sort_by_size_desc(SizeCalculator.file_sizes(note))
         is_empty_files: bool = len(file_sizes) == 0
         files_li: Tag = soup.new_tag('li')
@@ -59,7 +62,7 @@ class SizeButtonFormatter:
         if not is_empty_files:
             ol: Tag = soup.new_tag('ol')
             for file, size in file_sizes.items():
-                file_text, size_text = self.size_item_id_cache.file_size_to_human_string(file, size, 100)
+                file_text, size_text = ItemIdCache.file_size_to_str(file, size, 100)
                 li: Tag = soup.new_tag('li', attrs={"style": "white-space:nowrap"})
                 li.string = f"{file_text}: "
                 code: Tag = soup.new_tag('code')

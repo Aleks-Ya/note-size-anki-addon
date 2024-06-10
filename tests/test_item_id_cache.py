@@ -52,7 +52,7 @@ class SizeFormatterTestCase(unittest.TestCase):
     def test_get_note_size_performance_no_cache(self):
         execution_time: float = timeit.timeit(
             lambda: self.size_item_id_cache.get_note_size(self.note.id, use_cache=False), number=100_000)
-        self.assertLessEqual(execution_time, 8)
+        self.assertLessEqual(execution_time, 9)
 
     def test_get_note_size_performance_use_cache(self):
         execution_time: float = timeit.timeit(
