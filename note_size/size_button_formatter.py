@@ -66,9 +66,9 @@ class SizeButtonFormatter:
         if not is_empty_files:
             ol: Tag = soup.new_tag('ol')
             for file, size in file_sizes.items():
-                file_text, size_text = ItemIdCache.file_size_to_str(file, size, 100)
+                filename, size_text = ItemIdCache.file_size_to_str(file, size, 100)
                 li: Tag = soup.new_tag('li', attrs={"style": "white-space:nowrap"})
-                li.string = f"{file_text}: "
+                li.string = f"{filename}: "
                 code: Tag = soup.new_tag('code')
                 code.string = size_text
                 li.append(code)

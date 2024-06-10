@@ -3,6 +3,7 @@ from typing import NewType
 from .size_calculator import SizeBytes, MediaFile
 
 SizeStr = NewType("SizeStr", str)
+ShortFilename = NewType("ShortFilename", str)
 
 
 class SizeFormatter:
@@ -23,15 +24,18 @@ class SizeFormatter:
         return SizeStr(f'{num:0.1f}{final_unit}')
 
     @staticmethod
-    def file_size_to_human_string(file: MediaFile, size: SizeBytes, max_length: int) -> tuple[str, SizeStr]:
-        size_text: SizeStr = SizeFormatter.bytes_to_human_str(size)
-        file_text: str = SizeFormatter._prune_string(file, size_text, max_length)
-        return file_text, size_text
+    def file_size_to_human_string(file: MediaFile, size: SizeBytes, max_length: int) \
+            -> tuple[ShortFilename, SizeStr]:
+        size_str: SizeStr = SizeFormatter.bytes_to_human_str(size)
+        filename: ShortFilename = SizeFormatter._prune_string(file, size_str, max_length)
+        return filename, size_str
 
     @staticmethod
-    def _prune_string(file: MediaFile, size: SizeStr, max_length: int) -> str:
+    def _prune_string(file: MediaFile, size: SizeStr, max_length: int) -> ShortFilename:
         file_max_length: int = max_length - len(size) - 2
         if len(file) > file_max_length:
             part_length: int = (file_max_length - 3) // 2
-            file = file[:part_length] + "..." + file[-part_length:]
-        return file
+            filename: str = file[:part_length] + "..." + file[-part_length:]
+        else:
+            filename: str = file
+        return ShortFilename(filename)
