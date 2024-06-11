@@ -19,7 +19,7 @@ class SizeCalculator:
 
     @staticmethod
     def calculate_texts_size(note: Note) -> SizeBytes:
-        return SizeBytes(sum([len(field) for field in note.fields]))
+        return SizeBytes(sum([len(field.encode('utf-8')) for field in note.fields]))
 
     @staticmethod
     def calculate_files_size(note: Note) -> SizeBytes:

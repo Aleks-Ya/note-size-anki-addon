@@ -20,8 +20,8 @@ class SizeFormatterTestCase(unittest.TestCase):
         self.note: Note = self.td.create_note_with_files(self.col)
 
     def test_get_note_size_no_cache(self):
-        exp_size_1: SizeBytes = SizeBytes(len(self.td.front_field_content_with_files) +
-                                          len(self.td.back_field_content_with_files) +
+        exp_size_1: SizeBytes = SizeBytes(len(self.td.front_field_content_with_files.encode()) +
+                                          len(self.td.back_field_content_with_files.encode()) +
                                           len(self.td.content1) + len(self.td.content2) + len(self.td.content3))
         note_id: NoteId = self.note.id
         act_size_1: SizeBytes = self.item_id_cache.get_note_size(note_id, use_cache=False)
@@ -31,13 +31,13 @@ class SizeFormatterTestCase(unittest.TestCase):
         self.note[self.td.front_field_name] = content
         self.col.update_note(self.note)
         act_size_2: SizeBytes = self.item_id_cache.get_note_size(note_id, use_cache=False)
-        exp_size_2: SizeBytes = SizeBytes(len(content) + len(self.td.back_field_content_with_files)
+        exp_size_2: SizeBytes = SizeBytes(len(content.encode()) + len(self.td.back_field_content_with_files.encode())
                                           + len(self.td.content1) + len(self.td.content3))
         self.assertEqual(exp_size_2, act_size_2)
 
     def test_get_note_size_use_cache(self):
-        exp_size_1: SizeBytes = SizeBytes(len(self.td.front_field_content_with_files) +
-                                          len(self.td.back_field_content_with_files) +
+        exp_size_1: SizeBytes = SizeBytes(len(self.td.front_field_content_with_files.encode()) +
+                                          len(self.td.back_field_content_with_files.encode()) +
                                           len(self.td.content1) + len(self.td.content2) + len(self.td.content3))
         note_id: NoteId = self.note.id
         act_size_1: SizeBytes = self.item_id_cache.get_note_size(note_id, use_cache=False)
@@ -66,24 +66,24 @@ class SizeFormatterTestCase(unittest.TestCase):
     def test_get_note_size_str_no_cache(self):
         note_id: NoteId = self.note.id
         act_size_1: SizeStr = self.item_id_cache.get_note_size_str(note_id, use_cache=False)
-        self.assertEqual("129B", act_size_1)
+        self.assertEqual("142B", act_size_1)
 
         content: str = 'updated'
         self.note[self.td.front_field_name] = content
         self.col.update_note(self.note)
         act_size_2: SizeStr = self.item_id_cache.get_note_size_str(note_id, use_cache=False)
-        self.assertEqual("79B", act_size_2)
+        self.assertEqual("85B", act_size_2)
 
     def test_get_note_size_str_use_cache(self):
         note_id: NoteId = self.note.id
         act_size_1: SizeStr = self.item_id_cache.get_note_size_str(note_id, use_cache=False)
-        self.assertEqual("129B", act_size_1)
+        self.assertEqual("142B", act_size_1)
 
         content: str = 'updated'
         self.note[self.td.front_field_name] = content
         self.col.update_note(self.note)
         act_size_2: SizeStr = self.item_id_cache.get_note_size_str(note_id, use_cache=True)
-        self.assertEqual("129B", act_size_2)
+        self.assertEqual("142B", act_size_2)
 
     def tearDown(self):
         self.col.close()

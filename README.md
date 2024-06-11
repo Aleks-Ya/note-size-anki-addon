@@ -6,7 +6,7 @@ See [Addon Description](description/description.md)
 
 ## Logs
 
-`Tools` -> `Add-ons` -> `Note Size - Sort notes by size` -> `Files` -> `1188705668` -> `note_size.log`
+`Tools` -> `Add-ons` -> `Note Size - sort notes by size` -> `Files` -> `1188705668` -> `note_size.log`
 
 ## Unit tests
 

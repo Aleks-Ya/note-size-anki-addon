@@ -17,9 +17,16 @@ class SizeCalculatorTestCase(unittest.TestCase):
 
     def test_calculate_texts_size(self):
         act_size: SizeBytes = SizeCalculator.calculate_texts_size(self.note)
-        exp_size: SizeBytes = SizeBytes(len(self.td.front_field_content_with_files) +
-                                        len(self.td.back_field_content_with_files))
+        exp_size: SizeBytes = SizeBytes(len(self.td.front_field_content_with_files.encode()) +
+                                        len(self.td.back_field_content_with_files.encode()))
         self.assertEqual(exp_size, act_size)
+
+    def test_calculate_texts_size_unicode(self):
+        note: Note = self.td.create_note_without_files(self.col)
+        note[TestData.front_field_name] = '∑￡'
+        note[TestData.back_field_name] = '∆∏∦'
+        size: SizeBytes = SizeCalculator.calculate_texts_size(note)
+        self.assertEqual(SizeBytes(15), size)
 
     def test_calculate_files_size(self):
         act_size: SizeBytes = SizeCalculator.calculate_files_size(self.note)
@@ -28,16 +35,16 @@ class SizeCalculatorTestCase(unittest.TestCase):
 
     def test_calculate_note_size(self):
         act_size: SizeBytes = SizeCalculator.calculate_note_size(self.note)
-        exp_size: SizeBytes = SizeBytes(len(self.td.front_field_content_with_files)
-                                        + len(self.td.back_field_content_with_files)
+        exp_size: SizeBytes = SizeBytes(len(self.td.front_field_content_with_files.encode())
+                                        + len(self.td.back_field_content_with_files.encode())
                                         + len(self.td.content1) + len(self.td.content2) + len(self.td.content3))
         self.assertEqual(exp_size, act_size)
 
     def test_calculate_note_size_missing_file(self):
-        content: str = 'Missing file: <img src="absents.png">'
+        content: str = 'Missing file: <img src="absents.png"> ￡'
         self.note[self.td.front_field_name] = content
         act_size: SizeBytes = SizeCalculator.calculate_note_size(self.note)
-        exp_size: SizeBytes = SizeBytes(len(content) + len(self.td.back_field_content_with_files)
+        exp_size: SizeBytes = SizeBytes(len(content.encode()) + len(self.td.back_field_content_with_files.encode())
                                         + len(self.td.content1) + len(self.td.content3))
         self.assertEqual(exp_size, act_size)
 
