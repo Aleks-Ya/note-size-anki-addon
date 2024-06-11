@@ -24,6 +24,7 @@ class ButtonHooks:
         gui_hooks.editor_did_init_buttons.append(ButtonHooks._add_editor_button)
         gui_hooks.editor_did_load_note.append(self._on_load_note)
         gui_hooks.editor_did_unfocus_field.append(self._on_unfocus_field)
+        gui_hooks.editor_did_fire_typing_timer.append(self._on_fire_typing_timer)
         log.info("Size button hooks are set")
 
     def _on_init(self, editor: Editor):
@@ -51,6 +52,9 @@ class ButtonHooks:
         self._refresh_size_button()
 
     def _on_unfocus_field(self, _: bool, __: Note, ___: int):
+        self._refresh_size_button()
+
+    def _on_fire_typing_timer(self, _: Note):
         self._refresh_size_button()
 
     def _refresh_size_button(self):
