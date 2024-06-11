@@ -12,6 +12,10 @@ See [Addon Description](description/description.md)
 
 Run: `tox`
 
+## Local deploy
+
+Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
+
 ## Build
 
 1. Build ZIP: `python setup.py dist` (includes unit-tests)
