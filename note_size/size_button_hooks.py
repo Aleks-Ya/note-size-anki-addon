@@ -20,7 +20,7 @@ class SizeButtonHooks:
 
     def setup_hooks(self):
         gui_hooks.editor_did_init.append(self._on_init)
-        gui_hooks.editor_did_init_buttons.append(self._add_editor_button)
+        gui_hooks.editor_did_init_buttons.append(SizeButtonHooks._add_editor_button)
         gui_hooks.editor_did_load_note.append(self._on_load_note)
         gui_hooks.editor_did_unfocus_field.append(self._on_unfocus_field)
         log.info("Size button hooks are set")
@@ -28,15 +28,21 @@ class SizeButtonHooks:
     def _on_init(self, editor: Editor):
         self.editor = editor
 
-    def _on_size_button_click(self, editor: Editor):
+    @staticmethod
+    def _on_size_button_click(editor: Editor):
         log.info("Size button was clicked")
         note = editor.note
-        if note and not editor.addMode:
-            showInfo(self.size_button_formatter.format_note_detailed_text(note))
+        if note:
+            showInfo(SizeButtonFormatter.format_note_detailed_text(note))
 
-    def _add_editor_button(self, buttons: list[str], editor: Editor):
-        button: str = editor.addButton(id="size_button", label="Size: -", icon=None, cmd="size_button_cmd",
-                                       func=self._on_size_button_click, tip="Click to see details", disables=False)
+    @staticmethod
+    def _add_editor_button(buttons: list[str], editor: Editor):
+        button: str = editor.addButton(id="size_button",
+                                       label=f"Size: {SizeButtonFormatter.get_zero_size()}",
+                                       icon=None, cmd="size_button_cmd",
+                                       func=SizeButtonHooks._on_size_button_click,
+                                       tip="Click to see details",
+                                       disables=False)
         buttons.append(button)
         log.info("Size button was added to Editor")
 

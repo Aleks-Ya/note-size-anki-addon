@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup, Tag
 
 from .size_calculator import SizeCalculator, SizeBytes, MediaFile
 from .item_id_cache import ItemIdCache
-from .size_formatter import SizeStr
+from .size_formatter import SizeStr, SizeFormatter
 
 log: Logger = logging.getLogger(__name__)
 
@@ -22,19 +22,25 @@ class SizeButtonFormatter:
     def get_note_size(note: Note) -> SizeStr:
         return ItemIdCache.get_note_size_str(note)
 
-    def format_note_detailed_text(self, note: Note) -> str:
+    @staticmethod
+    def format_note_detailed_text(note: Note) -> str:
         soup: BeautifulSoup = BeautifulSoup()
-        self._add_total_note_size(note, soup)
+        SizeButtonFormatter._add_total_note_size(note, soup)
         SizeButtonFormatter._add_total_texts_size(note, soup)
         SizeButtonFormatter._add_total_file_size(note, soup)
         SizeButtonFormatter._add_files(note, soup)
         return str(soup.prettify())
 
-    def _add_total_note_size(self, note: Note, soup: BeautifulSoup) -> None:
+    @staticmethod
+    def get_zero_size() -> SizeStr:
+        return SizeFormatter.bytes_to_human_str(SizeBytes(0))
+
+    @staticmethod
+    def _add_total_note_size(note: Note, soup: BeautifulSoup) -> None:
         h3: Tag = soup.new_tag('h3')
         h3.string = f"Total note size: "
         code: Tag = soup.new_tag('code')
-        code.string = self.size_item_id_cache.get_note_human_str(note.id, use_cache=False)
+        code.string = ItemIdCache.get_note_size_str(note)
         h3.append(code)
         soup.append(h3)
 

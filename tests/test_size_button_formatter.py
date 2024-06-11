@@ -5,7 +5,6 @@ from anki.collection import Collection
 from anki.notes import Note
 from bs4 import BeautifulSoup
 
-from note_size import ItemIdCache
 from note_size.size_button_formatter import SizeButtonFormatter
 from tests.data import TestData
 
@@ -15,8 +14,6 @@ class SizeButtonFormatterTestCase(unittest.TestCase):
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
         self.td: TestData = TestData()
-        item_id_cache: ItemIdCache = ItemIdCache(self.col)
-        self.size_button_formatter: SizeButtonFormatter = SizeButtonFormatter(item_id_cache)
 
     def test_format_note_detailed_text(self):
         self.note: Note = self.td.create_note_with_files(self.col)
@@ -32,7 +29,7 @@ class SizeButtonFormatterTestCase(unittest.TestCase):
                     </ol>
                     """
         soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
-        act_text: str = self.size_button_formatter.format_note_detailed_text(self.note)
+        act_text: str = SizeButtonFormatter.format_note_detailed_text(self.note)
         exp_text: str = str(soup.prettify())
         self.assertEqual(exp_text, act_text)
 
@@ -45,7 +42,7 @@ class SizeButtonFormatterTestCase(unittest.TestCase):
                     <li>Files: (no files)</li>
                     """
         soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
-        act_text: str = self.size_button_formatter.format_note_detailed_text(self.note)
+        act_text: str = SizeButtonFormatter.format_note_detailed_text(self.note)
         exp_text: str = str(soup.prettify())
         self.assertEqual(exp_text, act_text)
 
@@ -63,7 +60,7 @@ class SizeButtonFormatterTestCase(unittest.TestCase):
                         </ol>
                         """
         soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
-        act_text: str = self.size_button_formatter.format_note_detailed_text(self.note)
+        act_text: str = SizeButtonFormatter.format_note_detailed_text(self.note)
         exp_text: str = str(soup.prettify())
         self.assertEqual(exp_text, act_text)
 
