@@ -1,39 +1,25 @@
 import logging
 from logging import Logger
 
-from anki.notes import NoteId, Note
+from anki.notes import Note
 from bs4 import BeautifulSoup, Tag
 
 from .size_calculator import SizeCalculator, SizeBytes, MediaFile
 from .item_id_cache import ItemIdCache
-from .size_formatter import SizeStr, SizeFormatter
 
 log: Logger = logging.getLogger(__name__)
 
 
-class SizeButtonFormatter:
-    def __init__(self, size_item_id_cache: ItemIdCache):
-        self.size_item_id_cache: ItemIdCache = size_item_id_cache
-
-    def get_note_human_str(self, note_id: NoteId) -> SizeStr:
-        return self.size_item_id_cache.get_note_human_str(note_id, use_cache=False)
-
-    @staticmethod
-    def get_note_size(note: Note) -> SizeStr:
-        return ItemIdCache.get_note_size_str(note)
+class DetailsFormatter:
 
     @staticmethod
     def format_note_detailed_text(note: Note) -> str:
         soup: BeautifulSoup = BeautifulSoup()
-        SizeButtonFormatter._add_total_note_size(note, soup)
-        SizeButtonFormatter._add_total_texts_size(note, soup)
-        SizeButtonFormatter._add_total_files_size(note, soup)
-        SizeButtonFormatter._add_files(note, soup)
+        DetailsFormatter._add_total_note_size(note, soup)
+        DetailsFormatter._add_total_texts_size(note, soup)
+        DetailsFormatter._add_total_files_size(note, soup)
+        DetailsFormatter._add_files(note, soup)
         return str(soup.prettify())
-
-    @staticmethod
-    def get_zero_size() -> SizeStr:
-        return SizeFormatter.bytes_to_str(SizeBytes(0))
 
     @staticmethod
     def _add_total_note_size(note: Note, soup: BeautifulSoup) -> None:

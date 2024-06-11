@@ -18,8 +18,8 @@ class SizeColumnHooks:
     column_key: str = "note-size"
     column_label: str = "Size"
 
-    def __init__(self, size_item_id_cache: ItemIdCache):
-        self.size_item_id_cache: ItemIdCache = size_item_id_cache
+    def __init__(self, item_id_cache: ItemIdCache):
+        self.item_id_cache: ItemIdCache = item_id_cache
 
     def setup_hooks(self):
         gui_hooks.browser_did_fetch_columns.append(self._add_custom_column)
@@ -46,8 +46,8 @@ class SizeColumnHooks:
         if self.column_key in columns:
             column_index: int = columns.index(self.column_key)
             cell: Cell = row.cells[column_index]
-            note_id: NoteId = item_id if is_note else self.size_item_id_cache.get_note_id_by_card_id(item_id)
-            cell.text = self.size_item_id_cache.get_note_human_str(note_id, use_cache=True)
+            note_id: NoteId = item_id if is_note else self.item_id_cache.get_note_id_by_card_id(item_id)
+            cell.text = self.item_id_cache.get_note_human_str(note_id, use_cache=True)
 
     def _on_browser_will_search(self, context: SearchContext) -> None:
         log.debug("Browser will search")
@@ -71,5 +71,5 @@ class SizeColumnHooks:
         return context.browser._switch.isChecked()
 
     def _get_item_size(self, item_id: ItemId, is_note: bool) -> SizeBytes:
-        note_id: NoteId = item_id if is_note else self.size_item_id_cache.get_note_id_by_card_id(item_id)
-        return self.size_item_id_cache.get_note_size(note_id, use_cache=True)
+        note_id: NoteId = item_id if is_note else self.item_id_cache.get_note_id_by_card_id(item_id)
+        return self.item_id_cache.get_note_size(note_id, use_cache=True)

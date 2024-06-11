@@ -5,11 +5,11 @@ from anki.collection import Collection
 from anki.notes import Note
 from bs4 import BeautifulSoup
 
-from note_size.size_button_formatter import SizeButtonFormatter
+from note_size.details_formatter import DetailsFormatter
 from tests.data import TestData
 
 
-class SizeButtonFormatterTestCase(unittest.TestCase):
+class DetailsFormatterTestCase(unittest.TestCase):
 
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
@@ -29,7 +29,7 @@ class SizeButtonFormatterTestCase(unittest.TestCase):
                     </ol>
                     """
         soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
-        act_text: str = SizeButtonFormatter.format_note_detailed_text(self.note)
+        act_text: str = DetailsFormatter.format_note_detailed_text(self.note)
         exp_text: str = str(soup.prettify())
         self.assertEqual(exp_text, act_text)
 
@@ -42,7 +42,7 @@ class SizeButtonFormatterTestCase(unittest.TestCase):
                     <li>Files: (no files)</li>
                     """
         soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
-        act_text: str = SizeButtonFormatter.format_note_detailed_text(self.note)
+        act_text: str = DetailsFormatter.format_note_detailed_text(self.note)
         exp_text: str = str(soup.prettify())
         self.assertEqual(exp_text, act_text)
 
@@ -60,7 +60,7 @@ class SizeButtonFormatterTestCase(unittest.TestCase):
                         </ol>
                         """
         soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
-        act_text: str = SizeButtonFormatter.format_note_detailed_text(self.note)
+        act_text: str = DetailsFormatter.format_note_detailed_text(self.note)
         exp_text: str = str(soup.prettify())
         self.assertEqual(exp_text, act_text)
 

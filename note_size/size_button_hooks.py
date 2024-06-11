@@ -6,8 +6,8 @@ from aqt import gui_hooks
 from aqt.editor import Editor
 from aqt.utils import showInfo
 
-from .size_button_formatter import SizeButtonFormatter
-from .size_formatter import SizeStr
+from .button_formatter import ButtonFormatter, ButtonLabel
+from .details_formatter import DetailsFormatter
 
 log: Logger = logging.getLogger(__name__)
 
@@ -15,8 +15,9 @@ log: Logger = logging.getLogger(__name__)
 class SizeButtonHooks:
     editor: Editor
 
-    def __init__(self, size_button_formatter: SizeButtonFormatter):
-        self.size_button_formatter: SizeButtonFormatter = size_button_formatter
+    def __init__(self, details_formatter: DetailsFormatter, button_formatter: ButtonFormatter):
+        self.details_formatter: DetailsFormatter = details_formatter
+        self.button_formatter: ButtonFormatter = button_formatter
 
     def setup_hooks(self):
         gui_hooks.editor_did_init.append(self._on_init)
@@ -33,12 +34,12 @@ class SizeButtonHooks:
         log.info("Size button was clicked")
         note = editor.note
         if note:
-            showInfo(SizeButtonFormatter.format_note_detailed_text(note))
+            showInfo(DetailsFormatter.format_note_detailed_text(note))
 
     @staticmethod
     def _add_editor_button(buttons: list[str], editor: Editor):
         button: str = editor.addButton(id="size_button",
-                                       label=f"Size: {SizeButtonFormatter.get_zero_size()}",
+                                       label=ButtonFormatter.get_zero_size_label(),
                                        icon=None, cmd="size_button_cmd",
                                        func=SizeButtonHooks._on_size_button_click,
                                        tip="Click to see details",
@@ -54,11 +55,11 @@ class SizeButtonHooks:
 
     def _refresh_size_button(self):
         if self.editor.web:
-            size: SizeStr = SizeStr("-")
+            label: ButtonLabel = ButtonFormatter.get_zero_size_label()
             if self.editor.note:
                 if self.editor.addMode:
-                    size: SizeStr = SizeButtonFormatter.get_note_size(self.editor.note)
+                    label: ButtonLabel = ButtonFormatter.get_add_mode_label(self.editor.note)
                 else:
-                    size: SizeStr = self.size_button_formatter.get_note_human_str(self.editor.note.id)
-            self.editor.web.eval(f"document.getElementById('size_button').textContent = 'Size: {size}'")
+                    label: ButtonLabel = self.button_formatter.get_edit_mode_label(self.editor.note.id)
+            self.editor.web.eval(f"document.getElementById('size_button').textContent = '{label}'")
             log.info("Size button was refreshed")

@@ -6,7 +6,8 @@ from threading import Thread
 
 from aqt import mw, gui_hooks
 
-from .size_button_formatter import SizeButtonFormatter
+from .button_formatter import ButtonFormatter
+from .details_formatter import DetailsFormatter
 from .size_button_hooks import SizeButtonHooks
 from .size_calculator import SizeCalculator
 from .size_column_hooks import SizeColumnHooks
@@ -38,8 +39,9 @@ def initialize():
     item_id_cache: ItemIdCache = ItemIdCache(mw.col)
     column_hooks: SizeColumnHooks = SizeColumnHooks(item_id_cache)
     column_hooks.setup_hooks()
-    button_formatter: SizeButtonFormatter = SizeButtonFormatter(item_id_cache)
-    button_hooks: SizeButtonHooks = SizeButtonHooks(button_formatter)
+    details_formatter: DetailsFormatter = DetailsFormatter()
+    button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache)
+    button_hooks: SizeButtonHooks = SizeButtonHooks(details_formatter, button_formatter)
     button_hooks.setup_hooks()
     thread = Thread(target=item_id_cache.warm_up_cache)
     thread.start()
