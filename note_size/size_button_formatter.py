@@ -27,13 +27,13 @@ class SizeButtonFormatter:
         soup: BeautifulSoup = BeautifulSoup()
         SizeButtonFormatter._add_total_note_size(note, soup)
         SizeButtonFormatter._add_total_texts_size(note, soup)
-        SizeButtonFormatter._add_total_file_size(note, soup)
+        SizeButtonFormatter._add_total_files_size(note, soup)
         SizeButtonFormatter._add_files(note, soup)
         return str(soup.prettify())
 
     @staticmethod
     def get_zero_size() -> SizeStr:
-        return SizeFormatter.bytes_to_human_str(SizeBytes(0))
+        return SizeFormatter.bytes_to_str(SizeBytes(0))
 
     @staticmethod
     def _add_total_note_size(note: Note, soup: BeautifulSoup) -> None:
@@ -49,16 +49,16 @@ class SizeButtonFormatter:
         li: Tag = soup.new_tag('li')
         li.string = f"Texts size: "
         code: Tag = soup.new_tag('code')
-        code.string = ItemIdCache.get_total_text_size(note)
+        code.string = ItemIdCache.calculate_texts_size(note)
         li.append(code)
         soup.append(li)
 
     @staticmethod
-    def _add_total_file_size(note: Note, soup: BeautifulSoup) -> None:
+    def _add_total_files_size(note: Note, soup: BeautifulSoup) -> None:
         li: Tag = soup.new_tag('li')
         li.string = f"Files size: "
         code: Tag = soup.new_tag('code')
-        code.string = ItemIdCache.get_total_file_size(note)
+        code.string = ItemIdCache.calculate_files_size(note)
         li.append(code)
         soup.append(li)
 

@@ -15,14 +15,14 @@ class SizeCalculatorTestCase(unittest.TestCase):
         self.td: TestData = TestData()
         self.note: Note = self.td.create_note_with_files(self.col)
 
-    def test_total_text_size(self):
-        act_size: SizeBytes = SizeCalculator.total_text_size(self.note)
+    def test_calculate_texts_size(self):
+        act_size: SizeBytes = SizeCalculator.calculate_texts_size(self.note)
         exp_size: SizeBytes = SizeBytes(len(self.td.front_field_content_with_files) +
                                         len(self.td.back_field_content_with_files))
         self.assertEqual(exp_size, act_size)
 
-    def test_total_file_size(self):
-        act_size: SizeBytes = SizeCalculator.total_file_size(self.note)
+    def test_calculate_files_size(self):
+        act_size: SizeBytes = SizeCalculator.calculate_files_size(self.note)
         exp_size: SizeBytes = SizeBytes(len(self.td.content1) + len(self.td.content2) + len(self.td.content3))
         self.assertEqual(exp_size, act_size)
 

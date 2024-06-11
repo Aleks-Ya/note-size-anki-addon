@@ -9,7 +9,7 @@ ShortFilename = NewType("ShortFilename", str)
 class SizeFormatter:
 
     @staticmethod
-    def bytes_to_human_str(bytes_size: SizeBytes) -> SizeStr:
+    def bytes_to_str(bytes_size: SizeBytes) -> SizeStr:
         divisor: int = 1024
         units: tuple[str, str, str] = 'B', 'KB', 'MB'
         final_unit: str = 'GB'
@@ -24,9 +24,9 @@ class SizeFormatter:
         return SizeStr(f'{num:0.1f}{final_unit}')
 
     @staticmethod
-    def file_size_to_human_string(file: MediaFile, size: SizeBytes, max_length: int) \
+    def file_size_to_str(file: MediaFile, size: SizeBytes, max_length: int) \
             -> tuple[ShortFilename, SizeStr]:
-        size_str: SizeStr = SizeFormatter.bytes_to_human_str(size)
+        size_str: SizeStr = SizeFormatter.bytes_to_str(size)
         filename: ShortFilename = SizeFormatter._prune_string(file, size_str, max_length)
         return filename, size_str
 

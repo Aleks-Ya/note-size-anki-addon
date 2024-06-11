@@ -15,14 +15,14 @@ class SizeCalculator:
 
     @staticmethod
     def calculate_note_size(note: Note) -> SizeBytes:
-        return SizeBytes(SizeCalculator.total_text_size(note) + SizeCalculator.total_file_size(note))
+        return SizeBytes(SizeCalculator.calculate_texts_size(note) + SizeCalculator.calculate_files_size(note))
 
     @staticmethod
-    def total_text_size(note: Note) -> SizeBytes:
+    def calculate_texts_size(note: Note) -> SizeBytes:
         return SizeBytes(sum([len(field) for field in note.fields]))
 
     @staticmethod
-    def total_file_size(note: Note) -> SizeBytes:
+    def calculate_files_size(note: Note) -> SizeBytes:
         return SizeBytes(sum([size for size in SizeCalculator.file_sizes(note).values()]))
 
     @staticmethod

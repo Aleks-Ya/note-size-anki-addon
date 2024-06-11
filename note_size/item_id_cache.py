@@ -51,21 +51,21 @@ class ItemIdCache:
             return self.note_human_str_cache[note_id]
         else:
             size: SizeBytes = self.get_note_size(note_id, use_cache)
-            self.note_human_str_cache[note_id] = SizeFormatter.bytes_to_human_str(size)
+            self.note_human_str_cache[note_id] = SizeFormatter.bytes_to_str(size)
             return self.note_human_str_cache[note_id]
 
     @staticmethod
     def get_note_size_str(note: Note) -> SizeStr:
-        return SizeFormatter.bytes_to_human_str(SizeCalculator.calculate_note_size(note))
+        return SizeFormatter.bytes_to_str(SizeCalculator.calculate_note_size(note))
 
     @staticmethod
-    def get_total_text_size(note: Note) -> SizeStr:
-        return SizeFormatter.bytes_to_human_str(SizeCalculator.total_text_size(note))
+    def calculate_texts_size(note: Note) -> SizeStr:
+        return SizeFormatter.bytes_to_str(SizeCalculator.calculate_texts_size(note))
 
     @staticmethod
-    def get_total_file_size(note: Note) -> SizeStr:
-        return SizeFormatter.bytes_to_human_str(SizeCalculator.total_file_size(note))
+    def calculate_files_size(note: Note) -> SizeStr:
+        return SizeFormatter.bytes_to_str(SizeCalculator.calculate_files_size(note))
 
     @staticmethod
     def file_size_to_str(file: MediaFile, size: SizeBytes, max_length: int) -> tuple[ShortFilename, SizeStr]:
-        return SizeFormatter.file_size_to_human_string(file, size, max_length)
+        return SizeFormatter.file_size_to_str(file, size, max_length)
