@@ -4,8 +4,8 @@ from logging import Logger
 from anki.notes import Note
 from bs4 import BeautifulSoup, Tag
 
+from .size_formatter import SizeFormatter
 from .size_calculator import SizeCalculator, SizeBytes, MediaFile
-from .item_id_cache import ItemIdCache
 
 log: Logger = logging.getLogger(__name__)
 
@@ -26,7 +26,7 @@ class DetailsFormatter:
         h3: Tag = soup.new_tag('h3')
         h3.string = f"Total note size: "
         code: Tag = soup.new_tag('code')
-        code.string = ItemIdCache.get_note_size_str(note)
+        code.string = SizeFormatter.bytes_to_str(SizeCalculator.calculate_note_size(note))
         h3.append(code)
         soup.append(h3)
 
@@ -35,7 +35,7 @@ class DetailsFormatter:
         li: Tag = soup.new_tag('li')
         li.string = f"Texts size: "
         code: Tag = soup.new_tag('code')
-        code.string = ItemIdCache.calculate_texts_size(note)
+        code.string = SizeFormatter.bytes_to_str(SizeCalculator.calculate_texts_size(note))
         li.append(code)
         soup.append(li)
 
@@ -44,7 +44,7 @@ class DetailsFormatter:
         li: Tag = soup.new_tag('li')
         li.string = f"Files size: "
         code: Tag = soup.new_tag('code')
-        code.string = ItemIdCache.calculate_files_size(note)
+        code.string = SizeFormatter.bytes_to_str(SizeCalculator.calculate_files_size(note))
         li.append(code)
         soup.append(li)
 
@@ -58,7 +58,7 @@ class DetailsFormatter:
         if not is_empty_files:
             ol: Tag = soup.new_tag('ol')
             for file, size in file_sizes.items():
-                filename, size_text = ItemIdCache.file_size_to_str(file, size, 100)
+                filename, size_text = SizeFormatter.file_size_to_str(file, size, 100)
                 li: Tag = soup.new_tag('li', attrs={"style": "white-space:nowrap"})
                 li.string = f"{filename}: "
                 code: Tag = soup.new_tag('code')

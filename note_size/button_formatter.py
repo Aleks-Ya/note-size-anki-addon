@@ -5,7 +5,7 @@ from typing import NewType
 from anki.notes import NoteId, Note
 
 from .item_id_cache import ItemIdCache
-from .size_calculator import SizeBytes
+from .size_calculator import SizeBytes, SizeCalculator
 from .size_formatter import SizeStr, SizeFormatter
 
 log: Logger = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ class ButtonFormatter:
 
     @staticmethod
     def get_add_mode_label(note: Note) -> ButtonLabel:
-        size: SizeStr = ItemIdCache.get_note_size_str(note)
+        size: SizeStr = SizeFormatter.bytes_to_str(SizeCalculator.calculate_note_size(note))
         return ButtonLabel(f"Size: {size}")
 
     def get_edit_mode_label(self, note_id: NoteId) -> ButtonLabel:

@@ -20,7 +20,8 @@ def configure_logging(addon_folder: Path) -> Logger:
     root: Logger = logging.getLogger()
     handler: FileHandler = logging.FileHandler(log_file)
     handler.setLevel(logging.DEBUG)
-    handler.setFormatter(logging.Formatter('%(asctime)s %(name)s %(funcName)s %(threadName)s %(levelname)s %(message)s'))
+    handler.setFormatter(
+        logging.Formatter('%(asctime)s %(name)s %(funcName)s %(threadName)s %(levelname)s %(message)s'))
     root.addHandler(handler)
     logger: Logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)

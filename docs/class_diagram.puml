@@ -24,9 +24,13 @@ package NoteSize {
             setup_hooks()
         }
     }
-    class SizeButtonFormatter {
-        get_note_size(Note): SizeStr
+    class DetailsFormatter {
         format_note_detailed_text(Note): str
+    }
+    class ButtonFormatter {
+        get_zero_size_label(): ButtonLabel
+        get_add_mode_label(Note): ButtonLabel
+        get_edit_mode_label(NoteId): ButtonLabel
     }
     class SizeCalculator {
         calculate_note_size(Note): SizeBytes
@@ -44,10 +48,6 @@ package NoteSize {
         get_note_id_by_card_id(CardId): NoteId
         get_note_size(NoteId, use_cache): SizeBytes
         get_note_human_str(NoteId, use_cache): SizeStr
-        get_note_size_str(Note): SizeStr
-        calculate_texts_size(Note): SizeStr
-        calculate_files_size(Note): SizeStr
-        file_size_to_str(MediaFile, SizeBytes, max_length): tuple[ShortFilename, SizeStr]
     }
     class Init {
         configure_logging(addon_folder)
@@ -58,10 +58,15 @@ package NoteSize {
 Init --> SizeColumnHooks
 Init --> SizeButtonHooks
 
+SizeButtonHooks --> ButtonFormatter
+SizeButtonHooks --> DetailsFormatter
 
-SizeButtonFormatter --> ItemIdCache
+ButtonFormatter --> ItemIdCache
+ButtonFormatter --> SizeCalculator
+ButtonFormatter --> SizeFormatter
 
-SizeButtonHooks --> SizeButtonFormatter
+DetailsFormatter --> SizeFormatter
+DetailsFormatter --> SizeCalculator
 
 SizeCalculator --> MediaManager
 
