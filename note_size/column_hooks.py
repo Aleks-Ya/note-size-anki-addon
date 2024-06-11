@@ -14,7 +14,7 @@ from .size_calculator import SizeBytes
 log: Logger = logging.getLogger(__name__)
 
 
-class SizeColumnHooks:
+class ColumnHooks:
     column_key: str = "note-size"
     column_label: str = "Size"
 

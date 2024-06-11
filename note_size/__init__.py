@@ -8,9 +8,9 @@ from aqt import mw, gui_hooks
 
 from .button_formatter import ButtonFormatter
 from .details_formatter import DetailsFormatter
-from .size_button_hooks import SizeButtonHooks
+from .button_hooks import ButtonHooks
 from .size_calculator import SizeCalculator
-from .size_column_hooks import SizeColumnHooks
+from .column_hooks import ColumnHooks
 from .size_formatter import SizeFormatter
 from .item_id_cache import ItemIdCache
 
@@ -38,11 +38,11 @@ log.info(f"NoteSize addon version: {version}")
 
 def initialize():
     item_id_cache: ItemIdCache = ItemIdCache(mw.col)
-    column_hooks: SizeColumnHooks = SizeColumnHooks(item_id_cache)
+    column_hooks: ColumnHooks = ColumnHooks(item_id_cache)
     column_hooks.setup_hooks()
     details_formatter: DetailsFormatter = DetailsFormatter()
     button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache)
-    button_hooks: SizeButtonHooks = SizeButtonHooks(details_formatter, button_formatter)
+    button_hooks: ButtonHooks = ButtonHooks(details_formatter, button_formatter)
     button_hooks.setup_hooks()
     thread = Thread(target=item_id_cache.warm_up_cache)
     thread.start()

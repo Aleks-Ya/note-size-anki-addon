@@ -12,7 +12,7 @@ from .details_formatter import DetailsFormatter
 log: Logger = logging.getLogger(__name__)
 
 
-class SizeButtonHooks:
+class ButtonHooks:
     editor: Editor
 
     def __init__(self, details_formatter: DetailsFormatter, button_formatter: ButtonFormatter):
@@ -21,7 +21,7 @@ class SizeButtonHooks:
 
     def setup_hooks(self):
         gui_hooks.editor_did_init.append(self._on_init)
-        gui_hooks.editor_did_init_buttons.append(SizeButtonHooks._add_editor_button)
+        gui_hooks.editor_did_init_buttons.append(ButtonHooks._add_editor_button)
         gui_hooks.editor_did_load_note.append(self._on_load_note)
         gui_hooks.editor_did_unfocus_field.append(self._on_unfocus_field)
         log.info("Size button hooks are set")
@@ -41,7 +41,7 @@ class SizeButtonHooks:
         button: str = editor.addButton(id="size_button",
                                        label=ButtonFormatter.get_zero_size_label(),
                                        icon=None, cmd="size_button_cmd",
-                                       func=SizeButtonHooks._on_size_button_click,
+                                       func=ButtonHooks._on_size_button_click,
                                        tip="Click to see details",
                                        disables=False)
         buttons.append(button)

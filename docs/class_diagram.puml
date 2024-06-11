@@ -17,10 +17,10 @@ package Anki {
 
 package NoteSize {
     together {
-        class SizeButtonHooks {
+        class ButtonHooks {
             setup_hooks()
         }
-        class SizeColumnHooks {
+        class ColumnHooks {
             setup_hooks()
         }
     }
@@ -55,11 +55,11 @@ package NoteSize {
     }
 }
 
-Init --> SizeColumnHooks
-Init --> SizeButtonHooks
+Init --> ColumnHooks
+Init --> ButtonHooks
 
-SizeButtonHooks --> ButtonFormatter
-SizeButtonHooks --> DetailsFormatter
+ButtonHooks --> ButtonFormatter
+ButtonHooks --> DetailsFormatter
 
 ButtonFormatter --> ItemIdCache
 ButtonFormatter --> SizeCalculator
@@ -70,8 +70,8 @@ DetailsFormatter --> SizeCalculator
 
 SizeCalculator --> MediaManager
 
-SizeColumnHooks --> Collection
-SizeColumnHooks --> ItemIdCache
+ColumnHooks --> Collection
+ColumnHooks --> ItemIdCache
 
 ItemIdCache --> Collection
 ItemIdCache --> SizeCalculator

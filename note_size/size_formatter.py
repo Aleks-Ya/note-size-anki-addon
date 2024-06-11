@@ -9,11 +9,11 @@ ShortFilename = NewType("ShortFilename", str)
 class SizeFormatter:
 
     @staticmethod
-    def bytes_to_str(bytes_size: SizeBytes) -> SizeStr:
+    def bytes_to_str(size: SizeBytes) -> SizeStr:
         divisor: int = 1024
         units: tuple[str, str, str] = 'B', 'KB', 'MB'
         final_unit: str = 'GB'
-        num: float = float(bytes_size)
+        num: float = float(size)
         for unit in units:
             if abs(num) < divisor:
                 if unit == 'B':
