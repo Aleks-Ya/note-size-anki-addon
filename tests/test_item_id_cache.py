@@ -63,26 +63,26 @@ class SizeFormatterTestCase(unittest.TestCase):
         for _ in range(0, 100_000):
             self.item_id_cache.get_note_size(self.note.id, use_cache=use_cache)
 
-    def test_get_note_human_str_no_cache(self):
+    def test_get_note_size_str_no_cache(self):
         note_id: NoteId = self.note.id
-        act_size_1: SizeStr = self.item_id_cache.get_note_human_str(note_id, use_cache=False)
+        act_size_1: SizeStr = self.item_id_cache.get_note_size_str(note_id, use_cache=False)
         self.assertEqual("129B", act_size_1)
 
         content: str = 'updated'
         self.note[self.td.front_field_name] = content
         self.col.update_note(self.note)
-        act_size_2: SizeStr = self.item_id_cache.get_note_human_str(note_id, use_cache=False)
+        act_size_2: SizeStr = self.item_id_cache.get_note_size_str(note_id, use_cache=False)
         self.assertEqual("79B", act_size_2)
 
-    def test_get_note_human_str_use_cache(self):
+    def test_get_note_size_str_use_cache(self):
         note_id: NoteId = self.note.id
-        act_size_1: SizeStr = self.item_id_cache.get_note_human_str(note_id, use_cache=False)
+        act_size_1: SizeStr = self.item_id_cache.get_note_size_str(note_id, use_cache=False)
         self.assertEqual("129B", act_size_1)
 
         content: str = 'updated'
         self.note[self.td.front_field_name] = content
         self.col.update_note(self.note)
-        act_size_2: SizeStr = self.item_id_cache.get_note_human_str(note_id, use_cache=True)
+        act_size_2: SizeStr = self.item_id_cache.get_note_size_str(note_id, use_cache=True)
         self.assertEqual("129B", act_size_2)
 
     def tearDown(self):

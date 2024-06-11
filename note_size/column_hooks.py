@@ -47,7 +47,7 @@ class ColumnHooks:
             column_index: int = columns.index(self.column_key)
             cell: Cell = row.cells[column_index]
             note_id: NoteId = item_id if is_note else self.item_id_cache.get_note_id_by_card_id(item_id)
-            cell.text = self.item_id_cache.get_note_human_str(note_id, use_cache=True)
+            cell.text = self.item_id_cache.get_note_size_str(note_id, use_cache=True)
 
     def _on_browser_will_search(self, context: SearchContext) -> None:
         log.debug("Browser will search")

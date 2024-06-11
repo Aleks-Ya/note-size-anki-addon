@@ -13,8 +13,8 @@ log: Logger = logging.getLogger(__name__)
 
 class ItemIdCache:
     id_cache: dict[CardId, NoteId] = {}
-    note_size_cache: dict[NoteId, SizeBytes] = {}
-    note_human_str_cache: dict[NoteId, SizeStr] = {}
+    size_bytes_cache: dict[NoteId, SizeBytes] = {}
+    size_str_cache: dict[NoteId, SizeStr] = {}
 
     def __init__(self, col: Collection):
         self.col: Collection = col
@@ -25,7 +25,7 @@ class ItemIdCache:
             all_note_ids = self.col.find_notes("deck:*")
             for note_id in all_note_ids:
                 self.get_note_size(note_id, use_cache=True)
-                self.get_note_human_str(note_id, use_cache=True)
+                self.get_note_size_str(note_id, use_cache=True)
             all_card_ids = self.col.find_cards("deck:*")
             for card_id in all_card_ids:
                 self.get_note_id_by_card_id(card_id)
@@ -39,17 +39,17 @@ class ItemIdCache:
         return self.id_cache[card_id]
 
     def get_note_size(self, note_id: NoteId, use_cache: bool) -> SizeBytes:
-        if use_cache and note_id in self.note_size_cache:
-            return self.note_size_cache[note_id]
+        if use_cache and note_id in self.size_bytes_cache:
+            return self.size_bytes_cache[note_id]
         else:
             note: Note = self.col.get_note(note_id)
-            self.note_size_cache[note_id] = SizeCalculator.calculate_note_size(note)
-            return self.note_size_cache[note_id]
+            self.size_bytes_cache[note_id] = SizeCalculator.calculate_note_size(note)
+            return self.size_bytes_cache[note_id]
 
-    def get_note_human_str(self, note_id: NoteId, use_cache: bool) -> SizeStr:
-        if use_cache and note_id in self.note_human_str_cache:
-            return self.note_human_str_cache[note_id]
+    def get_note_size_str(self, note_id: NoteId, use_cache: bool) -> SizeStr:
+        if use_cache and note_id in self.size_str_cache:
+            return self.size_str_cache[note_id]
         else:
             size: SizeBytes = self.get_note_size(note_id, use_cache)
-            self.note_human_str_cache[note_id] = SizeFormatter.bytes_to_str(size)
-            return self.note_human_str_cache[note_id]
+            self.size_str_cache[note_id] = SizeFormatter.bytes_to_str(size)
+            return self.size_str_cache[note_id]

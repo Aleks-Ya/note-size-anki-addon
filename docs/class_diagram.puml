@@ -47,7 +47,7 @@ package NoteSize {
         warm_up_cache()
         get_note_id_by_card_id(CardId): NoteId
         get_note_size(NoteId, use_cache): SizeBytes
-        get_note_human_str(NoteId, use_cache): SizeStr
+        get_note_size_str(NoteId, use_cache): SizeStr
     }
     class Init {
         configure_logging(addon_folder)
