@@ -18,14 +18,14 @@ class DetailsFormatterTestCase(unittest.TestCase):
     def test_format_note_detailed_text(self):
         self.note: Note = self.td.create_note_with_files(self.col)
         exp_html: str = """
-                    <h3>Total note size: <code>142B</code></h3>
-                    <li>Texts size: <code>121B</code></li>
-                    <li>Files size: <code>21B</code></li>
+                    <h3>Total note size: <code style="font-family:Consolas,monospace">142B</code></h3>
+                    <li>Texts size: <code style="font-family:Consolas,monospace">121B</code></li>
+                    <li>Files size: <code style="font-family:Consolas,monospace">21B</code></li>
                     <li>Files (big to small):</li>
                     <ol>
-                        <li style="white-space:nowrap">animation.gif: <code>9B</code></li>
-                        <li style="white-space:nowrap">picture.jpg: <code>7B</code></li>
-                        <li style="white-space:nowrap">sound.mp3: <code>5B</code></li>
+                        <li style="white-space:nowrap">animation.gif: <code style="font-family:Consolas,monospace">9B</code></li>
+                        <li style="white-space:nowrap">picture.jpg: <code style="font-family:Consolas,monospace">7B</code></li>
+                        <li style="white-space:nowrap">sound.mp3: <code style="font-family:Consolas,monospace">5B</code></li>
                     </ol>
                     """
         soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
@@ -36,9 +36,9 @@ class DetailsFormatterTestCase(unittest.TestCase):
     def test_format_no_files(self):
         self.note: Note = self.td.create_note_without_files(self.col)
         exp_html: str = """
-                    <h3>Total note size: <code>70B</code></h3>
-                    <li>Texts size: <code>70B</code></li>
-                    <li>Files size: <code>0B</code></li>
+                    <h3>Total note size: <code style="font-family:Consolas,monospace">70B</code></h3>
+                    <li>Texts size: <code style="font-family:Consolas,monospace">70B</code></li>
+                    <li>Files size: <code style="font-family:Consolas,monospace">0B</code></li>
                     <li>Files: (no files)</li>
                     """
         soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
@@ -51,12 +51,12 @@ class DetailsFormatterTestCase(unittest.TestCase):
         self.note[self.td.front_field_name] = 'Missing file: <img src="absents.png">'
         self.col.update_note(self.note)
         exp_html: str = """
-                        <h3>Total note size: <code>73B</code></h3>
-                        <li>Texts size: <code>73B</code></li>
-                        <li>Files size: <code>0B</code></li>
+                        <h3>Total note size: <code style="font-family:Consolas,monospace">73B</code></h3>
+                        <li>Texts size: <code style="font-family:Consolas,monospace">73B</code></li>
+                        <li>Files size: <code style="font-family:Consolas,monospace">0B</code></li>
                         <li>Files (big to small):</li>
                         <ol>
-                            <li style="white-space:nowrap">absents.png: <code>0B</code></li>
+                            <li style="white-space:nowrap">absents.png: <code style="font-family:Consolas,monospace">0B</code></li>
                         </ol>
                         """
         soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
