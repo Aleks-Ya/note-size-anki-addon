@@ -26,5 +26,6 @@ You can easily identify the largest notes to reduce your collection size.
 
 ## Contacts
 
+- [Support page at Anki Forum](https://forums.ankiweb.net/t/note-size-addon-support/46001)
 - [GitHub project](https://github.com/Aleks-Ya/note-size-anki-addon)
 - [Bug tracker](https://github.com/Aleks-Ya/note-size-anki-addon/issues)
