@@ -40,7 +40,7 @@ class MakeDistributionCommand(Command):
         note_size_package_dir: Path = Path(self.project_dir, note_size_dir)
         dest_subdir: Path = Path(self.build_dir, note_size_dir)
         shutil.copytree(note_size_package_dir, dest_subdir,
-                        ignore=shutil.ignore_patterns("*.log", "__pycache__"))
+                        ignore=shutil.ignore_patterns("*.log", "__pycache__", "meta.json"))
 
         self._copy_file_to_build("LICENSE", dest_subdir)
         self._copy_file_to_build("README.md", dest_subdir)
