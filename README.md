@@ -27,3 +27,6 @@ Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
     1. Major: `bumpversion major`
     2. Minor: `bumpversion minor`
     3. Patch: `bumpversion patch`
+2. Build ZIP: `python setup.py dist`
+3. Push Git branch and tags: `git push --follow-tags`
+4. Upload ZIP to the Addon page: https://ankiweb.net/shared/info/1188705668

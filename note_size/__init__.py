@@ -39,7 +39,7 @@ def initialize():
     item_id_cache: ItemIdCache = ItemIdCache(mw.col)
     column_hooks: ColumnHooks = ColumnHooks(item_id_cache)
     column_hooks.setup_hooks()
-    details_formatter: DetailsFormatter = DetailsFormatter()
+    details_formatter: DetailsFormatter = DetailsFormatter(addon_dir)
     button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache)
     button_hooks: ButtonHooks = ButtonHooks(details_formatter, button_formatter)
     button_hooks.setup_hooks()

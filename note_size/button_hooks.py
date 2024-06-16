@@ -21,7 +21,7 @@ class ButtonHooks:
 
     def setup_hooks(self):
         gui_hooks.editor_did_init.append(self._on_init)
-        gui_hooks.editor_did_init_buttons.append(ButtonHooks._add_editor_button)
+        gui_hooks.editor_did_init_buttons.append(self._add_editor_button)
         gui_hooks.editor_did_load_note.append(self._on_load_note)
         gui_hooks.editor_did_unfocus_field.append(self._on_unfocus_field)
         gui_hooks.editor_did_fire_typing_timer.append(self._on_fire_typing_timer)
@@ -30,19 +30,17 @@ class ButtonHooks:
     def _on_init(self, editor: Editor):
         self.editor = editor
 
-    @staticmethod
-    def _on_size_button_click(editor: Editor):
+    def _on_size_button_click(self, editor: Editor):
         log.info("Size button was clicked")
         note = editor.note
         if note:
-            showInfo(DetailsFormatter.format_note_detailed_text(note))
+            showInfo(self.details_formatter.format_note_detailed_text(note))
 
-    @staticmethod
-    def _add_editor_button(buttons: list[str], editor: Editor):
+    def _add_editor_button(self, buttons: list[str], editor: Editor):
         button: str = editor.addButton(id="size_button",
                                        label=ButtonFormatter.get_zero_size_label(),
                                        icon=None, cmd="size_button_cmd",
-                                       func=ButtonHooks._on_size_button_click,
+                                       func=self._on_size_button_click,
                                        tip="Click to see details",
                                        disables=False)
         buttons.append(button)
