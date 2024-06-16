@@ -1,18 +1,27 @@
+import json
 import os
 import shutil
 import subprocess
 from pathlib import Path
 
 import setuptools
-
-with open("README.md", "r") as f:
-    long_description = f.read()
-
 from setuptools import Command
+from git import TagReference, Repo, Commit
 
-version_file: str = os.path.join(os.path.dirname(__file__), 'note_size', 'version.txt')
-with open(version_file, 'r') as f:
-    version = f.read().strip()
+
+def _read_long_description():
+    with open("README.md", "r") as f:
+        return f.read()
+
+
+def _read_version() -> str:
+    version_file: str = os.path.join(os.path.dirname(__file__), 'note_size', 'version.txt')
+    with open(version_file, 'r') as f:
+        return f.read().strip()
+
+
+_version = _read_version()
+_author = "Alexey Yablokov"
 
 
 class MakeDistributionCommand(Command):
@@ -41,11 +50,11 @@ class MakeDistributionCommand(Command):
         dest_subdir: Path = Path(self.build_dir, note_size_dir)
         shutil.copytree(note_size_package_dir, dest_subdir,
                         ignore=shutil.ignore_patterns("*.log", "__pycache__", "meta.json"))
-
+        self._generate_manifest(dest_subdir)
         self._copy_file_to_build("LICENSE", dest_subdir)
         self._copy_file_to_build("README.md", dest_subdir)
 
-        output_zip: Path = Path(self.build_dir, f'note-size-{version}')
+        output_zip: Path = Path(self.build_dir, f'note-size-{_version}')
         actual_output_zip: Path = Path(shutil.make_archive(str(output_zip), 'zip', dest_subdir))
         renamed_output_zip: Path = Path(actual_output_zip.parent, f"{actual_output_zip.stem}.ankiaddon")
         os.rename(actual_output_zip, renamed_output_zip)
@@ -56,13 +65,34 @@ class MakeDistributionCommand(Command):
         dest: Path = Path(dest_subdir, filename)
         shutil.copyfile(src, dest)
 
+    @staticmethod
+    def _generate_manifest(dest_subdir: Path):
+        repo: Repo = Repo(".", search_parent_directories=True)
+        version: str = f"v{_version}"
+        tag: TagReference = repo.tag(version)
+        commit: Commit = tag.commit if tag in repo.tags else repo.head.commit
+        commit_epoch_sec: int = int(commit.committed_datetime.timestamp())
+        draft: dict[str, any] = {
+            "name": "Note Size - sort notes by size",
+            "package": "note_size",
+            "author": _author,
+            "min_point_version": 240401,
+            "max_point_version": 240602,
+            "human_version": version,
+            "homepage": "https://ankiweb.net/shared/info/1188705668",
+            "mod": commit_epoch_sec
+        }
+        path: Path = Path(dest_subdir, 'manifest.json')
+        with open(path, 'w') as fp:
+            json.dump(draft, fp, indent=2)
+
 
 setuptools.setup(
     name="note_size_anki_addon",
-    version=version,
-    author="Alexey Yablokov",
+    version=_version,
+    author=_author,
     description="Note Size Anki addon",
-    long_description=long_description,
+    long_description=_read_long_description(),
     long_description_content_type="text/markdown",
     url="https://github.com/Aleks-Ya/note-size-anki-addon",
     packages=list(),

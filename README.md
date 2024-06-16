@@ -6,7 +6,7 @@ See [Addon Description](description/description.md)
 
 ## Logs
 
-`Tools` -> `Add-ons` -> `Note Size - sort notes by size` -> `Files` -> `1188705668` -> `note_size.log`
+`Tools` -> `Add-ons` -> `Note Size - sort notes by size` -> `Files` -> `note_size.log`
 
 ## Unit tests
 
@@ -14,7 +14,7 @@ Run: `tox`
 
 ## Local deploy
 
-Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
+Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/note_size`
 
 ## Build
 
