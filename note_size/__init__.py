@@ -1,6 +1,6 @@
 import logging
 import os
-from logging import Logger, FileHandler
+from logging import Logger, FileHandler, Formatter
 from pathlib import Path
 from threading import Thread
 
@@ -17,13 +17,12 @@ from .item_id_cache import ItemIdCache
 
 def configure_logging(addon_folder: Path) -> Logger:
     log_file: str = os.path.join(addon_folder, "note_size.log")
-    root: Logger = logging.getLogger()
-    handler: FileHandler = logging.FileHandler(log_file)
-    handler.setLevel(logging.DEBUG)
-    handler.setFormatter(
-        logging.Formatter('%(asctime)s %(name)s %(funcName)s %(threadName)s %(levelname)s %(message)s'))
-    root.addHandler(handler)
     logger: Logger = logging.getLogger(__name__)
+    handler: FileHandler = FileHandler(log_file)
+    handler.setLevel(logging.DEBUG)
+    formatter: Formatter = Formatter('%(asctime)s %(name)s %(funcName)s %(threadName)s %(levelname)s %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
     logger.setLevel(logging.DEBUG)
     logger.info(f"\n\n{'#' * 100}\nLogger was configured: file={log_file}")
     return logger

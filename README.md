@@ -14,7 +14,7 @@ Run: `tox`
 
 ## Local deploy
 
-Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/note_size`
+Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
 
 ## Build
 
