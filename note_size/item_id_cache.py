@@ -1,5 +1,6 @@
 import logging
 from logging import Logger
+from threading import RLock
 
 from anki.cards import CardId
 from anki.collection import Collection
@@ -15,6 +16,9 @@ class ItemIdCache:
     id_cache: dict[CardId, NoteId] = {}
     size_bytes_cache: dict[NoteId, SizeBytes] = {}
     size_str_cache: dict[NoteId, SizeStr] = {}
+    id_cache_lock: RLock = RLock()
+    size_bytes_cache_lock: RLock = RLock()
+    size_str_lock: RLock = RLock()
 
     def __init__(self, col: Collection):
         self.col: Collection = col
@@ -34,22 +38,25 @@ class ItemIdCache:
             log.exception("Cache warm-up failed")
 
     def get_note_id_by_card_id(self, card_id: CardId) -> NoteId:
-        if card_id not in self.id_cache:
-            self.id_cache[card_id] = self.col.get_card(card_id).nid
-        return self.id_cache[card_id]
+        with self.id_cache_lock:
+            if card_id not in self.id_cache:
+                self.id_cache[card_id] = self.col.get_card(card_id).nid
+            return self.id_cache[card_id]
 
     def get_note_size(self, note_id: NoteId, use_cache: bool) -> SizeBytes:
-        if use_cache and note_id in self.size_bytes_cache:
-            return self.size_bytes_cache[note_id]
-        else:
-            note: Note = self.col.get_note(note_id)
-            self.size_bytes_cache[note_id] = SizeCalculator.calculate_note_size(note)
-            return self.size_bytes_cache[note_id]
+        with self.size_bytes_cache_lock:
+            if use_cache and note_id in self.size_bytes_cache:
+                return self.size_bytes_cache[note_id]
+            else:
+                note: Note = self.col.get_note(note_id)
+                self.size_bytes_cache[note_id] = SizeCalculator.calculate_note_size(note)
+                return self.size_bytes_cache[note_id]
 
     def get_note_size_str(self, note_id: NoteId, use_cache: bool) -> SizeStr:
-        if use_cache and note_id in self.size_str_cache:
-            return self.size_str_cache[note_id]
-        else:
-            size: SizeBytes = self.get_note_size(note_id, use_cache)
-            self.size_str_cache[note_id] = SizeFormatter.bytes_to_str(size)
-            return self.size_str_cache[note_id]
+        with self.size_str_lock:
+            if use_cache and note_id in self.size_str_cache:
+                return self.size_str_cache[note_id]
+            else:
+                size: SizeBytes = self.get_note_size(note_id, use_cache)
+                self.size_str_cache[note_id] = SizeFormatter.bytes_to_str(size)
+                return self.size_str_cache[note_id]
