@@ -5,7 +5,8 @@ import unittest
 from anki.collection import Collection
 from anki.notes import Note, NoteId
 
-from note_size import ItemIdCache
+from note_size import ItemIdCache, SizeCalculator
+from note_size.media_cache import MediaCache
 from note_size.types import SizeBytes, SizeStr
 from tests.data import TestData
 
@@ -14,7 +15,9 @@ class SizeFormatterTestCase(unittest.TestCase):
 
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
-        self.item_id_cache: ItemIdCache = ItemIdCache(self.col)
+        media_cache: MediaCache = MediaCache(self.col)
+        size_calculator: SizeCalculator = SizeCalculator(media_cache)
+        self.item_id_cache: ItemIdCache = ItemIdCache(self.col, size_calculator)
         self.td: TestData = TestData()
         self.note: Note = self.td.create_note_with_files(self.col)
 
@@ -59,7 +62,7 @@ class SizeFormatterTestCase(unittest.TestCase):
         self.assertLessEqual(execution_time, 0.5)
 
     def _run_get_note_size(self, use_cache: bool):
-        for _ in range(0, 100_000):
+        for _ in range(100_000):
             self.item_id_cache.get_note_size(self.note.id, use_cache=use_cache)
 
     def test_get_note_size_str_no_cache(self):

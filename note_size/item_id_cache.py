@@ -14,15 +14,16 @@ log: Logger = logging.getLogger(__name__)
 
 
 class ItemIdCache:
-    id_cache: dict[CardId, NoteId] = {}
-    size_bytes_cache: dict[NoteId, SizeBytes] = {}
-    size_str_cache: dict[NoteId, SizeStr] = {}
-    id_cache_lock: RLock = RLock()
-    size_bytes_cache_lock: RLock = RLock()
-    size_str_lock: RLock = RLock()
 
-    def __init__(self, col: Collection):
+    def __init__(self, col: Collection, size_calculator: SizeCalculator):
         self.col: Collection = col
+        self.size_calculator: SizeCalculator = size_calculator
+        self.id_cache: dict[CardId, NoteId] = {}
+        self.size_bytes_cache: dict[NoteId, SizeBytes] = {}
+        self.size_str_cache: dict[NoteId, SizeStr] = {}
+        self.id_cache_lock: RLock = RLock()
+        self.size_bytes_cache_lock: RLock = RLock()
+        self.size_str_lock: RLock = RLock()
 
     def warm_up_cache(self):
         try:
@@ -50,7 +51,7 @@ class ItemIdCache:
                 return self.size_bytes_cache[note_id]
             else:
                 note: Note = self.col.get_note(note_id)
-                self.size_bytes_cache[note_id] = SizeCalculator.calculate_note_size(note)
+                self.size_bytes_cache[note_id] = self.size_calculator.calculate_note_size(note)
                 return self.size_bytes_cache[note_id]
 
     def get_note_size_str(self, note_id: NoteId, use_cache: bool) -> SizeStr:

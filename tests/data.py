@@ -5,9 +5,9 @@ from note_size.types import MediaFile
 
 
 class TestData:
-    content1: bytes = b'picture'
-    content2: bytes = b'sound'
-    content3: bytes = b'animation'
+    content1: bytes = 'picture'.encode("utf-8")
+    content2: bytes = 'sound'.encode("utf-8")
+    content3: bytes = 'animation'.encode("utf-8")
     filename1: MediaFile
     filename2: MediaFile
     filename3: MediaFile

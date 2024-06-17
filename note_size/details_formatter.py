@@ -16,23 +16,23 @@ log: Logger = logging.getLogger(__name__)
 class DetailsFormatter:
     code_style: str = "font-family:Consolas,monospace"
 
-    def __init__(self, addon_dir: Path):
+    def __init__(self, addon_dir: Path, size_calculator: SizeCalculator):
         self.icons_dir: Path = addon_dir.joinpath("icon")
+        self.size_calculator: SizeCalculator = size_calculator
 
     def format_note_detailed_text(self, note: Note) -> str:
         soup: BeautifulSoup = BeautifulSoup()
-        DetailsFormatter._add_total_note_size(note, soup)
+        self._add_total_note_size(note, soup)
         DetailsFormatter._add_total_texts_size(note, soup)
-        DetailsFormatter._add_total_files_size(note, soup)
+        self._add_total_files_size(note, soup)
         self._add_files(note, soup)
         return str(soup.prettify())
 
-    @staticmethod
-    def _add_total_note_size(note: Note, soup: BeautifulSoup) -> None:
+    def _add_total_note_size(self, note: Note, soup: BeautifulSoup) -> None:
         h3: Tag = soup.new_tag('h3')
         h3.string = f"Total note size: "
         code: Tag = soup.new_tag('code', attrs={"style": DetailsFormatter.code_style})
-        code.string = SizeFormatter.bytes_to_str(SizeCalculator.calculate_note_size(note))
+        code.string = SizeFormatter.bytes_to_str(self.size_calculator.calculate_note_size(note))
         h3.append(code)
         soup.append(h3)
 
@@ -45,17 +45,16 @@ class DetailsFormatter:
         li.append(code)
         soup.append(li)
 
-    @staticmethod
-    def _add_total_files_size(note: Note, soup: BeautifulSoup) -> None:
+    def _add_total_files_size(self, note: Note, soup: BeautifulSoup) -> None:
         li: Tag = soup.new_tag('li')
         li.string = f"Files size: "
         code: Tag = soup.new_tag('code', attrs={"style": DetailsFormatter.code_style})
-        code.string = SizeFormatter.bytes_to_str(SizeCalculator.calculate_files_size(note))
+        code.string = SizeFormatter.bytes_to_str(self.size_calculator.calculate_files_size(note))
         li.append(code)
         soup.append(li)
 
     def _add_files(self, note: Note, soup: BeautifulSoup) -> None:
-        file_sizes: dict[MediaFile, SizeBytes] = SizeCalculator.sort_by_size_desc(SizeCalculator.file_sizes(note))
+        file_sizes: dict[MediaFile, SizeBytes] = SizeCalculator.sort_by_size_desc(self.size_calculator.file_sizes(note))
         is_empty_files: bool = len(file_sizes) == 0
         files_li: Tag = soup.new_tag('li')
         files_li.string = "Files (big to small):" if not is_empty_files else "Files: (no files)"

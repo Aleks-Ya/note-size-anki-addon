@@ -14,8 +14,6 @@ log: Logger = logging.getLogger(__name__)
 
 
 class ButtonHooks:
-    editor: Editor
-
     def __init__(self, details_formatter: DetailsFormatter, button_formatter: ButtonFormatter):
         self.details_formatter: DetailsFormatter = details_formatter
         self.button_formatter: ButtonFormatter = button_formatter
@@ -61,7 +59,7 @@ class ButtonHooks:
             label: ButtonLabel = ButtonFormatter.get_zero_size_label()
             if self.editor.note:
                 if self.editor.addMode:
-                    label: ButtonLabel = ButtonFormatter.get_add_mode_label(self.editor.note)
+                    label: ButtonLabel = self.button_formatter.get_add_mode_label(self.editor.note)
                 else:
                     label: ButtonLabel = self.button_formatter.get_edit_mode_label(self.editor.note.id)
             self.editor.web.eval(f"document.getElementById('size_button').textContent = '{label}'")
