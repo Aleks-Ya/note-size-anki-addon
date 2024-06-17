@@ -6,8 +6,7 @@ from anki.collection import Collection
 from anki.notes import Note, NoteId
 
 from note_size import ItemIdCache
-from note_size.size_calculator import SizeBytes
-from note_size.size_formatter import SizeStr
+from note_size.types import SizeBytes, SizeStr
 from tests.data import TestData
 
 

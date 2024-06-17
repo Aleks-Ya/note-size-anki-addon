@@ -1,14 +1,12 @@
 import logging
 import os
 from logging import Logger
-from typing import NewType
 
 from anki.notes import Note
 
-log: Logger = logging.getLogger(__name__)
+from note_size.types import SizeBytes, MediaFile
 
-SizeBytes = NewType("SizeBytes", int)
-MediaFile = NewType("MediaFile", str)
+log: Logger = logging.getLogger(__name__)
 
 
 class SizeCalculator:

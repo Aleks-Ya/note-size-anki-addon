@@ -1,9 +1,4 @@
-from typing import NewType
-
-from .size_calculator import SizeBytes, MediaFile
-
-SizeStr = NewType("SizeStr", str)
-ShortFilename = NewType("ShortFilename", str)
+from .types import SizeStr, ShortFilename, SizeBytes, MediaFile
 
 
 class SizeFormatter:

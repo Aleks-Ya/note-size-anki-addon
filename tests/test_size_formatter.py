@@ -4,8 +4,8 @@ import unittest
 
 from anki.collection import Collection
 
-from note_size.size_calculator import SizeBytes, MediaFile
-from note_size.size_formatter import SizeFormatter, SizeStr
+from note_size.types import SizeBytes, MediaFile, SizeStr
+from note_size.size_formatter import SizeFormatter
 
 
 class SizeFormatterTestCase(unittest.TestCase):

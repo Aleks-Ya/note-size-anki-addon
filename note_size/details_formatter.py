@@ -7,7 +7,8 @@ from anki.notes import Note
 from bs4 import BeautifulSoup, Tag
 
 from .size_formatter import SizeFormatter
-from .size_calculator import SizeCalculator, SizeBytes, MediaFile
+from .size_calculator import SizeCalculator
+from .types import SizeBytes, MediaFile
 
 log: Logger = logging.getLogger(__name__)
 

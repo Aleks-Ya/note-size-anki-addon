@@ -4,9 +4,10 @@ import unittest
 from anki.collection import Collection
 from anki.notes import Note
 
-from note_size.button_formatter import ButtonLabel, ButtonFormatter
+from note_size.button_formatter import ButtonFormatter
 from note_size.item_id_cache import ItemIdCache
-from note_size.size_calculator import SizeBytes, SizeCalculator
+from note_size.size_calculator import SizeCalculator
+from note_size.types import SizeBytes, ButtonLabel
 from tests.data import TestData
 
 

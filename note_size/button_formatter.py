@@ -1,16 +1,14 @@
 import logging
 from logging import Logger
-from typing import NewType
 
 from anki.notes import NoteId, Note
 
 from .item_id_cache import ItemIdCache
-from .size_calculator import SizeBytes, SizeCalculator
-from .size_formatter import SizeStr, SizeFormatter
+from .types import SizeStr, SizeBytes, ButtonLabel
+from .size_calculator import SizeCalculator
+from .size_formatter import SizeFormatter
 
 log: Logger = logging.getLogger(__name__)
-
-ButtonLabel = NewType("ButtonLabel", str)
 
 
 class ButtonFormatter:

@@ -1,7 +1,7 @@
 from anki.collection import Collection
 from anki.notes import Note
 
-from note_size.size_calculator import MediaFile
+from note_size.types import MediaFile
 
 
 class TestData:
