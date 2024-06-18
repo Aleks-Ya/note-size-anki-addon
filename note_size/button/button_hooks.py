@@ -6,7 +6,7 @@ from aqt import gui_hooks
 from aqt.editor import Editor
 from aqt.utils import showInfo
 
-from .types import ButtonLabel
+from ..types import ButtonLabel
 from .button_formatter import ButtonFormatter
 from .details_formatter import DetailsFormatter
 

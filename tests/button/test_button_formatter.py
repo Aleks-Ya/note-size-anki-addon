@@ -4,7 +4,7 @@ import unittest
 from anki.collection import Collection
 from anki.notes import Note
 
-from note_size.button_formatter import ButtonFormatter
+from note_size.button.button_formatter import ButtonFormatter
 from note_size.item_id_cache import ItemIdCache
 from note_size.media_cache import MediaCache
 from note_size.size_calculator import SizeCalculator

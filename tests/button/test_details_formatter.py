@@ -7,7 +7,7 @@ from anki.notes import Note
 from bs4 import BeautifulSoup
 
 from note_size import SizeCalculator, Config
-from note_size.details_formatter import DetailsFormatter
+from note_size.button.details_formatter import DetailsFormatter
 from note_size.media_cache import MediaCache
 from tests.data import Data
 
@@ -21,7 +21,7 @@ class DetailsFormatterTestCase(unittest.TestCase):
             else Path("./note_size").absolute()
         media_cache: MediaCache = MediaCache(self.col)
         size_calculator: SizeCalculator = SizeCalculator(media_cache)
-        config_json: Path = Path(__file__).parent.parent.joinpath("note_size").joinpath("config.json")
+        config_json: Path = Path(__file__).parent.parent.parent.joinpath("note_size").joinpath("config.json")
         config: Config = Config.from_path(config_json)
         self.details_formatter: DetailsFormatter = DetailsFormatter(self.note_size_dir, size_calculator, config)
 
@@ -34,15 +34,15 @@ class DetailsFormatterTestCase(unittest.TestCase):
                     <li>Files (big to small):</li>
                     <ol>
                         <li style="white-space:nowrap">
-                            <img height="15" src="{self.note_size_dir}/icon/image.png" style="vertical-align: middle;"/>
+                            <img height="15" src="{self.note_size_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                             animation.gif: <code style="font-family:Consolas,monospace">9B</code>
                         </li>
                         <li style="white-space:nowrap">
-                            <img height="15" src="{self.note_size_dir}/icon/image.png" style="vertical-align: middle;"/>
+                            <img height="15" src="{self.note_size_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                             picture.jpg: <code style="font-family:Consolas,monospace">7B</code>
                         </li>
                         <li style="white-space:nowrap">
-                            <img height="15" src="{self.note_size_dir}/icon/audio.png" style="vertical-align: middle;"/>
+                            <img height="15" src="{self.note_size_dir}/button/icon/audio.png" style="vertical-align: middle;"/>
                             sound.mp3: <code style="font-family:Consolas,monospace">5B</code>
                         </li>
                     </ol>
@@ -76,7 +76,7 @@ class DetailsFormatterTestCase(unittest.TestCase):
                         <li>Files (big to small):</li>
                         <ol>
                             <li style="white-space:nowrap">
-                                <img height="15" src="{self.note_size_dir}/icon/image.png" style="vertical-align: middle;"/>
+                                <img height="15" src="{self.note_size_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                                 absents.png: <code style="font-family:Consolas,monospace">0B</code>
                             </li>
                         </ol>

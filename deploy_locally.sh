@@ -18,17 +18,15 @@ then
 	exit 1
 fi
 
-python_files=$dest_dir/*.py
-echo "Deleting Python files: $python_files"
-rm -rf $python_files $dest_dir/icon
+dest_files=$dest_dir/*
+echo "Deleting dest files: $dest_files"
+rm -rf $dest_files
 
 echo "Copying files..."
-cp $src_dir/*.py $dest_dir
-cp -r $src_dir/icon $dest_dir
-cp -r $src_dir/config.json $dest_dir
+cp -r $src_dir/* $dest_dir
 
-cache_dir=$dest_dir/**/__pycache__
-echo "Deleting cache: $cache_dir"
-rm -rf $cache_dir
+echo "Deleting caches"
+rm -rf $dest_dir/**/__pycache__
+rm -rf $dest_dir/__pycache__
 
 echo "Done"

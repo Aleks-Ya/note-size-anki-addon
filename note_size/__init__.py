@@ -6,10 +6,10 @@ from threading import Thread
 
 from aqt import mw, gui_hooks
 
-from .button_formatter import ButtonFormatter
+from .button.button_formatter import ButtonFormatter
+from .button.details_formatter import DetailsFormatter
+from .button.button_hooks import ButtonHooks
 from .config import Config
-from .details_formatter import DetailsFormatter
-from .button_hooks import ButtonHooks
 from .media_cache import MediaCache
 from .size_calculator import SizeCalculator
 from .column.column_hooks import ColumnHooks
