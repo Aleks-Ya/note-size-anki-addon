@@ -6,6 +6,7 @@ from pathlib import Path
 from anki.notes import Note
 from bs4 import BeautifulSoup, Tag
 
+from .config import Config
 from .size_formatter import SizeFormatter
 from .size_calculator import SizeCalculator
 from .types import SizeBytes, MediaFile
@@ -16,9 +17,10 @@ log: Logger = logging.getLogger(__name__)
 class DetailsFormatter:
     code_style: str = "font-family:Consolas,monospace"
 
-    def __init__(self, addon_dir: Path, size_calculator: SizeCalculator):
+    def __init__(self, addon_dir: Path, size_calculator: SizeCalculator, config: Config):
         self.icons_dir: Path = addon_dir.joinpath("icon")
         self.size_calculator: SizeCalculator = size_calculator
+        self.max_length = config.details_formatter_max_file_length()
 
     def format_note_detailed_text(self, note: Note) -> str:
         soup: BeautifulSoup = BeautifulSoup()
@@ -62,7 +64,7 @@ class DetailsFormatter:
         if not is_empty_files:
             ol: Tag = soup.new_tag('ol')
             for file, size in file_sizes.items():
-                filename, size_text = SizeFormatter.file_size_to_str(file, size, 100)
+                filename, size_text = SizeFormatter.file_size_to_str(file, size, self.max_length)
                 icon_path: Path = self._get_file_icon(filename)
                 img: Tag = soup.new_tag("img",
                                         attrs={"src": icon_path, "height": "15", "style": "vertical-align: middle;"})

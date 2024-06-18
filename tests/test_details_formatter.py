@@ -6,7 +6,7 @@ from anki.collection import Collection
 from anki.notes import Note
 from bs4 import BeautifulSoup
 
-from note_size import SizeCalculator
+from note_size import SizeCalculator, Config
 from note_size.details_formatter import DetailsFormatter
 from note_size.media_cache import MediaCache
 from tests.data import Data
@@ -21,7 +21,9 @@ class DetailsFormatterTestCase(unittest.TestCase):
             else Path("./note_size").absolute()
         media_cache: MediaCache = MediaCache(self.col)
         size_calculator: SizeCalculator = SizeCalculator(media_cache)
-        self.details_formatter: DetailsFormatter = DetailsFormatter(self.note_size_dir, size_calculator)
+        config_json: Path = Path(__file__).parent.parent.joinpath("note_size").joinpath("config.json")
+        config: Config = Config.from_path(config_json)
+        self.details_formatter: DetailsFormatter = DetailsFormatter(self.note_size_dir, size_calculator, config)
 
     def test_format_note_detailed_text(self):
         self.note: Note = self.td.create_note_with_files()

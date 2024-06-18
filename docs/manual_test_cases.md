@@ -17,3 +17,4 @@
     1. Show the size column
     2. Performance
         1. Display all cards after Anki restart
+5. Config

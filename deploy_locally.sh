@@ -30,5 +30,6 @@ rm -rf $python_files $dest_dir/icon
 echo "Copying files..."
 cp $src_dir/*.py $dest_dir
 cp -r $src_dir/icon $dest_dir
+cp -r $src_dir/config.json $dest_dir
 
 echo "Done"

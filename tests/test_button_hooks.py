@@ -6,7 +6,7 @@ from anki.collection import Collection
 from aqt import gui_hooks
 
 from note_size import ItemIdCache, SizeCalculator, MediaCache, ButtonHooks, DetailsFormatter, \
-    ButtonFormatter
+    ButtonFormatter, Config
 
 
 class ButtonHooksTestCase(unittest.TestCase):
@@ -21,11 +21,12 @@ class ButtonHooksTestCase(unittest.TestCase):
         self.assertEqual(0, gui_hooks.editor_did_unfocus_field.count())
         self.assertEqual(0, gui_hooks.editor_did_fire_typing_timer.count())
 
-        addon_dir: Path = Path(__file__).parent.joinpath("note_size")
+        addon_dir: Path = Path(__file__).parent.parent.joinpath("note_size")
         media_cache: MediaCache = MediaCache(self.col)
         size_calculator: SizeCalculator = SizeCalculator(media_cache)
         item_id_cache: ItemIdCache = ItemIdCache(self.col, size_calculator)
-        details_formatter: DetailsFormatter = DetailsFormatter(addon_dir, size_calculator)
+        config: Config = Config.from_path(addon_dir.joinpath("config.json"))
+        details_formatter: DetailsFormatter = DetailsFormatter(addon_dir, size_calculator, config)
         button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, size_calculator)
         button_hooks: ButtonHooks = ButtonHooks(details_formatter, button_formatter)
         button_hooks.setup_hooks()
