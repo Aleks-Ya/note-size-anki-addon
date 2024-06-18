@@ -16,6 +16,7 @@ class ItemIdSorter:
 
     def __init__(self, item_id_cache: ItemIdCache):
         self.item_id_cache: ItemIdCache = item_id_cache
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     def sort_item_ids(self, item_ids: Sequence[ItemId], size_type: SizeType, is_note: bool) -> Sequence[NoteId]:
         key_func: partial = partial(self._get_item_size, size_type, is_note)

@@ -17,6 +17,7 @@ class ButtonHooks:
     def __init__(self, details_formatter: DetailsFormatter, button_formatter: ButtonFormatter):
         self.details_formatter: DetailsFormatter = details_formatter
         self.button_formatter: ButtonFormatter = button_formatter
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     def setup_hooks(self):
         gui_hooks.editor_did_init.append(self._on_init)

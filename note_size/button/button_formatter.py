@@ -15,6 +15,7 @@ class ButtonFormatter:
     def __init__(self, item_id_cache: ItemIdCache, size_calculator: SizeCalculator):
         self.item_id_cache: ItemIdCache = item_id_cache
         self.size_calculator: SizeCalculator = size_calculator
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     @staticmethod
     def get_zero_size_label() -> ButtonLabel:

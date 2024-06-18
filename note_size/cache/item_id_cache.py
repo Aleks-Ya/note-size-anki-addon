@@ -33,6 +33,7 @@ class ItemIdCache:
         self.size_str_caches: dict[SizeType, dict[NoteId, SizeStr]] = {ItemIdCache.TOTAL_SIZE: {},
                                                                        ItemIdCache.TEXTS_SIZE: {},
                                                                        ItemIdCache.FILES_SIZE: {}}
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     def warm_up_cache(self) -> None:
         try:

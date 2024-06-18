@@ -12,6 +12,7 @@ class Config:
     def __init__(self, config: dict[str, Any]):
         self.config = config
         log.info(f"Config loaded: {self.config}")
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     @classmethod
     def from_path(cls, path: Path) -> 'Config':

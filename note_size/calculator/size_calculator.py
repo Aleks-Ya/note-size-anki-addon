@@ -13,6 +13,7 @@ class SizeCalculator:
 
     def __init__(self, media_cache: MediaCache):
         self.media_cache: MediaCache = media_cache
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     def calculate_note_size(self, note: Note) -> SizeBytes:
         return SizeBytes(SizeCalculator.calculate_texts_size(note) + self.calculate_files_size(note))

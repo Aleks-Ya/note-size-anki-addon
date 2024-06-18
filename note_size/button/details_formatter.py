@@ -21,6 +21,7 @@ class DetailsFormatter:
         self.icons_dir: Path = addon_dir.joinpath("button").joinpath("icon")
         self.size_calculator: SizeCalculator = size_calculator
         self.max_length = config.details_formatter_max_file_length()
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     def format_note_detailed_text(self, note: Note) -> str:
         soup: BeautifulSoup = BeautifulSoup()

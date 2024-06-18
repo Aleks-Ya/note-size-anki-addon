@@ -29,6 +29,7 @@ class ColumnHooks:
     def __init__(self, item_id_cache: ItemIdCache, item_id_sorter: ItemIdSorter):
         self.item_id_cache: ItemIdCache = item_id_cache
         self.item_id_sorter: ItemIdSorter = item_id_sorter
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     def setup_hooks(self) -> None:
         gui_hooks.browser_did_fetch_columns.append(ColumnHooks._add_custom_column)
