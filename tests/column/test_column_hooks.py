@@ -4,7 +4,8 @@ import unittest
 from anki.collection import Collection
 from aqt import gui_hooks
 
-from note_size import ColumnHooks, ItemIdCache, SizeCalculator, MediaCache
+from note_size.column.column_hooks import ColumnHooks
+from note_size import ItemIdCache, SizeCalculator, MediaCache
 
 
 class ColumnHooksTestCase(unittest.TestCase):

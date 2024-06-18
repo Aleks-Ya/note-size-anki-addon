@@ -18,11 +18,6 @@ then
 	exit 1
 fi
 
-cache_dir=$dest_dir/__pycache__
-echo "Deleting cache: $cache_dir"
-rm -rf $cache_dir
-
-
 python_files=$dest_dir/*.py
 echo "Deleting Python files: $python_files"
 rm -rf $python_files $dest_dir/icon
@@ -31,5 +26,9 @@ echo "Copying files..."
 cp $src_dir/*.py $dest_dir
 cp -r $src_dir/icon $dest_dir
 cp -r $src_dir/config.json $dest_dir
+
+cache_dir=$dest_dir/**/__pycache__
+echo "Deleting cache: $cache_dir"
+rm -rf $cache_dir
 
 echo "Done"

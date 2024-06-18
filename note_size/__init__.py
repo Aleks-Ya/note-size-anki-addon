@@ -12,7 +12,7 @@ from .details_formatter import DetailsFormatter
 from .button_hooks import ButtonHooks
 from .media_cache import MediaCache
 from .size_calculator import SizeCalculator
-from .column_hooks import ColumnHooks
+from .column.column_hooks import ColumnHooks
 from .size_formatter import SizeFormatter
 from .item_id_cache import ItemIdCache
 
