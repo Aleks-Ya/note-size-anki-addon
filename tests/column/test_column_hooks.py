@@ -5,7 +5,9 @@ from anki.collection import Collection
 from aqt import gui_hooks
 
 from note_size.column.column_hooks import ColumnHooks
-from note_size import ItemIdCache, SizeCalculator, MediaCache
+from note_size.cache.item_id_cache import ItemIdCache
+from note_size.cache.media_cache import MediaCache
+from note_size.calculator.size_calculator import SizeCalculator
 
 
 class ColumnHooksTestCase(unittest.TestCase):

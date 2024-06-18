@@ -5,8 +5,8 @@ from anki.notes import NoteId, Note
 
 from ..cache.item_id_cache import ItemIdCache
 from ..types import SizeStr, SizeBytes, ButtonLabel
-from ..size_calculator import SizeCalculator
-from ..size_formatter import SizeFormatter
+from ..calculator.size_calculator import SizeCalculator
+from ..calculator.size_formatter import SizeFormatter
 
 log: Logger = logging.getLogger(__name__)
 

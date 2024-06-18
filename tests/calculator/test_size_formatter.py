@@ -5,7 +5,7 @@ import unittest
 from anki.collection import Collection
 
 from note_size.types import SizeBytes, MediaFile, SizeStr
-from note_size.size_formatter import SizeFormatter
+from note_size.calculator.size_formatter import SizeFormatter
 
 
 class SizeFormatterTestCase(unittest.TestCase):

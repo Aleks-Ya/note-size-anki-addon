@@ -1,4 +1,4 @@
-from .types import SizeStr, ShortFilename, SizeBytes, MediaFile
+from ..types import SizeStr, ShortFilename, SizeBytes, MediaFile
 
 
 class SizeFormatter:

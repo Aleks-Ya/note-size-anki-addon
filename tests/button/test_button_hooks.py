@@ -8,7 +8,10 @@ from aqt import gui_hooks
 from note_size.button.button_formatter import ButtonFormatter
 from note_size.button.button_hooks import ButtonHooks
 from note_size.button.details_formatter import DetailsFormatter
-from note_size import ItemIdCache, SizeCalculator, MediaCache, Config
+from note_size import Config
+from note_size.cache.item_id_cache import ItemIdCache
+from note_size.cache.media_cache import MediaCache
+from note_size.calculator.size_calculator import SizeCalculator
 
 
 class ButtonHooksTestCase(unittest.TestCase):

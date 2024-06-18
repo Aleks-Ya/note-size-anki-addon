@@ -12,9 +12,9 @@ from .button.button_hooks import ButtonHooks
 from .config import Config
 from .cache.media_cache import MediaCache
 from .cache.item_id_cache import ItemIdCache
-from .size_calculator import SizeCalculator
+from .calculator.size_calculator import SizeCalculator
+from .calculator.size_formatter import SizeFormatter
 from .column.column_hooks import ColumnHooks
-from .size_formatter import SizeFormatter
 
 
 def configure_logging(addon_folder: Path) -> Logger:

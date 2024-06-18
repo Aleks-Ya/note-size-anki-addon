@@ -6,7 +6,8 @@ from anki.collection import Collection
 from anki.notes import Note
 from bs4 import BeautifulSoup
 
-from note_size import SizeCalculator, Config
+from note_size import Config
+from note_size.calculator.size_calculator import SizeCalculator
 from note_size.button.details_formatter import DetailsFormatter
 from note_size.cache.media_cache import MediaCache
 from tests.data import Data
