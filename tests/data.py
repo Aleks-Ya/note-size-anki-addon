@@ -5,9 +5,9 @@ from note_size.types import MediaFile
 
 
 class TestData:
-    content1: bytes = 'picture'.encode("utf-8")
-    content2: bytes = 'sound'.encode("utf-8")
-    content3: bytes = 'animation'.encode("utf-8")
+    content1: bytes = 'picture'.encode()
+    content2: bytes = 'sound'.encode()
+    content3: bytes = 'animation'.encode()
     filename1: MediaFile
     filename2: MediaFile
     filename3: MediaFile
@@ -36,3 +36,8 @@ class TestData:
         note[self.back_field_name] = self.back_field_content_without_files
         col.addNote(note)
         return note
+
+    @staticmethod
+    def update_front_field(note: Note, content: str) -> None:
+        note[TestData.front_field_name] = content
+        note.col.update_note(note)

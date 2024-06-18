@@ -42,9 +42,7 @@ class ButtonFormatterTestCase(unittest.TestCase):
         label: ButtonLabel = self.button_formatter.get_edit_mode_label(note.id)
         self.assertEqual(SizeBytes(142), self.size_calculator.calculate_note_size(note))
         self.assertEqual("Size: 142B", label)
-        content: str = 'updated'
-        note[self.td.front_field_name] = content
-        self.col.update_note(note)
+        TestData.update_front_field(note, 'updated')
         self.assertEqual(SizeBytes(85), self.size_calculator.calculate_note_size(self.col.get_note(note.id)))
         self.assertEqual("Size: 85B", self.button_formatter.get_edit_mode_label(note.id))
 
