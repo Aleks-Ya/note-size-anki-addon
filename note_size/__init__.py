@@ -10,11 +10,11 @@ from .button.button_formatter import ButtonFormatter
 from .button.details_formatter import DetailsFormatter
 from .button.button_hooks import ButtonHooks
 from .config import Config
-from .media_cache import MediaCache
+from .cache.media_cache import MediaCache
+from .cache.item_id_cache import ItemIdCache
 from .size_calculator import SizeCalculator
 from .column.column_hooks import ColumnHooks
 from .size_formatter import SizeFormatter
-from .item_id_cache import ItemIdCache
 
 
 def configure_logging(addon_folder: Path) -> Logger:

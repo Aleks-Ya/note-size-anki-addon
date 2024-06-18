@@ -5,7 +5,7 @@ import unittest
 from anki.collection import Collection
 from anki.notes import Note
 
-from note_size.media_cache import MediaCache
+from note_size.cache.media_cache import MediaCache
 from note_size.types import SizeBytes
 from tests.data import Data
 

@@ -5,7 +5,7 @@ from threading import RLock
 
 from anki.collection import Collection
 
-from .types import MediaFile, SizeBytes
+from ..types import MediaFile, SizeBytes
 
 log: Logger = logging.getLogger(__name__)
 

@@ -6,9 +6,9 @@ from anki.cards import CardId
 from anki.collection import Collection
 from anki.notes import NoteId, Note
 
-from .types import SizeStr, SizeBytes, SizeType
-from .size_calculator import SizeCalculator
-from .size_formatter import SizeFormatter
+from ..types import SizeStr, SizeBytes, SizeType
+from ..size_calculator import SizeCalculator
+from ..size_formatter import SizeFormatter
 
 log: Logger = logging.getLogger(__name__)
 

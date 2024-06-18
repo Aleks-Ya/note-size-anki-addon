@@ -5,8 +5,9 @@ import unittest
 from anki.collection import Collection
 from anki.notes import Note, NoteId
 
-from note_size import ItemIdCache, SizeCalculator
-from note_size.media_cache import MediaCache
+from note_size.cache.item_id_cache import ItemIdCache
+from note_size import SizeCalculator
+from note_size.cache.media_cache import MediaCache
 from note_size.types import SizeBytes, SizeStr
 from tests.data import Data
 

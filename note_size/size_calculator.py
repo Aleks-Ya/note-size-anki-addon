@@ -3,7 +3,7 @@ from logging import Logger
 
 from anki.notes import Note
 
-from .media_cache import MediaCache
+from .cache.media_cache import MediaCache
 from .types import SizeBytes, MediaFile
 
 log: Logger = logging.getLogger(__name__)

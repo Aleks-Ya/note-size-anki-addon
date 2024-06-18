@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 
 from note_size import SizeCalculator, Config
 from note_size.button.details_formatter import DetailsFormatter
-from note_size.media_cache import MediaCache
+from note_size.cache.media_cache import MediaCache
 from tests.data import Data
 
 
