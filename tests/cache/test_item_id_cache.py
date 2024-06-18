@@ -5,6 +5,7 @@ import unittest
 from anki.collection import Collection
 from anki.notes import Note, NoteId
 
+from note_size import Config
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.size_calculator import SizeCalculator
@@ -18,7 +19,8 @@ class ItemIdCacheTestCase(unittest.TestCase):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
         media_cache: MediaCache = MediaCache(self.col)
         size_calculator: SizeCalculator = SizeCalculator(media_cache)
-        self.item_id_cache: ItemIdCache = ItemIdCache(self.col, size_calculator)
+        config: Config = Data.read_config()
+        self.item_id_cache: ItemIdCache = ItemIdCache(self.col, size_calculator, config)
         self.td: Data = Data(self.col)
         self.note: Note = self.td.create_note_with_files()
 

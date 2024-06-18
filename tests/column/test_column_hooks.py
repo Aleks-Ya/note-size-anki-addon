@@ -4,10 +4,12 @@ import unittest
 from anki.collection import Collection
 from aqt import gui_hooks
 
+from note_size import Config
 from note_size.column.column_hooks import ColumnHooks
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.size_calculator import SizeCalculator
+from tests.data import Data
 
 
 class ColumnHooksTestCase(unittest.TestCase):
@@ -23,7 +25,8 @@ class ColumnHooksTestCase(unittest.TestCase):
 
         media_cache: MediaCache = MediaCache(self.col)
         size_calculator: SizeCalculator = SizeCalculator(media_cache)
-        item_id_cache: ItemIdCache = ItemIdCache(self.col, size_calculator)
+        config: Config = Data.read_config()
+        item_id_cache: ItemIdCache = ItemIdCache(self.col, size_calculator, config)
         column_hooks: ColumnHooks = ColumnHooks(item_id_cache)
         column_hooks.setup_hooks()
 

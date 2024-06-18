@@ -1,5 +1,8 @@
 {
   "Details Formatter": {
     "Max Filename Length": 100
+  },
+  "Cache": {
+    "Warmup Enabled": true
   }
 }

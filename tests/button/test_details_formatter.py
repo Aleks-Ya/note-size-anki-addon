@@ -22,8 +22,7 @@ class DetailsFormatterTestCase(unittest.TestCase):
             else Path("./note_size").absolute()
         media_cache: MediaCache = MediaCache(self.col)
         size_calculator: SizeCalculator = SizeCalculator(media_cache)
-        config_json: Path = Path(__file__).parent.parent.parent.joinpath("note_size").joinpath("config.json")
-        config: Config = Config.from_path(config_json)
+        config: Config = Data.read_config()
         self.details_formatter: DetailsFormatter = DetailsFormatter(self.note_size_dir, size_calculator, config)
 
     def test_format_note_detailed_text(self):

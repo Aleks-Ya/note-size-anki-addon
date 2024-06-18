@@ -4,6 +4,7 @@ import unittest
 from anki.collection import Collection
 from anki.notes import Note
 
+from note_size import Config
 from note_size.button.button_formatter import ButtonFormatter
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
@@ -19,7 +20,8 @@ class ButtonFormatterTestCase(unittest.TestCase):
         self.td: Data = Data(self.col)
         media_cache: MediaCache = MediaCache(self.col)
         self.size_calculator: SizeCalculator = SizeCalculator(media_cache)
-        item_id_cache: ItemIdCache = ItemIdCache(self.col, self.size_calculator)
+        config: Config = Data.read_config()
+        item_id_cache: ItemIdCache = ItemIdCache(self.col, self.size_calculator, config)
         self.button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, self.size_calculator)
 
     def test_get_zero_size_label(self):

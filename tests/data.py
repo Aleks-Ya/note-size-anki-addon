@@ -1,6 +1,9 @@
+from pathlib import Path
+
 from anki.collection import Collection
 from anki.notes import Note
 
+from note_size import Config
 from note_size.types import MediaFile
 
 
@@ -47,3 +50,8 @@ class Data:
         actual: MediaFile = self.col.media.write_data(file, content)
         if actual != file:
             raise RuntimeError(f"File was renamed: original={file}, renamed={actual}")
+
+    @staticmethod
+    def read_config() -> Config:
+        config_json: Path = Path(__file__).parent.parent.joinpath("note_size").joinpath("config.json")
+        return Config.from_path(config_json)

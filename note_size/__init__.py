@@ -41,7 +41,7 @@ def initialize():
     c: Config = Config(mw.addonManager.getConfig(__name__))
     mc: MediaCache = MediaCache(mw.col)
     sc: SizeCalculator = SizeCalculator(mc)
-    iic: ItemIdCache = ItemIdCache(mw.col, sc)
+    iic: ItemIdCache = ItemIdCache(mw.col, sc, c)
     ch: ColumnHooks = ColumnHooks(iic)
     ch.setup_hooks()
     dt: DetailsFormatter = DetailsFormatter(addon_dir, sc, c)

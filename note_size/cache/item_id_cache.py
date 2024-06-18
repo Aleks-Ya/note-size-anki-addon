@@ -2,11 +2,13 @@ import logging
 from datetime import datetime
 from logging import Logger
 from threading import RLock
+from typing import Sequence
 
 from anki.cards import CardId
 from anki.collection import Collection
 from anki.notes import NoteId, Note
 
+from ..config import Config
 from ..types import SizeStr, SizeBytes, SizeType
 from ..calculator.size_calculator import SizeCalculator
 from ..calculator.size_formatter import SizeFormatter
@@ -19,7 +21,8 @@ class ItemIdCache:
     TEXTS_SIZE: SizeType = SizeType("texts")
     FILES_SIZE: SizeType = SizeType("files")
 
-    def __init__(self, col: Collection, size_calculator: SizeCalculator):
+    def __init__(self, col: Collection, size_calculator: SizeCalculator, config: Config):
+        self.warmup_enabled: bool = config.cache_warm_up_enabled()
         self.lock: RLock = RLock()
         self.col: Collection = col
         self.size_calculator: SizeCalculator = size_calculator
@@ -31,16 +34,19 @@ class ItemIdCache:
                                                                        ItemIdCache.TEXTS_SIZE: {},
                                                                        ItemIdCache.FILES_SIZE: {}}
 
-    def warm_up_cache(self):
+    def warm_up_cache(self) -> None:
         try:
+            if not self.warmup_enabled:
+                log.info("Cache warmup is disabled")
+                return
             log.info("Warming up cache...")
             start_time: datetime = datetime.now()
-            all_note_ids = self.col.find_notes("deck:*")
+            all_note_ids: Sequence[NoteId] = self.col.find_notes("deck:*")
             for note_id in all_note_ids:
                 for size_type in [ItemIdCache.TEXTS_SIZE, ItemIdCache.FILES_SIZE, ItemIdCache.TOTAL_SIZE]:
                     self.get_note_size_bytes(note_id, size_type, use_cache=True)
                     self.get_note_size_str(note_id, size_type, use_cache=True)
-            all_card_ids = self.col.find_cards("deck:*")
+            all_card_ids: Sequence[int] = self.col.find_cards("deck:*")
             for card_id in all_card_ids:
                 self.get_note_id_by_card_id(card_id)
             end_time: datetime = datetime.now()

@@ -12,6 +12,7 @@ from note_size import Config
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.size_calculator import SizeCalculator
+from tests.data import Data
 
 
 class ButtonHooksTestCase(unittest.TestCase):
@@ -29,8 +30,8 @@ class ButtonHooksTestCase(unittest.TestCase):
         addon_dir: Path = Path(__file__).parent.parent.parent.joinpath("note_size")
         media_cache: MediaCache = MediaCache(self.col)
         size_calculator: SizeCalculator = SizeCalculator(media_cache)
-        item_id_cache: ItemIdCache = ItemIdCache(self.col, size_calculator)
-        config: Config = Config.from_path(addon_dir.joinpath("config.json"))
+        config: Config = Data.read_config()
+        item_id_cache: ItemIdCache = ItemIdCache(self.col, size_calculator, config)
         details_formatter: DetailsFormatter = DetailsFormatter(addon_dir, size_calculator, config)
         button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, size_calculator)
         button_hooks: ButtonHooks = ButtonHooks(details_formatter, button_formatter)
