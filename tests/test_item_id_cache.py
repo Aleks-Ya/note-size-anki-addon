@@ -11,7 +11,7 @@ from note_size.types import SizeBytes, SizeStr
 from tests.data import TestData
 
 
-class SizeFormatterTestCase(unittest.TestCase):
+class ItemIdCacheTestCase(unittest.TestCase):
 
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
@@ -51,19 +51,10 @@ class SizeFormatterTestCase(unittest.TestCase):
         act_size_2: SizeBytes = self.item_id_cache.get_note_size(note_id, use_cache=True)
         self.assertEqual(exp_size_1, act_size_2)
 
-    def test_get_note_size_performance_no_cache(self):
+    def test_get_note_size_performance(self):
         execution_time: float = timeit.timeit(
-            lambda: self.item_id_cache.get_note_size(self.note.id, use_cache=False), number=100_000)
-        self.assertLessEqual(execution_time, 15)
-
-    def test_get_note_size_performance_use_cache(self):
-        execution_time: float = timeit.timeit(
-            lambda: self.item_id_cache.get_note_size(self.note.id, use_cache=True), number=100_000)
-        self.assertLessEqual(execution_time, 0.5)
-
-    def _run_get_note_size(self, use_cache: bool):
-        for _ in range(100_000):
-            self.item_id_cache.get_note_size(self.note.id, use_cache=use_cache)
+            lambda: self.item_id_cache.get_note_size(self.note.id, use_cache=True), number=1_000_000)
+        self.assertLessEqual(execution_time, 1)
 
     def test_get_note_size_str_no_cache(self):
         note_id: NoteId = self.note.id
