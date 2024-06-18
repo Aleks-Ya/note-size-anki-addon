@@ -9,14 +9,14 @@ from bs4 import BeautifulSoup
 from note_size import SizeCalculator
 from note_size.details_formatter import DetailsFormatter
 from note_size.media_cache import MediaCache
-from tests.data import TestData
+from tests.data import Data
 
 
 class DetailsFormatterTestCase(unittest.TestCase):
 
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
-        self.td: TestData = TestData()
+        self.td: Data = Data(self.col)
         self.note_size_dir: Path = Path("../note_size").absolute() if Path("../note_size").exists() \
             else Path("./note_size").absolute()
         media_cache: MediaCache = MediaCache(self.col)
@@ -24,7 +24,7 @@ class DetailsFormatterTestCase(unittest.TestCase):
         self.details_formatter: DetailsFormatter = DetailsFormatter(self.note_size_dir, size_calculator)
 
     def test_format_note_detailed_text(self):
-        self.note: Note = self.td.create_note_with_files(self.col)
+        self.note: Note = self.td.create_note_with_files()
         exp_html: str = f"""
                     <h3>Total note size: <code style="font-family:Consolas,monospace">142B</code></h3>
                     <li>Texts size: <code style="font-family:Consolas,monospace">121B</code></li>
@@ -51,7 +51,7 @@ class DetailsFormatterTestCase(unittest.TestCase):
         self.assertEqual(exp_text, act_text)
 
     def test_format_no_files(self):
-        self.note: Note = self.td.create_note_without_files(self.col)
+        self.note: Note = self.td.create_note_without_files()
         exp_html: str = """
                     <h3>Total note size: <code style="font-family:Consolas,monospace">70B</code></h3>
                     <li>Texts size: <code style="font-family:Consolas,monospace">70B</code></li>
@@ -64,8 +64,8 @@ class DetailsFormatterTestCase(unittest.TestCase):
         self.assertEqual(exp_text, act_text)
 
     def test_format_note_with_single_missing_file(self):
-        self.note: Note = self.td.create_note_without_files(self.col)
-        self.note[self.td.front_field_name] = 'Missing file: <img src="absents.png">'
+        self.note: Note = self.td.create_note_without_files()
+        self.note[Data.front_field_name] = 'Missing file: <img src="absents.png">'
         self.col.update_note(self.note)
         exp_html: str = f"""
                         <h3>Total note size: <code style="font-family:Consolas,monospace">73B</code></h3>

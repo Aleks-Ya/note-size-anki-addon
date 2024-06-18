@@ -9,14 +9,14 @@ from note_size.item_id_cache import ItemIdCache
 from note_size.media_cache import MediaCache
 from note_size.size_calculator import SizeCalculator
 from note_size.types import SizeBytes, ButtonLabel
-from tests.data import TestData
+from tests.data import Data
 
 
 class ButtonFormatterTestCase(unittest.TestCase):
 
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
-        self.td: TestData = TestData()
+        self.td: Data = Data(self.col)
         media_cache: MediaCache = MediaCache(self.col)
         self.size_calculator: SizeCalculator = SizeCalculator(media_cache)
         item_id_cache: ItemIdCache = ItemIdCache(self.col, self.size_calculator)
@@ -27,22 +27,22 @@ class ButtonFormatterTestCase(unittest.TestCase):
         self.assertEqual("Size: 0B", label)
 
     def test_get_add_mode_label(self):
-        note: Note = self.td.create_note_with_files(self.col)
+        note: Note = self.td.create_note_with_files()
         label: ButtonLabel = self.button_formatter.get_add_mode_label(note)
         self.assertEqual("Size: 142B", label)
 
     def test_get_edit_mode_label(self):
-        note: Note = self.td.create_note_with_files(self.col)
+        note: Note = self.td.create_note_with_files()
         label: ButtonLabel = self.button_formatter.get_edit_mode_label(note.id)
         self.assertEqual(SizeBytes(142), self.size_calculator.calculate_note_size(note))
         self.assertEqual("Size: 142B", label)
 
     def test_get_edit_mode_label_no_cache(self):
-        note: Note = self.td.create_note_with_files(self.col)
+        note: Note = self.td.create_note_with_files()
         label: ButtonLabel = self.button_formatter.get_edit_mode_label(note.id)
         self.assertEqual(SizeBytes(142), self.size_calculator.calculate_note_size(note))
         self.assertEqual("Size: 142B", label)
-        TestData.update_front_field(note, 'updated')
+        Data.update_front_field(note, 'updated')
         self.assertEqual(SizeBytes(85), self.size_calculator.calculate_note_size(self.col.get_note(note.id)))
         self.assertEqual("Size: 85B", self.button_formatter.get_edit_mode_label(note.id))
 
