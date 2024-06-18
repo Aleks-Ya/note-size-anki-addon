@@ -21,9 +21,7 @@ class ItemIdCache:
         self.id_cache: dict[CardId, NoteId] = {}
         self.size_bytes_cache: dict[NoteId, SizeBytes] = {}
         self.size_str_cache: dict[NoteId, SizeStr] = {}
-        self.id_cache_lock: RLock = RLock()
-        self.size_bytes_cache_lock: RLock = RLock()
-        self.size_str_lock: RLock = RLock()
+        self.lock: RLock = RLock()
 
     def warm_up_cache(self):
         try:
@@ -40,13 +38,13 @@ class ItemIdCache:
             log.exception("Cache warm-up failed")
 
     def get_note_id_by_card_id(self, card_id: CardId) -> NoteId:
-        with self.id_cache_lock:
+        with self.lock:
             if card_id not in self.id_cache:
                 self.id_cache[card_id] = self.col.get_card(card_id).nid
             return self.id_cache[card_id]
 
     def get_note_size(self, note_id: NoteId, use_cache: bool) -> SizeBytes:
-        with self.size_bytes_cache_lock:
+        with self.lock:
             if use_cache and note_id in self.size_bytes_cache:
                 return self.size_bytes_cache[note_id]
             else:
@@ -55,7 +53,7 @@ class ItemIdCache:
                 return self.size_bytes_cache[note_id]
 
     def get_note_size_str(self, note_id: NoteId, use_cache: bool) -> SizeStr:
-        with self.size_str_lock:
+        with self.lock:
             if use_cache and note_id in self.size_str_cache:
                 return self.size_str_cache[note_id]
             else:
