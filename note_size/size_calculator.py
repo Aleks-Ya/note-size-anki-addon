@@ -19,6 +19,10 @@ class SizeCalculator:
 
     @staticmethod
     def calculate_texts_size(note: Note) -> SizeBytes:
+        """
+
+        :rtype: object
+        """
         return SizeBytes(sum([len(field.encode('utf-8')) for field in note.fields]))
 
     def calculate_files_size(self, note: Note) -> SizeBytes:

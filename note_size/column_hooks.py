@@ -9,7 +9,7 @@ from aqt.browser import Column, Cell, SearchContext
 from aqt.browser import ItemId, CellRow
 
 from .item_id_cache import ItemIdCache
-from .types import SizeBytes, SizeStr
+from .types import SizeBytes, SizeType
 
 log: Logger = logging.getLogger(__name__)
 
@@ -57,20 +57,17 @@ class ColumnHooks:
         )
 
     def _modify_row(self, item_id: ItemId, is_note: bool, row: CellRow, columns: Sequence[str]) -> None:
-        self._update_row(columns, is_note, item_id, row, ColumnHooks.column_total_key,
-                         lambda note_id: self.item_id_cache.get_note_size_str(note_id, use_cache=True))
-        self._update_row(columns, is_note, item_id, row, ColumnHooks.column_texts_key,
-                         lambda note_id: self.item_id_cache.get_note_size_texts_str(note_id, use_cache=True))
-        self._update_row(columns, is_note, item_id, row, ColumnHooks.column_files_key,
-                         lambda note_id: self.item_id_cache.get_note_size_files_str(note_id, use_cache=True))
+        note_id: NoteId = item_id if is_note else self.item_id_cache.get_note_id_by_card_id(item_id)
+        self._update_row(columns, note_id, row, ColumnHooks.column_total_key, ItemIdCache.TOTAL_SIZE)
+        self._update_row(columns, note_id, row, ColumnHooks.column_texts_key, ItemIdCache.TEXTS_SIZE)
+        self._update_row(columns, note_id, row, ColumnHooks.column_files_key, ItemIdCache.FILES_SIZE)
 
-    def _update_row(self, columns: Sequence[str], is_note: bool, item_id: ItemId, row: CellRow, column_key: str,
-                    note_size_str_lambda: Callable[[NoteId], SizeStr]):
+    def _update_row(self, columns: Sequence[str], note_id: NoteId, row: CellRow, column_key: str,
+                    size_type: SizeType):
         if column_key in columns:
             column_index: int = columns.index(column_key)
             cell: Cell = row.cells[column_index]
-            note_id: NoteId = item_id if is_note else self.item_id_cache.get_note_id_by_card_id(item_id)
-            cell.text = note_size_str_lambda(note_id)
+            cell.text = self.item_id_cache.get_note_size_str(note_id, size_type, use_cache=True)
 
     @staticmethod
     def _on_browser_will_search(context: SearchContext) -> None:
@@ -90,11 +87,11 @@ class ColumnHooks:
         log.debug("Browser did search")
         is_note: bool = ColumnHooks._is_notes_mode(context)
         ColumnHooks._sort_by_column(context, ColumnHooks.column_total_label,
-                                    lambda item_id: self._get_item_size_total(item_id, is_note))
+                                    lambda item_id: self._get_item_size(item_id, ItemIdCache.TOTAL_SIZE, is_note))
         ColumnHooks._sort_by_column(context, ColumnHooks.column_texts_label,
-                                    lambda item_id: self._get_item_size_texts(item_id, is_note))
+                                    lambda item_id: self._get_item_size(item_id, ItemIdCache.TEXTS_SIZE, is_note))
         ColumnHooks._sort_by_column(context, ColumnHooks.column_files_label,
-                                    lambda item_id: self._get_item_size_files(item_id, is_note))
+                                    lambda item_id: self._get_item_size(item_id, ItemIdCache.FILES_SIZE, is_note))
 
     @staticmethod
     def _sort_by_column(context: SearchContext, column_label: str, item_size_lambda: Callable[[ItemId], SizeBytes]):
@@ -107,14 +104,6 @@ class ColumnHooks:
         # noinspection PyProtectedMember
         return context.browser._switch.isChecked()
 
-    def _get_item_size_total(self, item_id: ItemId, is_note: bool) -> SizeBytes:
+    def _get_item_size(self, item_id: ItemId, size_type: SizeType, is_note: bool) -> SizeBytes:
         note_id: NoteId = item_id if is_note else self.item_id_cache.get_note_id_by_card_id(item_id)
-        return self.item_id_cache.get_note_size(note_id, use_cache=True)
-
-    def _get_item_size_texts(self, item_id: ItemId, is_note: bool) -> SizeBytes:
-        note_id: NoteId = item_id if is_note else self.item_id_cache.get_note_id_by_card_id(item_id)
-        return self.item_id_cache.get_note_texts_size(note_id, use_cache=True)
-
-    def _get_item_size_files(self, item_id: ItemId, is_note: bool) -> SizeBytes:
-        note_id: NoteId = item_id if is_note else self.item_id_cache.get_note_id_by_card_id(item_id)
-        return self.item_id_cache.get_note_files_size(note_id, use_cache=True)
+        return self.item_id_cache.get_note_size_bytes(note_id, size_type, use_cache=True)
