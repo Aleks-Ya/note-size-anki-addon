@@ -9,6 +9,7 @@ from aqt import mw, gui_hooks
 from .button.button_formatter import ButtonFormatter
 from .button.details_formatter import DetailsFormatter
 from .button.button_hooks import ButtonHooks
+from .column.item_id_sorter import ItemIdSorter
 from .config import Config
 from .cache.media_cache import MediaCache
 from .cache.item_id_cache import ItemIdCache
@@ -42,7 +43,8 @@ def initialize():
     mc: MediaCache = MediaCache(mw.col)
     sc: SizeCalculator = SizeCalculator(mc)
     iic: ItemIdCache = ItemIdCache(mw.col, sc, c)
-    ch: ColumnHooks = ColumnHooks(iic)
+    iis: ItemIdSorter = ItemIdSorter(iic)
+    ch: ColumnHooks = ColumnHooks(iic, iis)
     ch.setup_hooks()
     dt: DetailsFormatter = DetailsFormatter(addon_dir, sc, c)
     bf: ButtonFormatter = ButtonFormatter(iic, sc)
