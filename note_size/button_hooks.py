@@ -27,11 +27,11 @@ class ButtonHooks:
         log.info("Size button hooks are set")
 
     def _on_init(self, editor: Editor):
-        self.editor = editor
+        self.editor: Editor = editor
 
     def _on_size_button_click(self, editor: Editor):
         log.info("Size button was clicked")
-        note = editor.note
+        note: Note = editor.note
         if note:
             showInfo(self.details_formatter.format_note_detailed_text(note))
 
