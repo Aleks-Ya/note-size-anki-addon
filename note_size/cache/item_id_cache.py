@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from logging import Logger
 from threading import RLock
 
@@ -33,6 +34,7 @@ class ItemIdCache:
     def warm_up_cache(self):
         try:
             log.info("Warming up cache...")
+            start_time: datetime = datetime.now()
             all_note_ids = self.col.find_notes("deck:*")
             for note_id in all_note_ids:
                 for size_type in [ItemIdCache.TEXTS_SIZE, ItemIdCache.FILES_SIZE, ItemIdCache.TOTAL_SIZE]:
@@ -41,7 +43,10 @@ class ItemIdCache:
             all_card_ids = self.col.find_cards("deck:*")
             for card_id in all_card_ids:
                 self.get_note_id_by_card_id(card_id)
-            log.info(f"Cache warming up finished: notes={len(all_note_ids)}, cards={len(all_card_ids)}")
+            end_time: datetime = datetime.now()
+            duration_sec: int = round((end_time - start_time).total_seconds())
+            log.info(f"Cache warming up finished: notes={len(all_note_ids)}, cards={len(all_card_ids)}, "
+                     f"duration_sec={duration_sec}")
         except Exception:
             log.exception("Cache warm-up failed")
 
