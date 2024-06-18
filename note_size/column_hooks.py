@@ -1,6 +1,6 @@
 import logging
 from logging import Logger
-from typing import Sequence, Optional
+from typing import Sequence, Optional, Callable
 
 from anki.collection import BrowserColumns
 from anki.notes import NoteId
@@ -9,14 +9,18 @@ from aqt.browser import Column, Cell, SearchContext
 from aqt.browser import ItemId, CellRow
 
 from .item_id_cache import ItemIdCache
-from .types import SizeBytes
+from .types import SizeBytes, SizeStr
 
 log: Logger = logging.getLogger(__name__)
 
 
 class ColumnHooks:
-    column_key: str = "note-size"
-    column_label: str = "Size"
+    column_total_key: str = "note-size-total"
+    column_total_label: str = "Size"
+    column_texts_key: str = "note-size-texts"
+    column_texts_label: str = "Size (texts)"
+    column_files_key: str = "note-size-files"
+    column_files_label: str = "Size (files)"
 
     def __init__(self, item_id_cache: ItemIdCache):
         self.item_id_cache: ItemIdCache = item_id_cache
@@ -30,42 +34,72 @@ class ColumnHooks:
 
     @staticmethod
     def _add_custom_column(columns: dict[str, Column]) -> None:
-        columns[ColumnHooks.column_key] = Column(
-            key=ColumnHooks.column_key,
-            cards_mode_label=ColumnHooks.column_label,
-            notes_mode_label=ColumnHooks.column_label,
+        ColumnHooks._add_column(columns, ColumnHooks.column_total_key, ColumnHooks.column_total_label,
+                                "Note size (texts and files are included)")
+        ColumnHooks._add_column(columns, ColumnHooks.column_texts_key, ColumnHooks.column_texts_label,
+                                "Note size (texts only, files are not included)")
+        ColumnHooks._add_column(columns, ColumnHooks.column_files_key, ColumnHooks.column_files_label,
+                                "Note size (files only, texts are not included)")
+        log.info("Columns were added")
+
+    @staticmethod
+    def _add_column(columns: dict[str, Column], column_key: str, column_label: str, tooltip_total: str) -> None:
+        columns[column_key] = Column(
+            key=column_key,
+            cards_mode_label=column_label,
+            notes_mode_label=column_label,
             sorting_cards=BrowserColumns.SORTING_DESCENDING,
             sorting_notes=BrowserColumns.SORTING_DESCENDING,
             uses_cell_font=True,
             alignment=BrowserColumns.ALIGNMENT_START,
-            cards_mode_tooltip="",
-            notes_mode_tooltip="",
+            cards_mode_tooltip=tooltip_total,
+            notes_mode_tooltip=tooltip_total,
         )
-        log.info("Column was added")
 
     def _modify_row(self, item_id: ItemId, is_note: bool, row: CellRow, columns: Sequence[str]) -> None:
-        if ColumnHooks.column_key in columns:
-            column_index: int = columns.index(ColumnHooks.column_key)
+        self._update_row(columns, is_note, item_id, row, ColumnHooks.column_total_key,
+                         lambda note_id: self.item_id_cache.get_note_size_str(note_id, use_cache=True))
+        self._update_row(columns, is_note, item_id, row, ColumnHooks.column_texts_key,
+                         lambda note_id: self.item_id_cache.get_note_size_texts_str(note_id, use_cache=True))
+        self._update_row(columns, is_note, item_id, row, ColumnHooks.column_files_key,
+                         lambda note_id: self.item_id_cache.get_note_size_files_str(note_id, use_cache=True))
+
+    def _update_row(self, columns: Sequence[str], is_note: bool, item_id: ItemId, row: CellRow, column_key: str,
+                    note_size_str_lambda: Callable[[NoteId], SizeStr]):
+        if column_key in columns:
+            column_index: int = columns.index(column_key)
             cell: Cell = row.cells[column_index]
             note_id: NoteId = item_id if is_note else self.item_id_cache.get_note_id_by_card_id(item_id)
-            cell.text = self.item_id_cache.get_note_size_str(note_id, use_cache=True)
+            cell.text = note_size_str_lambda(note_id)
 
     @staticmethod
     def _on_browser_will_search(context: SearchContext) -> None:
         log.debug("Browser will search")
-        if isinstance(context.order, Column) and context.order.key == ColumnHooks.column_key:
+        ColumnHooks._configure_sorting(context, ColumnHooks.column_total_key, ColumnHooks.column_total_label)
+        ColumnHooks._configure_sorting(context, ColumnHooks.column_texts_key, ColumnHooks.column_texts_label)
+        ColumnHooks._configure_sorting(context, ColumnHooks.column_files_key, ColumnHooks.column_files_label)
+
+    @staticmethod
+    def _configure_sorting(context: SearchContext, column_key: str, column_label: str):
+        if isinstance(context.order, Column) and context.order.key == column_key:
             sort_col: Optional[Column] = mw.col.get_browser_column("noteFld")
-            sort_col.notes_mode_label = ColumnHooks.column_label
+            sort_col.notes_mode_label = column_label
             context.order = sort_col
 
     def _on_browser_did_search(self, context: SearchContext) -> None:
         log.debug("Browser did search")
-        if (context.ids and isinstance(context.order, Column) and
-                context.order.notes_mode_label == ColumnHooks.column_label):
-            is_notes_mode: bool = ColumnHooks._is_notes_mode(context)
-            log.debug(f"Is notes mode: {is_notes_mode}")
-            context.ids = sorted(context.ids, key=lambda item_id: self._get_item_size(item_id, is_notes_mode),
-                                 reverse=True)
+        is_note: bool = ColumnHooks._is_notes_mode(context)
+        ColumnHooks._sort_by_column(context, ColumnHooks.column_total_label,
+                                    lambda item_id: self._get_item_size_total(item_id, is_note))
+        ColumnHooks._sort_by_column(context, ColumnHooks.column_texts_label,
+                                    lambda item_id: self._get_item_size_texts(item_id, is_note))
+        ColumnHooks._sort_by_column(context, ColumnHooks.column_files_label,
+                                    lambda item_id: self._get_item_size_files(item_id, is_note))
+
+    @staticmethod
+    def _sort_by_column(context: SearchContext, column_label: str, item_size_lambda: Callable[[ItemId], SizeBytes]):
+        if context.ids and isinstance(context.order, Column) and context.order.notes_mode_label == column_label:
+            context.ids = sorted(context.ids, key=item_size_lambda, reverse=True)
 
     @staticmethod
     def _is_notes_mode(context: SearchContext) -> bool:
@@ -73,6 +107,14 @@ class ColumnHooks:
         # noinspection PyProtectedMember
         return context.browser._switch.isChecked()
 
-    def _get_item_size(self, item_id: ItemId, is_note: bool) -> SizeBytes:
+    def _get_item_size_total(self, item_id: ItemId, is_note: bool) -> SizeBytes:
         note_id: NoteId = item_id if is_note else self.item_id_cache.get_note_id_by_card_id(item_id)
         return self.item_id_cache.get_note_size(note_id, use_cache=True)
+
+    def _get_item_size_texts(self, item_id: ItemId, is_note: bool) -> SizeBytes:
+        note_id: NoteId = item_id if is_note else self.item_id_cache.get_note_id_by_card_id(item_id)
+        return self.item_id_cache.get_note_texts_size(note_id, use_cache=True)
+
+    def _get_item_size_files(self, item_id: ItemId, is_note: bool) -> SizeBytes:
+        note_id: NoteId = item_id if is_note else self.item_id_cache.get_note_id_by_card_id(item_id)
+        return self.item_id_cache.get_note_files_size(note_id, use_cache=True)
