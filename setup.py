@@ -73,7 +73,7 @@ class MakeDistributionCommand(Command):
         commit: Commit = tag.commit if tag in repo.tags else repo.head.commit
         commit_epoch_sec: int = int(commit.committed_datetime.timestamp())
         draft: dict[str, any] = {
-            "name": "Note Size - sort notes by size",
+            "name": f"Note Size - sort notes by size {version}",
             "package": "note_size",
             "author": _author,
             "min_point_version": 240401,
