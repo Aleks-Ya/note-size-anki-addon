@@ -5,6 +5,7 @@ import unittest
 from anki.collection import Collection
 from anki.notes import Note
 
+from note_size import Config
 from note_size.cache.media_cache import MediaCache
 from note_size.types import SizeBytes
 from tests.data import Data
@@ -14,7 +15,8 @@ class MediaCacheTestCase(unittest.TestCase):
 
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
-        self.media_cache: MediaCache = MediaCache(self.col)
+        config: Config = Data.read_config()
+        self.media_cache: MediaCache = MediaCache(self.col, config)
         self.td: Data = Data(self.col)
 
     def test_get_file_size(self):

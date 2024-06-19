@@ -24,9 +24,9 @@ class ColumnHooksTestCase(unittest.TestCase):
         self.assertEqual(0, gui_hooks.browser_will_search.count())
         self.assertEqual(0, gui_hooks.browser_did_search.count())
 
-        media_cache: MediaCache = MediaCache(self.col)
-        size_calculator: SizeCalculator = SizeCalculator(media_cache)
         config: Config = Data.read_config()
+        media_cache: MediaCache = MediaCache(self.col, config)
+        size_calculator: SizeCalculator = SizeCalculator(media_cache)
         item_id_cache: ItemIdCache = ItemIdCache(self.col, size_calculator, config)
         item_id_sorter: ItemIdSorter = ItemIdSorter(item_id_cache)
         column_hooks: ColumnHooks = ColumnHooks(item_id_cache, item_id_sorter)

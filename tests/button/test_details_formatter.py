@@ -20,9 +20,9 @@ class DetailsFormatterTestCase(unittest.TestCase):
         self.td: Data = Data(self.col)
         self.note_size_dir: Path = Path("../note_size").absolute() if Path("../note_size").exists() \
             else Path("./note_size").absolute()
-        media_cache: MediaCache = MediaCache(self.col)
-        size_calculator: SizeCalculator = SizeCalculator(media_cache)
         config: Config = Data.read_config()
+        media_cache: MediaCache = MediaCache(self.col, config)
+        size_calculator: SizeCalculator = SizeCalculator(media_cache)
         self.details_formatter: DetailsFormatter = DetailsFormatter(self.note_size_dir, size_calculator, config)
 
     def test_format_note_detailed_text(self):

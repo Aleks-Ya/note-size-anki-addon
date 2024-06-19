@@ -28,9 +28,9 @@ class ButtonHooksTestCase(unittest.TestCase):
         self.assertEqual(0, gui_hooks.editor_did_fire_typing_timer.count())
 
         addon_dir: Path = Path(__file__).parent.parent.parent.joinpath("note_size")
-        media_cache: MediaCache = MediaCache(self.col)
-        size_calculator: SizeCalculator = SizeCalculator(media_cache)
         config: Config = Data.read_config()
+        media_cache: MediaCache = MediaCache(self.col, config)
+        size_calculator: SizeCalculator = SizeCalculator(media_cache)
         item_id_cache: ItemIdCache = ItemIdCache(self.col, size_calculator, config)
         details_formatter: DetailsFormatter = DetailsFormatter(addon_dir, size_calculator, config)
         button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, size_calculator)

@@ -17,9 +17,9 @@ class ItemIdCacheTestCase(unittest.TestCase):
 
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
-        media_cache: MediaCache = MediaCache(self.col)
-        size_calculator: SizeCalculator = SizeCalculator(media_cache)
         config: Config = Data.read_config()
+        media_cache: MediaCache = MediaCache(self.col, config)
+        size_calculator: SizeCalculator = SizeCalculator(media_cache)
         self.item_id_cache: ItemIdCache = ItemIdCache(self.col, size_calculator, config)
         self.td: Data = Data(self.col)
         self.note: Note = self.td.create_note_with_files()

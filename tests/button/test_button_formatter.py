@@ -18,9 +18,9 @@ class ButtonFormatterTestCase(unittest.TestCase):
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
         self.td: Data = Data(self.col)
-        media_cache: MediaCache = MediaCache(self.col)
-        self.size_calculator: SizeCalculator = SizeCalculator(media_cache)
         config: Config = Data.read_config()
+        media_cache: MediaCache = MediaCache(self.col, config)
+        self.size_calculator: SizeCalculator = SizeCalculator(media_cache)
         item_id_cache: ItemIdCache = ItemIdCache(self.col, self.size_calculator, config)
         self.button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, self.size_calculator)
 

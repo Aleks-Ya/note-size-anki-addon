@@ -4,6 +4,7 @@ import unittest
 from anki.collection import Collection
 from anki.notes import Note
 
+from note_size import Config
 from note_size.cache.media_cache import MediaCache
 from note_size.types import SizeBytes, MediaFile
 from note_size.calculator.size_calculator import SizeCalculator
@@ -16,7 +17,8 @@ class SizeCalculatorTestCase(unittest.TestCase):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
         self.td: Data = Data(self.col)
         self.note: Note = self.td.create_note_with_files()
-        media_cache: MediaCache = MediaCache(self.col)
+        config: Config = Data.read_config()
+        media_cache: MediaCache = MediaCache(self.col, config)
         self.size_calculator: SizeCalculator = SizeCalculator(media_cache)
 
     def test_calculate_texts_size(self):

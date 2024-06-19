@@ -38,9 +38,14 @@ with open(Path(addon_dir, 'version.txt'), 'r') as file:
 log.info(f"NoteSize addon version: {version}")
 
 
+def _warm_up_caches(media_cache: MediaCache, item_id_cache: ItemIdCache):
+    media_cache.warm_up_cache()
+    item_id_cache.warm_up_cache()
+
+
 def initialize():
     c: Config = Config(mw.addonManager.getConfig(__name__))
-    mc: MediaCache = MediaCache(mw.col)
+    mc: MediaCache = MediaCache(mw.col, c)
     sc: SizeCalculator = SizeCalculator(mc)
     iic: ItemIdCache = ItemIdCache(mw.col, sc, c)
     iis: ItemIdSorter = ItemIdSorter(iic)
@@ -50,7 +55,7 @@ def initialize():
     bf: ButtonFormatter = ButtonFormatter(iic, sc)
     bh: ButtonHooks = ButtonHooks(dt, bf)
     bh.setup_hooks()
-    thread = Thread(target=iic.warm_up_cache)
+    thread = Thread(target=_warm_up_caches, args=[mc, iic])
     thread.start()
 
 
