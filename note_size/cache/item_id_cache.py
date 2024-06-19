@@ -52,8 +52,13 @@ class ItemIdCache:
                 self.get_note_id_by_card_id(card_id)
             end_time: datetime = datetime.now()
             duration_sec: int = round((end_time - start_time).total_seconds())
+            size_bytes_cache_lengths: str = str([f"{cache[0]}={len(cache[1].keys())}"
+                                                 for cache in self.size_bytes_caches.items()])
+            size_str_cache_lengths: str = str([f"{cache[0]}={len(cache[1].keys())}"
+                                               for cache in self.size_str_caches.items()])
             log.info(f"Cache warming up finished: notes={len(all_note_ids)}, cards={len(all_card_ids)}, "
-                     f"duration_sec={duration_sec}")
+                     f"duration_sec={duration_sec}, size_bytes_cache_lengths={size_bytes_cache_lengths}, "
+                     f"size_str_cache_lengths={size_str_cache_lengths}, id_cache_length={len(self.id_cache.keys())}")
         except Exception:
             log.exception("Cache warm-up failed")
 
