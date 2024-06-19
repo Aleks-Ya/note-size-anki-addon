@@ -11,7 +11,7 @@ from note_size.types import SizeBytes
 from tests.data import Data
 
 
-class MediaCacheTestCase(unittest.TestCase):
+class TestMediaCache(unittest.TestCase):
 
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])

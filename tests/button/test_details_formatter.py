@@ -13,7 +13,7 @@ from note_size.cache.media_cache import MediaCache
 from tests.data import Data
 
 
-class DetailsFormatterTestCase(unittest.TestCase):
+class TestDetailsFormatter(unittest.TestCase):
 
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])

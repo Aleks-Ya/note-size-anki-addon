@@ -15,7 +15,7 @@ from note_size.calculator.size_calculator import SizeCalculator
 from tests.data import Data
 
 
-class ButtonHooksTestCase(unittest.TestCase):
+class TestButtonHooks(unittest.TestCase):
 
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])

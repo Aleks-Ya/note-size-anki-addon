@@ -13,7 +13,7 @@ from note_size.types import SizeBytes, SizeStr, SizeType
 from tests.data import Data
 
 
-class ItemIdCacheTestCase(unittest.TestCase):
+class TestItemIdCache(unittest.TestCase):
 
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])

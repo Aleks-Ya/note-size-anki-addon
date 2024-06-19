@@ -15,7 +15,7 @@ from note_size.types import SizeType
 from tests.data import Data
 
 
-class ItemIdSorterTestCase(unittest.TestCase):
+class TestItemIdSorter(unittest.TestCase):
 
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])

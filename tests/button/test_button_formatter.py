@@ -13,7 +13,7 @@ from note_size.types import SizeBytes, ButtonLabel
 from tests.data import Data
 
 
-class ButtonFormatterTestCase(unittest.TestCase):
+class TestButtonFormatter(unittest.TestCase):
 
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])

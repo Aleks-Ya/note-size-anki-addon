@@ -13,7 +13,7 @@ from note_size.column.item_id_sorter import ItemIdSorter
 from tests.data import Data
 
 
-class ColumnHooksTestCase(unittest.TestCase):
+class TestColumnHooks(unittest.TestCase):
 
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])

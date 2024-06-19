@@ -8,7 +8,7 @@ from note_size.types import SizeBytes, MediaFile, SizeStr
 from note_size.calculator.size_formatter import SizeFormatter
 
 
-class SizeFormatterTestCase(unittest.TestCase):
+class TestSizeFormatter(unittest.TestCase):
 
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
