@@ -6,7 +6,7 @@ from typing import Sequence
 
 from anki.cards import CardId
 from anki.collection import Collection
-from anki.notes import NoteId, Note
+from anki.notes import NoteId
 
 from ..config import Config
 from ..types import SizeStr, SizeBytes, SizeType
@@ -74,13 +74,13 @@ class ItemIdCache:
             if use_cache and note_id in cache:
                 return cache[note_id]
             else:
-                note: Note = self.col.get_note(note_id)
                 if size_type == ItemIdCache.TOTAL_SIZE:
-                    size: SizeBytes = self.size_calculator.calculate_note_size(note)
+                    size: SizeBytes = SizeBytes(self.get_note_size_bytes(note_id, ItemIdCache.TEXTS_SIZE, use_cache) +
+                                                self.get_note_size_bytes(note_id, ItemIdCache.FILES_SIZE, use_cache))
                 if size_type == ItemIdCache.TEXTS_SIZE:
-                    size: SizeBytes = self.size_calculator.calculate_texts_size(note)
+                    size: SizeBytes = self.size_calculator.calculate_texts_size(self.col.get_note(note_id))
                 if size_type == ItemIdCache.FILES_SIZE:
-                    size: SizeBytes = self.size_calculator.calculate_files_size(note)
+                    size: SizeBytes = self.size_calculator.calculate_files_size(self.col.get_note(note_id))
                 cache[note_id] = size
                 return cache[note_id]
 
