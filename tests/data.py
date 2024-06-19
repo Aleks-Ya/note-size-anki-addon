@@ -37,9 +37,9 @@ class Data:
         file3: MediaFile = MediaFile('animation.gif')
         front_field_content_with_files: str = f'Files: <img src="{file1}"> <img src="{file2}"> ∑￡'
         back_field_content_with_files: str = f'Files: <img src="{file1}"> <img src="{file3}"> ∆¥'
-        self._write_data_no_renaming(file1, content1)
-        self._write_data_no_renaming(file2, content2)
-        self._write_data_no_renaming(file3, content3)
+        self.__write_data_no_renaming(file1, content1)
+        self.__write_data_no_renaming(file2, content2)
+        self.__write_data_no_renaming(file3, content3)
         note: Note = self.col.newNote()
         note[self.__front_field_name] = front_field_content_with_files
         note[self.__back_field_name] = back_field_content_with_files
@@ -68,7 +68,7 @@ class Data:
         note[Data.__front_field_name] = content
         note.col.update_note(note)
 
-    def _write_data_no_renaming(self, file: MediaFile, content: bytes):
+    def __write_data_no_renaming(self, file: MediaFile, content: bytes):
         actual: MediaFile = self.col.media.write_data(file, content)
         if actual != file:
             raise RuntimeError(f"File was renamed: original={file}, renamed={actual}")

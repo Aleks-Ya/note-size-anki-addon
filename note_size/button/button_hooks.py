@@ -20,42 +20,42 @@ class ButtonHooks:
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def setup_hooks(self) -> None:
-        gui_hooks.editor_did_init.append(self._on_init)
-        gui_hooks.editor_did_init_buttons.append(self._add_editor_button)
-        gui_hooks.editor_did_load_note.append(self._on_load_note)
-        gui_hooks.editor_did_unfocus_field.append(self._on_unfocus_field)
-        gui_hooks.editor_did_fire_typing_timer.append(self._on_fire_typing_timer)
+        gui_hooks.editor_did_init.append(self.__on_init)
+        gui_hooks.editor_did_init_buttons.append(self.__add_editor_button)
+        gui_hooks.editor_did_load_note.append(self.__on_load_note)
+        gui_hooks.editor_did_unfocus_field.append(self.__on_unfocus_field)
+        gui_hooks.editor_did_fire_typing_timer.append(self.__on_fire_typing_timer)
         log.info("Size button hooks are set")
 
-    def _on_init(self, editor: Editor) -> None:
+    def __on_init(self, editor: Editor) -> None:
         self.editor: Editor = editor
 
-    def _on_size_button_click(self, editor: Editor) -> None:
+    def __on_size_button_click(self, editor: Editor) -> None:
         log.info("Size button was clicked")
         note: Note = editor.note
         if note:
             showInfo(self.details_formatter.format_note_detailed_text(note))
 
-    def _add_editor_button(self, buttons: list[str], editor: Editor) -> None:
+    def __add_editor_button(self, buttons: list[str], editor: Editor) -> None:
         button: str = editor.addButton(id="size_button",
                                        label=ButtonFormatter.get_zero_size_label(),
                                        icon=None, cmd="size_button_cmd",
-                                       func=self._on_size_button_click,
+                                       func=self.__on_size_button_click,
                                        tip="Click to see details",
                                        disables=False)
         buttons.append(button)
         log.info("Size button was added to Editor")
 
-    def _on_load_note(self, _: Editor) -> None:
-        self._refresh_size_button()
+    def __on_load_note(self, _: Editor) -> None:
+        self.__refresh_size_button()
 
-    def _on_unfocus_field(self, _: bool, __: Note, ___: int) -> None:
-        self._refresh_size_button()
+    def __on_unfocus_field(self, _: bool, __: Note, ___: int) -> None:
+        self.__refresh_size_button()
 
-    def _on_fire_typing_timer(self, _: Note) -> None:
-        self._refresh_size_button()
+    def __on_fire_typing_timer(self, _: Note) -> None:
+        self.__refresh_size_button()
 
-    def _refresh_size_button(self) -> None:
+    def __refresh_size_button(self) -> None:
         if self.editor.web:
             label: ButtonLabel = ButtonFormatter.get_zero_size_label()
             if self.editor.note:

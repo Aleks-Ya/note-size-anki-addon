@@ -25,13 +25,13 @@ class DetailsFormatter:
 
     def format_note_detailed_text(self, note: Note) -> str:
         soup: BeautifulSoup = BeautifulSoup()
-        self._add_total_note_size(note, soup)
-        DetailsFormatter._add_total_texts_size(note, soup)
-        self._add_total_files_size(note, soup)
-        self._add_files(note, soup)
+        self.__add_total_note_size(note, soup)
+        DetailsFormatter.__add_total_texts_size(note, soup)
+        self.__add_total_files_size(note, soup)
+        self.__add_files(note, soup)
         return str(soup.prettify())
 
-    def _add_total_note_size(self, note: Note, soup: BeautifulSoup) -> None:
+    def __add_total_note_size(self, note: Note, soup: BeautifulSoup) -> None:
         h3: Tag = soup.new_tag('h3')
         h3.string = f"Total note size: "
         code: Tag = soup.new_tag('code', attrs={"style": DetailsFormatter.__code_style})
@@ -40,7 +40,7 @@ class DetailsFormatter:
         soup.append(h3)
 
     @staticmethod
-    def _add_total_texts_size(note: Note, soup: BeautifulSoup) -> None:
+    def __add_total_texts_size(note: Note, soup: BeautifulSoup) -> None:
         li: Tag = soup.new_tag('li')
         li.string = f"Texts size: "
         code: Tag = soup.new_tag('code', attrs={"style": DetailsFormatter.__code_style})
@@ -48,7 +48,7 @@ class DetailsFormatter:
         li.append(code)
         soup.append(li)
 
-    def _add_total_files_size(self, note: Note, soup: BeautifulSoup) -> None:
+    def __add_total_files_size(self, note: Note, soup: BeautifulSoup) -> None:
         li: Tag = soup.new_tag('li')
         li.string = f"Files size: "
         code: Tag = soup.new_tag('code', attrs={"style": DetailsFormatter.__code_style})
@@ -56,7 +56,7 @@ class DetailsFormatter:
         li.append(code)
         soup.append(li)
 
-    def _add_files(self, note: Note, soup: BeautifulSoup) -> None:
+    def __add_files(self, note: Note, soup: BeautifulSoup) -> None:
         file_sizes: dict[MediaFile, SizeBytes] = SizeCalculator.sort_by_size_desc(self.size_calculator.file_sizes(note))
         is_empty_files: bool = len(file_sizes) == 0
         files_li: Tag = soup.new_tag('li')
@@ -66,7 +66,7 @@ class DetailsFormatter:
             ol: Tag = soup.new_tag('ol')
             for file, size in file_sizes.items():
                 filename, size_text = SizeFormatter.file_size_to_str(file, size, self.max_length)
-                icon_path: Path = self._get_file_icon(filename)
+                icon_path: Path = self.__get_file_icon(filename)
                 img: Tag = soup.new_tag("img",
                                         attrs={"src": icon_path, "height": "15", "style": "vertical-align: middle;"})
                 log.info(f"IMG: {img.prettify()}")
@@ -79,7 +79,7 @@ class DetailsFormatter:
                 ol.append(li)
             soup.append(ol)
 
-    def _get_file_icon(self, filename: str) -> Path:
+    def __get_file_icon(self, filename: str) -> Path:
         full_mime_type: str = mimetypes.guess_type(filename)[0]
         general_mime_type: str = full_mime_type.split("/")[0]
         icon_path: Path = self.icons_dir.joinpath(general_mime_type + ".png")

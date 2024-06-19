@@ -18,7 +18,7 @@ from .calculator.size_formatter import SizeFormatter
 from .column.column_hooks import ColumnHooks
 
 
-def configure_logging(addon_folder: Path) -> Logger:
+def __configure_logging(addon_folder: Path) -> Logger:
     log_file: str = os.path.join(addon_folder, "note_size.log")
     logger: Logger = logging.getLogger(__name__)
     handler: FileHandler = FileHandler(log_file)
@@ -32,18 +32,18 @@ def configure_logging(addon_folder: Path) -> Logger:
 
 
 addon_dir: Path = Path(__file__).parent
-log: Logger = configure_logging(addon_dir)
+log: Logger = __configure_logging(addon_dir)
 with open(Path(addon_dir, 'version.txt'), 'r') as file:
     version = file.read()
 log.info(f"NoteSize addon version: {version}")
 
 
-def _warm_up_caches(media_cache: MediaCache, item_id_cache: ItemIdCache):
+def __warm_up_caches(media_cache: MediaCache, item_id_cache: ItemIdCache):
     media_cache.warm_up_cache()
     item_id_cache.warm_up_cache()
 
 
-def initialize():
+def __initialize():
     c: Config = Config(mw.addonManager.getConfig(__name__))
     mc: MediaCache = MediaCache(mw.col, c)
     sc: SizeCalculator = SizeCalculator(mc)
@@ -55,8 +55,8 @@ def initialize():
     bf: ButtonFormatter = ButtonFormatter(iic, sc)
     bh: ButtonHooks = ButtonHooks(dt, bf)
     bh.setup_hooks()
-    thread = Thread(target=_warm_up_caches, args=[mc, iic])
+    thread = Thread(target=__warm_up_caches, args=[mc, iic])
     thread.start()
 
 
-gui_hooks.profile_did_open.append(initialize)
+gui_hooks.profile_did_open.append(__initialize)

@@ -53,7 +53,7 @@ class MediaCache:
                     log.warning(f"File absents: {full_path}")
                     new_size: SizeBytes = SizeBytes(0)
                 old_size: SizeBytes = self.file_sizes_cache[file] if file in self.file_sizes_cache else SizeBytes(0)
-                self._update_total_size(old_size, new_size)
+                self.__update_total_size(old_size, new_size)
                 self.file_sizes_cache[file] = new_size
             return self.file_sizes_cache[file]
 
@@ -61,5 +61,5 @@ class MediaCache:
         with self.lock:
             return self.total_file_size
 
-    def _update_total_size(self, old_size: SizeBytes, new_size: SizeBytes) -> None:
+    def __update_total_size(self, old_size: SizeBytes, new_size: SizeBytes) -> None:
         self.total_file_size = SizeBytes(self.total_file_size - old_size + new_size)

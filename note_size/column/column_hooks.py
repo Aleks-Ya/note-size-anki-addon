@@ -32,24 +32,24 @@ class ColumnHooks:
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def setup_hooks(self) -> None:
-        gui_hooks.browser_did_fetch_columns.append(ColumnHooks._add_custom_column)
-        gui_hooks.browser_did_fetch_row.append(self._modify_row)
-        gui_hooks.browser_will_search.append(ColumnHooks._on_browser_will_search)
-        gui_hooks.browser_did_search.append(self._on_browser_did_search)
+        gui_hooks.browser_did_fetch_columns.append(ColumnHooks.__add_custom_column)
+        gui_hooks.browser_did_fetch_row.append(self.__modify_row)
+        gui_hooks.browser_will_search.append(ColumnHooks.__on_browser_will_search)
+        gui_hooks.browser_did_search.append(self.__on_browser_did_search)
         log.info("Size column hooks are set")
 
     @staticmethod
-    def _add_custom_column(columns: dict[str, Column]) -> None:
-        ColumnHooks._add_column(columns, ColumnHooks.__column_total_key, ColumnHooks.__column_total_label,
-                                ColumnHooks.__column_total_tooltip)
-        ColumnHooks._add_column(columns, ColumnHooks.__column_texts_key, ColumnHooks.__column_texts_label,
-                                ColumnHooks.__column_texts_tooltip)
-        ColumnHooks._add_column(columns, ColumnHooks.__column_files_key, ColumnHooks.__column_files_label,
-                                ColumnHooks.__column_files_tooltip)
+    def __add_custom_column(columns: dict[str, Column]) -> None:
+        ColumnHooks.__add_column(columns, ColumnHooks.__column_total_key, ColumnHooks.__column_total_label,
+                                 ColumnHooks.__column_total_tooltip)
+        ColumnHooks.__add_column(columns, ColumnHooks.__column_texts_key, ColumnHooks.__column_texts_label,
+                                 ColumnHooks.__column_texts_tooltip)
+        ColumnHooks.__add_column(columns, ColumnHooks.__column_files_key, ColumnHooks.__column_files_label,
+                                 ColumnHooks.__column_files_tooltip)
         log.info("Columns were added")
 
     @staticmethod
-    def _add_column(columns: dict[str, Column], column_key: str, column_label: str, tooltip_total: str) -> None:
+    def __add_column(columns: dict[str, Column], column_key: str, column_label: str, tooltip_total: str) -> None:
         columns[column_key] = Column(
             key=column_key,
             cards_mode_label=column_label,
@@ -62,46 +62,46 @@ class ColumnHooks:
             notes_mode_tooltip=tooltip_total
         )
 
-    def _modify_row(self, item_id: ItemId, is_note: bool, row: CellRow, columns: Sequence[str]) -> None:
+    def __modify_row(self, item_id: ItemId, is_note: bool, row: CellRow, columns: Sequence[str]) -> None:
         note_id: NoteId = item_id if is_note else self.item_id_cache.get_note_id_by_card_id(item_id)
-        self._update_row(columns, note_id, row, ColumnHooks.__column_total_key, SizeType.TOTAL)
-        self._update_row(columns, note_id, row, ColumnHooks.__column_texts_key, SizeType.TEXTS)
-        self._update_row(columns, note_id, row, ColumnHooks.__column_files_key, SizeType.FILES)
+        self.__update_row(columns, note_id, row, ColumnHooks.__column_total_key, SizeType.TOTAL)
+        self.__update_row(columns, note_id, row, ColumnHooks.__column_texts_key, SizeType.TEXTS)
+        self.__update_row(columns, note_id, row, ColumnHooks.__column_files_key, SizeType.FILES)
 
-    def _update_row(self, columns: Sequence[str], note_id: NoteId, row: CellRow, column_key: str,
-                    size_type: SizeType):
+    def __update_row(self, columns: Sequence[str], note_id: NoteId, row: CellRow, column_key: str,
+                     size_type: SizeType):
         if column_key in columns:
             column_index: int = columns.index(column_key)
             cell: Cell = row.cells[column_index]
             cell.text = self.item_id_cache.get_note_size_str(note_id, size_type, use_cache=True)
 
     @staticmethod
-    def _on_browser_will_search(context: SearchContext) -> None:
+    def __on_browser_will_search(context: SearchContext) -> None:
         log.debug("Browser will search")
-        ColumnHooks._configure_sorting(context, ColumnHooks.__column_total_key, ColumnHooks.__column_total_label)
-        ColumnHooks._configure_sorting(context, ColumnHooks.__column_texts_key, ColumnHooks.__column_texts_label)
-        ColumnHooks._configure_sorting(context, ColumnHooks.__column_files_key, ColumnHooks.__column_files_label)
+        ColumnHooks.__configure_sorting(context, ColumnHooks.__column_total_key, ColumnHooks.__column_total_label)
+        ColumnHooks.__configure_sorting(context, ColumnHooks.__column_texts_key, ColumnHooks.__column_texts_label)
+        ColumnHooks.__configure_sorting(context, ColumnHooks.__column_files_key, ColumnHooks.__column_files_label)
 
     @staticmethod
-    def _configure_sorting(context: SearchContext, column_key: str, column_label: str) -> None:
+    def __configure_sorting(context: SearchContext, column_key: str, column_label: str) -> None:
         if isinstance(context.order, Column) and context.order.key == column_key:
             sort_col: Optional[Column] = mw.col.get_browser_column("noteFld")
             sort_col.notes_mode_label = column_label
             context.order = sort_col
 
-    def _on_browser_did_search(self, context: SearchContext) -> None:
+    def __on_browser_did_search(self, context: SearchContext) -> None:
         log.debug("Browser did search")
-        is_note: bool = ColumnHooks._is_notes_mode(context)
-        self._sort_by_column(context, ColumnHooks.__column_total_label, SizeType.TOTAL, is_note)
-        self._sort_by_column(context, ColumnHooks.__column_texts_label, SizeType.TEXTS, is_note)
-        self._sort_by_column(context, ColumnHooks.__column_files_label, SizeType.FILES, is_note)
+        is_note: bool = ColumnHooks.__is_notes_mode(context)
+        self.__sort_by_column(context, ColumnHooks.__column_total_label, SizeType.TOTAL, is_note)
+        self.__sort_by_column(context, ColumnHooks.__column_texts_label, SizeType.TEXTS, is_note)
+        self.__sort_by_column(context, ColumnHooks.__column_files_label, SizeType.FILES, is_note)
 
-    def _sort_by_column(self, context: SearchContext, column_label: str, size_type: SizeType, is_note: bool) -> None:
+    def __sort_by_column(self, context: SearchContext, column_label: str, size_type: SizeType, is_note: bool) -> None:
         if context.ids and isinstance(context.order, Column) and context.order.notes_mode_label == column_label:
             context.ids = self.item_id_sorter.sort_item_ids(context.ids, size_type, is_note)
 
     @staticmethod
-    def _is_notes_mode(context: SearchContext) -> bool:
+    def __is_notes_mode(context: SearchContext) -> bool:
         # Method "aqt.browser.table.table.Table.is_notes_mode" doesn't show correct state after toggling the switch
         # noinspection PyProtectedMember
         return context.browser._switch.isChecked()
