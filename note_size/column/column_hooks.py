@@ -16,15 +16,15 @@ log: Logger = logging.getLogger(__name__)
 
 
 class ColumnHooks:
-    column_total_key: str = "note-size-total"
-    column_total_label: str = "Size"
-    column_total_tooltip: str = "Note size (texts and files are included)"
-    column_texts_key: str = "note-size-texts"
-    column_texts_label: str = "Size (texts)"
-    column_texts_tooltip: str = "Note size (texts only, files are not included)"
-    column_files_key: str = "note-size-files"
-    column_files_label: str = "Size (files)"
-    column_files_tooltip: str = "Note size (files only, texts are not included)"
+    __column_total_key: str = "note-size-total"
+    __column_total_label: str = "Size"
+    __column_total_tooltip: str = "Note size (texts and files are included)"
+    __column_texts_key: str = "note-size-texts"
+    __column_texts_label: str = "Size (texts)"
+    __column_texts_tooltip: str = "Note size (texts only, files are not included)"
+    __column_files_key: str = "note-size-files"
+    __column_files_label: str = "Size (files)"
+    __column_files_tooltip: str = "Note size (files only, texts are not included)"
 
     def __init__(self, item_id_cache: ItemIdCache, item_id_sorter: ItemIdSorter):
         self.item_id_cache: ItemIdCache = item_id_cache
@@ -40,12 +40,12 @@ class ColumnHooks:
 
     @staticmethod
     def _add_custom_column(columns: dict[str, Column]) -> None:
-        ColumnHooks._add_column(columns, ColumnHooks.column_total_key, ColumnHooks.column_total_label,
-                                ColumnHooks.column_total_tooltip)
-        ColumnHooks._add_column(columns, ColumnHooks.column_texts_key, ColumnHooks.column_texts_label,
-                                ColumnHooks.column_texts_tooltip)
-        ColumnHooks._add_column(columns, ColumnHooks.column_files_key, ColumnHooks.column_files_label,
-                                ColumnHooks.column_files_tooltip)
+        ColumnHooks._add_column(columns, ColumnHooks.__column_total_key, ColumnHooks.__column_total_label,
+                                ColumnHooks.__column_total_tooltip)
+        ColumnHooks._add_column(columns, ColumnHooks.__column_texts_key, ColumnHooks.__column_texts_label,
+                                ColumnHooks.__column_texts_tooltip)
+        ColumnHooks._add_column(columns, ColumnHooks.__column_files_key, ColumnHooks.__column_files_label,
+                                ColumnHooks.__column_files_tooltip)
         log.info("Columns were added")
 
     @staticmethod
@@ -64,9 +64,9 @@ class ColumnHooks:
 
     def _modify_row(self, item_id: ItemId, is_note: bool, row: CellRow, columns: Sequence[str]) -> None:
         note_id: NoteId = item_id if is_note else self.item_id_cache.get_note_id_by_card_id(item_id)
-        self._update_row(columns, note_id, row, ColumnHooks.column_total_key, SizeType.TOTAL)
-        self._update_row(columns, note_id, row, ColumnHooks.column_texts_key, SizeType.TEXTS)
-        self._update_row(columns, note_id, row, ColumnHooks.column_files_key, SizeType.FILES)
+        self._update_row(columns, note_id, row, ColumnHooks.__column_total_key, SizeType.TOTAL)
+        self._update_row(columns, note_id, row, ColumnHooks.__column_texts_key, SizeType.TEXTS)
+        self._update_row(columns, note_id, row, ColumnHooks.__column_files_key, SizeType.FILES)
 
     def _update_row(self, columns: Sequence[str], note_id: NoteId, row: CellRow, column_key: str,
                     size_type: SizeType):
@@ -78,9 +78,9 @@ class ColumnHooks:
     @staticmethod
     def _on_browser_will_search(context: SearchContext) -> None:
         log.debug("Browser will search")
-        ColumnHooks._configure_sorting(context, ColumnHooks.column_total_key, ColumnHooks.column_total_label)
-        ColumnHooks._configure_sorting(context, ColumnHooks.column_texts_key, ColumnHooks.column_texts_label)
-        ColumnHooks._configure_sorting(context, ColumnHooks.column_files_key, ColumnHooks.column_files_label)
+        ColumnHooks._configure_sorting(context, ColumnHooks.__column_total_key, ColumnHooks.__column_total_label)
+        ColumnHooks._configure_sorting(context, ColumnHooks.__column_texts_key, ColumnHooks.__column_texts_label)
+        ColumnHooks._configure_sorting(context, ColumnHooks.__column_files_key, ColumnHooks.__column_files_label)
 
     @staticmethod
     def _configure_sorting(context: SearchContext, column_key: str, column_label: str) -> None:
@@ -92,9 +92,9 @@ class ColumnHooks:
     def _on_browser_did_search(self, context: SearchContext) -> None:
         log.debug("Browser did search")
         is_note: bool = ColumnHooks._is_notes_mode(context)
-        self._sort_by_column(context, ColumnHooks.column_total_label, SizeType.TOTAL, is_note)
-        self._sort_by_column(context, ColumnHooks.column_texts_label, SizeType.TEXTS, is_note)
-        self._sort_by_column(context, ColumnHooks.column_files_label, SizeType.FILES, is_note)
+        self._sort_by_column(context, ColumnHooks.__column_total_label, SizeType.TOTAL, is_note)
+        self._sort_by_column(context, ColumnHooks.__column_texts_label, SizeType.TEXTS, is_note)
+        self._sort_by_column(context, ColumnHooks.__column_files_label, SizeType.FILES, is_note)
 
     def _sort_by_column(self, context: SearchContext, column_label: str, size_type: SizeType, is_note: bool) -> None:
         if context.ids and isinstance(context.order, Column) and context.order.notes_mode_label == column_label:

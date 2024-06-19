@@ -15,7 +15,7 @@ log: Logger = logging.getLogger(__name__)
 
 
 class DetailsFormatter:
-    code_style: str = "font-family:Consolas,monospace"
+    __code_style: str = "font-family:Consolas,monospace"
 
     def __init__(self, addon_dir: Path, size_calculator: SizeCalculator, config: Config):
         self.icons_dir: Path = addon_dir.joinpath("button").joinpath("icon")
@@ -34,7 +34,7 @@ class DetailsFormatter:
     def _add_total_note_size(self, note: Note, soup: BeautifulSoup) -> None:
         h3: Tag = soup.new_tag('h3')
         h3.string = f"Total note size: "
-        code: Tag = soup.new_tag('code', attrs={"style": DetailsFormatter.code_style})
+        code: Tag = soup.new_tag('code', attrs={"style": DetailsFormatter.__code_style})
         code.string = SizeFormatter.bytes_to_str(self.size_calculator.calculate_note_size(note))
         h3.append(code)
         soup.append(h3)
@@ -43,7 +43,7 @@ class DetailsFormatter:
     def _add_total_texts_size(note: Note, soup: BeautifulSoup) -> None:
         li: Tag = soup.new_tag('li')
         li.string = f"Texts size: "
-        code: Tag = soup.new_tag('code', attrs={"style": DetailsFormatter.code_style})
+        code: Tag = soup.new_tag('code', attrs={"style": DetailsFormatter.__code_style})
         code.string = SizeFormatter.bytes_to_str(SizeCalculator.calculate_texts_size(note))
         li.append(code)
         soup.append(li)
@@ -51,7 +51,7 @@ class DetailsFormatter:
     def _add_total_files_size(self, note: Note, soup: BeautifulSoup) -> None:
         li: Tag = soup.new_tag('li')
         li.string = f"Files size: "
-        code: Tag = soup.new_tag('code', attrs={"style": DetailsFormatter.code_style})
+        code: Tag = soup.new_tag('code', attrs={"style": DetailsFormatter.__code_style})
         code.string = SizeFormatter.bytes_to_str(self.size_calculator.calculate_files_size(note))
         li.append(code)
         soup.append(li)
@@ -73,7 +73,7 @@ class DetailsFormatter:
                 li: Tag = soup.new_tag('li', attrs={"style": "white-space:nowrap"})
                 li.append(img)
                 li.append(f"{filename}: ")
-                code: Tag = soup.new_tag('code', attrs={"style": DetailsFormatter.code_style})
+                code: Tag = soup.new_tag('code', attrs={"style": DetailsFormatter.__code_style})
                 code.string = size_text
                 li.append(code)
                 ol.append(li)
