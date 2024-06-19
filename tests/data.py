@@ -29,49 +29,39 @@ class Data:
         self.col: Collection = col
 
     def create_note_with_files(self) -> NoteData:
-        content1: bytes = 'picture'.encode()
-        content2: bytes = 'sound'.encode()
-        content3: bytes = 'animation'.encode()
-        file1: MediaFile = MediaFile('picture.jpg')
-        file2: MediaFile = MediaFile('sound.mp3')
-        file3: MediaFile = MediaFile('animation.gif')
-        front_field_content_with_files: str = f'Files: <img src="{file1}"> <img src="{file2}"> ∑￡'
-        back_field_content_with_files: str = f'Files: <img src="{file1}"> <img src="{file3}"> ∆¥'
-        self.__write_data_no_renaming(file1, content1)
-        self.__write_data_no_renaming(file2, content2)
-        self.__write_data_no_renaming(file3, content3)
+        content0: bytes = 'picture'.encode()
+        content1: bytes = 'sound'.encode()
+        content2: bytes = 'animation'.encode()
+        file0: MediaFile = self.col.media.write_data('picture.jpg', content0)
+        file1: MediaFile = self.col.media.write_data('sound.mp3', content1)
+        file2: MediaFile = self.col.media.write_data('animation.gif', content2)
+        front_field_content: str = f'Files: <img src="{file0}"> <img src="{file1}"> ∑￡'
+        back_field_content: str = f'Files: <img src="{file0}"> <img src="{file2}"> ∆¥'
         note: Note = self.col.newNote()
-        note[self.__front_field_name] = front_field_content_with_files
-        note[self.__back_field_name] = back_field_content_with_files
+        note[self.__front_field_name] = front_field_content
+        note[self.__back_field_name] = back_field_content
         self.col.addNote(note)
-        file_contents: list[bytes] = [content1, content2, content3]
-        files: list[MediaFile] = [file1, file2, file3]
+        file_contents: list[bytes] = [content0, content1, content2]
+        files: list[MediaFile] = [file0, file1, file2]
         return NoteData(note, file_contents, files,
                         Data.__front_field_name, Data.__back_field_name,
-                        front_field_content_with_files,
-                        back_field_content_with_files)
+                        front_field_content, back_field_content)
 
     def create_note_without_files(self) -> NoteData:
-        front_field_content_without_files: str = 'The field on the front card ∑￡'
-        back_field_content_without_files: str = 'Another field on the back card ∆¥'
+        front_field_content: str = 'The field on the front card ∑￡'
+        back_field_content: str = 'Another field on the back card ∆¥'
         note: Note = self.col.newNote()
-        note[self.__front_field_name] = front_field_content_without_files
-        note[self.__back_field_name] = back_field_content_without_files
+        note[self.__front_field_name] = front_field_content
+        note[self.__back_field_name] = back_field_content
         self.col.addNote(note)
         return NoteData(note, [], [],
                         Data.__front_field_name, Data.__back_field_name,
-                        front_field_content_without_files,
-                        back_field_content_without_files)
+                        front_field_content, back_field_content)
 
     @staticmethod
     def update_front_field(note: Note, content: str) -> None:
         note[Data.__front_field_name] = content
         note.col.update_note(note)
-
-    def __write_data_no_renaming(self, file: MediaFile, content: bytes):
-        actual: MediaFile = self.col.media.write_data(file, content)
-        if actual != file:
-            raise RuntimeError(f"File was renamed: original={file}, renamed={actual}")
 
     @staticmethod
     def read_config() -> Config:
