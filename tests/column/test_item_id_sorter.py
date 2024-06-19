@@ -11,6 +11,7 @@ from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.column.item_id_sorter import ItemIdSorter
+from note_size.types import SizeType
 from tests.data import Data
 
 
@@ -31,7 +32,7 @@ class ItemIdSorterTestCase(unittest.TestCase):
         note3: Note = self.td.create_note_with_files()
         self.td.update_front_field(note1, "abc")
         item_ids: Sequence[ItemId] = [note1.id, note2.id, note3.id]
-        act_item_ids: Sequence[ItemId] = self.item_id_sorter.sort_item_ids(item_ids, ItemIdCache.TOTAL_SIZE, True)
+        act_item_ids: Sequence[ItemId] = self.item_id_sorter.sort_item_ids(item_ids, SizeType.TOTAL, True)
         exp_item_ids: Sequence[ItemId] = [note3.id, note2.id, note1.id]
         self.assertSequenceEqual(exp_item_ids, act_item_ids)
 

@@ -64,9 +64,9 @@ class ColumnHooks:
 
     def _modify_row(self, item_id: ItemId, is_note: bool, row: CellRow, columns: Sequence[str]) -> None:
         note_id: NoteId = item_id if is_note else self.item_id_cache.get_note_id_by_card_id(item_id)
-        self._update_row(columns, note_id, row, ColumnHooks.column_total_key, ItemIdCache.TOTAL_SIZE)
-        self._update_row(columns, note_id, row, ColumnHooks.column_texts_key, ItemIdCache.TEXTS_SIZE)
-        self._update_row(columns, note_id, row, ColumnHooks.column_files_key, ItemIdCache.FILES_SIZE)
+        self._update_row(columns, note_id, row, ColumnHooks.column_total_key, SizeType.TOTAL)
+        self._update_row(columns, note_id, row, ColumnHooks.column_texts_key, SizeType.TEXTS)
+        self._update_row(columns, note_id, row, ColumnHooks.column_files_key, SizeType.FILES)
 
     def _update_row(self, columns: Sequence[str], note_id: NoteId, row: CellRow, column_key: str,
                     size_type: SizeType):
@@ -92,9 +92,9 @@ class ColumnHooks:
     def _on_browser_did_search(self, context: SearchContext) -> None:
         log.debug("Browser did search")
         is_note: bool = ColumnHooks._is_notes_mode(context)
-        self._sort_by_column(context, ColumnHooks.column_total_label, ItemIdCache.TOTAL_SIZE, is_note)
-        self._sort_by_column(context, ColumnHooks.column_texts_label, ItemIdCache.TEXTS_SIZE, is_note)
-        self._sort_by_column(context, ColumnHooks.column_files_label, ItemIdCache.FILES_SIZE, is_note)
+        self._sort_by_column(context, ColumnHooks.column_total_label, SizeType.TOTAL, is_note)
+        self._sort_by_column(context, ColumnHooks.column_texts_label, SizeType.TEXTS, is_note)
+        self._sort_by_column(context, ColumnHooks.column_files_label, SizeType.FILES, is_note)
 
     def _sort_by_column(self, context: SearchContext, column_label: str, size_type: SizeType, is_note: bool) -> None:
         if context.ids and isinstance(context.order, Column) and context.order.notes_mode_label == column_label:

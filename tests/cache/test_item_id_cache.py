@@ -9,7 +9,7 @@ from note_size import Config
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.size_calculator import SizeCalculator
-from note_size.types import SizeBytes, SizeStr
+from note_size.types import SizeBytes, SizeStr, SizeType
 from tests.data import Data
 
 
@@ -29,12 +29,12 @@ class ItemIdCacheTestCase(unittest.TestCase):
                                           len(Data.back_field_content_with_files.encode()) +
                                           len(Data.content1) + len(Data.content2) + len(Data.content3))
         note_id: NoteId = self.note.id
-        act_size_1: SizeBytes = self.item_id_cache.get_note_size_bytes(note_id, ItemIdCache.TOTAL_SIZE, use_cache=False)
+        act_size_1: SizeBytes = self.item_id_cache.get_note_size_bytes(note_id, SizeType.TOTAL, use_cache=False)
         self.assertEqual(exp_size_1, act_size_1)
 
         content: str = 'updated'
         Data.update_front_field(self.note, content)
-        act_size_2: SizeBytes = self.item_id_cache.get_note_size_bytes(note_id, ItemIdCache.TOTAL_SIZE, use_cache=False)
+        act_size_2: SizeBytes = self.item_id_cache.get_note_size_bytes(note_id, SizeType.TOTAL, use_cache=False)
         exp_size_2: SizeBytes = SizeBytes(len(content.encode()) + len(Data.back_field_content_with_files.encode())
                                           + len(Data.content1) + len(Data.content3))
         self.assertEqual(exp_size_2, act_size_2)
@@ -44,39 +44,35 @@ class ItemIdCacheTestCase(unittest.TestCase):
                                           len(Data.back_field_content_with_files.encode()) +
                                           len(Data.content1) + len(Data.content2) + len(Data.content3))
         note_id: NoteId = self.note.id
-        act_size_1: SizeBytes = self.item_id_cache.get_note_size_bytes(note_id, ItemIdCache.TOTAL_SIZE, use_cache=False)
+        act_size_1: SizeBytes = self.item_id_cache.get_note_size_bytes(note_id, SizeType.TOTAL, use_cache=False)
         self.assertEqual(exp_size_1, act_size_1)
 
         Data.update_front_field(self.note, 'updated')
-        act_size_2: SizeBytes = self.item_id_cache.get_note_size_bytes(note_id, ItemIdCache.TOTAL_SIZE, use_cache=True)
+        act_size_2: SizeBytes = self.item_id_cache.get_note_size_bytes(note_id, SizeType.TOTAL, use_cache=True)
         self.assertEqual(exp_size_1, act_size_2)
 
     def test_get_note_size_bytes_performance(self):
         execution_time: float = timeit.timeit(
-            lambda: self.item_id_cache.get_note_size_bytes(self.note.id, ItemIdCache.TOTAL_SIZE, use_cache=True),
+            lambda: self.item_id_cache.get_note_size_bytes(self.note.id, SizeType.TOTAL, use_cache=True),
             number=1_000_000)
         self.assertLessEqual(execution_time, 1)
 
     def test_get_note_size_str_no_cache(self):
         note_id: NoteId = self.note.id
-        act_size_1: SizeStr = self.item_id_cache.get_note_size_str(note_id, ItemIdCache.TOTAL_SIZE,
-                                                                   use_cache=False)
+        act_size_1: SizeStr = self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False)
         self.assertEqual("142B", act_size_1)
 
         Data.update_front_field(self.note, 'updated')
-        act_size_2: SizeStr = self.item_id_cache.get_note_size_str(note_id, ItemIdCache.TOTAL_SIZE,
-                                                                   use_cache=False)
+        act_size_2: SizeStr = self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False)
         self.assertEqual("85B", act_size_2)
 
     def test_get_note_size_str_use_cache(self):
         note_id: NoteId = self.note.id
-        act_size_1: SizeStr = self.item_id_cache.get_note_size_str(note_id, ItemIdCache.TOTAL_SIZE,
-                                                                   use_cache=False)
+        act_size_1: SizeStr = self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False)
         self.assertEqual("142B", act_size_1)
 
         Data.update_front_field(self.note, 'updated')
-        act_size_2: SizeStr = self.item_id_cache.get_note_size_str(note_id, ItemIdCache.TOTAL_SIZE,
-                                                                   use_cache=True)
+        act_size_2: SizeStr = self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=True)
         self.assertEqual("142B", act_size_2)
 
     def tearDown(self):
