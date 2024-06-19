@@ -27,9 +27,9 @@ class TestItemIdSorter(unittest.TestCase):
         self.item_id_sorter: ItemIdSorter = ItemIdSorter(item_id_cache)
 
     def test_sort_item_ids(self):
-        note1: Note = self.td.create_note_without_files()
-        note2: Note = self.td.create_note_without_files()
-        note3: Note = self.td.create_note_with_files()
+        note1: Note = self.td.create_note_without_files().note
+        note2: Note = self.td.create_note_without_files().note
+        note3: Note = self.td.create_note_with_files().note
         self.td.update_front_field(note1, "abc")
         item_ids: Sequence[ItemId] = [note1.id, note2.id, note3.id]
         act_item_ids: Sequence[ItemId] = self.item_id_sorter.sort_item_ids(item_ids, SizeType.TOTAL, True)
