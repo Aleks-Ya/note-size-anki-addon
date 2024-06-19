@@ -4,6 +4,7 @@ from logging import Logger, FileHandler, Formatter
 from pathlib import Path
 from threading import Thread
 
+from anki.collection import Collection
 from aqt import mw, gui_hooks
 
 from .button.button_formatter import ButtonFormatter
@@ -43,11 +44,11 @@ def __warm_up_caches(media_cache: MediaCache, item_id_cache: ItemIdCache):
     item_id_cache.warm_up_cache()
 
 
-def __initialize():
+def __initialize(col: Collection):
     c: Config = Config(mw.addonManager.getConfig(__name__))
-    mc: MediaCache = MediaCache(mw.col, c)
+    mc: MediaCache = MediaCache(col, c)
     sc: SizeCalculator = SizeCalculator(mc)
-    iic: ItemIdCache = ItemIdCache(mw.col, sc, c)
+    iic: ItemIdCache = ItemIdCache(col, sc, c)
     iis: ItemIdSorter = ItemIdSorter(iic)
     ch: ColumnHooks = ColumnHooks(iic, iis)
     ch.setup_hooks()
@@ -59,4 +60,4 @@ def __initialize():
     thread.start()
 
 
-gui_hooks.profile_did_open.append(__initialize)
+gui_hooks.collection_did_load.append(__initialize)
