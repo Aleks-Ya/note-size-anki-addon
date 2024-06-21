@@ -4,19 +4,19 @@ from anki.collection import Collection
 from anki.notes import Note
 
 from note_size import Config
-from note_size.types import MediaFile, FieldName
+from note_size.types import MediaFile, FieldName, FieldContent
 
 
 class NoteData:
 
     def __init__(self, note: Note, file_contents: list[bytes], files: list[MediaFile],
                  front_field_name: FieldName, back_field_name: FieldName,
-                 front_field_content: str, back_field_content: str):
+                 front_field_content: FieldContent, back_field_content: FieldContent):
         self.note: Note = note
         self.file_contents: list[bytes] = file_contents
         self.files: list[MediaFile] = files
-        self.front_field_content: str = front_field_content
-        self.back_field_content: str = back_field_content
+        self.front_field_content: FieldContent = front_field_content
+        self.back_field_content: FieldContent = back_field_content
         self.front_field_name: FieldName = front_field_name
         self.back_field_name: FieldName = back_field_name
 
@@ -35,8 +35,8 @@ class Data:
         file0: MediaFile = self.col.media.write_data('picture.jpg', content0)
         file1: MediaFile = self.col.media.write_data('sound.mp3', content1)
         file2: MediaFile = self.col.media.write_data('animation.gif', content2)
-        front_field_content: str = f'Files: <img src="{file0}"> <img src="{file1}"> ∑￡'
-        back_field_content: str = f'Files: <img src="{file0}"> <img src="{file2}"> ∆¥'
+        front_field_content: FieldContent = FieldContent(f'Files: <img src="{file0}"> <img src="{file1}"> ∑￡')
+        back_field_content: FieldContent = FieldContent(f'Files: <img src="{file0}"> <img src="{file2}"> ∆¥')
         note: Note = self.col.newNote()
         note[self.__front_field_name] = front_field_content
         note[self.__back_field_name] = back_field_content
@@ -48,8 +48,8 @@ class Data:
                         front_field_content, back_field_content)
 
     def create_note_without_files(self) -> NoteData:
-        front_field_content: str = 'The field on the front card ∑￡'
-        back_field_content: str = 'Another field on the back card ∆¥'
+        front_field_content: FieldContent = FieldContent('The field on the front card ∑￡')
+        back_field_content: FieldContent = FieldContent('Another field on the back card ∆¥')
         note: Note = self.col.newNote()
         note[self.__front_field_name] = front_field_content
         note[self.__back_field_name] = back_field_content
