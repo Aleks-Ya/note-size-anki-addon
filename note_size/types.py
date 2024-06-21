@@ -6,6 +6,7 @@ MediaFile = NewType("MediaFile", str)
 ButtonLabel = NewType("ButtonLabel", str)
 SizeStr = NewType("SizeStr", str)
 ShortFilename = NewType("ShortFilename", str)
+FieldName = NewType("FieldName", str)
 
 
 class SizeType(Enum):

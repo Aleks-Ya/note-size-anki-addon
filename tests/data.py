@@ -4,26 +4,26 @@ from anki.collection import Collection
 from anki.notes import Note
 
 from note_size import Config
-from note_size.types import MediaFile
+from note_size.types import MediaFile, FieldName
 
 
 class NoteData:
 
     def __init__(self, note: Note, file_contents: list[bytes], files: list[MediaFile],
-                 front_field_name: str, back_field_name: str,
+                 front_field_name: FieldName, back_field_name: FieldName,
                  front_field_content: str, back_field_content: str):
         self.note: Note = note
         self.file_contents: list[bytes] = file_contents
         self.files: list[MediaFile] = files
         self.front_field_content: str = front_field_content
         self.back_field_content: str = back_field_content
-        self.front_field_name: str = front_field_name
-        self.back_field_name: str = back_field_name
+        self.front_field_name: FieldName = front_field_name
+        self.back_field_name: FieldName = back_field_name
 
 
 class Data:
-    __front_field_name: str = 'Front'
-    __back_field_name: str = 'Back'
+    __front_field_name: FieldName = FieldName('Front')
+    __back_field_name: FieldName = FieldName('Back')
 
     def __init__(self, col: Collection):
         self.col: Collection = col
