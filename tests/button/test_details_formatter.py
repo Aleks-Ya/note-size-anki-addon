@@ -17,12 +17,11 @@ class TestDetailsFormatter(unittest.TestCase):
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
         self.td: Data = Data(self.col)
-        self.note_size_dir: Path = Path("../note_size").absolute() if Path("../note_size").exists() \
-            else Path("./note_size").absolute()
+        self.addon_dir: Path = Path(__file__).parent.parent.parent.joinpath("note_size")
         config: Config = Data.read_config()
         media_cache: MediaCache = MediaCache(self.col, config)
         size_calculator: SizeCalculator = SizeCalculator(media_cache)
-        self.details_formatter: DetailsFormatter = DetailsFormatter(self.note_size_dir, size_calculator, config)
+        self.details_formatter: DetailsFormatter = DetailsFormatter(self.addon_dir, size_calculator, config)
 
     def test_format_note_detailed_text(self):
         note_data: NoteData = self.td.create_note_with_files()
@@ -33,15 +32,15 @@ class TestDetailsFormatter(unittest.TestCase):
                     <li>Files (big to small):</li>
                     <ol>
                         <li style="white-space:nowrap">
-                            <img height="15" src="{self.note_size_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                            <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                             animation.gif: <code style="font-family:Consolas,monospace">9B</code>
                         </li>
                         <li style="white-space:nowrap">
-                            <img height="15" src="{self.note_size_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                            <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                             picture.jpg: <code style="font-family:Consolas,monospace">7B</code>
                         </li>
                         <li style="white-space:nowrap">
-                            <img height="15" src="{self.note_size_dir}/button/icon/audio.png" style="vertical-align: middle;"/>
+                            <img height="15" src="{self.addon_dir}/button/icon/audio.png" style="vertical-align: middle;"/>
                             sound.mp3: <code style="font-family:Consolas,monospace">5B</code>
                         </li>
                     </ol>
@@ -66,8 +65,7 @@ class TestDetailsFormatter(unittest.TestCase):
 
     def test_format_note_with_single_missing_file(self):
         note_data: NoteData = self.td.create_note_without_files()
-        note_data.note[note_data.front_field_name] = 'Missing file: <img src="absents.png">'
-        self.col.update_note(note_data.note)
+        self.td.update_front_field(note_data.note, 'Missing file: <img src="absents.png">')
         exp_html: str = f"""
                         <h3>Total note size: <code style="font-family:Consolas,monospace">73B</code></h3>
                         <li>Texts size: <code style="font-family:Consolas,monospace">73B</code></li>
@@ -75,7 +73,7 @@ class TestDetailsFormatter(unittest.TestCase):
                         <li>Files (big to small):</li>
                         <ol>
                             <li style="white-space:nowrap">
-                                <img height="15" src="{self.note_size_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                                <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                                 absents.png: <code style="font-family:Consolas,monospace">0B</code>
                             </li>
                         </ol>
