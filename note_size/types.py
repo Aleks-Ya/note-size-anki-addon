@@ -8,6 +8,7 @@ SizeStr = NewType("SizeStr", str)
 ShortFilename = NewType("ShortFilename", str)
 FieldName = NewType("FieldName", str)
 FieldContent = NewType("FieldContent", str)
+FileContent = NewType("FileContent", str)
 
 
 class SizeType(Enum):

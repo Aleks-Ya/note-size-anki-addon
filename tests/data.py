@@ -4,16 +4,16 @@ from anki.collection import Collection
 from anki.notes import Note
 
 from note_size import Config
-from note_size.types import MediaFile, FieldName, FieldContent
+from note_size.types import MediaFile, FieldName, FieldContent, FileContent
 
 
 class NoteData:
 
-    def __init__(self, note: Note, file_contents: list[bytes], files: list[MediaFile],
+    def __init__(self, note: Note, file_contents: list[FileContent], files: list[MediaFile],
                  front_field_name: FieldName, back_field_name: FieldName,
                  front_field_content: FieldContent, back_field_content: FieldContent):
         self.note: Note = note
-        self.file_contents: list[bytes] = file_contents
+        self.file_contents: list[FileContent] = file_contents
         self.files: list[MediaFile] = files
         self.front_field_content: FieldContent = front_field_content
         self.back_field_content: FieldContent = back_field_content
@@ -29,19 +29,19 @@ class Data:
         self.col: Collection = col
 
     def create_note_with_files(self) -> NoteData:
-        content0: bytes = 'picture'.encode()
-        content1: bytes = 'sound'.encode()
-        content2: bytes = 'animation'.encode()
-        file0: MediaFile = self.col.media.write_data('picture.jpg', content0)
-        file1: MediaFile = self.col.media.write_data('sound.mp3', content1)
-        file2: MediaFile = self.col.media.write_data('animation.gif', content2)
+        content0: FileContent = FileContent('picture')
+        content1: FileContent = FileContent('sound')
+        content2: FileContent = FileContent('animation')
+        file0: MediaFile = self.col.media.write_data('picture.jpg', content0.encode())
+        file1: MediaFile = self.col.media.write_data('sound.mp3', content1.encode())
+        file2: MediaFile = self.col.media.write_data('animation.gif', content2.encode())
         front_field_content: FieldContent = FieldContent(f'Files: <img src="{file0}"> <img src="{file1}"> ∑￡')
         back_field_content: FieldContent = FieldContent(f'Files: <img src="{file0}"> <img src="{file2}"> ∆¥')
         note: Note = self.col.newNote()
         note[self.__front_field_name] = front_field_content
         note[self.__back_field_name] = back_field_content
         self.col.addNote(note)
-        file_contents: list[bytes] = [content0, content1, content2]
+        file_contents: list[FileContent] = [content0, content1, content2]
         files: list[MediaFile] = [file0, file1, file2]
         return NoteData(note, file_contents, files,
                         Data.__front_field_name, Data.__back_field_name,
