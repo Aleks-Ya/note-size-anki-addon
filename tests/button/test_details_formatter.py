@@ -10,7 +10,8 @@ from note_size import Config
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.button.details_formatter import DetailsFormatter
 from note_size.cache.media_cache import MediaCache
-from tests.data import Data
+from note_size.types import FileContent, MediaFile, FieldName
+from tests.data import Data, DefaultFields
 
 
 class TestDetailsFormatter(unittest.TestCase):
@@ -79,6 +80,39 @@ class TestDetailsFormatter(unittest.TestCase):
                             </li>
                         </ol>
                         """
+        soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
+        act_text: str = self.details_formatter.format_note_detailed_text(note)
+        exp_text: str = str(soup.prettify())
+        self.assertEqual(exp_text, act_text)
+
+    def test_unrecognized_mime_type(self):
+        files: dict[FieldName, dict[MediaFile, FileContent]] = {
+            DefaultFields.front_field_name: {
+                MediaFile("without_extension"): DefaultFields.content0,
+                MediaFile("unrecognized_extension.ae1"): DefaultFields.content1
+            }
+        }
+        note: Note = self.td.create_note_with_given_files(files)
+        exp_html: str = f"""
+            <h3> Total note size: <code style="font-family:Consolas,monospace"> 94B </code></h3>
+            <li> Texts size: <code style="font-family:Consolas,monospace"> 82B </code></li>
+            <li> Files size: <code style="font-family:Consolas,monospace"> 12B </code></li>
+            <li> Files (big to small):</li>
+            <ol>
+                <li style="white-space:nowrap">
+                    <img height="15"
+                         src="/home/aleks/pr/home/note-size-anki-addon/note_size/button/icon/other.png"
+                         style="vertical-align: middle;"/>
+                    without_extension: <code style="font-family:Consolas,monospace"> 7B </code>
+                </li>
+                <li style="white-space:nowrap">
+                    <img height="15"
+                         src="/home/aleks/pr/home/note-size-anki-addon/note_size/button/icon/other.png"
+                         style="vertical-align: middle;"/>
+                    unrecognized_extension.ae1: <code style="font-family:Consolas,monospace"> 5B </code>
+                </li>
+            </ol>
+                    """
         soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
         act_text: str = self.details_formatter.format_note_detailed_text(note)
         exp_text: str = str(soup.prettify())

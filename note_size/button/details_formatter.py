@@ -80,9 +80,12 @@ class DetailsFormatter:
             soup.append(ol)
 
     def __get_file_icon(self, filename: str) -> Path:
+        icon_path: Path = self.icons_dir.joinpath("other.png")
         full_mime_type: str = mimetypes.guess_type(filename)[0]
+        if not full_mime_type:
+            return icon_path
         general_mime_type: str = full_mime_type.split("/")[0]
-        icon_path: Path = self.icons_dir.joinpath(general_mime_type + ".png")
-        if not icon_path.exists():
-            icon_path: Path = self.icons_dir.joinpath("other.png")
+        png_icon_path: Path = self.icons_dir.joinpath(general_mime_type + ".png")
+        if png_icon_path.exists():
+            return png_icon_path
         return icon_path
