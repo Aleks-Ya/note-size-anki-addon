@@ -32,3 +32,4 @@ You can easily identify the largest notes to reduce your collection size.
 - [Support page at Anki Forum](https://forums.ankiweb.net/t/note-size-addon-support/46001)
 - [GitHub project](https://github.com/Aleks-Ya/note-size-anki-addon)
 - [Bug tracker](https://github.com/Aleks-Ya/note-size-anki-addon/issues)
+- [Changelog](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/CHANGELOG.md)

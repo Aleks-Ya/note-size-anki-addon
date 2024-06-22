@@ -53,6 +53,7 @@ class MakeDistributionCommand(Command):
         self._generate_manifest(dest_subdir)
         self._copy_file_to_build("LICENSE", dest_subdir)
         self._copy_file_to_build("README.md", dest_subdir)
+        self._copy_file_to_build("CHANGELOG.md", dest_subdir)
 
         output_zip: Path = Path(self.build_dir, f'note-size-{_version}')
         actual_output_zip: Path = Path(shutil.make_archive(str(output_zip), 'zip', dest_subdir))

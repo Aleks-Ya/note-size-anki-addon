@@ -21,12 +21,18 @@ Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
 1. Build ZIP: `python setup.py dist` (includes unit-tests)
 2. Output: `./dist/note-size-X.X-X.zip`
 
+## Changelog
+
+Append changelog: `git-changelog -t path:changelog.jinja -io CHANGELOG.md`
+
 ## Release
 
-1. Increment version:
+1. Update changelog: `git-changelog -t path:changelog.jinja -io CHANGELOG.md`
+2. Increment version:
     1. Major: `bumpversion major`
     2. Minor: `bumpversion minor`
     3. Patch: `bumpversion patch`
-2. Build ZIP: `python setup.py dist`
-3. Push Git branch and tags: `git push --follow-tags`
+3. Build ZIP: `python setup.py dist`
 4. Upload ZIP to the Addon page: https://ankiweb.net/shared/info/1188705668
+5. Push Git branch and tags: `git push --follow-tags`
+6. Create a GitHub release from tag
