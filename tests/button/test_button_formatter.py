@@ -2,6 +2,7 @@ import tempfile
 import unittest
 
 from anki.collection import Collection
+from anki.notes import Note
 
 from note_size import Config
 from note_size.button.button_formatter import ButtonFormatter
@@ -9,7 +10,7 @@ from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.types import SizeBytes, ButtonLabel
-from tests.data import Data, NoteData
+from tests.data import Data
 
 
 class TestButtonFormatter(unittest.TestCase):
@@ -28,24 +29,24 @@ class TestButtonFormatter(unittest.TestCase):
         self.assertEqual("Size: 0B", label)
 
     def test_get_add_mode_label(self):
-        note_data: NoteData = self.td.create_note_with_files()
-        label: ButtonLabel = self.button_formatter.get_add_mode_label(note_data.note)
-        self.assertEqual("Size: 142B", label)
+        note: Note = self.td.create_note_with_files()
+        label: ButtonLabel = self.button_formatter.get_add_mode_label(note)
+        self.assertEqual("Size: 143B", label)
 
     def test_get_edit_mode_label(self):
-        note_data: NoteData = self.td.create_note_with_files()
-        label: ButtonLabel = self.button_formatter.get_edit_mode_label(note_data.note.id)
-        self.assertEqual(SizeBytes(142), self.size_calculator.calculate_note_size(note_data.note))
-        self.assertEqual("Size: 142B", label)
+        note: Note = self.td.create_note_with_files()
+        label: ButtonLabel = self.button_formatter.get_edit_mode_label(note.id)
+        self.assertEqual(SizeBytes(143), self.size_calculator.calculate_note_size(note))
+        self.assertEqual("Size: 143B", label)
 
     def test_get_edit_mode_label_no_cache(self):
-        note_data: NoteData = self.td.create_note_with_files()
-        label: ButtonLabel = self.button_formatter.get_edit_mode_label(note_data.note.id)
-        self.assertEqual(SizeBytes(142), self.size_calculator.calculate_note_size(note_data.note))
-        self.assertEqual("Size: 142B", label)
-        Data.update_front_field(note_data.note, 'updated')
-        self.assertEqual(SizeBytes(85), self.size_calculator.calculate_note_size(self.col.get_note(note_data.note.id)))
-        self.assertEqual("Size: 85B", self.button_formatter.get_edit_mode_label(note_data.note.id))
+        note: Note = self.td.create_note_with_files()
+        label: ButtonLabel = self.button_formatter.get_edit_mode_label(note.id)
+        self.assertEqual(SizeBytes(143), self.size_calculator.calculate_note_size(note))
+        self.assertEqual("Size: 143B", label)
+        Data.update_front_field(note, 'updated')
+        self.assertEqual(SizeBytes(86), self.size_calculator.calculate_note_size(self.col.get_note(note.id)))
+        self.assertEqual("Size: 86B", self.button_formatter.get_edit_mode_label(note.id))
 
     def tearDown(self):
         self.col.close()

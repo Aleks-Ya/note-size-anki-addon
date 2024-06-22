@@ -3,13 +3,14 @@ import unittest
 from pathlib import Path
 
 from anki.collection import Collection
+from anki.notes import Note
 from bs4 import BeautifulSoup
 
 from note_size import Config
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.button.details_formatter import DetailsFormatter
 from note_size.cache.media_cache import MediaCache
-from tests.data import Data, NoteData
+from tests.data import Data
 
 
 class TestDetailsFormatter(unittest.TestCase):
@@ -24,10 +25,10 @@ class TestDetailsFormatter(unittest.TestCase):
         self.details_formatter: DetailsFormatter = DetailsFormatter(self.addon_dir, size_calculator, config)
 
     def test_format_note_detailed_text(self):
-        note_data: NoteData = self.td.create_note_with_files()
+        note: Note = self.td.create_note_with_files()
         exp_html: str = f"""
-                    <h3>Total note size: <code style="font-family:Consolas,monospace">142B</code></h3>
-                    <li>Texts size: <code style="font-family:Consolas,monospace">121B</code></li>
+                    <h3>Total note size: <code style="font-family:Consolas,monospace">143B</code></h3>
+                    <li>Texts size: <code style="font-family:Consolas,monospace">122B</code></li>
                     <li>Files size: <code style="font-family:Consolas,monospace">21B</code></li>
                     <li>Files (big to small):</li>
                     <ol>
@@ -46,12 +47,12 @@ class TestDetailsFormatter(unittest.TestCase):
                     </ol>
                     """
         soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
-        act_text: str = self.details_formatter.format_note_detailed_text(note_data.note)
+        act_text: str = self.details_formatter.format_note_detailed_text(note)
         exp_text: str = str(soup.prettify())
         self.assertEqual(exp_text, act_text)
 
     def test_format_no_files(self):
-        note_data: NoteData = self.td.create_note_without_files()
+        note: Note = self.td.create_note_without_files()
         exp_html: str = """
                     <h3>Total note size: <code style="font-family:Consolas,monospace">70B</code></h3>
                     <li>Texts size: <code style="font-family:Consolas,monospace">70B</code></li>
@@ -59,13 +60,13 @@ class TestDetailsFormatter(unittest.TestCase):
                     <li>Files: (no files)</li>
                     """
         soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
-        act_text: str = self.details_formatter.format_note_detailed_text(note_data.note)
+        act_text: str = self.details_formatter.format_note_detailed_text(note)
         exp_text: str = str(soup.prettify())
         self.assertEqual(exp_text, act_text)
 
     def test_format_note_with_single_missing_file(self):
-        note_data: NoteData = self.td.create_note_without_files()
-        self.td.update_front_field(note_data.note, 'Missing file: <img src="absents.png">')
+        note: Note = self.td.create_note_without_files()
+        self.td.update_front_field(note, 'Missing file: <img src="absents.png">')
         exp_html: str = f"""
                         <h3>Total note size: <code style="font-family:Consolas,monospace">73B</code></h3>
                         <li>Texts size: <code style="font-family:Consolas,monospace">73B</code></li>
@@ -79,7 +80,7 @@ class TestDetailsFormatter(unittest.TestCase):
                         </ol>
                         """
         soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
-        act_text: str = self.details_formatter.format_note_detailed_text(note_data.note)
+        act_text: str = self.details_formatter.format_note_detailed_text(note)
         exp_text: str = str(soup.prettify())
         self.assertEqual(exp_text, act_text)
 
