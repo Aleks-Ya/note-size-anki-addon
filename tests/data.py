@@ -26,13 +26,16 @@ class Data:
         self.col: Collection = col
 
     def create_note_with_files(self) -> Note:
-        note: Note = self.col.newNote()
-        note[DefaultFields.front_field_name] = DefaultFields.front_field_content
-        note[DefaultFields.back_field_name] = DefaultFields.back_field_content
-        self.col.media.write_data(DefaultFields.file0, DefaultFields.content0.encode())
-        self.col.media.write_data(DefaultFields.file1, DefaultFields.content1.encode())
-        self.col.media.write_data(DefaultFields.file2, DefaultFields.content2.encode())
-        self.col.addNote(note)
+        note: Note = self.create_note_with_given_files({
+            DefaultFields.front_field_name: {
+                DefaultFields.file0: DefaultFields.content0,
+                DefaultFields.file1: DefaultFields.content1
+            },
+            DefaultFields.back_field_name: {
+                DefaultFields.file0: DefaultFields.content0,
+                DefaultFields.file2: DefaultFields.content2
+            }
+        })
         return note
 
     def create_note_without_files(self) -> Note:
@@ -43,6 +46,22 @@ class Data:
         note[DefaultFields.back_field_name] = back_field_content
         self.col.addNote(note)
         return note
+
+    def create_note_with_given_files(self, fields: dict[FieldName, dict[MediaFile, FileContent]]) -> Note:
+        note: Note = self.col.newNote()
+        field_contents: dict[FieldName, FieldContent] = {field_name: self.__add_files_to_field(field_files)
+                                                         for field_name, field_files in fields.items()}
+        for field_name, field_content in field_contents.items():
+            note[field_name] = field_content
+        self.col.addNote(note)
+        return note
+
+    def __add_files_to_field(self, files: dict[MediaFile, FileContent]) -> FieldContent:
+        field_content: FieldContent = FieldContent("Files ∑￡:")
+        for media_file, file_content in files.items():
+            media_file: MediaFile = self.col.media.write_data(media_file, file_content.encode())
+            field_content += f' <img src="{media_file}">'
+        return field_content
 
     @staticmethod
     def update_front_field(note: Note, content: str) -> None:
