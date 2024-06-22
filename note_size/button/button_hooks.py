@@ -1,5 +1,6 @@
 import logging
 from logging import Logger
+from typing import Any
 
 from anki.notes import Note
 from aqt import gui_hooks
@@ -60,6 +61,10 @@ class ButtonHooks:
         log.debug("On fire typing timer...")
         self.__refresh_size_button()
 
+    @staticmethod
+    def __eval_callback(val: Any):
+        log.debug(f"Eval callback: {val}")
+
     def __refresh_size_button(self) -> None:
         log.debug("Refresh size button...")
         if self.editor.web:
@@ -69,7 +74,12 @@ class ButtonHooks:
                     label: ButtonLabel = self.button_formatter.get_add_mode_label(self.editor.note)
                 else:
                     label: ButtonLabel = self.button_formatter.get_edit_mode_label(self.editor.note.id)
-            self.editor.web.eval(f"document.getElementById('size_button').textContent = '{label}'")
+            js: str = f""" try {{
+                                document.getElementById('size_button').textContent = '{label}'
+                            }} catch (error) {{
+                              error.stack
+                            }}"""
+            self.editor.web.evalWithCallback(js, ButtonHooks.__eval_callback)
             log.info("Size button was refreshed")
         else:
             log.debug("Skip size button refresh as editor.web is empty")
