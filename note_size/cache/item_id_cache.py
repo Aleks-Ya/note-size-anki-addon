@@ -77,7 +77,7 @@ class ItemIdCache:
                 if size_type == SizeType.TEXTS:
                     size: SizeBytes = self.size_calculator.calculate_texts_size(self.col.get_note(note_id))
                 if size_type == SizeType.FILES:
-                    size: SizeBytes = self.size_calculator.calculate_files_size(self.col.get_note(note_id))
+                    size: SizeBytes = self.size_calculator.calculate_files_size(self.col.get_note(note_id), use_cache)
                 cache[note_id] = size
                 return cache[note_id]
 

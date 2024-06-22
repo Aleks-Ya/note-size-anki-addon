@@ -35,14 +35,14 @@ class TestSizeCalculator(unittest.TestCase):
         self.assertEqual(SizeBytes(15), size)
 
     def test_calculate_files_size(self):
-        act_size: SizeBytes = self.size_calculator.calculate_files_size(self.note)
+        act_size: SizeBytes = self.size_calculator.calculate_files_size(self.note, use_cache=False)
         exp_size: SizeBytes = SizeBytes(len(DefaultFields.content0) +
                                         len(DefaultFields.content1) +
                                         len(DefaultFields.content2))
         self.assertEqual(exp_size, act_size)
 
     def test_calculate_note_size(self):
-        act_size: SizeBytes = self.size_calculator.calculate_note_size(self.note)
+        act_size: SizeBytes = self.size_calculator.calculate_note_size(self.note, use_cache=False)
         exp_size: SizeBytes = SizeBytes(len(DefaultFields.front_field_content.encode()) +
                                         len(DefaultFields.back_field_content.encode()) +
                                         len(DefaultFields.content0) +
@@ -53,7 +53,7 @@ class TestSizeCalculator(unittest.TestCase):
     def test_calculate_note_size_missing_file(self):
         content: str = 'Missing file: <img src="absents.png"> ￡'
         self.note[DefaultFields.front_field_name] = content
-        act_size: SizeBytes = self.size_calculator.calculate_note_size(self.note)
+        act_size: SizeBytes = self.size_calculator.calculate_note_size(self.note, use_cache=False)
         exp_size: SizeBytes = SizeBytes(len(content.encode()) +
                                         len(DefaultFields.back_field_content.encode()) +
                                         len(DefaultFields.content0) +
@@ -61,7 +61,7 @@ class TestSizeCalculator(unittest.TestCase):
         self.assertEqual(exp_size, act_size)
 
     def test_file_sizes(self):
-        act_file_sizes: dict[MediaFile, SizeBytes] = self.size_calculator.file_sizes(self.note)
+        act_file_sizes: dict[MediaFile, SizeBytes] = self.size_calculator.file_sizes(self.note, use_cache=False)
         exp_file_sizes: dict[MediaFile, SizeBytes] = {
             DefaultFields.file0: SizeBytes(len(DefaultFields.content0)),
             DefaultFields.file1: SizeBytes(len(DefaultFields.content1)),

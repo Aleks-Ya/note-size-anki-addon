@@ -25,7 +25,7 @@ class ButtonFormatter:
         return label
 
     def get_add_mode_label(self, note: Note) -> ButtonLabel:
-        size: SizeStr = SizeFormatter.bytes_to_str(self.size_calculator.calculate_note_size(note))
+        size: SizeStr = SizeFormatter.bytes_to_str(self.size_calculator.calculate_note_size(note, use_cache=False))
         label: ButtonLabel = ButtonLabel(f"Size: {size}")
         log.debug(f"Add mode label created for NoteId {note.id}: {label}")
         return label

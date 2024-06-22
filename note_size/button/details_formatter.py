@@ -35,7 +35,7 @@ class DetailsFormatter:
         h3: Tag = soup.new_tag('h3')
         h3.string = f"Total note size: "
         code: Tag = soup.new_tag('code', attrs={"style": DetailsFormatter.__code_style})
-        code.string = SizeFormatter.bytes_to_str(self.size_calculator.calculate_note_size(note))
+        code.string = SizeFormatter.bytes_to_str(self.size_calculator.calculate_note_size(note, use_cache=False))
         h3.append(code)
         soup.append(h3)
 
@@ -52,19 +52,20 @@ class DetailsFormatter:
         li: Tag = soup.new_tag('li')
         li.string = f"Files size: "
         code: Tag = soup.new_tag('code', attrs={"style": DetailsFormatter.__code_style})
-        code.string = SizeFormatter.bytes_to_str(self.size_calculator.calculate_files_size(note))
+        code.string = SizeFormatter.bytes_to_str(self.size_calculator.calculate_files_size(note, use_cache=False))
         li.append(code)
         soup.append(li)
 
     def __add_files(self, note: Note, soup: BeautifulSoup) -> None:
-        file_sizes: dict[MediaFile, SizeBytes] = SizeCalculator.sort_by_size_desc(self.size_calculator.file_sizes(note))
-        is_empty_files: bool = len(file_sizes) == 0
+        file_sizes: dict[MediaFile, SizeBytes] = self.size_calculator.file_sizes(note, use_cache=False)
+        file_sizes_sorted: dict[MediaFile, SizeBytes] = SizeCalculator.sort_by_size_desc(file_sizes)
+        is_empty_files: bool = len(file_sizes_sorted) == 0
         files_li: Tag = soup.new_tag('li')
         files_li.string = "Files (big to small):" if not is_empty_files else "Files: (no files)"
         soup.append(files_li)
         if not is_empty_files:
             ol: Tag = soup.new_tag('ol')
-            for file, size in file_sizes.items():
+            for file, size in file_sizes_sorted.items():
                 filename, size_text = SizeFormatter.file_size_to_str(file, size, self.max_length)
                 icon_path: Path = self.__get_file_icon(filename)
                 img: Tag = soup.new_tag("img",
