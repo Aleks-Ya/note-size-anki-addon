@@ -2,6 +2,14 @@
 
 <!-- insertion marker -->
 
+## [v1.11.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v1.11.0) - 2024-06-23
+
+<small>[Compare with v1.9.0](https://github.com/Aleks-Ya/note-size-anki-addon/compare/v1.10.0...v1.11.0)</small>
+
+1. [FEATURE] Add "Logger Level" config property
+2. [BUG] Fix failed to create log dir #2
+3. [DOCS] Add "Configuration" page
+
 ## [v1.10.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v1.10.0) - 2024-06-23
 
 <small>[Compare with v1.9.0](https://github.com/Aleks-Ya/note-size-anki-addon/compare/v1.9.1...v1.10.0)</small>
