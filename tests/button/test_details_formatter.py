@@ -28,25 +28,25 @@ class TestDetailsFormatter(unittest.TestCase):
     def test_format_note_detailed_text(self):
         note: Note = self.td.create_note_with_files()
         exp_html: str = f"""
-                    <h3>Total note size: <code style="font-family:Consolas,monospace">143B</code></h3>
-                    <li>Texts size: <code style="font-family:Consolas,monospace">122B</code></li>
-                    <li>Files size: <code style="font-family:Consolas,monospace">21B</code></li>
-                    <li>Files (big to small):</li>
-                    <ol>
-                        <li style="white-space:nowrap">
-                            <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                            animation.gif: <code style="font-family:Consolas,monospace">9B</code>
-                        </li>
-                        <li style="white-space:nowrap">
-                            <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                            picture.jpg: <code style="font-family:Consolas,monospace">7B</code>
-                        </li>
-                        <li style="white-space:nowrap">
-                            <img height="15" src="{self.addon_dir}/button/icon/audio.png" style="vertical-align: middle;"/>
-                            sound.mp3: <code style="font-family:Consolas,monospace">5B</code>
-                        </li>
-                    </ol>
-                    """
+            <h3>Total note size: <code style="font-family:Consolas,monospace">143B</code></h3>
+            <li>Texts size: <code style="font-family:Consolas,monospace">122B</code></li>
+            <li>Files size: <code style="font-family:Consolas,monospace">21B</code></li>
+            <li>Files (big to small):</li>
+            <ol>
+                <li style="white-space:nowrap">
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    animation.gif: <code style="font-family:Consolas,monospace">9B</code>
+                </li>
+                <li style="white-space:nowrap">
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    picture.jpg: <code style="font-family:Consolas,monospace">7B</code>
+                </li>
+                <li style="white-space:nowrap">
+                    <img alt="Audio file" height="15" src="{self.addon_dir}/button/icon/audio.png" style="vertical-align: middle;"/>
+                    sound.mp3: <code style="font-family:Consolas,monospace">5B</code>
+                </li>
+            </ol>
+            """
         soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
         act_text: str = self.details_formatter.format_note_detailed_text(note)
         exp_text: str = str(soup.prettify())
@@ -69,16 +69,16 @@ class TestDetailsFormatter(unittest.TestCase):
         note: Note = self.td.create_note_without_files()
         self.td.update_front_field(note, 'Missing file: <img src="absents.png">')
         exp_html: str = f"""
-                        <h3>Total note size: <code style="font-family:Consolas,monospace">73B</code></h3>
-                        <li>Texts size: <code style="font-family:Consolas,monospace">73B</code></li>
-                        <li>Files size: <code style="font-family:Consolas,monospace">0B</code></li>
-                        <li>Files (big to small):</li>
-                        <ol>
-                            <li style="white-space:nowrap">
-                                <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                                absents.png: <code style="font-family:Consolas,monospace">0B</code>
-                            </li>
-                        </ol>
+            <h3>Total note size: <code style="font-family:Consolas,monospace">73B</code></h3>
+            <li>Texts size: <code style="font-family:Consolas,monospace">73B</code></li>
+            <li>Files size: <code style="font-family:Consolas,monospace">0B</code></li>
+            <li>Files (big to small):</li>
+            <ol>
+                <li style="white-space:nowrap">
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    absents.png: <code style="font-family:Consolas,monospace">0B</code>
+                </li>
+            </ol>
                         """
         soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
         act_text: str = self.details_formatter.format_note_detailed_text(note)
@@ -100,15 +100,11 @@ class TestDetailsFormatter(unittest.TestCase):
             <li> Files (big to small):</li>
             <ol>
                 <li style="white-space:nowrap">
-                    <img height="15"
-                         src="{self.addon_dir}/button/icon/other.png"
-                         style="vertical-align: middle;"/>
+                    <img alt="Other file"  height="15" src="{self.addon_dir}/button/icon/other.png" style="vertical-align: middle;"/>
                     without_extension: <code style="font-family:Consolas,monospace"> 7B </code>
                 </li>
                 <li style="white-space:nowrap">
-                    <img height="15"
-                         src="{self.addon_dir}/button/icon/other.png"
-                         style="vertical-align: middle;"/>
+                    <img alt="Other file" height="15" src="{self.addon_dir}/button/icon/other.png" style="vertical-align: middle;"/>
                     unrecognized_extension.ae1: <code style="font-family:Consolas,monospace"> 5B </code>
                 </li>
             </ol>
@@ -131,43 +127,43 @@ class TestDetailsFormatter(unittest.TestCase):
             <li>Files (big to small):</li>
             <ol>
                 <li style="white-space:nowrap">
-                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                     file_00.png:<code style="font-family:Consolas,monospace">10B</code>
                 </li>
                 <li style="white-space:nowrap">
-                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                     file_01.png:<code style="font-family:Consolas,monospace">10B</code>
                 </li>
                 <li style="white-space:nowrap">
-                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                     file_02.png:<code style="font-family:Consolas,monospace">10B</code>
                 </li>
                 <li style="white-space:nowrap">
-                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                     file_03.png:<code style="font-family:Consolas,monospace">10B</code>
                 </li>
                 <li style="white-space:nowrap">
-                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                     file_04.png:<code style="font-family:Consolas,monospace">10B</code>
                 </li>
                 <li style="white-space:nowrap">
-                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                     file_05.png:<code style="font-family:Consolas,monospace">10B</code>
                 </li>
                 <li style="white-space:nowrap">
-                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                     file_06.png:<code style="font-family:Consolas,monospace">10B</code>
                 </li>
                 <li style="white-space:nowrap">
-                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                     file_07.png:<code style="font-family:Consolas,monospace">10B</code>
                 </li>
                 <li style="white-space:nowrap">
-                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                     file_08.png:<code style="font-family:Consolas,monospace">10B</code>
                 </li>
                 <li style="white-space:nowrap">
-                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                     file_09.png:<code style="font-family:Consolas,monospace">10B</code>
                 </li>
                 <li style="white-space:nowrap">More 5 files are hidden</li>
@@ -191,43 +187,43 @@ class TestDetailsFormatter(unittest.TestCase):
             <li>Files (big to small):</li>
             <ol>
                 <li style="white-space:nowrap">
-                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                     file_00.png:<code style="font-family:Consolas,monospace">10B</code>
                 </li>
                 <li style="white-space:nowrap">
-                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                     file_01.png:<code style="font-family:Consolas,monospace">10B</code>
                 </li>
                 <li style="white-space:nowrap">
-                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                     file_02.png:<code style="font-family:Consolas,monospace">10B</code>
                 </li>
                 <li style="white-space:nowrap">
-                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                     file_03.png:<code style="font-family:Consolas,monospace">10B</code>
                 </li>
                 <li style="white-space:nowrap">
-                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                     file_04.png:<code style="font-family:Consolas,monospace">10B</code>
                 </li>
                 <li style="white-space:nowrap">
-                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                     file_05.png:<code style="font-family:Consolas,monospace">10B</code>
                 </li>
                 <li style="white-space:nowrap">
-                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                     file_06.png:<code style="font-family:Consolas,monospace">10B</code>
                 </li>
                 <li style="white-space:nowrap">
-                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                     file_07.png:<code style="font-family:Consolas,monospace">10B</code>
                 </li>
                 <li style="white-space:nowrap">
-                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                     file_08.png:<code style="font-family:Consolas,monospace">10B</code>
                 </li>
                 <li style="white-space:nowrap">
-                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
                     file_09.png:<code style="font-family:Consolas,monospace">10B</code>
                 </li>
             </ol>

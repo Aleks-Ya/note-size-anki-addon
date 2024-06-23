@@ -71,8 +71,12 @@ class DetailsFormatter:
             for file, size in file_sizes_limited.items():
                 filename, size_text = SizeFormatter.file_size_to_str(file, size, self.max_length)
                 icon_path: Path = self.__get_file_icon(filename)
-                img: Tag = soup.new_tag("img",
-                                        attrs={"src": icon_path, "height": "15", "style": "vertical-align: middle;"})
+                alt: str = DetailsFormatter.__get_img_alt(icon_path)
+                img: Tag = soup.new_tag("img", attrs={
+                    "src": icon_path, "height": "15",
+                    "style": "vertical-align: middle;",
+                    "alt": alt
+                })
                 log.info(f"IMG: {img.prettify()}")
                 li: Tag = soup.new_tag('li', attrs={"style": "white-space:nowrap"})
                 li.append(img)
@@ -98,3 +102,7 @@ class DetailsFormatter:
         if png_icon_path.exists():
             return png_icon_path
         return icon_path
+
+    @staticmethod
+    def __get_img_alt(icon_path: Path):
+        return f"{icon_path.stem.capitalize()} file"
