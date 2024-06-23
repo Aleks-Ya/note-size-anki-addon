@@ -1,4 +1,7 @@
 {
+  "Logging": {
+    "Logger Level": "INFO"
+  },
   "Details Formatter": {
     "Max Filename Length": 100,
     "Max Files To Show": 10

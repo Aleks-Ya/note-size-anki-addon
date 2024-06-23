@@ -31,6 +31,7 @@ class TestConfigLoader(unittest.TestCase):
         self.__copy_config_json_to_addons_dir()
         config: Config = self.config_loader.load_config()
         self.assertDictEqual({
+            'Logging': {'Logger Level': 'INFO'},
             'Cache': {'Warmup Enabled': True},
             'Details Formatter': {
                 'Max Filename Length': 100,
@@ -39,6 +40,7 @@ class TestConfigLoader(unittest.TestCase):
     def test_actual_values_all(self):
         self.__copy_config_json_to_addons_dir()
         meta_json_config: dict[str, Any] = {
+            'Logging': {'Logger Level': 'DEBUG'},
             'Cache': {'Warmup Enabled': False},
             'Details Formatter': {
                 'Max Filename Length': 200,
@@ -52,6 +54,7 @@ class TestConfigLoader(unittest.TestCase):
         self.__write_meta_json_config({'Details Formatter': {'Max Filename Length': 200}})
         config: Config = self.config_loader.load_config()
         self.assertDictEqual({
+            'Logging': {'Logger Level': 'INFO'},
             'Cache': {'Warmup Enabled': True},
             'Details Formatter': {
                 'Max Filename Length': 200,
@@ -61,6 +64,7 @@ class TestConfigLoader(unittest.TestCase):
     def test_delete_unused_properties(self):
         self.__copy_config_json_to_addons_dir()
         self.__write_meta_json_config({
+            'Logging': {'Logger Level': 'INFO'},
             'Details Formatter': {
                 'Max Filename Length': 200,
                 'Unused Nested': 'Nested 1'
@@ -69,6 +73,7 @@ class TestConfigLoader(unittest.TestCase):
         })
         config: Config = self.config_loader.load_config()
         self.assertDictEqual({
+            'Logging': {'Logger Level': 'INFO'},
             'Cache': {'Warmup Enabled': True},
             'Details Formatter': {
                 'Max Filename Length': 200,
@@ -78,6 +83,7 @@ class TestConfigLoader(unittest.TestCase):
     def test_save_loaded_config(self):
         self.__copy_config_json_to_addons_dir()
         self.__write_meta_json_config({
+            'Logging': {'Logger Level': 'INFO'},
             'Details Formatter': {
                 'Max Filename Length': 200,
                 'Unused Nested': 'Nested 1'
@@ -86,6 +92,7 @@ class TestConfigLoader(unittest.TestCase):
         })
         config_origin: Optional[dict[str, Any]] = self.addon_manager.getConfig(self.module_name)
         self.assertDictEqual({
+            'Logging': {'Logger Level': 'INFO'},
             'Cache': {'Warmup Enabled': True},
             'Details Formatter': {
                 'Max Filename Length': 200,
@@ -95,6 +102,7 @@ class TestConfigLoader(unittest.TestCase):
         }, config_origin)
         config: Config = self.config_loader.load_config()
         self.assertDictEqual({
+            'Logging': {'Logger Level': 'INFO'},
             'Cache': {'Warmup Enabled': True},
             'Details Formatter': {
                 'Max Filename Length': 200,
@@ -103,6 +111,7 @@ class TestConfigLoader(unittest.TestCase):
         }, config.config)
         config_saved: Optional[dict[str, Any]] = self.addon_manager.getConfig(self.module_name)
         self.assertDictEqual({
+            'Logging': {'Logger Level': 'INFO'},
             'Cache': {'Warmup Enabled': True},
             'Details Formatter': {
                 'Max Filename Length': 200,

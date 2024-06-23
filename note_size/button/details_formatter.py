@@ -77,7 +77,6 @@ class DetailsFormatter:
                     "style": "vertical-align: middle;",
                     "alt": alt
                 })
-                log.info(f"IMG: {img.prettify()}")
                 li: Tag = soup.new_tag('li', attrs={"style": "white-space:nowrap"})
                 li.append(img)
                 li.append(f"{filename}: ")

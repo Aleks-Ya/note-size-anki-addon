@@ -26,12 +26,13 @@ def __configure_logging(addon_manager: AddonManager, module: str) -> Logger:
     log_file: Path = log_dir.joinpath("note_size.log")
     logger: Logger = logging.getLogger(__name__)
     handler: FileHandler = FileHandler(log_file)
-    handler.setLevel(logging.DEBUG)
-    formatter: Formatter = Formatter('%(asctime)s %(name)s %(funcName)s %(threadName)s %(levelname)s %(message)s')
+    level: int = logging.DEBUG
+    handler.setLevel(level)
+    formatter: Formatter = Formatter('%(asctime)s %(levelname)s %(name)s %(funcName)s %(threadName)s %(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
-    logger.setLevel(logging.DEBUG)
-    logger.info(f"\n\n{'#' * 100}\nLogger was configured: file={log_file}")
+    logger.setLevel(level)
+    logger.info(f"\n\n{'#' * 100}\nLogger was configured: level={logging.getLevelName(level)}, file={log_file}")
     return logger
 
 
@@ -47,6 +48,9 @@ def __initialize(col: Collection):
     log.info(f"NoteSize addon version: {addon_dir.joinpath('version.txt').open().read()}")
     cl: ConfigLoader = ConfigLoader(mw.addonManager, module)
     c: Config = cl.load_config()
+    log_level: str = c.get_log_level()
+    log.info(f"Set log level from Config: {log_level}")
+    log.setLevel(log_level)
     mc: MediaCache = MediaCache(col, c)
     sc: SizeCalculator = SizeCalculator(mc)
     iic: ItemIdCache = ItemIdCache(col, sc, c)

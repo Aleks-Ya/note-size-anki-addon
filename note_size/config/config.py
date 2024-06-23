@@ -11,8 +11,10 @@ class Config:
 
     def __init__(self, config: dict[str, Any]):
         self.config = config
-        log.info(f"Config loaded: {self.config}")
         log.debug(f"{self.__class__.__name__} was instantiated")
+
+    def __str__(self):
+        return str(self.config)
 
     @classmethod
     def from_path(cls, path: Path) -> 'Config':
@@ -28,3 +30,6 @@ class Config:
 
     def cache_warm_up_enabled(self) -> bool:
         return self.config['Cache']['Warmup Enabled']
+
+    def get_log_level(self) -> str:
+        return self.config['Logging']['Logger Level']

@@ -80,6 +80,6 @@ class ButtonHooks:
                               error.stack
                             }}"""
             self.editor.web.evalWithCallback(js, ButtonHooks.__eval_callback)
-            log.info("Size button was refreshed")
+            log.info(f"Size button was refreshed: {label}")
         else:
             log.debug("Skip size button refresh as editor.web is empty")
