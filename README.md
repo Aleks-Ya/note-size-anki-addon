@@ -1,31 +1,32 @@
 # Note Size Anki addon
 
-## Description
+### User documentation
 
-See [Addon Description](description/description.md)
+See [User Manual](description/user_manual.md)
 
-## Logs
+### Logs
 
-`Tools` -> `Add-ons` -> `Note Size - sort notes by size` -> `Files` -> `note_size.log`
+See [Logging Level](description/configuration.md#logging-level)
 
-## Unit tests
+### Tests
 
-Run: `tox`
+- Run unit-tests: `tox`
+- [Manual test cases](docs/manual_test_cases.md)
 
-## Local deploy
+### Local deploy
 
 Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
 
-## Build
+### Build
 
 1. Build ZIP: `python setup.py dist` (includes unit-tests)
 2. Output: `./dist/note-size-X.X-X.zip`
 
-## Changelog
+### Changelog
 
 Append changelog: `git-changelog -t path:changelog.jinja -io CHANGELOG.md`
 
-## Release
+### Release
 
 1. Update changelog: `git-changelog -t path:changelog.jinja -io CHANGELOG.md`
 2. Increment version:

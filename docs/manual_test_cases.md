@@ -1,5 +1,7 @@
 # Manual test cases
 
+TBD
+
 1. Install
     1. Upgrade installed addon
     2. New installation
