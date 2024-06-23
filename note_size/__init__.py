@@ -17,6 +17,7 @@ from .cache.item_id_cache import ItemIdCache
 from .calculator.size_calculator import SizeCalculator
 from .calculator.size_formatter import SizeFormatter
 from .column.column_hooks import ColumnHooks
+from .config.config_loader import ConfigLoader
 
 
 def __configure_logging(addon_folder: Path) -> Logger:
@@ -32,9 +33,10 @@ def __configure_logging(addon_folder: Path) -> Logger:
     return logger
 
 
-addon_dir: Path = Path(__file__).parent
-log: Logger = __configure_logging(addon_dir)
-with open(Path(addon_dir, 'version.txt'), 'r') as file:
+__addon_dir: Path = Path(__file__).parent
+__module: str = __addon_dir.stem
+log: Logger = __configure_logging(__addon_dir)
+with open(Path(__addon_dir, 'version.txt'), 'r') as file:
     version = file.read()
 log.info(f"NoteSize addon version: {version}")
 
@@ -45,14 +47,15 @@ def __warm_up_caches(media_cache: MediaCache, item_id_cache: ItemIdCache):
 
 
 def __initialize(col: Collection):
-    c: Config = Config(mw.addonManager.getConfig(__name__))
+    cl: ConfigLoader = ConfigLoader(mw.addonManager, __module)
+    c: Config = cl.load_config()
     mc: MediaCache = MediaCache(col, c)
     sc: SizeCalculator = SizeCalculator(mc)
     iic: ItemIdCache = ItemIdCache(col, sc, c)
     iis: ItemIdSorter = ItemIdSorter(iic)
     ch: ColumnHooks = ColumnHooks(iic, iis)
     ch.setup_hooks()
-    dt: DetailsFormatter = DetailsFormatter(addon_dir, sc, c)
+    dt: DetailsFormatter = DetailsFormatter(__addon_dir, sc, c)
     bf: ButtonFormatter = ButtonFormatter(iic, sc)
     bh: ButtonHooks = ButtonHooks(dt, bf)
     bh.setup_hooks()

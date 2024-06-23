@@ -9,3 +9,4 @@ tox
 bs4
 bumpversion
 GitPython
+mock
