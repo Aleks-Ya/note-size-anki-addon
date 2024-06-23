@@ -25,7 +25,12 @@ You can easily identify the largest notes to reduce your collection size.
 - Show details about a note by clicking the "Size: 1KB" button.
 
 ![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/edit_note.png)
+
 ![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/add_note.png)
+
+## Configuration
+
+See the [Configuration page](configuration.md).
 
 ## Contacts
 
