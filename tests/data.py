@@ -3,7 +3,7 @@ from pathlib import Path
 from anki.collection import Collection
 from anki.notes import Note
 
-from note_size import Config
+from note_size.config.config import Config
 from note_size.types import MediaFile, FieldName, FieldContent, FileContent
 
 

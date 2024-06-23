@@ -4,7 +4,7 @@ import unittest
 from anki.collection import Collection
 from aqt import gui_hooks
 
-from note_size import Config
+from note_size.config.config import Config
 from note_size.column.column_hooks import ColumnHooks
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache

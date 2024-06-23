@@ -4,7 +4,7 @@ import unittest
 from anki.collection import Collection
 from anki.notes import Note
 
-from note_size import Config
+from note_size.config.config import Config
 from note_size.cache.media_cache import MediaCache
 from note_size.types import SizeBytes, MediaFile
 from note_size.calculator.size_calculator import SizeCalculator

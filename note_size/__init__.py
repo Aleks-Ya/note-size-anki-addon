@@ -11,7 +11,7 @@ from .button.button_formatter import ButtonFormatter
 from .button.details_formatter import DetailsFormatter
 from .button.button_hooks import ButtonHooks
 from .column.item_id_sorter import ItemIdSorter
-from .config import Config
+from .config.config import Config
 from .cache.media_cache import MediaCache
 from .cache.item_id_cache import ItemIdCache
 from .calculator.size_calculator import SizeCalculator

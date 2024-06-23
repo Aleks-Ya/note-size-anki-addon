@@ -4,7 +4,7 @@ import unittest
 from anki.collection import Collection
 from anki.notes import Note
 
-from note_size import Config
+from note_size.config.config import Config
 from note_size.button.button_formatter import ButtonFormatter
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache

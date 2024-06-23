@@ -8,7 +8,7 @@ from anki.cards import CardId
 from anki.collection import Collection
 from anki.notes import NoteId
 
-from ..config import Config
+from ..config.config import Config
 from ..types import SizeStr, SizeBytes, SizeType
 from ..calculator.size_calculator import SizeCalculator
 from ..calculator.size_formatter import SizeFormatter

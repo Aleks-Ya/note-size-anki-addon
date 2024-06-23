@@ -6,7 +6,7 @@ from pathlib import Path
 from anki.notes import Note
 from bs4 import BeautifulSoup, Tag
 
-from ..config import Config
+from ..config.config import Config
 from ..calculator.size_formatter import SizeFormatter
 from ..calculator.size_calculator import SizeCalculator
 from ..types import SizeBytes, MediaFile
