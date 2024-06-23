@@ -22,7 +22,7 @@ from .config.config_loader import ConfigLoader
 
 def __configure_logging(addon_manager: AddonManager, module: str) -> Logger:
     log_dir: Path = addon_manager.logs_folder(module)
-    log_dir.mkdir(exist_ok=True)
+    log_dir.mkdir(exist_ok=True, parents=True)
     log_file: Path = log_dir.joinpath("note_size.log")
     logger: Logger = logging.getLogger(__name__)
     handler: FileHandler = FileHandler(log_file)
