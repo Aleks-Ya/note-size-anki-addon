@@ -1,11 +1,11 @@
 import logging
-import os
 from logging import Logger, FileHandler, Formatter
 from pathlib import Path
 from threading import Thread
 
 from anki.collection import Collection
 from aqt import mw, gui_hooks
+from aqt.addons import AddonManager
 
 from .button.button_formatter import ButtonFormatter
 from .button.details_formatter import DetailsFormatter
@@ -20,8 +20,10 @@ from .column.column_hooks import ColumnHooks
 from .config.config_loader import ConfigLoader
 
 
-def __configure_logging(addon_folder: Path) -> Logger:
-    log_file: str = os.path.join(addon_folder, "note_size.log")
+def __configure_logging(addon_manager: AddonManager, module: str) -> Logger:
+    log_dir: Path = addon_manager.logs_folder(module)
+    log_dir.mkdir(exist_ok=True)
+    log_file: Path = log_dir.joinpath("note_size.log")
     logger: Logger = logging.getLogger(__name__)
     handler: FileHandler = FileHandler(log_file)
     handler.setLevel(logging.DEBUG)
@@ -33,21 +35,17 @@ def __configure_logging(addon_folder: Path) -> Logger:
     return logger
 
 
-__addon_dir: Path = Path(__file__).parent
-__module: str = __addon_dir.stem
-log: Logger = __configure_logging(__addon_dir)
-with open(Path(__addon_dir, 'version.txt'), 'r') as file:
-    version = file.read()
-log.info(f"NoteSize addon version: {version}")
-
-
 def __warm_up_caches(media_cache: MediaCache, item_id_cache: ItemIdCache):
     media_cache.warm_up_cache()
     item_id_cache.warm_up_cache()
 
 
 def __initialize(col: Collection):
-    cl: ConfigLoader = ConfigLoader(mw.addonManager, __module)
+    addon_dir: Path = Path(__file__).parent
+    module: str = addon_dir.stem
+    log: Logger = __configure_logging(mw.addonManager, module)
+    log.info(f"NoteSize addon version: {addon_dir.joinpath('version.txt').open().read()}")
+    cl: ConfigLoader = ConfigLoader(mw.addonManager, module)
     c: Config = cl.load_config()
     mc: MediaCache = MediaCache(col, c)
     sc: SizeCalculator = SizeCalculator(mc)
@@ -55,7 +53,7 @@ def __initialize(col: Collection):
     iis: ItemIdSorter = ItemIdSorter(iic)
     ch: ColumnHooks = ColumnHooks(iic, iis)
     ch.setup_hooks()
-    dt: DetailsFormatter = DetailsFormatter(__addon_dir, sc, c)
+    dt: DetailsFormatter = DetailsFormatter(addon_dir, sc, c)
     bf: ButtonFormatter = ButtonFormatter(iic, sc)
     bh: ButtonHooks = ButtonHooks(dt, bf)
     bh.setup_hooks()
