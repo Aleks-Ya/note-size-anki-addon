@@ -2,16 +2,17 @@
 
 <!-- insertion marker -->
 
-## Unreleased
+## [v1.10.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v1.10.0) - 2024-06-23
 
-<small>[Compare with latest](https://github.com/Aleks-Ya/note-size-anki-addon/compare/v1.9.1...HEAD)</small>
+<small>[Compare with v1.9.0](https://github.com/Aleks-Ya/note-size-anki-addon/compare/v1.9.1...v1.10.0)</small>
 
-### Added
-
-- Add
-  CHANGELOG.md ([a19a591](https://github.com/Aleks-Ya/note-size-anki-addon/commit/a19a5916dbd7491cbc775cab8f0a37142fb05295)).
-
-<!-- insertion marker -->
+1. [FEATURE] Add changelog
+2. [FEATURE] Limit number of files shown in Details window
+3. [BUG] Reading config failure after addon updates
+4. [BUG] Add "alt" attribute to "img" tags on Details window
+5. [BUG] Add "use_cache" parameter to SizeCalculator#()
+6. [BUG] Log file cannot be deleted during addon deletion on Windows
+7. [MISC] Log response from web.eval
 
 ## [v1.9.1](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v1.9.1) - 2024-06-22
 
@@ -142,4 +143,3 @@
 
 1. [FEATURE] Implemented size column, size button and details window
 2. [MISC] Running unit-tests with Tox
-
