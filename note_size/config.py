@@ -23,5 +23,8 @@ class Config:
     def details_formatter_max_file_length(self) -> int:
         return self.config['Details Formatter']['Max Filename Length']
 
+    def details_formatter_max_files_to_show(self) -> int:
+        return self.config['Details Formatter']['Max Files To Show']
+
     def cache_warm_up_enabled(self) -> bool:
         return self.config['Cache']['Warmup Enabled']

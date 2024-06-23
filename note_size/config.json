@@ -1,6 +1,7 @@
 {
   "Details Formatter": {
-    "Max Filename Length": 100
+    "Max Filename Length": 100,
+    "Max Files To Show": 10
   },
   "Cache": {
     "Warmup Enabled": true

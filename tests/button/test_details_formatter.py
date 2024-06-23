@@ -101,13 +101,13 @@ class TestDetailsFormatter(unittest.TestCase):
             <ol>
                 <li style="white-space:nowrap">
                     <img height="15"
-                         src="/home/aleks/pr/home/note-size-anki-addon/note_size/button/icon/other.png"
+                         src="{self.addon_dir}/button/icon/other.png"
                          style="vertical-align: middle;"/>
                     without_extension: <code style="font-family:Consolas,monospace"> 7B </code>
                 </li>
                 <li style="white-space:nowrap">
                     <img height="15"
-                         src="/home/aleks/pr/home/note-size-anki-addon/note_size/button/icon/other.png"
+                         src="{self.addon_dir}/button/icon/other.png"
                          style="vertical-align: middle;"/>
                     unrecognized_extension.ae1: <code style="font-family:Consolas,monospace"> 5B </code>
                 </li>
@@ -117,6 +117,129 @@ class TestDetailsFormatter(unittest.TestCase):
         act_text: str = self.details_formatter.format_note_detailed_text(note)
         exp_text: str = str(soup.prettify())
         self.assertEqual(exp_text, act_text)
+
+    def test_limit_showed_number_of_files(self):
+        files: dict[MediaFile, FileContent] = TestDetailsFormatter.__generate_files(15)
+        fields: dict[FieldName, dict[MediaFile, FileContent]] = {
+            DefaultFields.front_field_name: files
+        }
+        note: Note = self.td.create_note_with_given_files(fields)
+        exp_html: str = f"""
+            <h3>Total note size:<code style="font-family:Consolas,monospace">523B</code></h3>
+            <li>Texts size:<code style="font-family:Consolas,monospace">373B</code></li>
+            <li>Files size:<code style="font-family:Consolas,monospace">150B</code></li>
+            <li>Files (big to small):</li>
+            <ol>
+                <li style="white-space:nowrap">
+                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    file_00.png:<code style="font-family:Consolas,monospace">10B</code>
+                </li>
+                <li style="white-space:nowrap">
+                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    file_01.png:<code style="font-family:Consolas,monospace">10B</code>
+                </li>
+                <li style="white-space:nowrap">
+                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    file_02.png:<code style="font-family:Consolas,monospace">10B</code>
+                </li>
+                <li style="white-space:nowrap">
+                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    file_03.png:<code style="font-family:Consolas,monospace">10B</code>
+                </li>
+                <li style="white-space:nowrap">
+                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    file_04.png:<code style="font-family:Consolas,monospace">10B</code>
+                </li>
+                <li style="white-space:nowrap">
+                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    file_05.png:<code style="font-family:Consolas,monospace">10B</code>
+                </li>
+                <li style="white-space:nowrap">
+                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    file_06.png:<code style="font-family:Consolas,monospace">10B</code>
+                </li>
+                <li style="white-space:nowrap">
+                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    file_07.png:<code style="font-family:Consolas,monospace">10B</code>
+                </li>
+                <li style="white-space:nowrap">
+                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    file_08.png:<code style="font-family:Consolas,monospace">10B</code>
+                </li>
+                <li style="white-space:nowrap">
+                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    file_09.png:<code style="font-family:Consolas,monospace">10B</code>
+                </li>
+                <li style="white-space:nowrap">More 5 files are hidden</li>
+            </ol>
+                    """
+        soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
+        act_text: str = self.details_formatter.format_note_detailed_text(note)
+        exp_text: str = str(soup.prettify())
+        self.assertEqual(exp_text, act_text)
+
+    def test_limit_showed_number_of_files_exact(self):
+        files: dict[MediaFile, FileContent] = TestDetailsFormatter.__generate_files(10)
+        fields: dict[FieldName, dict[MediaFile, FileContent]] = {
+            DefaultFields.front_field_name: files
+        }
+        note: Note = self.td.create_note_with_given_files(fields)
+        exp_html: str = f"""
+            <h3>Total note size:<code style="font-family:Consolas,monospace">353B</code></h3>
+            <li>Texts size:<code style="font-family:Consolas,monospace">253B</code></li>
+            <li>Files size:<code style="font-family:Consolas,monospace">100B</code></li>
+            <li>Files (big to small):</li>
+            <ol>
+                <li style="white-space:nowrap">
+                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    file_00.png:<code style="font-family:Consolas,monospace">10B</code>
+                </li>
+                <li style="white-space:nowrap">
+                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    file_01.png:<code style="font-family:Consolas,monospace">10B</code>
+                </li>
+                <li style="white-space:nowrap">
+                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    file_02.png:<code style="font-family:Consolas,monospace">10B</code>
+                </li>
+                <li style="white-space:nowrap">
+                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    file_03.png:<code style="font-family:Consolas,monospace">10B</code>
+                </li>
+                <li style="white-space:nowrap">
+                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    file_04.png:<code style="font-family:Consolas,monospace">10B</code>
+                </li>
+                <li style="white-space:nowrap">
+                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    file_05.png:<code style="font-family:Consolas,monospace">10B</code>
+                </li>
+                <li style="white-space:nowrap">
+                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    file_06.png:<code style="font-family:Consolas,monospace">10B</code>
+                </li>
+                <li style="white-space:nowrap">
+                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    file_07.png:<code style="font-family:Consolas,monospace">10B</code>
+                </li>
+                <li style="white-space:nowrap">
+                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    file_08.png:<code style="font-family:Consolas,monospace">10B</code>
+                </li>
+                <li style="white-space:nowrap">
+                    <img height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
+                    file_09.png:<code style="font-family:Consolas,monospace">10B</code>
+                </li>
+            </ol>
+                    """
+        soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
+        act_text: str = self.details_formatter.format_note_detailed_text(note)
+        exp_text: str = str(soup.prettify())
+        self.assertEqual(exp_text, act_text)
+
+    @staticmethod
+    def __generate_files(file_number):
+        return {MediaFile(f"file_{i:02d}.png"): FileContent(f"content_{i:02d}") for i in range(file_number)}
 
     def tearDown(self):
         self.col.close()

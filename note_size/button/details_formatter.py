@@ -21,6 +21,7 @@ class DetailsFormatter:
         self.icons_dir: Path = addon_dir.joinpath("button").joinpath("icon")
         self.size_calculator: SizeCalculator = size_calculator
         self.max_length = config.details_formatter_max_file_length()
+        self.max_files_number = config.details_formatter_max_files_to_show()
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def format_note_detailed_text(self, note: Note) -> str:
@@ -59,13 +60,15 @@ class DetailsFormatter:
     def __add_files(self, note: Note, soup: BeautifulSoup) -> None:
         file_sizes: dict[MediaFile, SizeBytes] = self.size_calculator.file_sizes(note, use_cache=False)
         file_sizes_sorted: dict[MediaFile, SizeBytes] = SizeCalculator.sort_by_size_desc(file_sizes)
-        is_empty_files: bool = len(file_sizes_sorted) == 0
+        limited_keys: list[MediaFile] = list(file_sizes_sorted.keys())[:self.max_files_number]
+        file_sizes_limited: dict[MediaFile, SizeBytes] = {key: file_sizes_sorted[key] for key in limited_keys}
+        is_empty_files: bool = len(file_sizes_limited) == 0
         files_li: Tag = soup.new_tag('li')
         files_li.string = "Files (big to small):" if not is_empty_files else "Files: (no files)"
         soup.append(files_li)
         if not is_empty_files:
             ol: Tag = soup.new_tag('ol')
-            for file, size in file_sizes_sorted.items():
+            for file, size in file_sizes_limited.items():
                 filename, size_text = SizeFormatter.file_size_to_str(file, size, self.max_length)
                 icon_path: Path = self.__get_file_icon(filename)
                 img: Tag = soup.new_tag("img",
@@ -79,6 +82,11 @@ class DetailsFormatter:
                 li.append(code)
                 ol.append(li)
             soup.append(ol)
+            hidden_files_number: int = len(file_sizes_sorted) - len(file_sizes_limited)
+            if hidden_files_number > 0:
+                li: Tag = soup.new_tag('li', attrs={"style": "white-space:nowrap"})
+                li.string = f"More {hidden_files_number} files are hidden"
+                ol.append(li)
 
     def __get_file_icon(self, filename: str) -> Path:
         icon_path: Path = self.icons_dir.joinpath("other.png")
