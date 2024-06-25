@@ -3,7 +3,7 @@ import timeit
 import unittest
 
 from anki.collection import Collection
-from anki.notes import Note, NoteId
+from anki.notes import NoteId, Note
 
 from note_size.config.config import Config
 from note_size.cache.item_id_cache import ItemIdCache
@@ -22,19 +22,19 @@ class TestItemIdCache(unittest.TestCase):
         size_calculator: SizeCalculator = SizeCalculator(media_cache)
         self.item_id_cache: ItemIdCache = ItemIdCache(self.col, size_calculator, config)
         self.td: Data = Data(self.col)
-        self.note: Note = self.td.create_note_with_files()
 
     def test_get_note_size_bytes_no_cache(self):
         exp_size_1: SizeBytes = SizeBytes(len(DefaultFields.front_field_content.encode()) +
                                           len(DefaultFields.back_field_content.encode()) +
                                           len(DefaultFields.content0) + len(DefaultFields.content1) +
                                           len(DefaultFields.content2))
-        note_id: NoteId = self.note.id
+        note: Note = self.td.create_note_with_files()
+        note_id: NoteId = note.id
         act_size_1: SizeBytes = self.item_id_cache.get_note_size_bytes(note_id, SizeType.TOTAL, use_cache=False)
         self.assertEqual(exp_size_1, act_size_1)
 
         content: str = 'updated'
-        Data.update_front_field(self.note, content)
+        Data.update_front_field(note, content)
         act_size_2: SizeBytes = self.item_id_cache.get_note_size_bytes(note_id, SizeType.TOTAL, use_cache=False)
         exp_size_2: SizeBytes = SizeBytes(len(content.encode()) +
                                           len(DefaultFields.back_field_content.encode()) +
@@ -48,35 +48,39 @@ class TestItemIdCache(unittest.TestCase):
                                           len(DefaultFields.content0) +
                                           len(DefaultFields.content1) +
                                           len(DefaultFields.content2))
-        note_id: NoteId = self.note.id
+        note: Note = self.td.create_note_with_files()
+        note_id: NoteId = note.id
         act_size_1: SizeBytes = self.item_id_cache.get_note_size_bytes(note_id, SizeType.TOTAL, use_cache=False)
         self.assertEqual(exp_size_1, act_size_1)
 
-        Data.update_front_field(self.note, 'updated')
+        Data.update_front_field(note, 'updated')
         act_size_2: SizeBytes = self.item_id_cache.get_note_size_bytes(note_id, SizeType.TOTAL, use_cache=True)
         self.assertEqual(exp_size_1, act_size_2)
 
     def test_get_note_size_bytes_performance(self):
+        note: Note = self.td.create_note_with_files()
         execution_time: float = timeit.timeit(
-            lambda: self.item_id_cache.get_note_size_bytes(self.note.id, SizeType.TOTAL, use_cache=True),
+            lambda: self.item_id_cache.get_note_size_bytes(note.id, SizeType.TOTAL, use_cache=True),
             number=1_000_000)
         self.assertLessEqual(execution_time, 1)
 
     def test_get_note_size_str_no_cache(self):
-        note_id: NoteId = self.note.id
+        note: Note = self.td.create_note_with_files()
+        note_id: NoteId = note.id
         act_size_1: SizeStr = self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False)
         self.assertEqual("143B", act_size_1)
 
-        Data.update_front_field(self.note, 'updated')
+        Data.update_front_field(note, 'updated')
         act_size_2: SizeStr = self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False)
         self.assertEqual("86B", act_size_2)
 
     def test_get_note_size_str_use_cache(self):
-        note_id: NoteId = self.note.id
+        note: Note = self.td.create_note_with_files()
+        note_id: NoteId = note.id
         act_size_1: SizeStr = self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False)
         self.assertEqual("143B", act_size_1)
 
-        Data.update_front_field(self.note, 'updated')
+        Data.update_front_field(note, 'updated')
         act_size_2: SizeStr = self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=True)
         self.assertEqual("143B", act_size_2)
 
