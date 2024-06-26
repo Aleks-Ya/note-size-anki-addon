@@ -7,17 +7,8 @@ from anki.collection import Collection
 from aqt import mw, gui_hooks
 from aqt.addons import AddonManager
 
-from .button.button_formatter import ButtonFormatter
-from .button.details_formatter import DetailsFormatter
-from .button.button_hooks import ButtonHooks
-from .column.item_id_sorter import ItemIdSorter
-from .config.config import Config
 from .cache.media_cache import MediaCache
 from .cache.item_id_cache import ItemIdCache
-from .calculator.size_calculator import SizeCalculator
-from .calculator.size_formatter import SizeFormatter
-from .column.column_hooks import ColumnHooks
-from .config.config_loader import ConfigLoader
 
 
 def __configure_logging(addon_manager: AddonManager, module: str) -> Logger:
@@ -42,6 +33,16 @@ def __warm_up_caches(media_cache: MediaCache, item_id_cache: ItemIdCache):
 
 
 def __initialize(col: Collection):
+    from .button.button_formatter import ButtonFormatter
+    from .button.details_formatter import DetailsFormatter
+    from .button.button_hooks import ButtonHooks
+    from .column.item_id_sorter import ItemIdSorter
+    from .config.config import Config
+    from .calculator.size_calculator import SizeCalculator
+    from .column.column_hooks import ColumnHooks
+    from .config.config_loader import ConfigLoader
+    from .deck_browser.deck_browser_hooks import DeckBrowserHooks
+
     addon_dir: Path = Path(__file__).parent
     module: str = addon_dir.stem
     log: Logger = __configure_logging(mw.addonManager, module)
@@ -61,6 +62,8 @@ def __initialize(col: Collection):
     button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, size_calculator)
     button_hooks: ButtonHooks = ButtonHooks(details_formatter, button_formatter)
     button_hooks.setup_hooks()
+    deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(media_cache, item_id_cache)
+    deck_browser_hooks.setup_hooks()
     thread = Thread(target=__warm_up_caches, args=[media_cache, item_id_cache])
     thread.start()
 
