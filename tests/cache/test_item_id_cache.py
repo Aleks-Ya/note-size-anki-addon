@@ -84,6 +84,17 @@ class TestItemIdCache(unittest.TestCase):
         act_size_2: SizeStr = self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=True)
         self.assertEqual("143B", act_size_2)
 
+    def test_get_total_texts_size(self):
+        self.assertEqual(SizeBytes(0), self.item_id_cache.get_total_texts_size())
+
+        note1: Note = self.td.create_note_with_files()
+        size1: SizeBytes = self.item_id_cache.get_note_size_bytes(note1.id, SizeType.TEXTS, use_cache=True)
+        self.assertEqual(size1, self.item_id_cache.get_total_texts_size())
+
+        note2: Note = self.td.create_note_without_files()
+        size2: SizeBytes = self.item_id_cache.get_note_size_bytes(note2.id, SizeType.TEXTS, use_cache=True)
+        self.assertEqual(size1 + size2, self.item_id_cache.get_total_texts_size())
+
     def tearDown(self):
         self.col.close()
 

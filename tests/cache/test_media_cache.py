@@ -35,7 +35,7 @@ class TestMediaCache(unittest.TestCase):
         self.media_cache.get_file_size(DefaultFields.file0, use_cache=True)
         self.media_cache.get_file_size(DefaultFields.file1, use_cache=True)
         self.media_cache.get_file_size(DefaultFields.file1, use_cache=True)  # check for duplicating
-        act_total_size: SizeBytes = self.media_cache.get_total_size()
+        act_total_size: SizeBytes = self.media_cache.get_total_files_size()
         exp_total_size: SizeBytes = SizeBytes(len(DefaultFields.content0) + len(DefaultFields.content1))
         self.assertEqual(exp_total_size, act_total_size)
 
