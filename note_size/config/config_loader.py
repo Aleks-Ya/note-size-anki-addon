@@ -12,16 +12,16 @@ log: Logger = logging.getLogger(__name__)
 class ConfigLoader:
 
     def __init__(self, addon_manager: AddonManager, module: str):
-        self.module: str = module
-        self.addon_manager: AddonManager = addon_manager
+        self.__module: str = module
+        self.__addon_manager: AddonManager = addon_manager
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def load_config(self) -> Config:
-        log.debug(f"Loading config for module {self.module}")
-        defaults_opt: Optional[dict[str, Any]] = self.addon_manager.addonConfigDefaults(self.module)
-        actual_opt: Optional[dict[str, Any]] = self.addon_manager.getConfig(self.module)
+        log.debug(f"Loading config for module {self.__module}")
+        defaults_opt: Optional[dict[str, Any]] = self.__addon_manager.addonConfigDefaults(self.__module)
+        actual_opt: Optional[dict[str, Any]] = self.__addon_manager.getConfig(self.__module)
         joined: dict[str, Any] = self.__update_dict_recursive_if_present(defaults_opt, actual_opt)
-        self.addon_manager.writeConfig(self.module, joined)
+        self.__addon_manager.writeConfig(self.__module, joined)
         config: Config = Config(joined)
         log.info(f"Config was loaded: {config}")
         return config

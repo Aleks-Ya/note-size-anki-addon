@@ -27,8 +27,8 @@ class ColumnHooks:
     __column_files_tooltip: str = "Note size (files only, texts are not included)"
 
     def __init__(self, item_id_cache: ItemIdCache, item_id_sorter: ItemIdSorter):
-        self.item_id_cache: ItemIdCache = item_id_cache
-        self.item_id_sorter: ItemIdSorter = item_id_sorter
+        self.__item_id_cache: ItemIdCache = item_id_cache
+        self.__item_id_sorter: ItemIdSorter = item_id_sorter
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def setup_hooks(self) -> None:
@@ -63,7 +63,7 @@ class ColumnHooks:
         )
 
     def __modify_row(self, item_id: ItemId, is_note: bool, row: CellRow, columns: Sequence[str]) -> None:
-        note_id: NoteId = item_id if is_note else self.item_id_cache.get_note_id_by_card_id(item_id)
+        note_id: NoteId = item_id if is_note else self.__item_id_cache.get_note_id_by_card_id(item_id)
         self.__update_row(columns, note_id, row, ColumnHooks.__column_total_key, SizeType.TOTAL)
         self.__update_row(columns, note_id, row, ColumnHooks.__column_texts_key, SizeType.TEXTS)
         self.__update_row(columns, note_id, row, ColumnHooks.__column_files_key, SizeType.FILES)
@@ -73,7 +73,7 @@ class ColumnHooks:
         if column_key in columns:
             column_index: int = columns.index(column_key)
             cell: Cell = row.cells[column_index]
-            cell.text = self.item_id_cache.get_note_size_str(note_id, size_type, use_cache=True)
+            cell.text = self.__item_id_cache.get_note_size_str(note_id, size_type, use_cache=True)
 
     @staticmethod
     def __on_browser_will_search(context: SearchContext) -> None:
@@ -98,7 +98,7 @@ class ColumnHooks:
 
     def __sort_by_column(self, context: SearchContext, column_label: str, size_type: SizeType, is_note: bool) -> None:
         if context.ids and isinstance(context.order, Column) and context.order.notes_mode_label == column_label:
-            context.ids = self.item_id_sorter.sort_item_ids(context.ids, size_type, is_note)
+            context.ids = self.__item_id_sorter.sort_item_ids(context.ids, size_type, is_note)
 
     @staticmethod
     def __is_notes_mode(context: SearchContext) -> bool:

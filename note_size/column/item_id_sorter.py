@@ -15,7 +15,7 @@ log: Logger = logging.getLogger(__name__)
 class ItemIdSorter:
 
     def __init__(self, item_id_cache: ItemIdCache):
-        self.item_id_cache: ItemIdCache = item_id_cache
+        self.__item_id_cache: ItemIdCache = item_id_cache
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def sort_item_ids(self, item_ids: Sequence[ItemId], size_type: SizeType, is_note: bool) -> Sequence[NoteId]:
@@ -23,5 +23,5 @@ class ItemIdSorter:
         return sorted(item_ids, key=key_func, reverse=True)
 
     def __get_item_size(self, size_type: SizeType, is_note: bool, item_id: ItemId) -> SizeBytes:
-        note_id: NoteId = item_id if is_note else self.item_id_cache.get_note_id_by_card_id(item_id)
-        return self.item_id_cache.get_note_size_bytes(note_id, size_type, use_cache=True)
+        note_id: NoteId = item_id if is_note else self.__item_id_cache.get_note_id_by_card_id(item_id)
+        return self.__item_id_cache.get_note_size_bytes(note_id, size_type, use_cache=True)

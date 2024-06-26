@@ -16,8 +16,8 @@ log: Logger = logging.getLogger(__name__)
 
 class ButtonHooks:
     def __init__(self, details_formatter: DetailsFormatter, button_formatter: ButtonFormatter):
-        self.details_formatter: DetailsFormatter = details_formatter
-        self.button_formatter: ButtonFormatter = button_formatter
+        self.__details_formatter: DetailsFormatter = details_formatter
+        self.__button_formatter: ButtonFormatter = button_formatter
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def setup_hooks(self) -> None:
@@ -36,7 +36,7 @@ class ButtonHooks:
         log.debug("On size button click...")
         note: Note = editor.note
         if note:
-            showInfo(self.details_formatter.format_note_detailed_text(note))
+            showInfo(self.__details_formatter.format_note_detailed_text(note))
 
     def __add_editor_button(self, buttons: list[str], editor: Editor) -> None:
         log.debug("Add editor button...")
@@ -71,9 +71,9 @@ class ButtonHooks:
             label: ButtonLabel = ButtonFormatter.get_zero_size_label()
             if self.editor.note:
                 if self.editor.addMode:
-                    label: ButtonLabel = self.button_formatter.get_add_mode_label(self.editor.note)
+                    label: ButtonLabel = self.__button_formatter.get_add_mode_label(self.editor.note)
                 else:
-                    label: ButtonLabel = self.button_formatter.get_edit_mode_label(self.editor.note.id)
+                    label: ButtonLabel = self.__button_formatter.get_edit_mode_label(self.editor.note.id)
             js: str = f""" try {{
                                 document.getElementById('size_button').textContent = '{label}'
                             }} catch (error) {{

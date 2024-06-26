@@ -18,10 +18,10 @@ class DetailsFormatter:
     __code_style: str = "font-family:Consolas,monospace"
 
     def __init__(self, addon_dir: Path, size_calculator: SizeCalculator, config: Config):
-        self.icons_dir: Path = addon_dir.joinpath("button").joinpath("icon")
-        self.size_calculator: SizeCalculator = size_calculator
-        self.max_length = config.details_formatter_max_file_length()
-        self.max_files_number = config.details_formatter_max_files_to_show()
+        self.__icons_dir: Path = addon_dir.joinpath("button").joinpath("icon")
+        self.__size_calculator: SizeCalculator = size_calculator
+        self.__max_length = config.details_formatter_max_file_length()
+        self.__max_files_number = config.details_formatter_max_files_to_show()
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def format_note_detailed_text(self, note: Note) -> str:
@@ -36,7 +36,7 @@ class DetailsFormatter:
         h3: Tag = soup.new_tag('h3')
         h3.string = f"Total note size: "
         code: Tag = soup.new_tag('code', attrs={"style": DetailsFormatter.__code_style})
-        code.string = SizeFormatter.bytes_to_str(self.size_calculator.calculate_note_size(note, use_cache=False))
+        code.string = SizeFormatter.bytes_to_str(self.__size_calculator.calculate_note_size(note, use_cache=False))
         h3.append(code)
         soup.append(h3)
 
@@ -53,14 +53,14 @@ class DetailsFormatter:
         li: Tag = soup.new_tag('li')
         li.string = f"Files size: "
         code: Tag = soup.new_tag('code', attrs={"style": DetailsFormatter.__code_style})
-        code.string = SizeFormatter.bytes_to_str(self.size_calculator.calculate_files_size(note, use_cache=False))
+        code.string = SizeFormatter.bytes_to_str(self.__size_calculator.calculate_files_size(note, use_cache=False))
         li.append(code)
         soup.append(li)
 
     def __add_files(self, note: Note, soup: BeautifulSoup) -> None:
-        file_sizes: dict[MediaFile, SizeBytes] = self.size_calculator.file_sizes(note, use_cache=False)
+        file_sizes: dict[MediaFile, SizeBytes] = self.__size_calculator.file_sizes(note, use_cache=False)
         file_sizes_sorted: dict[MediaFile, SizeBytes] = SizeCalculator.sort_by_size_desc(file_sizes)
-        limited_keys: list[MediaFile] = list(file_sizes_sorted.keys())[:self.max_files_number]
+        limited_keys: list[MediaFile] = list(file_sizes_sorted.keys())[:self.__max_files_number]
         file_sizes_limited: dict[MediaFile, SizeBytes] = {key: file_sizes_sorted[key] for key in limited_keys}
         is_empty_files: bool = len(file_sizes_limited) == 0
         files_li: Tag = soup.new_tag('li')
@@ -69,7 +69,7 @@ class DetailsFormatter:
         if not is_empty_files:
             ol: Tag = soup.new_tag('ol')
             for file, size in file_sizes_limited.items():
-                filename, size_text = SizeFormatter.file_size_to_str(file, size, self.max_length)
+                filename, size_text = SizeFormatter.file_size_to_str(file, size, self.__max_length)
                 icon_path: Path = self.__get_file_icon(filename)
                 alt: str = DetailsFormatter.__get_img_alt(icon_path)
                 img: Tag = soup.new_tag("img", attrs={
@@ -92,12 +92,12 @@ class DetailsFormatter:
                 ol.append(li)
 
     def __get_file_icon(self, filename: str) -> Path:
-        icon_path: Path = self.icons_dir.joinpath("other.png")
+        icon_path: Path = self.__icons_dir.joinpath("other.png")
         full_mime_type: str = mimetypes.guess_type(filename)[0]
         if not full_mime_type:
             return icon_path
         general_mime_type: str = full_mime_type.split("/")[0]
-        png_icon_path: Path = self.icons_dir.joinpath(general_mime_type + ".png")
+        png_icon_path: Path = self.__icons_dir.joinpath(general_mime_type + ".png")
         if png_icon_path.exists():
             return png_icon_path
         return icon_path

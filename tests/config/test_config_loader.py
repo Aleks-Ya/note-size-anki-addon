@@ -25,7 +25,7 @@ class TestConfigLoader(unittest.TestCase):
     def test_empty_addon_dir(self):
         self.__write_meta_json_config({})
         config: Config = self.config_loader.load_config()
-        self.assertDictEqual({}, config.config)
+        self.assertDictEqual({}, config.as_dict())
 
     def test_default_values(self):
         self.__copy_config_json_to_addons_dir()
@@ -36,7 +36,7 @@ class TestConfigLoader(unittest.TestCase):
             'Size Button': {
                 'Details Window': {
                     'Max Filename Length': 100,
-                    'Max Files To Show': 10}}}, config.config)
+                    'Max Files To Show': 10}}}, config.as_dict())
 
     def test_actual_values_all(self):
         self.__copy_config_json_to_addons_dir()
@@ -49,7 +49,7 @@ class TestConfigLoader(unittest.TestCase):
                     'Max Files To Show': 20}}}
         self.__write_meta_json_config(meta_json_config)
         config: Config = self.config_loader.load_config()
-        self.assertDictEqual(meta_json_config, config.config)
+        self.assertDictEqual(meta_json_config, config.as_dict())
 
     def test_actual_values_partial(self):
         self.__copy_config_json_to_addons_dir()
@@ -60,7 +60,7 @@ class TestConfigLoader(unittest.TestCase):
             'Cache': {'Warmup Enabled': True},
             'Size Button': {'Details Window': {
                 'Max Filename Length': 200,
-                'Max Files To Show': 10}}}, config.config)
+                'Max Files To Show': 10}}}, config.as_dict())
 
     def test_delete_unused_properties(self):
         self.__copy_config_json_to_addons_dir()
@@ -80,7 +80,7 @@ class TestConfigLoader(unittest.TestCase):
             'Size Button': {
                 'Details Window': {
                     'Max Filename Length': 200,
-                    'Max Files To Show': 10}}}, config.config)
+                    'Max Files To Show': 10}}}, config.as_dict())
 
     def test_save_loaded_config(self):
         self.__copy_config_json_to_addons_dir()
@@ -110,7 +110,7 @@ class TestConfigLoader(unittest.TestCase):
             'Size Button': {
                 'Details Window': {
                     'Max Filename Length': 200,
-                    'Max Files To Show': 10}}}, config.config)
+                    'Max Files To Show': 10}}}, config.as_dict())
         config_saved: Optional[dict[str, Any]] = self.addon_manager.getConfig(self.module_name)
         self.assertDictEqual({
             'Logging': {'Logger Level': 'INFO'},

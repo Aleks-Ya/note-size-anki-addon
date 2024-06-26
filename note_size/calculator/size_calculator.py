@@ -12,7 +12,7 @@ log: Logger = logging.getLogger(__name__)
 class SizeCalculator:
 
     def __init__(self, media_cache: MediaCache):
-        self.media_cache: MediaCache = media_cache
+        self.__media_cache: MediaCache = media_cache
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def calculate_note_size(self, note: Note, use_cache: bool) -> SizeBytes:
@@ -31,7 +31,7 @@ class SizeCalculator:
             files: list[str] = note.col.media.files_in_str(note.mid, field)
             sizes: dict[MediaFile, SizeBytes] = {}
             for file in files:
-                sizes[MediaFile(file)] = self.media_cache.get_file_size(MediaFile(file), use_cache=use_cache)
+                sizes[MediaFile(file)] = self.__media_cache.get_file_size(MediaFile(file), use_cache=use_cache)
             all_files.update(sizes)
         return all_files
 

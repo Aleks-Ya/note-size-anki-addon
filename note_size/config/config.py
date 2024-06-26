@@ -10,11 +10,11 @@ log: Logger = logging.getLogger(__name__)
 class Config:
 
     def __init__(self, config: dict[str, Any]):
-        self.config = config
+        self.__config = config
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def __str__(self):
-        return str(self.config)
+        return str(self.__config)
 
     @classmethod
     def from_path(cls, path: Path) -> 'Config':
@@ -23,13 +23,16 @@ class Config:
         return cls(config_data)
 
     def details_formatter_max_file_length(self) -> int:
-        return self.config['Size Button']['Details Window']['Max Filename Length']
+        return self.__config['Size Button']['Details Window']['Max Filename Length']
 
     def details_formatter_max_files_to_show(self) -> int:
-        return self.config['Size Button']['Details Window']['Max Files To Show']
+        return self.__config['Size Button']['Details Window']['Max Files To Show']
 
     def cache_warm_up_enabled(self) -> bool:
-        return self.config['Cache']['Warmup Enabled']
+        return self.__config['Cache']['Warmup Enabled']
 
     def get_log_level(self) -> str:
-        return self.config['Logging']['Logger Level']
+        return self.__config['Logging']['Logger Level']
+
+    def as_dict(self) -> dict[str, Any]:
+        return self.__config
