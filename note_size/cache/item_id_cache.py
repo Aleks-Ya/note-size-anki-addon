@@ -9,7 +9,7 @@ from anki.collection import Collection
 from anki.notes import NoteId
 
 from ..config.config import Config
-from ..types import SizeStr, SizeBytes, SizeType
+from ..types import SizeStr, SizeBytes, SizeType, size_types
 from ..calculator.size_calculator import SizeCalculator
 from ..calculator.size_formatter import SizeFormatter
 
@@ -42,7 +42,7 @@ class ItemIdCache:
             start_time: datetime = datetime.now()
             all_note_ids: Sequence[NoteId] = self.__col.find_notes("deck:*")
             for note_id in all_note_ids:
-                for size_type in [SizeType.TEXTS, SizeType.FILES, SizeType.TOTAL]:
+                for size_type in size_types:
                     self.get_note_size_bytes(note_id, size_type, use_cache=True)
                     self.get_note_size_str(note_id, size_type, use_cache=True)
             all_card_ids: Sequence[int] = self.__col.find_cards("deck:*")
@@ -97,6 +97,20 @@ class ItemIdCache:
     def get_total_texts_size(self) -> SizeBytes:
         with self.__lock:
             return self.__total_texts_size
+
+    def evict_note(self, note_id: NoteId):
+        with self.__lock:
+            for cache in self.__size_bytes_caches.values():
+                if note_id in cache:
+                    old_size: SizeBytes = cache[note_id]
+                    del cache[note_id]
+                    self.__update_total_texts_size(old_size, SizeBytes(0))
+            for cache in self.__size_str_caches.values():
+                if note_id in cache:
+                    del cache[note_id]
+            for cid, nid in self.__id_cache.items():
+                if nid == note_id and note_id in self.__id_cache:
+                    del self.__id_cache[cid]
 
     def __update_total_texts_size(self, old_size: SizeBytes, new_size: SizeBytes) -> None:
         self.__total_texts_size = SizeBytes(self.__total_texts_size - old_size + new_size)

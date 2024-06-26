@@ -15,3 +15,6 @@ class SizeType(Enum):
     TOTAL = "total"
     TEXTS = "texts"
     FILES = "files"
+
+
+size_types: list[SizeType] = [SizeType.TEXTS, SizeType.FILES, SizeType.TOTAL]
