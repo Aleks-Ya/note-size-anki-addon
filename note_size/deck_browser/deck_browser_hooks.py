@@ -23,7 +23,7 @@ class DeckBrowserHooks:
     def setup_hooks(self) -> None:
         gui_hooks.deck_browser_will_render_content.append(self.__on_action)
         # gui_hooks.webview_did_receive_js_message.append(self.__on_event)
-        log.info("Deck Browser hooks are set")
+        log.info(f"{self.__class__.__name__} are set")
 
     # noinspection PyUnresolvedReferences
     def __on_action(self, _: 'aqt.deckbrowser.DeckBrowser', content: 'aqt.deckbrowser.DeckBrowserContent') -> None:

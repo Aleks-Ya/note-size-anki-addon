@@ -100,11 +100,11 @@ class ItemIdCache:
 
     def evict_note(self, note_id: NoteId):
         with self.__lock:
+            old_size: SizeBytes = self.__size_bytes_caches[SizeType.TEXTS][note_id]
+            self.__update_total_texts_size(old_size, SizeBytes(0))
             for cache in self.__size_bytes_caches.values():
                 if note_id in cache:
-                    old_size: SizeBytes = cache[note_id]
                     del cache[note_id]
-                    self.__update_total_texts_size(old_size, SizeBytes(0))
             for cache in self.__size_str_caches.values():
                 if note_id in cache:
                     del cache[note_id]

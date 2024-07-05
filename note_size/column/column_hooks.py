@@ -36,7 +36,7 @@ class ColumnHooks:
         gui_hooks.browser_did_fetch_row.append(self.__modify_row)
         gui_hooks.browser_will_search.append(ColumnHooks.__on_browser_will_search)
         gui_hooks.browser_did_search.append(self.__on_browser_did_search)
-        log.info("Size column hooks are set")
+        log.info(f"{self.__class__.__name__} are set")
 
     @staticmethod
     def __add_custom_column(columns: dict[str, Column]) -> None:

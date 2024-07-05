@@ -7,6 +7,7 @@ from anki.collection import Collection
 from aqt import mw, gui_hooks
 from aqt.addons import AddonManager
 
+from .cache.cache_hooks import CacheHooks
 from .cache.media_cache import MediaCache
 from .cache.item_id_cache import ItemIdCache
 
@@ -64,6 +65,8 @@ def __initialize(col: Collection):
     button_hooks.setup_hooks()
     deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(media_cache, item_id_cache)
     deck_browser_hooks.setup_hooks()
+    cache_hooks: CacheHooks = CacheHooks(media_cache, item_id_cache, size_calculator)
+    cache_hooks.setup_hooks()
     thread = Thread(target=__warm_up_caches, args=[media_cache, item_id_cache])
     thread.start()
 

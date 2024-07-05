@@ -26,7 +26,7 @@ class ButtonHooks:
         gui_hooks.editor_did_load_note.append(self.__on_load_note)
         gui_hooks.editor_did_unfocus_field.append(self.__on_unfocus_field)
         gui_hooks.editor_did_fire_typing_timer.append(self.__on_fire_typing_timer)
-        log.info("Size button hooks are set")
+        log.info(f"{self.__class__.__name__} are set")
 
     def __on_init(self, editor: Editor) -> None:
         log.debug("On init...")

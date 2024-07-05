@@ -20,3 +20,7 @@ TBD
     2. Performance
         1. Display all cards after Anki restart
 5. Config
+6. Collection size
+    1. Add note
+    2. Delete note
+    3. Edit note
