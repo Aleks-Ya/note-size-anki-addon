@@ -1,5 +1,5 @@
-anki==24.4.1
-aqt==24.4.1
+anki==24.6.3
+aqt==24.6.3
 PyQt6==6.6.1
 PyQt6-Qt6==6.6.1
 PyQt6-WebEngine==6.6.0
