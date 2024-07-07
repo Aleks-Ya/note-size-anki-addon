@@ -1,8 +1,9 @@
 import tempfile
 import unittest
 
-from anki.collection import Collection
+from anki.collection import Collection, BrowserColumns
 from aqt import gui_hooks
+from aqt.browser import Column
 
 from note_size.config.config import Config
 from note_size.column.column_hooks import ColumnHooks
@@ -41,6 +42,43 @@ class TestColumnHooks(unittest.TestCase):
         self.assertEqual(0, gui_hooks.browser_did_fetch_row.count())
         self.assertEqual(0, gui_hooks.browser_will_search.count())
         self.assertEqual(0, gui_hooks.browser_did_search.count())
+
+    def test_add_columns(self):
+        self.column_hooks.setup_hooks()
+        columns: dict[str, Column] = {}
+        gui_hooks.browser_did_fetch_columns(columns)
+        self.assertDictEqual(columns, {
+            "note-size-total": Column(
+                key="note-size-total",
+                cards_mode_label="Size",
+                notes_mode_label="Size",
+                sorting_cards=BrowserColumns.SORTING_DESCENDING,
+                sorting_notes=BrowserColumns.SORTING_DESCENDING,
+                uses_cell_font=True,
+                cards_mode_tooltip="Note size (texts and files are included)",
+                notes_mode_tooltip="Note size (texts and files are included)"
+            ),
+            "note-size-texts": Column(
+                key="note-size-texts",
+                cards_mode_label="Size (texts)",
+                notes_mode_label="Size (texts)",
+                sorting_cards=BrowserColumns.SORTING_DESCENDING,
+                sorting_notes=BrowserColumns.SORTING_DESCENDING,
+                uses_cell_font=True,
+                cards_mode_tooltip="Note size (texts only, files are not included)",
+                notes_mode_tooltip="Note size (texts only, files are not included)"
+            ),
+            "note-size-files": Column(
+                key="note-size-files",
+                cards_mode_label="Size (files)",
+                notes_mode_label="Size (files)",
+                sorting_cards=BrowserColumns.SORTING_DESCENDING,
+                sorting_notes=BrowserColumns.SORTING_DESCENDING,
+                uses_cell_font=True,
+                cards_mode_tooltip="Note size (files only, texts are not included)",
+                notes_mode_tooltip="Note size (files only, texts are not included)"
+            )
+        })
 
     def tearDown(self):
         self.column_hooks.remove_hooks()

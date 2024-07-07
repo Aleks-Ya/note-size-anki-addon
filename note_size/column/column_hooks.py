@@ -76,12 +76,12 @@ class ColumnHooks:
 
     def __modify_row(self, item_id: ItemId, is_note: bool, row: CellRow, columns: Sequence[str]) -> None:
         note_id: NoteId = item_id if is_note else self.__item_id_cache.get_note_id_by_card_id(item_id)
-        self.__update_row(columns, note_id, row, ColumnHooks.__column_total_key, SizeType.TOTAL)
-        self.__update_row(columns, note_id, row, ColumnHooks.__column_texts_key, SizeType.TEXTS)
-        self.__update_row(columns, note_id, row, ColumnHooks.__column_files_key, SizeType.FILES)
+        self.__update_column(ColumnHooks.__column_total_key, SizeType.TOTAL, row, columns, note_id)
+        self.__update_column(ColumnHooks.__column_texts_key, SizeType.TEXTS, row, columns, note_id)
+        self.__update_column(ColumnHooks.__column_files_key, SizeType.FILES, row, columns, note_id)
 
-    def __update_row(self, columns: Sequence[str], note_id: NoteId, row: CellRow, column_key: str,
-                     size_type: SizeType):
+    def __update_column(self, column_key: str, size_type: SizeType, row: CellRow, columns: Sequence[str],
+                        note_id: NoteId) -> None:
         if column_key in columns:
             column_index: int = columns.index(column_key)
             cell: Cell = row.cells[column_index]
