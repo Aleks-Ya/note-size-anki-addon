@@ -1,6 +1,6 @@
 import logging
 from logging import Logger
-from typing import Sequence, Optional
+from typing import Sequence, Optional, Callable, Union
 
 from anki.collection import BrowserColumns
 from anki.notes import NoteId
@@ -29,14 +29,26 @@ class ColumnHooks:
     def __init__(self, item_id_cache: ItemIdCache, item_id_sorter: ItemIdSorter):
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__item_id_sorter: ItemIdSorter = item_id_sorter
+        self.__hook_browser_did_fetch_columns: Callable[[dict[str, Column]], None] = ColumnHooks.__add_custom_column
+        self.__hook_browser_did_fetch_row: Callable[[Union[int, NoteId], bool, CellRow, Sequence[str]], None] = \
+            self.__modify_row
+        self.__hook_browser_will_search: Callable[[SearchContext], None] = ColumnHooks.__on_browser_will_search
+        self.__hook_browser_did_search: Callable[[SearchContext], None] = self.__on_browser_did_search
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def setup_hooks(self) -> None:
-        gui_hooks.browser_did_fetch_columns.append(ColumnHooks.__add_custom_column)
-        gui_hooks.browser_did_fetch_row.append(self.__modify_row)
-        gui_hooks.browser_will_search.append(ColumnHooks.__on_browser_will_search)
-        gui_hooks.browser_did_search.append(self.__on_browser_did_search)
+        gui_hooks.browser_did_fetch_columns.append(self.__hook_browser_did_fetch_columns)
+        gui_hooks.browser_did_fetch_row.append(self.__hook_browser_did_fetch_row)
+        gui_hooks.browser_will_search.append(self.__hook_browser_will_search)
+        gui_hooks.browser_did_search.append(self.__hook_browser_did_search)
         log.info(f"{self.__class__.__name__} are set")
+
+    def remove_hooks(self) -> None:
+        gui_hooks.browser_did_fetch_columns.remove(self.__hook_browser_did_fetch_columns)
+        gui_hooks.browser_did_fetch_row.remove(self.__hook_browser_did_fetch_row)
+        gui_hooks.browser_will_search.remove(self.__hook_browser_will_search)
+        gui_hooks.browser_did_search.remove(self.__hook_browser_did_search)
+        log.info(f"{self.__class__.__name__} are removed")
 
     @staticmethod
     def __add_custom_column(columns: dict[str, Column]) -> None:

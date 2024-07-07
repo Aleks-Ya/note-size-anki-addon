@@ -1,6 +1,6 @@
 import logging
 from logging import Logger
-from typing import Any
+from typing import Any, Callable
 
 from anki.notes import Note
 from aqt import gui_hooks
@@ -18,17 +18,30 @@ class ButtonHooks:
     def __init__(self, details_formatter: DetailsFormatter, button_formatter: ButtonFormatter):
         self.__details_formatter: DetailsFormatter = details_formatter
         self.__button_formatter: ButtonFormatter = button_formatter
+        self.__hook_editor_did_init: Callable[[Editor], None] = self.__on_editor_did_init
+        self.__hook_editor_did_init_buttons: Callable[[list[str], Editor], None] = self.__on_editor_did_init_buttons
+        self.__hook_editor_did_load_note: Callable[[Editor], None] = self.__on_editor_did_load_note
+        self.__hook_editor_did_unfocus_field: Callable[[bool, Note, int], None] = self.__on_editor_did_unfocus_field
+        self.__hook_editor_did_fire_typing_timer: Callable[[Note], None] = self.__on_editor_did_fire_typing_timer
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def setup_hooks(self) -> None:
-        gui_hooks.editor_did_init.append(self.__on_init)
-        gui_hooks.editor_did_init_buttons.append(self.__add_editor_button)
-        gui_hooks.editor_did_load_note.append(self.__on_load_note)
-        gui_hooks.editor_did_unfocus_field.append(self.__on_unfocus_field)
-        gui_hooks.editor_did_fire_typing_timer.append(self.__on_fire_typing_timer)
+        gui_hooks.editor_did_init.append(self.__hook_editor_did_init)
+        gui_hooks.editor_did_init_buttons.append(self.__hook_editor_did_init_buttons)
+        gui_hooks.editor_did_load_note.append(self.__hook_editor_did_load_note)
+        gui_hooks.editor_did_unfocus_field.append(self.__hook_editor_did_unfocus_field)
+        gui_hooks.editor_did_fire_typing_timer.append(self.__hook_editor_did_fire_typing_timer)
         log.info(f"{self.__class__.__name__} are set")
 
-    def __on_init(self, editor: Editor) -> None:
+    def remove_hooks(self) -> None:
+        gui_hooks.editor_did_init.remove(self.__hook_editor_did_init)
+        gui_hooks.editor_did_init_buttons.remove(self.__hook_editor_did_init_buttons)
+        gui_hooks.editor_did_load_note.remove(self.__hook_editor_did_load_note)
+        gui_hooks.editor_did_unfocus_field.remove(self.__hook_editor_did_unfocus_field)
+        gui_hooks.editor_did_fire_typing_timer.remove(self.__hook_editor_did_fire_typing_timer)
+        log.info(f"{self.__class__.__name__} was set")
+
+    def __on_editor_did_init(self, editor: Editor) -> None:
         log.debug("On init...")
         self.editor: Editor = editor
 
@@ -38,7 +51,7 @@ class ButtonHooks:
         if note:
             showInfo(self.__details_formatter.format_note_detailed_text(note))
 
-    def __add_editor_button(self, buttons: list[str], editor: Editor) -> None:
+    def __on_editor_did_init_buttons(self, buttons: list[str], editor: Editor) -> None:
         log.debug("Add editor button...")
         button: str = editor.addButton(id="size_button",
                                        label=ButtonFormatter.get_zero_size_label(),
@@ -49,15 +62,15 @@ class ButtonHooks:
         buttons.append(button)
         log.info("Size button was added to Editor")
 
-    def __on_load_note(self, _: Editor) -> None:
+    def __on_editor_did_load_note(self, _: Editor) -> None:
         log.debug("On load note...")
         self.__refresh_size_button()
 
-    def __on_unfocus_field(self, _: bool, __: Note, ___: int) -> None:
+    def __on_editor_did_unfocus_field(self, _: bool, __: Note, ___: int) -> None:
         log.debug("On unfocus field...")
         self.__refresh_size_button()
 
-    def __on_fire_typing_timer(self, _: Note) -> None:
+    def __on_editor_did_fire_typing_timer(self, _: Note) -> None:
         log.debug("On fire typing timer...")
         self.__refresh_size_button()
 

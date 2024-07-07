@@ -19,14 +19,6 @@ class TestButtonHooks(unittest.TestCase):
 
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
-
-    def test_setup_hooks(self):
-        self.assertEqual(0, gui_hooks.editor_did_init.count())
-        self.assertEqual(0, gui_hooks.editor_did_init_buttons.count())
-        self.assertEqual(2, gui_hooks.editor_did_load_note.count())
-        self.assertEqual(0, gui_hooks.editor_did_unfocus_field.count())
-        self.assertEqual(0, gui_hooks.editor_did_fire_typing_timer.count())
-
         addon_dir: Path = Path(__file__).parent.parent.parent.joinpath("note_size")
         config: Config = Data.read_config()
         media_cache: MediaCache = MediaCache(self.col, config)
@@ -34,16 +26,30 @@ class TestButtonHooks(unittest.TestCase):
         item_id_cache: ItemIdCache = ItemIdCache(self.col, size_calculator, config)
         details_formatter: DetailsFormatter = DetailsFormatter(addon_dir, size_calculator, config)
         button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, size_calculator)
-        button_hooks: ButtonHooks = ButtonHooks(details_formatter, button_formatter)
-        button_hooks.setup_hooks()
+        self.button_hooks: ButtonHooks = ButtonHooks(details_formatter, button_formatter)
 
+    def test_setup_hooks(self):
+        self.__assert_no_hooks()
+
+        self.button_hooks.setup_hooks()
         self.assertEqual(1, gui_hooks.editor_did_init.count())
         self.assertEqual(1, gui_hooks.editor_did_init_buttons.count())
         self.assertEqual(3, gui_hooks.editor_did_load_note.count())
         self.assertEqual(1, gui_hooks.editor_did_unfocus_field.count())
         self.assertEqual(1, gui_hooks.editor_did_fire_typing_timer.count())
 
+        self.button_hooks.remove_hooks()
+        self.__assert_no_hooks()
+
+    def __assert_no_hooks(self):
+        self.assertEqual(0, gui_hooks.editor_did_init.count())
+        self.assertEqual(0, gui_hooks.editor_did_init_buttons.count())
+        self.assertEqual(2, gui_hooks.editor_did_load_note.count())
+        self.assertEqual(0, gui_hooks.editor_did_unfocus_field.count())
+        self.assertEqual(0, gui_hooks.editor_did_fire_typing_timer.count())
+
     def tearDown(self):
+        self.button_hooks.remove_hooks()
         self.col.close()
 
 

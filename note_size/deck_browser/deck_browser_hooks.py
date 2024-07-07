@@ -1,6 +1,7 @@
 import datetime
 import logging
 from logging import Logger
+from typing import Callable, Any
 
 from aqt import gui_hooks
 
@@ -18,12 +19,18 @@ class DeckBrowserHooks:
     def __init__(self, media_cache: MediaCache, item_id_cache: ItemIdCache):
         self.__media_cache: MediaCache = media_cache
         self.__item_id_cache: ItemIdCache = item_id_cache
+        self.__hook_deck_browser_will_render_content: Callable[[Any, Any], None] = self.__on_action
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def setup_hooks(self) -> None:
-        gui_hooks.deck_browser_will_render_content.append(self.__on_action)
+        gui_hooks.deck_browser_will_render_content.append(self.__hook_deck_browser_will_render_content)
         # gui_hooks.webview_did_receive_js_message.append(self.__on_event)
         log.info(f"{self.__class__.__name__} are set")
+
+    def remove_hooks(self) -> None:
+        gui_hooks.deck_browser_will_render_content.remove(self.__hook_deck_browser_will_render_content)
+        # gui_hooks.webview_did_receive_js_message.remove(self.__on_event)
+        log.info(f"{self.__class__.__name__} are removed")
 
     # noinspection PyUnresolvedReferences
     def __on_action(self, _: 'aqt.deckbrowser.DeckBrowser', content: 'aqt.deckbrowser.DeckBrowserContent') -> None:

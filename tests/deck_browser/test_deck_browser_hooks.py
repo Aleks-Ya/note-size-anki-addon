@@ -16,20 +16,23 @@ class TestDeckBrowserHooks(unittest.TestCase):
 
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
-
-    def test_setup_hooks(self):
-        self.assertEqual(0, gui_hooks.deck_browser_will_render_content.count())
-
         config: Config = Data.read_config()
         media_cache: MediaCache = MediaCache(self.col, config)
         size_calculator: SizeCalculator = SizeCalculator(media_cache)
         item_id_cache: ItemIdCache = ItemIdCache(self.col, size_calculator, config)
-        deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(media_cache, item_id_cache)
-        deck_browser_hooks.setup_hooks()
+        self.deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(media_cache, item_id_cache)
 
+    def test_setup_hooks(self):
+        self.assertEqual(0, gui_hooks.deck_browser_will_render_content.count())
+
+        self.deck_browser_hooks.setup_hooks()
         self.assertEqual(1, gui_hooks.deck_browser_will_render_content.count())
 
+        self.deck_browser_hooks.remove_hooks()
+        self.assertEqual(0, gui_hooks.deck_browser_will_render_content.count())
+
     def tearDown(self):
+        self.deck_browser_hooks.remove_hooks()
         self.col.close()
 
 
