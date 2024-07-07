@@ -2,6 +2,7 @@ from pathlib import Path
 
 from anki.collection import Collection
 from anki.notes import Note
+from aqt import gui_hooks
 
 from note_size.config.config import Config
 from note_size.types import MediaFile, FieldName, FieldContent, FileContent
@@ -36,6 +37,7 @@ class Data:
                 DefaultFields.file2: DefaultFields.content2
             }
         })
+        gui_hooks.add_cards_did_add_note(note)
         return note
 
     def create_note_without_files(self) -> Note:

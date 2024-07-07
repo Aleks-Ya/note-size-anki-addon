@@ -109,6 +109,17 @@ class TestItemIdCache(unittest.TestCase):
         self.item_id_cache.evict_note(note1.id)
         self.assertEqual(size2, self.item_id_cache.get_total_texts_size())
 
+    def test_refresh_note(self):
+        note: Note = self.td.create_note_with_files()
+        note_id: NoteId = note.id
+        self.assertEqual("143B", self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=True))
+
+        Data.update_front_field(note, 'updated')
+        self.assertEqual("143B", self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=True))
+
+        self.item_id_cache.refresh_note(note_id)
+        self.assertEqual("86B", self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=True))
+
     def tearDown(self):
         self.col.close()
 

@@ -98,6 +98,10 @@ class ItemIdCache:
         with self.__lock:
             return self.__total_texts_size
 
+    def refresh_note(self, note_id: NoteId):
+        for size_type in size_types:
+            self.get_note_size_str(note_id, size_type, use_cache=False)
+
     def evict_note(self, note_id: NoteId):
         with self.__lock:
             old_size: SizeBytes = self.__size_bytes_caches[SizeType.TEXTS][note_id]
