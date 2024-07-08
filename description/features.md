@@ -16,9 +16,14 @@ Often Anki automatically wraps your text with HTML tags which consume additional
 
 ## Implemented features
 
-1. See the note size at the real time as you are editing it.
-2. Sort notes by "Size" columns.
-3. Show details about a note by clicking the "Size: 1KB" button.
+1. Show collection size in Deck Browser
+2. See the note size at the real time as you are editing it.
+3. Sort notes by "Size" columns.
+4. Show details about a note by clicking the "Size: 1KB" button.
+
+### In Deck Browser
+
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/collection_size.png)
 
 ### In Browser
 
