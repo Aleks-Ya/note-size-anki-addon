@@ -29,4 +29,4 @@ class DeckBrowserHooks:
                     content: 'aqt.deckbrowser.DeckBrowserContent') -> None:
         html: str = self.__collection_size_formatter.format_collection_size_html()
         content.stats += html
-        log.info(f"DeckBrowserContent stats (edited): {content.stats}\n\n")
+        log.debug(f"DeckBrowserContent stats (edited): {content.stats}\n\n")
