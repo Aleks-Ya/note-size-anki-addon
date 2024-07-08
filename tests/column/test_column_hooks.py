@@ -5,7 +5,8 @@ from typing import Sequence
 from anki.collection import Collection, BrowserColumns
 from anki.notes import Note
 from aqt import gui_hooks
-from aqt.browser import Column, ItemId, CellRow, Cell
+from aqt.browser import Column, ItemId, CellRow, Cell, SearchContext
+from mock.mock import MagicMock
 
 from note_size.config.config import Config
 from note_size.column.column_hooks import ColumnHooks
@@ -23,8 +24,8 @@ class TestColumnHooks(unittest.TestCase):
         self.td: Data = Data(self.col)
         config: Config = Data.read_config()
         media_cache: MediaCache = MediaCache(self.col, config)
-        size_calculator: SizeCalculator = SizeCalculator(media_cache)
-        item_id_cache: ItemIdCache = ItemIdCache(self.col, size_calculator, config)
+        self.size_calculator: SizeCalculator = SizeCalculator(media_cache)
+        item_id_cache: ItemIdCache = ItemIdCache(self.col, self.size_calculator, config)
         item_id_sorter: ItemIdSorter = ItemIdSorter(item_id_cache)
         self.column_hooks: ColumnHooks = ColumnHooks(item_id_cache, item_id_sorter)
 
@@ -98,6 +99,18 @@ class TestColumnHooks(unittest.TestCase):
             Cell("122B", False),
             Cell("21B", False)
         ), row.cells)
+
+    def test_sort_rows_by_column(self):
+        self.column_hooks.setup_hooks()
+        note_big: Note = self.td.create_note_with_given_fields("big big big")
+        note_medium: Note = self.td.create_note_with_given_fields("medium")
+        note_small: Note = self.td.create_note_with_given_fields("small")
+        browser: MagicMock = MagicMock()
+        column: Column = Column(key="note-size-total", notes_mode_label="Size")
+        ids: Sequence[ItemId] = [note_medium.id, note_big.id, note_small.id]
+        search_context: SearchContext = SearchContext("", browser, column, False, ids)
+        gui_hooks.browser_did_search(search_context)
+        self.assertSequenceEqual([note_big.id, note_medium.id, note_small.id], search_context.ids)
 
     def tearDown(self):
         self.column_hooks.remove_hooks()

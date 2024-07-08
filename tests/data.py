@@ -40,14 +40,20 @@ class Data:
         gui_hooks.add_cards_did_add_note(note)
         return note
 
-    def create_note_without_files(self) -> Note:
-        front_field_content: FieldContent = FieldContent('The field on the front card ∑￡')
-        back_field_content: FieldContent = FieldContent('Another field on the back card ∆¥')
+    def create_note_with_given_fields(self,
+                                      front_field_content: str = "Front content",
+                                      back_field_content: str = "Back content") -> Note:
+        front_field_content: FieldContent = FieldContent(front_field_content)
+        back_field_content: FieldContent = FieldContent(back_field_content)
         note: Note = self.col.newNote()
         note[DefaultFields.front_field_name] = front_field_content
         note[DefaultFields.back_field_name] = back_field_content
         self.col.addNote(note)
         return note
+
+    def create_note_without_files(self) -> Note:
+        return self.create_note_with_given_fields('The field on the front card ∑￡',
+                                                  'Another field on the back card ∆¥')
 
     def create_note_with_given_files(self, fields: dict[FieldName, dict[MediaFile, FileContent]]) -> Note:
         note: Note = self.col.newNote()
