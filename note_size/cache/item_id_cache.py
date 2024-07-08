@@ -20,6 +20,7 @@ class ItemIdCache:
 
     def __init__(self, col: Collection, size_calculator: SizeCalculator, config: Config):
         self.__warmup_enabled: bool = config.cache_warm_up_enabled()
+        self.__initialized: bool = False
         self.__lock: RLock = RLock()
         self.__col: Collection = col
         self.__size_calculator: SizeCalculator = size_calculator
@@ -57,8 +58,14 @@ class ItemIdCache:
             log.info(f"Cache warming up finished: notes={len(all_note_ids)}, cards={len(all_card_ids)}, "
                      f"duration_sec={duration_sec}, size_bytes_cache_lengths={size_bytes_cache_lengths}, "
                      f"size_str_cache_lengths={size_str_cache_lengths}, id_cache_length={len(self.__id_cache.keys())}")
+            with self.__lock:
+                self.__initialized = True
         except Exception:
             log.exception("Cache warm-up failed")
+
+    def is_initialized(self):
+        with self.__lock:
+            return self.__initialized
 
     def get_note_id_by_card_id(self, card_id: CardId) -> NoteId:
         with self.__lock:

@@ -120,6 +120,11 @@ class TestItemIdCache(unittest.TestCase):
         self.item_id_cache.refresh_note(note_id)
         self.assertEqual("86B", self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=True))
 
+    def test_is_initialized(self):
+        self.assertFalse(self.item_id_cache.is_initialized())
+        self.item_id_cache.warm_up_cache()
+        self.assertTrue(self.item_id_cache.is_initialized())
+
     def tearDown(self):
         self.col.close()
 
