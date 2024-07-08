@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from logging import Logger
 from typing import Sequence, Callable
 
@@ -20,21 +21,25 @@ class CacheHooks:
         self.__media_cache: MediaCache = media_cache
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__size_calculator: SizeCalculator = size_calculator
+        self.__last_update_media_sync_did_progress: datetime = datetime.now()
         self.__hook_add_cards_did_add_note: Callable[[Note], None] = self.__add_cards_did_add_note
         self.__hook_notes_will_be_deleted: Callable[[Collection, Sequence[NoteId]], None] = self.__notes_will_be_deleted
         self.__hook_media_sync_did_start_or_stop: Callable[[bool], None] = self.__media_sync_did_start_or_stop
+        self.__hook_media_sync_did_progress: Callable[[str], None] = self.__media_sync_did_progress
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def setup_hooks(self) -> None:
         gui_hooks.add_cards_did_add_note.append(self.__hook_add_cards_did_add_note)
         hooks.notes_will_be_deleted.append(self.__hook_notes_will_be_deleted)
         gui_hooks.media_sync_did_start_or_stop.append(self.__hook_media_sync_did_start_or_stop)
+        gui_hooks.media_sync_did_progress.append(self.__hook_media_sync_did_progress)
         log.info(f"{self.__class__.__name__} are set")
 
     def remove_hooks(self) -> None:
         gui_hooks.add_cards_did_add_note.remove(self.__hook_add_cards_did_add_note)
         hooks.notes_will_be_deleted.remove(self.__hook_notes_will_be_deleted)
         gui_hooks.media_sync_did_start_or_stop.remove(self.__hook_media_sync_did_start_or_stop)
+        gui_hooks.media_sync_did_progress.remove(self.__hook_media_sync_did_progress)
         log.info(f"{self.__class__.__name__} was removed")
 
     def __add_cards_did_add_note(self, note: Note) -> None:
@@ -51,4 +56,9 @@ class CacheHooks:
     def __media_sync_did_start_or_stop(self, running: bool) -> None:
         log.info(f"MediaSyncDidStartOrStop: running={running}")
         if not running:
+            self.__media_cache.warm_up_cache()
+
+    def __media_sync_did_progress(self, entry: str) -> None:
+        log.info(f"MediaSyncDidProgress: entry={entry}")
+        if (datetime.now() - self.__last_update_media_sync_did_progress).total_seconds() > 3:
             self.__media_cache.warm_up_cache()

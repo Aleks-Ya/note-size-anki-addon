@@ -1,4 +1,5 @@
 import tempfile
+import time
 import unittest
 from pathlib import Path
 
@@ -30,14 +31,17 @@ class TestCacheHooks(unittest.TestCase):
         self.assertEqual(0, gui_hooks.add_cards_did_add_note.count())
         self.assertEqual(0, hooks.notes_will_be_deleted.count())
         self.assertEqual(0, gui_hooks.media_sync_did_start_or_stop.count())
+        self.assertEqual(0, gui_hooks.media_sync_did_progress.count())
         self.cache_hooks.setup_hooks()
         self.assertEqual(1, gui_hooks.add_cards_did_add_note.count())
         self.assertEqual(1, hooks.notes_will_be_deleted.count())
         self.assertEqual(1, gui_hooks.media_sync_did_start_or_stop.count())
+        self.assertEqual(1, gui_hooks.media_sync_did_progress.count())
         self.cache_hooks.remove_hooks()
         self.assertEqual(0, gui_hooks.add_cards_did_add_note.count())
         self.assertEqual(0, hooks.notes_will_be_deleted.count())
         self.assertEqual(0, gui_hooks.media_sync_did_start_or_stop.count())
+        self.assertEqual(0, gui_hooks.media_sync_did_progress.count())
 
     def test_add_cards_did_add_note(self):
         self.cache_hooks.setup_hooks()
@@ -61,6 +65,18 @@ class TestCacheHooks(unittest.TestCase):
         gui_hooks.media_sync_did_start_or_stop(True)
         self.assertEqual(21, self.media_cache.get_total_files_size())
         gui_hooks.media_sync_did_start_or_stop(False)
+        self.assertEqual(24, self.media_cache.get_total_files_size())
+
+    def test_media_sync_did_progress(self):
+        self.cache_hooks.setup_hooks()
+        self.td.create_note_with_files()
+        self.assertEqual(21, self.media_cache.get_total_files_size())
+        Path(self.col.media.dir(), "image.png").write_text("abc")
+        self.assertEqual(21, self.media_cache.get_total_files_size())
+        gui_hooks.media_sync_did_progress("")
+        self.assertEqual(21, self.media_cache.get_total_files_size())
+        time.sleep(3)
+        gui_hooks.media_sync_did_progress("")
         self.assertEqual(24, self.media_cache.get_total_files_size())
 
     def tearDown(self):
