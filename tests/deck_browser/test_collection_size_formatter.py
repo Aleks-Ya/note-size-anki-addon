@@ -41,9 +41,7 @@ class TestCollectionSizeFormatter(unittest.TestCase):
         exp_soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
         exp_text: str = str(exp_soup.prettify())
         act_html: str = self.collection_size_formatter.format_collection_size_html()
-        act_soup: BeautifulSoup = BeautifulSoup(act_html, 'html.parser')
-        act_text: str = str(act_soup.prettify())
-        self.assertEqual(exp_text, act_text)
+        self.assertEqual(exp_text, act_html)
 
     def tearDown(self):
         self.col.close()
