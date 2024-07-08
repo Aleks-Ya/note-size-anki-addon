@@ -7,9 +7,8 @@
 <small>[Compare with v1.9.0](https://github.com/Aleks-Ya/note-size-anki-addon/compare/v1.11.0...v1.12.0)</small>
 
 1. [FEATURE] Display Collection size in Deck Browser
-2. [BUG] Fix failed to create log dir #2
-3. [DOCS] Split description in several page
-4. [MISC] Upgrade to Anki 24.6.3
+2. [DOCS] Split description in several page
+3. [MISC] Upgrade to Anki 24.6.3
 
 ## [v1.11.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v1.11.0) - 2024-06-23
 
