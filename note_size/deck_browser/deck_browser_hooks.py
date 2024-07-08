@@ -14,12 +14,6 @@ log: Logger = logging.getLogger(__name__)
 
 
 class DeckBrowserHooks:
-    __my_python_action: str = "refresh-collection-size"
-    __collection_size_id: str = "collection_size"
-    __media_size_id: str = "media_size"
-    __total_size_id: str = "total_size"
-    __button_id: str = "refresh_button"
-    __code_style: str = "font-family:Consolas,monospace"
 
     def __init__(self, media_cache: MediaCache, item_id_cache: ItemIdCache):
         self.__media_cache: MediaCache = media_cache
@@ -46,13 +40,10 @@ class DeckBrowserHooks:
         collection_title: str = f'Size of file "{self.__collection_file_path}"'
         media_title: str = f'Size of folder "{self.__media_folder_path}"'
         total_title: str = f'Total size of collection file and media folder'
-        collection_span: str = (
-            f"<span id='{DeckBrowserHooks.__collection_size_id}' "
-            f"style='{DeckBrowserHooks.__code_style}'>{collection_size}</span>")
-        media_span: str = (f"<span id='{DeckBrowserHooks.__media_size_id}' "
-                           f"style='{DeckBrowserHooks.__code_style}'>{media_size}</span>")
-        total_span: str = (f"<span id='{DeckBrowserHooks.__total_size_id}' "
-                           f"style='{DeckBrowserHooks.__code_style}'>{total_size}</span>")
+        code_style: str = "font-family:Consolas,monospace"
+        collection_span: str = f"<span style='{code_style}'>{collection_size}</span>"
+        media_span: str = f"<span style='{code_style}'>{media_size}</span>"
+        total_span: str = f"<span style='{code_style}'>{total_size}</span>"
         content.stats += (f"<div>"
                           f"<span title='{collection_title}'>Collection:&nbsp;{collection_span}&nbsp;&nbsp;&nbsp;</span>"
                           f"<span title='{media_title}'>Media:&nbsp;{media_span}&nbsp;&nbsp;&nbsp;</span>"
