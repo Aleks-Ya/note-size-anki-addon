@@ -22,12 +22,14 @@ class CollectionSizeFormatter:
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def format_collection_size_html(self) -> str:
+        media_file_number: int = len(list(self.__media_folder_path.glob('*')))
+        media_file_number_str: str = f"{media_file_number:,}".replace(',', ' ')
         soup: BeautifulSoup = BeautifulSoup()
         div: Tag = soup.new_tag('div')
         div.append(self.__span(soup, "Collection", self.__collection_size(),
                                f'Size of file "{self.__collection_file_path}"'))
         div.append(self.__span(soup, "Media", self.__media_size(),
-                               f'Size of folder "{self.__media_folder_path}"'))
+                               f'Size of folder "{self.__media_folder_path}" ({media_file_number_str} files)'))
         div.append(self.__span(soup, "Total", self.__total_size(),
                                f'Total size of collection file and media folder'))
         soup.append(div)

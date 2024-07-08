@@ -28,7 +28,7 @@ class TestCollectionSizeFormatter(unittest.TestCase):
                     Collection:&nbsp;
                     <span style='font-family:Consolas,monospace'>4.0KB</span>&nbsp;&nbsp;&nbsp;
                 </span>
-                <span title='Size of folder "{self.col.media.dir()}"'>
+                <span title='Size of folder "{self.col.media.dir()}" (3 files)'>
                     Media:&nbsp;
                     <span style='font-family:Consolas,monospace'>0B</span>&nbsp;&nbsp;&nbsp;
                 </span>
