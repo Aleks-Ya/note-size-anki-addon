@@ -104,11 +104,12 @@ class ColumnHooks:
     def __on_browser_did_search(self, context: SearchContext) -> None:
         log.debug("Browser did search")
         is_note: bool = ColumnHooks.__is_notes_mode(context)
-        self.__sort_by_column(context, ColumnHooks.__column_total_label, SizeType.TOTAL, is_note)
-        self.__sort_by_column(context, ColumnHooks.__column_texts_label, SizeType.TEXTS, is_note)
-        self.__sort_by_column(context, ColumnHooks.__column_files_label, SizeType.FILES, is_note)
+        self.__sort_rows_by_column(ColumnHooks.__column_total_label, SizeType.TOTAL, context, is_note)
+        self.__sort_rows_by_column(ColumnHooks.__column_texts_label, SizeType.TEXTS, context, is_note)
+        self.__sort_rows_by_column(ColumnHooks.__column_files_label, SizeType.FILES, context, is_note)
 
-    def __sort_by_column(self, context: SearchContext, column_label: str, size_type: SizeType, is_note: bool) -> None:
+    def __sort_rows_by_column(self, column_label: str, size_type: SizeType, context: SearchContext,
+                              is_note: bool) -> None:
         if context.ids and isinstance(context.order, Column) and context.order.notes_mode_label == column_label:
             context.ids = self.__item_id_sorter.sort_item_ids(context.ids, size_type, is_note)
 

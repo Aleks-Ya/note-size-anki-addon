@@ -1,9 +1,11 @@
 import tempfile
 import unittest
+from typing import Sequence
 
 from anki.collection import Collection, BrowserColumns
+from anki.notes import Note
 from aqt import gui_hooks
-from aqt.browser import Column
+from aqt.browser import Column, ItemId, CellRow, Cell
 
 from note_size.config.config import Config
 from note_size.column.column_hooks import ColumnHooks
@@ -18,6 +20,7 @@ class TestColumnHooks(unittest.TestCase):
 
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
+        self.td: Data = Data(self.col)
         config: Config = Data.read_config()
         media_cache: MediaCache = MediaCache(self.col, config)
         size_calculator: SizeCalculator = SizeCalculator(media_cache)
@@ -79,6 +82,22 @@ class TestColumnHooks(unittest.TestCase):
                 notes_mode_tooltip="Note size (files only, texts are not included)"
             )
         })
+
+    def test_modify_row(self):
+        self.column_hooks.setup_hooks()
+        note: Note = self.td.create_note_with_files()
+        item_id: ItemId = note.id
+        is_note: bool = True
+        init_text: str = "init text"
+        row: CellRow = CellRow.generic(4, init_text)
+        columns: Sequence[str] = ["English", "note-size-total", "note-size-texts", "note-size-files"]
+        gui_hooks.browser_did_fetch_row(item_id, is_note, row, columns)
+        self.assertTupleEqual((
+            Cell(init_text, False),
+            Cell("143B", False),
+            Cell("122B", False),
+            Cell("21B", False)
+        ), row.cells)
 
     def tearDown(self):
         self.column_hooks.remove_hooks()
