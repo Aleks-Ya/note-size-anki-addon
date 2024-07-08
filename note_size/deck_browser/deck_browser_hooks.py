@@ -1,6 +1,7 @@
 import datetime
 import logging
 from logging import Logger
+from pathlib import Path
 from typing import Callable, Any
 
 from aqt import gui_hooks, mw
@@ -42,28 +43,17 @@ class DeckBrowserHooks:
     def __on_action(self, _: 'aqt.deckbrowser.DeckBrowser',
                     content: 'aqt.deckbrowser.DeckBrowserContent') -> None:
         on_click_js: str = f"pycmd('{DeckBrowserHooks.__my_python_action}')"
-        button_title: str = "Update"
-        if self.__item_id_cache.is_initialized():
-            collection_size: SizeStr = self.__collection_size()
-            collection_title: str = "Size of note fields without media"
-            media_size: SizeStr = self.__media_size()
-            media_title: str = "Size of media files without fields"
-            total_size: SizeStr = self.__total_size()
-            total_title: str = "Size of note fields with media"
-        else:
-            collection_size: str = "⏳"
-            collection_title: str = "Calculating..."
-            media_size: str = collection_size
-            media_title: str = collection_title
-            total_size: str = collection_size
-            total_title: str = collection_title
-        collection_span: str = (f"<span id='{DeckBrowserHooks.__collection_size_id}' title='{collection_title}' "
-                                f"style='{DeckBrowserHooks.__code_style}'>{collection_size}</span>")
-        media_span: str = (f"<span id='{DeckBrowserHooks.__media_size_id}' title='{media_title}' "
+        collection_size: SizeStr = SizeFormatter.bytes_to_str(self.__collection_size())
+        media_size: SizeStr = SizeFormatter.bytes_to_str(self.__media_size())
+        total_size: SizeStr = SizeFormatter.bytes_to_str(self.__total_size())
+        collection_span: str = (
+            f"<span id='{DeckBrowserHooks.__collection_size_id}' title='Size of note fields without media' "
+            f"style='{DeckBrowserHooks.__code_style}'>{collection_size}</span>")
+        media_span: str = (f"<span id='{DeckBrowserHooks.__media_size_id}' title='Size of media files without fields' "
                            f"style='{DeckBrowserHooks.__code_style}'>{media_size}</span>")
-        total_span: str = (f"<span id='{DeckBrowserHooks.__total_size_id}' title='{total_title}' "
+        total_span: str = (f"<span id='{DeckBrowserHooks.__total_size_id}' title='Size of note fields with media' "
                            f"style='{DeckBrowserHooks.__code_style}'>{total_size}</span>")
-        button: str = (f"<button id='{DeckBrowserHooks.__button_id}' title='{button_title}' "
+        button: str = (f"<button id='{DeckBrowserHooks.__button_id}' title='Update' "
                        f"""style="padding: 2px 5px;" onclick="{on_click_js}">⟳</button>""")
         content.stats += (f"<div style='align-items: center; display: flex; justify-content: center;'>"
                           f"Collection:&nbsp;{collection_span}&nbsp;&nbsp;&nbsp;"
@@ -72,22 +62,22 @@ class DeckBrowserHooks:
                           f"{button}</div>")
         log.info(f"DeckBrowserContent stats (edited): {content.stats}\n\n")
 
-    def __media_size(self) -> SizeStr:
-        return SizeFormatter.bytes_to_str(self.__media_cache.get_total_files_size())
+    def __media_size(self) -> SizeBytes:
+        return self.__media_cache.get_total_files_size()
 
-    def __collection_size(self) -> SizeStr:
-        return SizeFormatter.bytes_to_str(self.__item_id_cache.get_total_texts_size())
+    @staticmethod
+    def __collection_size() -> SizeBytes:
+        collection_file_path: Path = Path(mw.pm.profileFolder(), "collection.anki2")
+        return SizeBytes(collection_file_path.stat().st_size)
 
-    def __total_size(self) -> SizeStr:
-        total_size: SizeBytes = SizeBytes(self.__item_id_cache.get_total_texts_size() +
-                                          self.__media_cache.get_total_files_size())
-        return SizeFormatter.bytes_to_str(total_size)
+    def __total_size(self) -> SizeBytes:
+        return SizeBytes(self.__collection_size() + self.__media_size())
 
     def __on_event(self, handled: tuple[bool, Any], message: str, _: Any) -> tuple[bool, Any]:
         if message == DeckBrowserHooks.__my_python_action:
-            collection_size: SizeStr = self.__collection_size()
-            media_size: SizeStr = self.__media_size()
-            total_size: SizeStr = self.__total_size()
+            collection_size: SizeStr = SizeFormatter.bytes_to_str(self.__collection_size())
+            media_size: SizeStr = SizeFormatter.bytes_to_str(self.__media_size())
+            total_size: SizeStr = SizeFormatter.bytes_to_str(self.__total_size())
             button_title: str = f"Updated {datetime.datetime.now().time().replace(microsecond=0)}"
             on_click_js: str = (
                 f"document.getElementById('{DeckBrowserHooks.__collection_size_id}').textContent='{collection_size}';"
