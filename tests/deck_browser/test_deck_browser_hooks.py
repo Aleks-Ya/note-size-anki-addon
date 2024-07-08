@@ -24,12 +24,15 @@ class TestDeckBrowserHooks(unittest.TestCase):
 
     def test_setup_hooks(self):
         self.assertEqual(0, gui_hooks.deck_browser_will_render_content.count())
+        self.assertEqual(0, gui_hooks.webview_did_receive_js_message.count())
 
         self.deck_browser_hooks.setup_hooks()
         self.assertEqual(1, gui_hooks.deck_browser_will_render_content.count())
+        self.assertEqual(1, gui_hooks.webview_did_receive_js_message.count())
 
         self.deck_browser_hooks.remove_hooks()
         self.assertEqual(0, gui_hooks.deck_browser_will_render_content.count())
+        self.assertEqual(0, gui_hooks.webview_did_receive_js_message.count())
 
     def tearDown(self):
         self.deck_browser_hooks.remove_hooks()
