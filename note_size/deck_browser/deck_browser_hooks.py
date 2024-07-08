@@ -1,26 +1,19 @@
 import logging
 from logging import Logger
-from pathlib import Path
 from typing import Callable, Any
 
-from aqt import gui_hooks, mw
+from aqt import gui_hooks
 
-from ..types import SizeStr, SizeBytes
-from ..cache.item_id_cache import ItemIdCache
-from ..cache.media_cache import MediaCache
-from ..calculator.size_formatter import SizeFormatter
+from .collection_size_formatter import CollectionSizeFormatter
 
 log: Logger = logging.getLogger(__name__)
 
 
 class DeckBrowserHooks:
 
-    def __init__(self, media_cache: MediaCache, item_id_cache: ItemIdCache):
-        self.__media_cache: MediaCache = media_cache
-        self.__item_id_cache: ItemIdCache = item_id_cache
+    def __init__(self, collection_size_formatter: CollectionSizeFormatter):
+        self.__collection_size_formatter: CollectionSizeFormatter = collection_size_formatter
         self.__hook_deck_browser_will_render_content: Callable[[Any, Any], None] = self.__on_action
-        self.__collection_file_path: Path = Path(mw.pm.profileFolder(), "collection.anki2")
-        self.__media_folder_path: Path = Path(mw.col.media.dir())
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def setup_hooks(self) -> None:
@@ -34,28 +27,6 @@ class DeckBrowserHooks:
     # noinspection PyUnresolvedReferences
     def __on_action(self, _: 'aqt.deckbrowser.DeckBrowser',
                     content: 'aqt.deckbrowser.DeckBrowserContent') -> None:
-        collection_size: SizeStr = SizeFormatter.bytes_to_str(self.__collection_size())
-        media_size: SizeStr = SizeFormatter.bytes_to_str(self.__media_size())
-        total_size: SizeStr = SizeFormatter.bytes_to_str(self.__total_size())
-        collection_title: str = f'Size of file "{self.__collection_file_path}"'
-        media_title: str = f'Size of folder "{self.__media_folder_path}"'
-        total_title: str = f'Total size of collection file and media folder'
-        code_style: str = "font-family:Consolas,monospace"
-        collection_span: str = f"<span style='{code_style}'>{collection_size}</span>"
-        media_span: str = f"<span style='{code_style}'>{media_size}</span>"
-        total_span: str = f"<span style='{code_style}'>{total_size}</span>"
-        content.stats += (f"<div>"
-                          f"<span title='{collection_title}'>Collection:&nbsp;{collection_span}&nbsp;&nbsp;&nbsp;</span>"
-                          f"<span title='{media_title}'>Media:&nbsp;{media_span}&nbsp;&nbsp;&nbsp;</span>"
-                          f"<span title='{total_title}'>Total:&nbsp;{total_span}</span>"
-                          f"</div>")
+        html: str = self.__collection_size_formatter.format_collection_size_html()
+        content.stats += html
         log.info(f"DeckBrowserContent stats (edited): {content.stats}\n\n")
-
-    def __media_size(self) -> SizeBytes:
-        return self.__media_cache.get_total_files_size()
-
-    def __collection_size(self) -> SizeBytes:
-        return SizeBytes(self.__collection_file_path.stat().st_size)
-
-    def __total_size(self) -> SizeBytes:
-        return SizeBytes(self.__collection_size() + self.__media_size())

@@ -10,6 +10,7 @@ from aqt.addons import AddonManager
 from .cache.cache_hooks import CacheHooks
 from .cache.media_cache import MediaCache
 from .cache.item_id_cache import ItemIdCache
+from .deck_browser.collection_size_formatter import CollectionSizeFormatter
 
 
 def __configure_logging(addon_manager: AddonManager, module: str) -> Logger:
@@ -63,7 +64,8 @@ def __initialize(col: Collection):
     button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, size_calculator)
     button_hooks: ButtonHooks = ButtonHooks(details_formatter, button_formatter)
     button_hooks.setup_hooks()
-    deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(media_cache, item_id_cache)
+    collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(col, media_cache)
+    deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter)
     deck_browser_hooks.setup_hooks()
     cache_hooks: CacheHooks = CacheHooks(media_cache, item_id_cache, size_calculator)
     cache_hooks.setup_hooks()
