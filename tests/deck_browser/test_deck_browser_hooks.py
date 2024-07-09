@@ -18,15 +18,24 @@ class TestDeckBrowserHooks(unittest.TestCase):
         config: Config = Data.read_config()
         media_cache: MediaCache = MediaCache(self.col, config)
         collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(self.col, media_cache)
-        self.deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter)
+        self.deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter, config)
 
-    def test_setup_hooks(self):
+    def test_setup_hooks_enabled(self):
         self.assertEqual(0, gui_hooks.deck_browser_will_render_content.count())
-
         self.deck_browser_hooks.setup_hooks()
         self.assertEqual(1, gui_hooks.deck_browser_will_render_content.count())
-
         self.deck_browser_hooks.remove_hooks()
+        self.assertEqual(0, gui_hooks.deck_browser_will_render_content.count())
+
+    def test_setup_hooks_disabled(self):
+        config: Config = Data.read_config_updated({'Deck Browser': {'Show Full Collection Size': False}})
+        media_cache: MediaCache = MediaCache(self.col, config)
+        collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(self.col, media_cache)
+        deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter, config)
+        self.assertEqual(0, gui_hooks.deck_browser_will_render_content.count())
+        deck_browser_hooks.setup_hooks()
+        self.assertEqual(0, gui_hooks.deck_browser_will_render_content.count())
+        deck_browser_hooks.remove_hooks()
         self.assertEqual(0, gui_hooks.deck_browser_will_render_content.count())
 
     def tearDown(self):

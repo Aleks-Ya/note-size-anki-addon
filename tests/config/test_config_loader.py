@@ -31,22 +31,22 @@ class TestConfigLoader(unittest.TestCase):
         self.__copy_config_json_to_addons_dir()
         config: Config = self.config_loader.load_config()
         self.assertDictEqual({
-            'Logging': {'Logger Level': 'INFO'},
             'Cache': {'Warmup Enabled': True},
-            'Size Button': {
-                'Details Window': {
-                    'Max Filename Length': 100,
-                    'Max Files To Show': 10}}}, config.as_dict())
+            'Deck Browser': {'Show Full Collection Size': True},
+            'Logging': {'Logger Level': 'INFO'},
+            'Size Button': {'Details Window': {
+                'Max Filename Length': 100,
+                'Max Files To Show': 10}}}, config.as_dict())
 
     def test_actual_values_all(self):
         self.__copy_config_json_to_addons_dir()
         meta_json_config: dict[str, Any] = {
-            'Logging': {'Logger Level': 'DEBUG'},
             'Cache': {'Warmup Enabled': False},
-            'Size Button': {
-                'Details Window': {
-                    'Max Filename Length': 200,
-                    'Max Files To Show': 20}}}
+            'Deck Browser': {'Show Full Collection Size': True},
+            'Logging': {'Logger Level': 'DEBUG'},
+            'Size Button': {'Details Window': {
+                'Max Filename Length': 200,
+                'Max Files To Show': 20}}}
         self.__write_meta_json_config(meta_json_config)
         config: Config = self.config_loader.load_config()
         self.assertDictEqual(meta_json_config, config.as_dict())
@@ -56,8 +56,9 @@ class TestConfigLoader(unittest.TestCase):
         self.__write_meta_json_config({'Size Button': {'Details Window': {'Max Filename Length': 200}}})
         config: Config = self.config_loader.load_config()
         self.assertDictEqual({
-            'Logging': {'Logger Level': 'INFO'},
             'Cache': {'Warmup Enabled': True},
+            'Deck Browser': {'Show Full Collection Size': True},
+            'Logging': {'Logger Level': 'INFO'},
             'Size Button': {'Details Window': {
                 'Max Filename Length': 200,
                 'Max Files To Show': 10}}}, config.as_dict())
@@ -66,55 +67,52 @@ class TestConfigLoader(unittest.TestCase):
         self.__copy_config_json_to_addons_dir()
         self.__write_meta_json_config({
             'Logging': {'Logger Level': 'INFO'},
-            'Size Button': {
-                'Details Window': {
-                    'Max Filename Length': 200,
-                    'Unused Nested': 'Nested 1'
-                }},
+            'Size Button': {'Details Window': {
+                'Max Filename Length': 200,
+                'Unused Nested': 'Nested 1'}},
             'Unused Top': {'Property 1': 'Value 1'}
         })
         config: Config = self.config_loader.load_config()
         self.assertDictEqual({
-            'Logging': {'Logger Level': 'INFO'},
             'Cache': {'Warmup Enabled': True},
-            'Size Button': {
-                'Details Window': {
-                    'Max Filename Length': 200,
-                    'Max Files To Show': 10}}}, config.as_dict())
+            'Deck Browser': {'Show Full Collection Size': True},
+            'Logging': {'Logger Level': 'INFO'},
+            'Size Button': {'Details Window': {
+                'Max Filename Length': 200,
+                'Max Files To Show': 10}}}, config.as_dict())
 
     def test_save_loaded_config(self):
         self.__copy_config_json_to_addons_dir()
         self.__write_meta_json_config({
+            'Deck Browser': {'Show Full Collection Size': True},
             'Logging': {'Logger Level': 'INFO'},
-            'Size Button': {
-                'Details Window': {
-                    'Max Filename Length': 200,
-                    'Unused Nested': 'Nested 1'
-                }},
+            'Size Button': {'Details Window': {
+                'Max Filename Length': 200,
+                'Unused Nested': 'Nested 1'}},
             'Unused Top': {'Property 1': 'Value 1'}
         })
         config_origin: Optional[dict[str, Any]] = self.addon_manager.getConfig(self.module_name)
         self.assertDictEqual({
-            'Logging': {'Logger Level': 'INFO'},
             'Cache': {'Warmup Enabled': True},
-            'Size Button': {
-                'Details Window': {
-                    'Max Filename Length': 200,
-                    'Unused Nested': 'Nested 1'
-                }},
+            'Deck Browser': {'Show Full Collection Size': True},
+            'Logging': {'Logger Level': 'INFO'},
+            'Size Button': {'Details Window': {
+                'Max Filename Length': 200,
+                'Unused Nested': 'Nested 1'}},
             'Unused Top': {'Property 1': 'Value 1'}}, config_origin)
         config: Config = self.config_loader.load_config()
         self.assertDictEqual({
-            'Logging': {'Logger Level': 'INFO'},
             'Cache': {'Warmup Enabled': True},
-            'Size Button': {
-                'Details Window': {
-                    'Max Filename Length': 200,
-                    'Max Files To Show': 10}}}, config.as_dict())
+            'Deck Browser': {'Show Full Collection Size': True},
+            'Logging': {'Logger Level': 'INFO'},
+            'Size Button': {'Details Window': {
+                'Max Filename Length': 200,
+                'Max Files To Show': 10}}}, config.as_dict())
         config_saved: Optional[dict[str, Any]] = self.addon_manager.getConfig(self.module_name)
         self.assertDictEqual({
-            'Logging': {'Logger Level': 'INFO'},
             'Cache': {'Warmup Enabled': True},
+            'Deck Browser': {'Show Full Collection Size': True},
+            'Logging': {'Logger Level': 'INFO'},
             'Size Button': {'Details Window': {
                 'Max Filename Length': 200,
                 'Max Files To Show': 10}}}, config_saved)

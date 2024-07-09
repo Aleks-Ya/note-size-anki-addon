@@ -10,5 +10,8 @@
   },
   "Cache": {
     "Warmup Enabled": true
+  },
+  "Deck Browser": {
+    "Show Full Collection Size": true
   }
 }

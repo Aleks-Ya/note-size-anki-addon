@@ -19,6 +19,18 @@ Set the logger level.
 Output log file on Linux: `~/.local/share/Anki2/logs/addons/1188705668/note_size.log`.  
 Output log file on Windows: `c:\Users\%USERNAME%\AppData\Roaming\Anki2\logs\addons\1188705668\note_size.log`.
 
+### Deck Browser
+
+#### Show Full Collection Size
+
+- Property name: `Deck Browser` - `Show Full Collection Size`
+- Type: Boolean
+- Default value: `true`
+- Possible values: `true`, `false`
+
+Display or hide the Collection size in the Deck Browser:  
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/collection_size.png)
+
 ### Size Button
 
 #### Max Filename Length

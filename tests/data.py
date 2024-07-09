@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any
 
 from anki.collection import Collection
 from anki.notes import Note
@@ -80,3 +81,8 @@ class Data:
     def read_config() -> Config:
         config_json: Path = Path(__file__).parent.parent.joinpath("note_size").joinpath("config.json")
         return Config.from_path(config_json)
+
+    @staticmethod
+    def read_config_updated(overwrites: dict[str, Any]) -> Config:
+        config_json: Path = Path(__file__).parent.parent.joinpath("note_size").joinpath("config.json")
+        return Config.from_path_updated(config_json, overwrites)

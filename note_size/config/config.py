@@ -22,17 +22,27 @@ class Config:
             config_data: dict[str, Any] = json.load(config_file)
         return cls(config_data)
 
-    def details_formatter_max_file_length(self) -> int:
-        return self.__config['Size Button']['Details Window']['Max Filename Length']
-
-    def details_formatter_max_files_to_show(self) -> int:
-        return self.__config['Size Button']['Details Window']['Max Files To Show']
+    @classmethod
+    def from_path_updated(cls, path: Path, overwrites: dict[str, Any]) -> 'Config':
+        with Path(path).open() as config_file:
+            config_data: dict[str, Any] = json.load(config_file)
+            config_data.update(overwrites)
+        return cls(config_data)
 
     def cache_warm_up_enabled(self) -> bool:
         return self.__config['Cache']['Warmup Enabled']
 
-    def get_log_level(self) -> str:
+    def deck_browser_show_full_collection_size(self) -> bool:
+        return self.__config['Deck Browser']['Show Full Collection Size']
+
+    def log_level(self) -> str:
         return self.__config['Logging']['Logger Level']
+
+    def details_formatter_max_filename_length(self) -> int:
+        return self.__config['Size Button']['Details Window']['Max Filename Length']
+
+    def details_formatter_max_files_to_show(self) -> int:
+        return self.__config['Size Button']['Details Window']['Max Files To Show']
 
     def as_dict(self) -> dict[str, Any]:
         return self.__config

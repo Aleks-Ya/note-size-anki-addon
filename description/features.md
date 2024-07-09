@@ -14,6 +14,12 @@ Often Anki automatically wraps your text with HTML tags which consume additional
 
 ![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/calculate_note_size.png)
 
+## How collection size is calculated
+
+Collection size is the size of file `collection.anki2` located in the current profile folder.  
+Media size is the size of folder `collection.media` located in the current profile folder.
+Total size is sum of the collection and media sizes.
+
 ## Implemented features
 
 1. Show collection size in Deck Browser
