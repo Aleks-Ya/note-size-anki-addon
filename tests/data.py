@@ -2,6 +2,8 @@ from pathlib import Path
 from typing import Any
 
 from anki.collection import Collection
+from anki.decks import DeckId
+from anki.models import NotetypeDict
 from anki.notes import Note
 from aqt import gui_hooks
 
@@ -26,6 +28,8 @@ class Data:
 
     def __init__(self, col: Collection):
         self.col: Collection = col
+        self.note_type: NotetypeDict = self.col.models.by_name('Basic')
+        self.deck_id: DeckId = self.col.decks.get_current_id()
 
     def create_note_with_files(self) -> Note:
         note: Note = self.create_note_with_given_files({
@@ -46,10 +50,10 @@ class Data:
                                       back_field_content: str = "Back content") -> Note:
         front_field_content: FieldContent = FieldContent(front_field_content)
         back_field_content: FieldContent = FieldContent(back_field_content)
-        note: Note = self.col.newNote()
+        note: Note = self.col.new_note(self.note_type)
         note[DefaultFields.front_field_name] = front_field_content
         note[DefaultFields.back_field_name] = back_field_content
-        self.col.addNote(note)
+        self.col.add_note(note, self.deck_id)
         return note
 
     def create_note_without_files(self) -> Note:
@@ -57,12 +61,12 @@ class Data:
                                                   'Another field on the back card ∆¥')
 
     def create_note_with_given_files(self, fields: dict[FieldName, dict[MediaFile, FileContent]]) -> Note:
-        note: Note = self.col.newNote()
+        note: Note = self.col.new_note(self.note_type)
         field_contents: dict[FieldName, FieldContent] = {field_name: self.__add_files_to_field(field_files)
                                                          for field_name, field_files in fields.items()}
         for field_name, field_content in field_contents.items():
             note[field_name] = field_content
-        self.col.addNote(note)
+        self.col.add_note(note, self.deck_id)
         return note
 
     def __add_files_to_field(self, files: dict[MediaFile, FileContent]) -> FieldContent:
@@ -86,3 +90,7 @@ class Data:
     def read_config_updated(overwrites: dict[str, Any]) -> Config:
         config_json: Path = Path(__file__).parent.parent.joinpath("note_size").joinpath("config.json")
         return Config.from_path_updated(config_json, overwrites)
+
+    def __new_note(self) -> Note:
+        note_type: NotetypeDict = self.col.models.by_name('Basic')
+        return self.col.new_note(note_type)
