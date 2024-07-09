@@ -2,7 +2,7 @@ import json
 import logging
 from logging import Logger
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 log: Logger = logging.getLogger(__name__)
 
@@ -18,16 +18,26 @@ class Config:
 
     @classmethod
     def from_path(cls, path: Path) -> 'Config':
-        with Path(path).open() as config_file:
-            config_data: dict[str, Any] = json.load(config_file)
-        return cls(config_data)
+        return cls.from_path_updated(path, {})
 
     @classmethod
     def from_path_updated(cls, path: Path, overwrites: dict[str, Any]) -> 'Config':
         with Path(path).open() as config_file:
             config_data: dict[str, Any] = json.load(config_file)
-            config_data.update(overwrites)
-        return cls(config_data)
+        return cls(Config.join(config_data, overwrites))
+
+    @staticmethod
+    def join(base: Optional[dict[str, Any]], actual: Optional[dict[str, Any]]) \
+            -> dict[str, Any]:
+        base: dict[str, Any] = dict(base if base else {})
+        actual: dict[str, Any] = actual if actual else {}
+        for k, v in actual.items():
+            if k in base:
+                if isinstance(v, dict):
+                    base[k] = Config.join(base.get(k, {}), v)
+                else:
+                    base[k] = v
+        return base
 
     def cache_warm_up_enabled(self) -> bool:
         return self.__config['Cache']['Warmup Enabled']
@@ -38,11 +48,14 @@ class Config:
     def log_level(self) -> str:
         return self.__config['Logging']['Logger Level']
 
-    def details_formatter_max_filename_length(self) -> int:
+    def size_button_details_formatter_max_filename_length(self) -> int:
         return self.__config['Size Button']['Details Window']['Max Filename Length']
 
-    def details_formatter_max_files_to_show(self) -> int:
+    def size_button_details_formatter_max_files_to_show(self) -> int:
         return self.__config['Size Button']['Details Window']['Max Files To Show']
+
+    def size_button_enabled(self) -> bool:
+        return self.__config['Size Button']['Enabled']
 
     def as_dict(self) -> dict[str, Any]:
         return self.__config

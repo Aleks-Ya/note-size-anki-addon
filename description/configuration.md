@@ -33,6 +33,15 @@ Display or hide the Collection size in the Deck Browser:
 
 ### Size Button
 
+#### Enabled
+
+- Property name: `Size Button` - `Enabled`
+- Type: Boolean
+- Default value: `true`
+- Possible values: `true`, `false`
+
+Display or hide the Size Button in the Browser, in the Editor and in the Adding note window.
+
 #### Max Filename Length
 
 - Property name: `Size Button` - `Details Window` - `Max Filename Length`

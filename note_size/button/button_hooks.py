@@ -7,6 +7,7 @@ from aqt import gui_hooks
 from aqt.editor import Editor
 from aqt.utils import showInfo
 
+from ..config.config import Config
 from ..types import ButtonLabel
 from .button_formatter import ButtonFormatter
 from .details_formatter import DetailsFormatter
@@ -15,7 +16,8 @@ log: Logger = logging.getLogger(__name__)
 
 
 class ButtonHooks:
-    def __init__(self, details_formatter: DetailsFormatter, button_formatter: ButtonFormatter):
+    def __init__(self, details_formatter: DetailsFormatter, button_formatter: ButtonFormatter, config: Config):
+        self.__enabled: bool = config.size_button_enabled()
         self.__details_formatter: DetailsFormatter = details_formatter
         self.__button_formatter: ButtonFormatter = button_formatter
         self.__hook_editor_did_init: Callable[[Editor], None] = self.__on_editor_did_init
@@ -26,12 +28,15 @@ class ButtonHooks:
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def setup_hooks(self) -> None:
-        gui_hooks.editor_did_init.append(self.__hook_editor_did_init)
-        gui_hooks.editor_did_init_buttons.append(self.__hook_editor_did_init_buttons)
-        gui_hooks.editor_did_load_note.append(self.__hook_editor_did_load_note)
-        gui_hooks.editor_did_unfocus_field.append(self.__hook_editor_did_unfocus_field)
-        gui_hooks.editor_did_fire_typing_timer.append(self.__hook_editor_did_fire_typing_timer)
-        log.info(f"{self.__class__.__name__} are set")
+        if self.__enabled:
+            gui_hooks.editor_did_init.append(self.__hook_editor_did_init)
+            gui_hooks.editor_did_init_buttons.append(self.__hook_editor_did_init_buttons)
+            gui_hooks.editor_did_load_note.append(self.__hook_editor_did_load_note)
+            gui_hooks.editor_did_unfocus_field.append(self.__hook_editor_did_unfocus_field)
+            gui_hooks.editor_did_fire_typing_timer.append(self.__hook_editor_did_fire_typing_timer)
+            log.info(f"{self.__class__.__name__} are set")
+        else:
+            log.info(f"Size Button is disabled")
 
     def remove_hooks(self) -> None:
         gui_hooks.editor_did_init.remove(self.__hook_editor_did_init)

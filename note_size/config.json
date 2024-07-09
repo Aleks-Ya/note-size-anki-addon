@@ -1,4 +1,10 @@
 {
+  "Cache": {
+    "Warmup Enabled": true
+  },
+  "Deck Browser": {
+    "Show Full Collection Size": true
+  },
   "Logging": {
     "Logger Level": "INFO"
   },
@@ -6,12 +12,7 @@
     "Details Window": {
       "Max Filename Length": 100,
       "Max Files To Show": 10
-    }
-  },
-  "Cache": {
-    "Warmup Enabled": true
-  },
-  "Deck Browser": {
-    "Show Full Collection Size": true
+    },
+    "Enabled": true
   }
 }

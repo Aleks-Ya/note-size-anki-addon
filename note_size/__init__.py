@@ -62,7 +62,7 @@ def __initialize(col: Collection):
     column_hooks.setup_hooks()
     details_formatter: DetailsFormatter = DetailsFormatter(addon_dir, size_calculator, config)
     button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, size_calculator)
-    button_hooks: ButtonHooks = ButtonHooks(details_formatter, button_formatter)
+    button_hooks: ButtonHooks = ButtonHooks(details_formatter, button_formatter, config)
     button_hooks.setup_hooks()
     collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(col, media_cache)
     deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter, config)

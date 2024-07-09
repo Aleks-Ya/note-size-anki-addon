@@ -19,26 +19,38 @@ class TestButtonHooks(unittest.TestCase):
 
     def setUp(self):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
-        addon_dir: Path = Path(__file__).parent.parent.parent.joinpath("note_size")
+        self.addon_dir: Path = Path(__file__).parent.parent.parent.joinpath("note_size")
         config: Config = Data.read_config()
         media_cache: MediaCache = MediaCache(self.col, config)
         size_calculator: SizeCalculator = SizeCalculator(media_cache)
         item_id_cache: ItemIdCache = ItemIdCache(self.col, size_calculator, config)
-        details_formatter: DetailsFormatter = DetailsFormatter(addon_dir, size_calculator, config)
+        details_formatter: DetailsFormatter = DetailsFormatter(self.addon_dir, size_calculator, config)
         button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, size_calculator)
-        self.button_hooks: ButtonHooks = ButtonHooks(details_formatter, button_formatter)
+        self.button_hooks: ButtonHooks = ButtonHooks(details_formatter, button_formatter, config)
 
-    def test_setup_hooks(self):
+    def test_setup_hooks_enabled(self):
         self.__assert_no_hooks()
-
         self.button_hooks.setup_hooks()
         self.assertEqual(1, gui_hooks.editor_did_init.count())
         self.assertEqual(1, gui_hooks.editor_did_init_buttons.count())
         self.assertEqual(3, gui_hooks.editor_did_load_note.count())
         self.assertEqual(1, gui_hooks.editor_did_unfocus_field.count())
         self.assertEqual(1, gui_hooks.editor_did_fire_typing_timer.count())
-
         self.button_hooks.remove_hooks()
+        self.__assert_no_hooks()
+
+    def test_setup_hooks_disabled(self):
+        config: Config = Data.read_config_updated({'Size Button': {'Enabled': False}})
+        media_cache: MediaCache = MediaCache(self.col, config)
+        size_calculator: SizeCalculator = SizeCalculator(media_cache)
+        item_id_cache: ItemIdCache = ItemIdCache(self.col, size_calculator, config)
+        details_formatter: DetailsFormatter = DetailsFormatter(self.addon_dir, size_calculator, config)
+        button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, size_calculator)
+        button_hooks: ButtonHooks = ButtonHooks(details_formatter, button_formatter, config)
+        self.__assert_no_hooks()
+        button_hooks.setup_hooks()
+        self.__assert_no_hooks()
+        button_hooks.remove_hooks()
         self.__assert_no_hooks()
 
     def __assert_no_hooks(self):
