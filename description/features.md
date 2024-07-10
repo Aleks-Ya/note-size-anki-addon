@@ -25,7 +25,7 @@ Total size is sum of the collection and media sizes.
 1. Show collection size in Deck Browser
 2. See the note size at the real time as you are editing it.
 3. Sort notes by "Size" columns.
-4. Show details about a note by clicking the "Size: 1KB" button.
+4. Show details about a note by clicking the "123KB" button.
 
 ### In Deck Browser
 

@@ -62,7 +62,7 @@ class ButtonHooks:
                                        label=ButtonFormatter.get_zero_size_label(),
                                        icon=None, cmd="size_button_cmd",
                                        func=self.__on_size_button_click,
-                                       tip="Click to see details",
+                                       tip="Note size. Click for details",
                                        disables=False)
         buttons.append(button)
         log.info("Size button was added to Editor")
