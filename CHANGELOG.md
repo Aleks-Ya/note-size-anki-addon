@@ -2,6 +2,13 @@
 
 <!-- insertion marker -->
 
+## [v1.14.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v1.14.0) - 2024-07-11
+
+<small>[Compare with v1.13.0](https://github.com/Aleks-Ya/note-size-anki-addon/compare/v1.13.0...v1.14.0)</small>
+
+1. [MISC] Remove prefix "Size:" from the Size button
+2. [MISC] Use default font for Browser cells
+
 ## [v1.13.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v1.13.0) - 2024-07-09
 
 <small>[Compare with v1.12.0](https://github.com/Aleks-Ya/note-size-anki-addon/compare/v1.12.0...v1.13.0)</small>
