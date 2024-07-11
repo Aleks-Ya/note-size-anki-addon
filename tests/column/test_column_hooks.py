@@ -58,7 +58,7 @@ class TestColumnHooks(unittest.TestCase):
                 notes_mode_label="Size",
                 sorting_cards=BrowserColumns.SORTING_DESCENDING,
                 sorting_notes=BrowserColumns.SORTING_DESCENDING,
-                uses_cell_font=True,
+                uses_cell_font=False,
                 cards_mode_tooltip="Note size (texts and files are included)",
                 notes_mode_tooltip="Note size (texts and files are included)"
             ),
@@ -68,7 +68,7 @@ class TestColumnHooks(unittest.TestCase):
                 notes_mode_label="Size (texts)",
                 sorting_cards=BrowserColumns.SORTING_DESCENDING,
                 sorting_notes=BrowserColumns.SORTING_DESCENDING,
-                uses_cell_font=True,
+                uses_cell_font=False,
                 cards_mode_tooltip="Note size (texts only, files are not included)",
                 notes_mode_tooltip="Note size (texts only, files are not included)"
             ),
@@ -78,7 +78,7 @@ class TestColumnHooks(unittest.TestCase):
                 notes_mode_label="Size (files)",
                 sorting_cards=BrowserColumns.SORTING_DESCENDING,
                 sorting_notes=BrowserColumns.SORTING_DESCENDING,
-                uses_cell_font=True,
+                uses_cell_font=False,
                 cards_mode_tooltip="Note size (files only, texts are not included)",
                 notes_mode_tooltip="Note size (files only, texts are not included)"
             )
