@@ -1,5 +1,14 @@
 # Features
 
+**Table of content**
+
+- [How note size is calculated](#how-note-size-is-calculated)
+- [How collection size is calculated](#how-collection-size-is-calculated)
+- [Implemented features](#implemented-features)
+    - [In Deck Browser](#in-deck-browser)
+    - [In Browser](#in-browser)
+    - [In Editor when adding new note](#in-editor-when-adding-new-note)
+
 ## How note size is calculated
 
 A note size comprises:

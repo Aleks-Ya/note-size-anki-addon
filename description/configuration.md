@@ -1,5 +1,20 @@
 # "Note Size" addon configuration
 
+**Table of content**
+
+- [Find configuration in Anki](#find-configuration-in-anki)
+- [Supported properties](#supported-properties)
+    - [Logging](#logging)
+        - [Logging Level](#logging-level)
+    - [Deck Browser](#deck-browser)
+        - [Show Full Collection Size](#show-full-collection-size)
+    - [Size Button](#size-button)
+        - [Enabled](#enabled)
+        - [Max Filename Length](#max-filename-length)
+        - [Max Files To Show](#max-files-to-show)
+    - [Cache](#cache)
+        - [Warmup Enabled](#warmup-enabled)
+
 ## Find configuration in Anki
 
 ![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/open_config.png)
