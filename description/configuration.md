@@ -2,7 +2,7 @@
 
 ## Find configuration in Anki
 
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/open_config.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/open_config.png)
 
 ## Supported properties
 
@@ -29,7 +29,7 @@ Output log file on Windows: `c:\Users\%USERNAME%\AppData\Roaming\Anki2\logs\addo
 - Possible values: `true`, `false`
 
 Display or hide the Collection size in the Deck Browser:  
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/collection_size.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/collection_size.png)
 
 ### Size Button
 
@@ -49,7 +49,7 @@ Display or hide the Size Button in the Browser, in the Editor and in the Adding 
 - Default value: `100`
 - Possible values: positive number
 
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/config_max_filename_length.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/config_max_filename_length.png)
 
 #### Max Files To Show
 
@@ -58,7 +58,7 @@ Display or hide the Size Button in the Browser, in the Editor and in the Adding 
 - Default value: `10`
 - Possible values: positive number
 
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/config_max_files_to_show.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/config_max_files_to_show.png)
 
 ### Cache
 

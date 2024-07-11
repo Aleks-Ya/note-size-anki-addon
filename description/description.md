@@ -10,8 +10,8 @@ For questions, bugs, suggestions see
 
 ### In Browser
 
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/edit_note.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/edit_note.png)
 
 ### In Deck Browser
 
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/collection_size.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/collection_size.png)
