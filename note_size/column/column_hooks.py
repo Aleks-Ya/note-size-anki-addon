@@ -69,7 +69,7 @@ class ColumnHooks:
             sorting_cards=BrowserColumns.SORTING_DESCENDING,
             sorting_notes=BrowserColumns.SORTING_DESCENDING,
             uses_cell_font=False,
-            alignment=BrowserColumns.ALIGNMENT_START,
+            alignment=BrowserColumns.ALIGNMENT_CENTER,
             cards_mode_tooltip=tooltip_total,
             notes_mode_tooltip=tooltip_total
         )
