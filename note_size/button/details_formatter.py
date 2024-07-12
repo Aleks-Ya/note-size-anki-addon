@@ -7,6 +7,7 @@ from anki.notes import Note
 from bs4 import BeautifulSoup, Tag
 
 from ..config.config import Config
+from ..config.settings import Settings
 from ..calculator.size_formatter import SizeFormatter
 from ..calculator.size_calculator import SizeCalculator
 from ..types import SizeBytes, MediaFile
@@ -17,8 +18,8 @@ log: Logger = logging.getLogger(__name__)
 class DetailsFormatter:
     __code_style: str = "font-family:Consolas,monospace"
 
-    def __init__(self, addon_dir: Path, size_calculator: SizeCalculator, config: Config):
-        self.__icons_dir: Path = addon_dir.joinpath("button").joinpath("icon")
+    def __init__(self, size_calculator: SizeCalculator, settings: Settings, config: Config):
+        self.__icons_dir: Path = settings.addon_dir().joinpath("button").joinpath("icon")
         self.__size_calculator: SizeCalculator = size_calculator
         self.__max_length = config.size_button_details_formatter_max_filename_length()
         self.__max_files_number = config.size_button_details_formatter_max_files_to_show()

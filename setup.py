@@ -78,7 +78,7 @@ class MakeDistributionCommand(Command):
             "package": "1188705668",
             "author": _author,
             "min_point_version": 240401,
-            "max_point_version": 240602,
+            "max_point_version": 240603,
             "human_version": version,
             "homepage": "https://ankiweb.net/shared/info/1188705668",
             "mod": commit_epoch_sec

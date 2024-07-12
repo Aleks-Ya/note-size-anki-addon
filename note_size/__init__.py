@@ -5,16 +5,16 @@ from threading import Thread
 
 from anki.collection import Collection
 from aqt import mw, gui_hooks
-from aqt.addons import AddonManager
 
 from .cache.cache_hooks import CacheHooks
 from .cache.media_cache import MediaCache
 from .cache.item_id_cache import ItemIdCache
+from .config.settings import Settings
 from .deck_browser.collection_size_formatter import CollectionSizeFormatter
 
 
-def __configure_logging(addon_manager: AddonManager, module: str) -> Logger:
-    log_dir: Path = addon_manager.logs_folder(module)
+def __configure_logging(settings: Settings) -> Logger:
+    log_dir: Path = settings.logs_folder()
     log_dir.mkdir(exist_ok=True, parents=True)
     log_file: Path = log_dir.joinpath("note_size.log")
     logger: Logger = logging.getLogger(__name__)
@@ -45,11 +45,15 @@ def __initialize(col: Collection):
     from .config.config_loader import ConfigLoader
     from .deck_browser.deck_browser_hooks import DeckBrowserHooks
 
+    mw.addonManager.setWebExports(__name__, r"web/.*(css|js)")
     addon_dir: Path = Path(__file__).parent
     module: str = addon_dir.stem
-    log: Logger = __configure_logging(mw.addonManager, module)
-    log.info(f"NoteSize addon version: {addon_dir.joinpath('version.txt').open().read()}")
-    config_loader: ConfigLoader = ConfigLoader(mw.addonManager, module)
+    settings: Settings = Settings(addon_dir, module,
+                                  mw.addonManager.logs_folder(module),
+                                  mw.addonManager.addonFromModule(__name__))
+    log: Logger = __configure_logging(settings)
+    log.info(f"NoteSize addon version: {settings.addon_dir().joinpath('version.txt').read_text()}")
+    config_loader: ConfigLoader = ConfigLoader(mw.addonManager, settings)
     config: Config = config_loader.load_config()
     log_level: str = config.log_level()
     log.info(f"Set log level from Config: {log_level}")
@@ -60,9 +64,9 @@ def __initialize(col: Collection):
     item_id_sorter: ItemIdSorter = ItemIdSorter(item_id_cache)
     column_hooks: ColumnHooks = ColumnHooks(item_id_cache, item_id_sorter)
     column_hooks.setup_hooks()
-    details_formatter: DetailsFormatter = DetailsFormatter(addon_dir, size_calculator, config)
-    button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, size_calculator)
-    button_hooks: ButtonHooks = ButtonHooks(details_formatter, button_formatter, config)
+    details_formatter: DetailsFormatter = DetailsFormatter(size_calculator, settings, config)
+    button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, size_calculator, config)
+    button_hooks: ButtonHooks = ButtonHooks(details_formatter, button_formatter, settings, config)
     button_hooks.setup_hooks()
     collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(col, media_cache)
     deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter, config)

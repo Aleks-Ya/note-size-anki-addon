@@ -5,14 +5,15 @@ from typing import Optional, Any
 from aqt.addons import AddonManager
 
 from ..config.config import Config
+from ..config.settings import Settings
 
 log: Logger = logging.getLogger(__name__)
 
 
 class ConfigLoader:
 
-    def __init__(self, addon_manager: AddonManager, module: str):
-        self.__module: str = module
+    def __init__(self, addon_manager: AddonManager, settings: Settings):
+        self.__module: str = settings.module()
         self.__addon_manager: AddonManager = addon_manager
         log.debug(f"{self.__class__.__name__} was instantiated")
 

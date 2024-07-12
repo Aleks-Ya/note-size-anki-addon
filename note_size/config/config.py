@@ -10,7 +10,7 @@ log: Logger = logging.getLogger(__name__)
 class Config:
 
     def __init__(self, config: dict[str, Any]):
-        self.__config = config
+        self.__config: dict[str, Any] = config
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def __str__(self):
@@ -56,6 +56,12 @@ class Config:
 
     def size_button_enabled(self) -> bool:
         return self.__config['Size Button']['Enabled']
+
+    def size_button_color_enabled(self) -> bool:
+        return self.__config['Size Button']['Color']['Enabled']
+
+    def size_button_color_levels(self) -> list[dict[str, str]]:
+        return self.__config['Size Button']['Color']['Levels']
 
     def as_dict(self) -> dict[str, Any]:
         return self.__config

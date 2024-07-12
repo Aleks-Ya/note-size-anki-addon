@@ -26,6 +26,13 @@ Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
 
 Append changelog: `git-changelog -t path:changelog.jinja -io CHANGELOG.md`
 
+### Generate MarkDown table of content (TOC)
+
+1. Install: `pip install md-toc`
+2. Generate TOC: 
+   1. Features: `md_toc -s 1 github description/features.md`
+   2. Configuration: `md_toc -s 1 github description/configuration.md`
+
 ### Release
 
 1. Update changelog: `git-changelog -t path:changelog.jinja -io CHANGELOG.md`

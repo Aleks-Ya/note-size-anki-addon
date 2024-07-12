@@ -19,6 +19,21 @@ class SizeFormatter:
         return SizeStr(f'{num:0.1f} {final_unit}')
 
     @staticmethod
+    def str_to_bytes(size_str: SizeStr) -> SizeBytes:
+        size_str = size_str.strip()
+        units = {'B': 0, 'KB': 1, 'MB': 2, 'GB': 3}
+        if size_str[-2:].upper() in units:
+            size = float(size_str[:-2])
+            unit = units[size_str[-2:].upper()]
+        elif size_str[-1].upper() in units:
+            size = float(size_str[:-1])
+            unit = units[size_str[-1].upper()]
+        else:
+            raise ValueError(f"Invalid size string: '{size_str}'")
+        size_in_bytes = int(size * (1024 ** unit))
+        return SizeBytes(size_in_bytes)
+
+    @staticmethod
     def file_size_to_str(file: MediaFile, size: SizeBytes, max_length: int) \
             -> tuple[ShortFilename, SizeStr]:
         size_str: SizeStr = SizeFormatter.bytes_to_str(size)

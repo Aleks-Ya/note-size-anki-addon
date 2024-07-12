@@ -22,6 +22,15 @@ class TestSizeFormatter(unittest.TestCase):
         self.assertEqual(SizeStr("1.7 GB"), self.size_formatter.bytes_to_str(SizeBytes(1_784_600_456)))
         self.assertEqual(SizeStr("1626.8 GB"), self.size_formatter.bytes_to_str(SizeBytes(1_746_784_600_456)))
 
+    def test_str_to_bytes(self):
+        self.assertEqual(SizeBytes(0), self.size_formatter.str_to_bytes(SizeStr("0 B")))
+        self.assertEqual(SizeBytes(456), self.size_formatter.str_to_bytes(SizeStr("456 B")))
+        self.assertEqual(SizeBytes(456), self.size_formatter.str_to_bytes(SizeStr("456B")))
+        self.assertEqual(SizeBytes(1_433), self.size_formatter.str_to_bytes(SizeStr("1.4 KB")))
+        self.assertEqual(SizeBytes(1_433), self.size_formatter.str_to_bytes(SizeStr("1.4KB")))
+        self.assertEqual(SizeBytes(1_572_864), self.size_formatter.str_to_bytes(SizeStr("1.5 MB")))
+        self.assertEqual(SizeBytes(1_746_763_199_283), self.size_formatter.str_to_bytes(SizeStr("1626.8 GB")))
+
     def test_file_size_to_str(self):
         file: MediaFile = MediaFile('picture.jpg')
         size: SizeBytes = SizeBytes(50)

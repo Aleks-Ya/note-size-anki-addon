@@ -9,6 +9,7 @@ from aqt.addons import AddonManager
 from mock.mock import MagicMock
 
 from note_size.config.config import Config
+from note_size.config.settings import Settings
 from note_size.config.config_loader import ConfigLoader
 
 
@@ -17,10 +18,11 @@ class TestConfigLoader(unittest.TestCase):
     def setUp(self):
         self.module_name: str = "note_size"
         self.addons_dir: Path = Path(tempfile.mkdtemp())
+        self.settings: Settings = Settings(Path(), "note_size", Path(), "1188705668")
         wm: MagicMock = MagicMock()
         wm.pm.addonFolder.return_value = self.addons_dir
         self.addon_manager: AddonManager = AddonManager(wm)
-        self.config_loader: ConfigLoader = ConfigLoader(self.addon_manager, self.module_name)
+        self.config_loader: ConfigLoader = ConfigLoader(self.addon_manager, self.settings)
 
     def test_empty_addon_dir(self):
         self.__write_meta_json_config({})
@@ -35,6 +37,11 @@ class TestConfigLoader(unittest.TestCase):
             'Deck Browser': {'Show Full Collection Size': True},
             'Logging': {'Logger Level': 'INFO'},
             'Size Button': {
+                "Color": {
+                    "Enabled": True,
+                    "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB", "Min Size": None},
+                               {"Color": "Orange", "Max Size": "1 MB", "Min Size": "100 KB"},
+                               {"Color": "LightCoral", "Max Size": None, "Min Size": "1 MB"}]},
                 'Details Window': {
                     'Max Filename Length': 100,
                     'Max Files To Show': 10},
@@ -47,6 +54,11 @@ class TestConfigLoader(unittest.TestCase):
             'Deck Browser': {'Show Full Collection Size': True},
             'Logging': {'Logger Level': 'DEBUG'},
             'Size Button': {
+                "Color": {
+                    "Enabled": True,
+                    "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB", "Min Size": None},
+                               {"Color": "Orange", "Max Size": "1 MB", "Min Size": "100 KB"},
+                               {"Color": "LightCoral", "Max Size": None, "Min Size": "1 MB"}]},
                 'Details Window': {
                     'Max Filename Length': 200,
                     'Max Files To Show': 20},
@@ -64,6 +76,11 @@ class TestConfigLoader(unittest.TestCase):
             'Deck Browser': {'Show Full Collection Size': True},
             'Logging': {'Logger Level': 'INFO'},
             'Size Button': {
+                "Color": {
+                    "Enabled": True,
+                    "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB", "Min Size": None},
+                               {"Color": "Orange", "Max Size": "1 MB", "Min Size": "100 KB"},
+                               {"Color": "LightCoral", "Max Size": None, "Min Size": "1 MB"}]},
                 'Details Window': {
                     'Max Filename Length': 200,
                     'Max Files To Show': 10},
@@ -73,9 +90,15 @@ class TestConfigLoader(unittest.TestCase):
         self.__copy_config_json_to_addons_dir()
         self.__write_meta_json_config({
             'Logging': {'Logger Level': 'INFO'},
-            'Size Button': {'Details Window': {
-                'Max Filename Length': 200,
-                'Unused Nested': 'Nested 1'}},
+            'Size Button': {
+                "Color": {
+                    "Enabled": True,
+                    "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB", "Min Size": None},
+                               {"Color": "Orange", "Max Size": "1 MB", "Min Size": "100 KB"},
+                               {"Color": "LightCoral", "Max Size": None, "Min Size": "1 MB"}]},
+                'Details Window': {
+                    'Max Filename Length': 200,
+                    'Unused Nested': 'Nested 1'}},
             'Unused Top': {'Property 1': 'Value 1'}
         })
         config: Config = self.config_loader.load_config()
@@ -84,6 +107,11 @@ class TestConfigLoader(unittest.TestCase):
             'Deck Browser': {'Show Full Collection Size': True},
             'Logging': {'Logger Level': 'INFO'},
             'Size Button': {
+                "Color": {
+                    "Enabled": True,
+                    "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB", "Min Size": None},
+                               {"Color": "Orange", "Max Size": "1 MB", "Min Size": "100 KB"},
+                               {"Color": "LightCoral", "Max Size": None, "Min Size": "1 MB"}]},
                 'Details Window': {
                     'Max Filename Length': 200,
                     'Max Files To Show': 10},
@@ -95,6 +123,11 @@ class TestConfigLoader(unittest.TestCase):
             'Deck Browser': {'Show Full Collection Size': True},
             'Logging': {'Logger Level': 'INFO'},
             'Size Button': {
+                "Color": {
+                    "Enabled": True,
+                    "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB", "Min Size": None},
+                               {"Color": "Orange", "Max Size": "1 MB", "Min Size": "100 KB"},
+                               {"Color": "LightCoral", "Max Size": None, "Min Size": "1 MB"}]},
                 'Details Window': {
                     'Max Filename Length': 200,
                     'Unused Nested': 'Nested 1'},
@@ -107,6 +140,11 @@ class TestConfigLoader(unittest.TestCase):
             'Deck Browser': {'Show Full Collection Size': True},
             'Logging': {'Logger Level': 'INFO'},
             'Size Button': {
+                "Color": {
+                    "Enabled": True,
+                    "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB", "Min Size": None},
+                               {"Color": "Orange", "Max Size": "1 MB", "Min Size": "100 KB"},
+                               {"Color": "LightCoral", "Max Size": None, "Min Size": "1 MB"}]},
                 'Details Window': {
                     'Max Filename Length': 200,
                     'Unused Nested': 'Nested 1'},
@@ -118,6 +156,11 @@ class TestConfigLoader(unittest.TestCase):
             'Deck Browser': {'Show Full Collection Size': True},
             'Logging': {'Logger Level': 'INFO'},
             'Size Button': {
+                "Color": {
+                    "Enabled": True,
+                    "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB", "Min Size": None},
+                               {"Color": "Orange", "Max Size": "1 MB", "Min Size": "100 KB"},
+                               {"Color": "LightCoral", "Max Size": None, "Min Size": "1 MB"}]},
                 'Details Window': {
                     'Max Filename Length': 200,
                     'Max Files To Show': 10},
@@ -128,6 +171,11 @@ class TestConfigLoader(unittest.TestCase):
             'Deck Browser': {'Show Full Collection Size': True},
             'Logging': {'Logger Level': 'INFO'},
             'Size Button': {
+                "Color": {
+                    "Enabled": True,
+                    "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB", "Min Size": None},
+                               {"Color": "Orange", "Max Size": "1 MB", "Min Size": "100 KB"},
+                               {"Color": "LightCoral", "Max Size": None, "Min Size": "1 MB"}]},
                 'Details Window': {
                     'Max Filename Length': 200,
                     'Max Files To Show': 10},

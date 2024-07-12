@@ -13,6 +13,26 @@
       "Max Filename Length": 100,
       "Max Files To Show": 10
     },
-    "Enabled": true
+    "Enabled": true,
+    "Color": {
+      "Enabled": true,
+      "Levels": [
+        {
+          "Color": "PaleGreen",
+          "Min Size": null,
+          "Max Size": "100 KB"
+        },
+        {
+          "Color": "Orange",
+          "Min Size": "100 KB",
+          "Max Size": "1 MB"
+        },
+        {
+          "Color": "LightCoral",
+          "Min Size": "1 MB",
+          "Max Size": null
+        }
+      ]
+    }
   }
 }

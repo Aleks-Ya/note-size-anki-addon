@@ -25,9 +25,9 @@ Often Anki automatically wraps your text with HTML tags which consume additional
 
 ## How collection size is calculated
 
-Collection size is the size of file `collection.anki2` located in the current profile folder.  
-Media size is the size of folder `collection.media` located in the current profile folder.
-Total size is sum of the collection and media sizes.
+_Collection size_ is the size of file `collection.anki2` located in the current profile folder.  
+_Media size_ is the size of folder `collection.media` located in the current profile folder.  
+_Total size_ is the sum of the collection and media sizes.
 
 ## Implemented features
 

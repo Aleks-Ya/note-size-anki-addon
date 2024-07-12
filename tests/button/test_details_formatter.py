@@ -7,6 +7,7 @@ from anki.notes import Note
 from bs4 import BeautifulSoup
 
 from note_size.config.config import Config
+from note_size.config.settings import Settings
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.button.details_formatter import DetailsFormatter
 from note_size.cache.media_cache import MediaCache
@@ -20,10 +21,11 @@ class TestDetailsFormatter(unittest.TestCase):
         self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
         self.td: Data = Data(self.col)
         self.addon_dir: Path = Path(__file__).parent.parent.parent.joinpath("note_size")
+        self.settings: Settings = Settings(self.addon_dir, "note_size", Path(), "1188705668")
         config: Config = Data.read_config()
         media_cache: MediaCache = MediaCache(self.col, config)
         size_calculator: SizeCalculator = SizeCalculator(media_cache)
-        self.details_formatter: DetailsFormatter = DetailsFormatter(self.addon_dir, size_calculator, config)
+        self.details_formatter: DetailsFormatter = DetailsFormatter(size_calculator, self.settings, config)
 
     def test_format_note_detailed_text(self):
         note: Note = self.td.create_note_with_files()
