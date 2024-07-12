@@ -68,21 +68,21 @@ class TestItemIdCache(unittest.TestCase):
         note: Note = self.td.create_note_with_files()
         note_id: NoteId = note.id
         act_size_1: SizeStr = self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False)
-        self.assertEqual("143B", act_size_1)
+        self.assertEqual("143 B", act_size_1)
 
         Data.update_front_field(note, 'updated')
         act_size_2: SizeStr = self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False)
-        self.assertEqual("86B", act_size_2)
+        self.assertEqual("86 B", act_size_2)
 
     def test_get_note_size_str_use_cache(self):
         note: Note = self.td.create_note_with_files()
         note_id: NoteId = note.id
         act_size_1: SizeStr = self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False)
-        self.assertEqual("143B", act_size_1)
+        self.assertEqual("143 B", act_size_1)
 
         Data.update_front_field(note, 'updated')
         act_size_2: SizeStr = self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=True)
-        self.assertEqual("143B", act_size_2)
+        self.assertEqual("143 B", act_size_2)
 
     def test_get_total_texts_size(self):
         self.assertEqual(SizeBytes(0), self.item_id_cache.get_total_texts_size())
@@ -112,13 +112,13 @@ class TestItemIdCache(unittest.TestCase):
     def test_refresh_note(self):
         note: Note = self.td.create_note_with_files()
         note_id: NoteId = note.id
-        self.assertEqual("143B", self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=True))
+        self.assertEqual("143 B", self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=True))
 
         Data.update_front_field(note, 'updated')
-        self.assertEqual("143B", self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=True))
+        self.assertEqual("143 B", self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=True))
 
         self.item_id_cache.refresh_note(note_id)
-        self.assertEqual("86B", self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=True))
+        self.assertEqual("86 B", self.item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=True))
 
     def test_is_initialized(self):
         self.assertFalse(self.item_id_cache.is_initialized())

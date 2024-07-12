@@ -12,11 +12,11 @@ class SizeFormatter:
         for unit in units:
             if abs(num) < divisor:
                 if unit == 'B':
-                    return SizeStr(f'{num:0.0f}{unit}')
+                    return SizeStr(f'{num:0.0f} {unit}')
                 else:
-                    return SizeStr(f'{num:0.1f}{unit}')
+                    return SizeStr(f'{num:0.1f} {unit}')
             num /= divisor
-        return SizeStr(f'{num:0.1f}{final_unit}')
+        return SizeStr(f'{num:0.1f} {final_unit}')
 
     @staticmethod
     def file_size_to_str(file: MediaFile, size: SizeBytes, max_length: int) \

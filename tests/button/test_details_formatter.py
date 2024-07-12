@@ -28,22 +28,22 @@ class TestDetailsFormatter(unittest.TestCase):
     def test_format_note_detailed_text(self):
         note: Note = self.td.create_note_with_files()
         exp_html: str = f"""
-            <h3>Total note size: <code style="font-family:Consolas,monospace">143B</code></h3>
-            <li>Texts size: <code style="font-family:Consolas,monospace">122B</code></li>
-            <li>Files size: <code style="font-family:Consolas,monospace">21B</code></li>
+            <h3>Total note size: <code style="font-family:Consolas,monospace">143 B</code></h3>
+            <li>Texts size: <code style="font-family:Consolas,monospace">122 B</code></li>
+            <li>Files size: <code style="font-family:Consolas,monospace">21 B</code></li>
             <li>Files (big to small):</li>
             <ol>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    animation.gif: <code style="font-family:Consolas,monospace">9B</code>
+                    animation.gif: <code style="font-family:Consolas,monospace">9 B</code>
                 </li>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    picture.jpg: <code style="font-family:Consolas,monospace">7B</code>
+                    picture.jpg: <code style="font-family:Consolas,monospace">7 B</code>
                 </li>
                 <li style="white-space:nowrap">
                     <img alt="Audio file" height="15" src="{self.addon_dir}/button/icon/audio.png" style="vertical-align: middle;"/>
-                    sound.mp3: <code style="font-family:Consolas,monospace">5B</code>
+                    sound.mp3: <code style="font-family:Consolas,monospace">5 B</code>
                 </li>
             </ol>
             """
@@ -55,9 +55,9 @@ class TestDetailsFormatter(unittest.TestCase):
     def test_format_no_files(self):
         note: Note = self.td.create_note_without_files()
         exp_html: str = """
-                    <h3>Total note size: <code style="font-family:Consolas,monospace">70B</code></h3>
-                    <li>Texts size: <code style="font-family:Consolas,monospace">70B</code></li>
-                    <li>Files size: <code style="font-family:Consolas,monospace">0B</code></li>
+                    <h3>Total note size: <code style="font-family:Consolas,monospace">70 B</code></h3>
+                    <li>Texts size: <code style="font-family:Consolas,monospace">70 B</code></li>
+                    <li>Files size: <code style="font-family:Consolas,monospace">0 B</code></li>
                     <li>Files: (no files)</li>
                     """
         soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
@@ -69,14 +69,14 @@ class TestDetailsFormatter(unittest.TestCase):
         note: Note = self.td.create_note_without_files()
         self.td.update_front_field(note, 'Missing file: <img src="absents.png">')
         exp_html: str = f"""
-            <h3>Total note size: <code style="font-family:Consolas,monospace">73B</code></h3>
-            <li>Texts size: <code style="font-family:Consolas,monospace">73B</code></li>
-            <li>Files size: <code style="font-family:Consolas,monospace">0B</code></li>
+            <h3>Total note size: <code style="font-family:Consolas,monospace">73 B</code></h3>
+            <li>Texts size: <code style="font-family:Consolas,monospace">73 B</code></li>
+            <li>Files size: <code style="font-family:Consolas,monospace">0 B</code></li>
             <li>Files (big to small):</li>
             <ol>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    absents.png: <code style="font-family:Consolas,monospace">0B</code>
+                    absents.png: <code style="font-family:Consolas,monospace">0 B</code>
                 </li>
             </ol>
                         """
@@ -94,18 +94,18 @@ class TestDetailsFormatter(unittest.TestCase):
         }
         note: Note = self.td.create_note_with_given_files(files)
         exp_html: str = f"""
-            <h3> Total note size: <code style="font-family:Consolas,monospace"> 94B </code></h3>
-            <li> Texts size: <code style="font-family:Consolas,monospace"> 82B </code></li>
-            <li> Files size: <code style="font-family:Consolas,monospace"> 12B </code></li>
+            <h3> Total note size: <code style="font-family:Consolas,monospace">94 B</code></h3>
+            <li> Texts size: <code style="font-family:Consolas,monospace">82 B</code></li>
+            <li> Files size: <code style="font-family:Consolas,monospace">12 B</code></li>
             <li> Files (big to small):</li>
             <ol>
                 <li style="white-space:nowrap">
                     <img alt="Other file"  height="15" src="{self.addon_dir}/button/icon/other.png" style="vertical-align: middle;"/>
-                    without_extension: <code style="font-family:Consolas,monospace"> 7B </code>
+                    without_extension: <code style="font-family:Consolas,monospace">7 B</code>
                 </li>
                 <li style="white-space:nowrap">
                     <img alt="Other file" height="15" src="{self.addon_dir}/button/icon/other.png" style="vertical-align: middle;"/>
-                    unrecognized_extension.ae1: <code style="font-family:Consolas,monospace"> 5B </code>
+                    unrecognized_extension.ae1: <code style="font-family:Consolas,monospace">5 B</code>
                 </li>
             </ol>
                     """
@@ -121,50 +121,50 @@ class TestDetailsFormatter(unittest.TestCase):
         }
         note: Note = self.td.create_note_with_given_files(fields)
         exp_html: str = f"""
-            <h3>Total note size:<code style="font-family:Consolas,monospace">523B</code></h3>
-            <li>Texts size:<code style="font-family:Consolas,monospace">373B</code></li>
-            <li>Files size:<code style="font-family:Consolas,monospace">150B</code></li>
+            <h3>Total note size:<code style="font-family:Consolas,monospace">523 B</code></h3>
+            <li>Texts size:<code style="font-family:Consolas,monospace">373 B</code></li>
+            <li>Files size:<code style="font-family:Consolas,monospace">150 B</code></li>
             <li>Files (big to small):</li>
             <ol>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    file_00.png:<code style="font-family:Consolas,monospace">10B</code>
+                    file_00.png:<code style="font-family:Consolas,monospace">10 B</code>
                 </li>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    file_01.png:<code style="font-family:Consolas,monospace">10B</code>
+                    file_01.png:<code style="font-family:Consolas,monospace">10 B</code>
                 </li>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    file_02.png:<code style="font-family:Consolas,monospace">10B</code>
+                    file_02.png:<code style="font-family:Consolas,monospace">10 B</code>
                 </li>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    file_03.png:<code style="font-family:Consolas,monospace">10B</code>
+                    file_03.png:<code style="font-family:Consolas,monospace">10 B</code>
                 </li>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    file_04.png:<code style="font-family:Consolas,monospace">10B</code>
+                    file_04.png:<code style="font-family:Consolas,monospace">10 B</code>
                 </li>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    file_05.png:<code style="font-family:Consolas,monospace">10B</code>
+                    file_05.png:<code style="font-family:Consolas,monospace">10 B</code>
                 </li>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    file_06.png:<code style="font-family:Consolas,monospace">10B</code>
+                    file_06.png:<code style="font-family:Consolas,monospace">10 B</code>
                 </li>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    file_07.png:<code style="font-family:Consolas,monospace">10B</code>
+                    file_07.png:<code style="font-family:Consolas,monospace">10 B</code>
                 </li>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    file_08.png:<code style="font-family:Consolas,monospace">10B</code>
+                    file_08.png:<code style="font-family:Consolas,monospace">10 B</code>
                 </li>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    file_09.png:<code style="font-family:Consolas,monospace">10B</code>
+                    file_09.png:<code style="font-family:Consolas,monospace">10 B</code>
                 </li>
                 <li style="white-space:nowrap">More 5 files are hidden</li>
             </ol>
@@ -181,50 +181,50 @@ class TestDetailsFormatter(unittest.TestCase):
         }
         note: Note = self.td.create_note_with_given_files(fields)
         exp_html: str = f"""
-            <h3>Total note size:<code style="font-family:Consolas,monospace">353B</code></h3>
-            <li>Texts size:<code style="font-family:Consolas,monospace">253B</code></li>
-            <li>Files size:<code style="font-family:Consolas,monospace">100B</code></li>
+            <h3>Total note size:<code style="font-family:Consolas,monospace">353 B</code></h3>
+            <li>Texts size:<code style="font-family:Consolas,monospace">253 B</code></li>
+            <li>Files size:<code style="font-family:Consolas,monospace">100 B</code></li>
             <li>Files (big to small):</li>
             <ol>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    file_00.png:<code style="font-family:Consolas,monospace">10B</code>
+                    file_00.png:<code style="font-family:Consolas,monospace">10 B</code>
                 </li>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    file_01.png:<code style="font-family:Consolas,monospace">10B</code>
+                    file_01.png:<code style="font-family:Consolas,monospace">10 B</code>
                 </li>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    file_02.png:<code style="font-family:Consolas,monospace">10B</code>
+                    file_02.png:<code style="font-family:Consolas,monospace">10 B</code>
                 </li>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    file_03.png:<code style="font-family:Consolas,monospace">10B</code>
+                    file_03.png:<code style="font-family:Consolas,monospace">10 B</code>
                 </li>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    file_04.png:<code style="font-family:Consolas,monospace">10B</code>
+                    file_04.png:<code style="font-family:Consolas,monospace">10 B</code>
                 </li>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    file_05.png:<code style="font-family:Consolas,monospace">10B</code>
+                    file_05.png:<code style="font-family:Consolas,monospace">10 B</code>
                 </li>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    file_06.png:<code style="font-family:Consolas,monospace">10B</code>
+                    file_06.png:<code style="font-family:Consolas,monospace">10 B</code>
                 </li>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    file_07.png:<code style="font-family:Consolas,monospace">10B</code>
+                    file_07.png:<code style="font-family:Consolas,monospace">10 B</code>
                 </li>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    file_08.png:<code style="font-family:Consolas,monospace">10B</code>
+                    file_08.png:<code style="font-family:Consolas,monospace">10 B</code>
                 </li>
                 <li style="white-space:nowrap">
                     <img alt="Image file" height="15" src="{self.addon_dir}/button/icon/image.png" style="vertical-align: middle;"/>
-                    file_09.png:<code style="font-family:Consolas,monospace">10B</code>
+                    file_09.png:<code style="font-family:Consolas,monospace">10 B</code>
                 </li>
             </ol>
                     """

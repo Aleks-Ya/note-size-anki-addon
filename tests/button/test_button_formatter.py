@@ -26,28 +26,28 @@ class TestButtonFormatter(unittest.TestCase):
 
     def test_get_zero_size_label(self):
         label: ButtonLabel = ButtonFormatter.get_zero_size_label()
-        self.assertEqual("0B", label)
+        self.assertEqual("0 B", label)
 
     def test_get_add_mode_label(self):
         note: Note = self.td.create_note_with_files()
         label: ButtonLabel = self.button_formatter.get_add_mode_label(note)
-        self.assertEqual("143B", label)
+        self.assertEqual("143 B", label)
 
     def test_get_edit_mode_label(self):
         note: Note = self.td.create_note_with_files()
         label: ButtonLabel = self.button_formatter.get_edit_mode_label(note.id)
         self.assertEqual(SizeBytes(143), self.size_calculator.calculate_note_size(note, use_cache=False))
-        self.assertEqual("143B", label)
+        self.assertEqual("143 B", label)
 
     def test_get_edit_mode_label_no_cache(self):
         note: Note = self.td.create_note_with_files()
         label: ButtonLabel = self.button_formatter.get_edit_mode_label(note.id)
         self.assertEqual(SizeBytes(143), self.size_calculator.calculate_note_size(note, use_cache=False))
-        self.assertEqual("143B", label)
+        self.assertEqual("143 B", label)
         Data.update_front_field(note, 'updated')
         self.assertEqual(SizeBytes(86), self.size_calculator.calculate_note_size(self.col.get_note(note.id),
                                                                                  use_cache=False))
-        self.assertEqual("86B", self.button_formatter.get_edit_mode_label(note.id))
+        self.assertEqual("86 B", self.button_formatter.get_edit_mode_label(note.id))
 
     def tearDown(self):
         self.col.close()

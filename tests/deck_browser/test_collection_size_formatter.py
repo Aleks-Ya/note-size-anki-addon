@@ -26,15 +26,15 @@ class TestCollectionSizeFormatter(unittest.TestCase):
             <div>
                 <span title='Size of file "{self.col.path}"'>
                     Collection:&nbsp;
-                    <span style='font-family:Consolas,monospace'>4.0KB</span>&nbsp;&nbsp;&nbsp;
+                    <span style='font-family:Consolas,monospace'>4.0 KB</span>&nbsp;&nbsp;&nbsp;
                 </span>
                 <span title='Size of folder "{self.col.media.dir()}" (3 files)'>
                     Media:&nbsp;
-                    <span style='font-family:Consolas,monospace'>0B</span>&nbsp;&nbsp;&nbsp;
+                    <span style='font-family:Consolas,monospace'>0 B</span>&nbsp;&nbsp;&nbsp;
                 </span>
                 <span title='Total size of collection file and media folder'>
                     Total:&nbsp;
-                    <span style='font-family:Consolas,monospace'>4.0KB</span>
+                    <span style='font-family:Consolas,monospace'>4.0 KB</span>
                 </span>
             </div>
             """

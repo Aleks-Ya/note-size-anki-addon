@@ -98,9 +98,9 @@ class TestColumnHooks(unittest.TestCase):
         gui_hooks.browser_did_fetch_row(item_id, is_note, row, columns)
         self.assertTupleEqual((
             Cell(init_text, False),
-            Cell("143B", False),
-            Cell("122B", False),
-            Cell("21B", False)
+            Cell("143 B", False),
+            Cell("122 B", False),
+            Cell("21 B", False)
         ), row.cells)
 
     def test_sort_rows_by_column(self):
