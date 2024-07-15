@@ -50,10 +50,10 @@ class MakeDistributionCommand(Command):
         dest_subdir: Path = Path(self.build_dir, note_size_dir)
         shutil.copytree(note_size_package_dir, dest_subdir,
                         ignore=shutil.ignore_patterns("*.log", "__pycache__", "meta.json"))
-        self._generate_manifest(dest_subdir)
-        self._copy_file_to_build("LICENSE", dest_subdir)
-        self._copy_file_to_build("README.md", dest_subdir)
-        self._copy_file_to_build("CHANGELOG.md", dest_subdir)
+        self.__generate_manifest(dest_subdir)
+        self.__copy_file_to_build("LICENSE", dest_subdir)
+        self.__copy_file_to_build("README.md", dest_subdir)
+        self.__copy_file_to_build("CHANGELOG.md", dest_subdir)
 
         output_zip: Path = Path(self.build_dir, f'note-size-{_version}')
         actual_output_zip: Path = Path(shutil.make_archive(str(output_zip), 'zip', dest_subdir))
@@ -61,13 +61,13 @@ class MakeDistributionCommand(Command):
         os.rename(actual_output_zip, renamed_output_zip)
         print(f'Output ZIP: {renamed_output_zip}')
 
-    def _copy_file_to_build(self, filename: str, dest_subdir):
+    def __copy_file_to_build(self, filename: str, dest_subdir):
         src: Path = Path(self.project_dir, filename)
         dest: Path = Path(dest_subdir, filename)
         shutil.copyfile(src, dest)
 
     @staticmethod
-    def _generate_manifest(dest_subdir: Path):
+    def __generate_manifest(dest_subdir: Path):
         repo: Repo = Repo(".", search_parent_directories=True)
         version: str = f"v{_version}"
         tag: TagReference = repo.tag(version)
@@ -75,7 +75,7 @@ class MakeDistributionCommand(Command):
         commit_epoch_sec: int = int(commit.committed_datetime.timestamp())
         draft: dict[str, any] = {
             "name": f"Note Size - sort notes by size {version}",
-            "package": "note_size",
+            "package": "1188705668",
             "author": _author,
             "min_point_version": 240401,
             "max_point_version": 240602,
