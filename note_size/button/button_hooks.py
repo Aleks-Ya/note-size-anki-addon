@@ -57,7 +57,7 @@ class ButtonHooks:
     def __on_editor_did_init(self, editor: Editor) -> None:
         log.debug("On Editor did init...")
         self.editor: Editor = editor
-        self.__refresh_size_button()
+        self.__refresh_size_button(editor)
 
     def __on_size_button_click(self, editor: Editor) -> None:
         log.debug("On size button click...")
@@ -76,17 +76,17 @@ class ButtonHooks:
         buttons.append(button)
         log.info("Size button was added to Editor")
 
-    def __on_editor_did_load_note(self, _: Editor) -> None:
+    def __on_editor_did_load_note(self, editor: Editor) -> None:
         log.debug("On load note...")
-        self.__refresh_size_button()
+        self.__refresh_size_button(editor)
 
     def __on_editor_did_unfocus_field(self, _: bool, __: Note, ___: int) -> None:
         log.debug("On unfocus field...")
-        self.__refresh_size_button()
+        self.__refresh_size_button(self.editor)
 
     def __on_editor_did_fire_typing_timer(self, _: Note) -> None:
         log.debug("On fire typing timer...")
-        self.__refresh_size_button()
+        self.__refresh_size_button(self.editor)
 
     def __add_size_button_css(self, web_content: WebContent, _: Optional[object]) -> None:
         web_content.css.append(f"/_addons/{self.__addon_package}/web/size_button.css")
@@ -95,15 +95,15 @@ class ButtonHooks:
     def __eval_callback(val: Any):
         log.debug(f"Eval callback: {val}")
 
-    def __refresh_size_button(self) -> None:
+    def __refresh_size_button(self, editor: Editor) -> None:
         log.debug("Refresh size button...")
-        if self.editor.web:
+        if editor.web:
             label: ButtonLabel = self.__button_formatter.get_zero_size_label()
-            if self.editor.note:
-                if self.editor.addMode:
-                    label: ButtonLabel = self.__button_formatter.get_add_mode_label(self.editor.note)
+            if editor.note:
+                if editor.addMode:
+                    label: ButtonLabel = self.__button_formatter.get_add_mode_label(editor.note)
                 else:
-                    label: ButtonLabel = self.__button_formatter.get_edit_mode_label(self.editor.note.id)
+                    label: ButtonLabel = self.__button_formatter.get_edit_mode_label(editor.note.id)
             js: str = f"""
                 try {{
                     document.getElementById('size_button').textContent = '{label.get_text()}'
@@ -111,7 +111,7 @@ class ButtonHooks:
                 }} catch (error) {{
                   error.stack
                 }} """
-            self.editor.web.evalWithCallback(js, ButtonHooks.__eval_callback)
-            log.info(f"Size button was refreshed: {label}")
+            editor.web.evalWithCallback(js, ButtonHooks.__eval_callback)
+            log.debug(f"Size button was refreshed: {label}")
         else:
             log.debug("Skip size button refresh as editor.web is empty")
