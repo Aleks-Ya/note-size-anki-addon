@@ -2,6 +2,16 @@
 
 <!-- insertion marker -->
 
+## [v1.15.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v1.15.0) - 2024-07-15
+
+<small>[Compare with v1.14.0](https://github.com/Aleks-Ya/note-size-anki-addon/compare/v1.14.0...v1.15.0)</small>
+
+1. [FEATURE] Background color of Size button depends on note size
+2. [BUG] Fix updating Size button when Add Editor is open
+3. [MISC] Add space before size units
+4. [MISC] Align size in Browser cells by center
+5. [MISC] Install from file to the same folder as from addons catalog
+
 ## [v1.14.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v1.14.0) - 2024-07-11
 
 <small>[Compare with v1.13.0](https://github.com/Aleks-Ya/note-size-anki-addon/compare/v1.13.0...v1.14.0)</small>
