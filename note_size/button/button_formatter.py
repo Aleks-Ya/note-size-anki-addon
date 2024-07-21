@@ -8,18 +8,12 @@ from anki.notes import NoteId, Note
 from .button_label import ButtonLabel
 from ..cache.item_id_cache import ItemIdCache
 from ..config.config import Config
+from ..config.level_parser import Level, LevelParser
 from ..types import SizeStr, SizeBytes, SizeType
 from ..calculator.size_calculator import SizeCalculator
 from ..calculator.size_formatter import SizeFormatter
 
 log: Logger = logging.getLogger(__name__)
-
-
-class Level:
-    def __init__(self, color: str, min_size: SizeBytes, max_size: SizeBytes):
-        self.color: str = color
-        self.min_size: SizeBytes = min_size
-        self.max_size: SizeBytes = max_size
 
 
 class ButtonFormatter:
@@ -54,22 +48,10 @@ class ButtonFormatter:
         return label
 
     def __get_color(self, size: SizeBytes) -> str:
-        if self.__config.size_button_color_enabled():
-            color_levels: list[Level] = self.__parse_levels(self.__config.size_button_color_levels())
+        if self.__config.get_size_button_color_enabled():
+            color_levels: list[Level] = LevelParser.parse_levels(self.__config.get_size_button_color_levels())
             for level in color_levels:
-                if level.min_size <= size < level.max_size:
+                if level.min_size_bytes <= size < level.max_size_bytes:
                     return level.color
         return ""
 
-    @staticmethod
-    def __parse_levels(levels: list[dict[str, str]]) -> list[Level]:
-        levels_list: list[Level] = []
-        for level in levels:
-            color: str = level.get("Color")
-            min_size_str: Optional[SizeStr] = SizeStr(level.get("Min Size"))
-            max_size_str: Optional[SizeStr] = SizeStr(level.get("Max Size"))
-            min_size_bytes: SizeBytes = SizeFormatter.str_to_bytes(min_size_str) if min_size_str else 0
-            max_size_bytes: SizeBytes = SizeFormatter.str_to_bytes(max_size_str) if max_size_str \
-                else sys.maxsize
-            levels_list.append(Level(color, min_size_bytes, max_size_bytes))
-        return levels_list

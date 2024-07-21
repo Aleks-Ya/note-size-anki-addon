@@ -1,59 +1,33 @@
 import json
 import shutil
-import tempfile
 from pathlib import Path
 from typing import Any, Optional
 
-import pytest
 from aqt.addons import AddonManager
-from mock.mock import MagicMock
 
 from note_size.config.config import Config
-from note_size.config.settings import Settings
 from note_size.config.config_loader import ConfigLoader
-
-
-@pytest.fixture
-def addons_dir() -> Path:
-    return Path(tempfile.mkdtemp())
-
-
-@pytest.fixture
-def module_dir(addons_dir: Path, module_name: str) -> Path:
-    return addons_dir.joinpath(module_name)
-
-
-@pytest.fixture
-def addon_manager(addons_dir: Path) -> AddonManager:
-    wm: MagicMock = MagicMock()
-    wm.pm.addonFolder.return_value = addons_dir
-    return AddonManager(wm)
-
-
-@pytest.fixture
-def config_loader(addon_manager: AddonManager, settings: Settings) -> ConfigLoader:
-    return ConfigLoader(addon_manager, settings)
 
 
 def test_empty_addon_dir(config_loader: ConfigLoader, module_dir: Path) -> None:
     __write_meta_json_config({}, module_dir)
     config: Config = config_loader.load_config()
-    assert config.as_dict() == {}
+    assert config.get_as_dict() == {}
 
 
 def test_default_values(config_loader: ConfigLoader, module_name: str, module_dir: Path):
     __copy_config_json_to_addons_dir(module_name, module_dir)
     config: Config = config_loader.load_config()
-    assert config.as_dict() == {
+    assert config.get_as_dict() == {
         'Cache': {'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'INFO'},
         'Size Button': {
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB", "Min Size": None},
-                           {"Color": "Orange", "Max Size": "1 MB", "Min Size": "100 KB"},
-                           {"Color": "LightCoral", "Max Size": None, "Min Size": "1 MB"}]},
+                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
+                           {"Color": "Orange", "Max Size": "1 MB"},
+                           {"Color": "LightCoral", "Max Size": None}]},
             'Details Window': {
                 'Max Filename Length': 100,
                 'Max Files To Show': 10},
@@ -69,32 +43,32 @@ def test_actual_values_all(config_loader: ConfigLoader, module_name: str, module
         'Size Button': {
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB", "Min Size": None},
-                           {"Color": "Orange", "Max Size": "1 MB", "Min Size": "100 KB"},
-                           {"Color": "LightCoral", "Max Size": None, "Min Size": "1 MB"}]},
+                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
+                           {"Color": "Orange", "Max Size": "1 MB"},
+                           {"Color": "LightCoral", "Max Size": None}]},
             'Details Window': {
                 'Max Filename Length': 200,
                 'Max Files To Show': 20},
             'Enabled': True}}
     __write_meta_json_config(meta_json_config, module_dir)
     config: Config = config_loader.load_config()
-    assert meta_json_config == config.as_dict()
+    assert meta_json_config == config.get_as_dict()
 
 
 def test_actual_values_partial(module_name: str, module_dir: Path, config_loader: ConfigLoader):
     __copy_config_json_to_addons_dir(module_name, module_dir)
     __write_meta_json_config({'Size Button': {'Details Window': {'Max Filename Length': 200}}}, module_dir)
     config: Config = config_loader.load_config()
-    assert config.as_dict() == {
+    assert config.get_as_dict() == {
         'Cache': {'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'INFO'},
         'Size Button': {
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB", "Min Size": None},
-                           {"Color": "Orange", "Max Size": "1 MB", "Min Size": "100 KB"},
-                           {"Color": "LightCoral", "Max Size": None, "Min Size": "1 MB"}]},
+                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
+                           {"Color": "Orange", "Max Size": "1 MB"},
+                           {"Color": "LightCoral", "Max Size": None}]},
             'Details Window': {
                 'Max Filename Length': 200,
                 'Max Files To Show': 10},
@@ -108,25 +82,25 @@ def test_delete_unused_properties(module_name: str, module_dir: Path, config_loa
         'Size Button': {
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB", "Min Size": None},
-                           {"Color": "Orange", "Max Size": "1 MB", "Min Size": "100 KB"},
-                           {"Color": "LightCoral", "Max Size": None, "Min Size": "1 MB"}]},
+                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
+                           {"Color": "Orange", "Max Size": "1 MB"},
+                           {"Color": "LightCoral", "Max Size": None}]},
             'Details Window': {
                 'Max Filename Length': 200,
                 'Unused Nested': 'Nested 1'}},
         'Unused Top': {'Property 1': 'Value 1'}
     }, module_dir)
     config: Config = config_loader.load_config()
-    assert config.as_dict() == {
+    assert config.get_as_dict() == {
         'Cache': {'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'INFO'},
         'Size Button': {
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB", "Min Size": None},
-                           {"Color": "Orange", "Max Size": "1 MB", "Min Size": "100 KB"},
-                           {"Color": "LightCoral", "Max Size": None, "Min Size": "1 MB"}]},
+                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
+                           {"Color": "Orange", "Max Size": "1 MB"},
+                           {"Color": "LightCoral", "Max Size": None}]},
             'Details Window': {
                 'Max Filename Length': 200,
                 'Max Files To Show': 10},
@@ -142,9 +116,9 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
         'Size Button': {
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB", "Min Size": None},
-                           {"Color": "Orange", "Max Size": "1 MB", "Min Size": "100 KB"},
-                           {"Color": "LightCoral", "Max Size": None, "Min Size": "1 MB"}]},
+                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
+                           {"Color": "Orange", "Max Size": "1 MB"},
+                           {"Color": "LightCoral", "Max Size": None}]},
             'Details Window': {
                 'Max Filename Length': 200,
                 'Unused Nested': 'Nested 1'},
@@ -159,25 +133,25 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
         'Size Button': {
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB", "Min Size": None},
-                           {"Color": "Orange", "Max Size": "1 MB", "Min Size": "100 KB"},
-                           {"Color": "LightCoral", "Max Size": None, "Min Size": "1 MB"}]},
+                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
+                           {"Color": "Orange", "Max Size": "1 MB"},
+                           {"Color": "LightCoral", "Max Size": None}]},
             'Details Window': {
                 'Max Filename Length': 200,
                 'Unused Nested': 'Nested 1'},
             'Enabled': True},
         'Unused Top': {'Property 1': 'Value 1'}}
     config: Config = config_loader.load_config()
-    assert config.as_dict() == {
+    assert config.get_as_dict() == {
         'Cache': {'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'INFO'},
         'Size Button': {
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB", "Min Size": None},
-                           {"Color": "Orange", "Max Size": "1 MB", "Min Size": "100 KB"},
-                           {"Color": "LightCoral", "Max Size": None, "Min Size": "1 MB"}]},
+                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
+                           {"Color": "Orange", "Max Size": "1 MB"},
+                           {"Color": "LightCoral", "Max Size": None}]},
             'Details Window': {
                 'Max Filename Length': 200,
                 'Max Files To Show': 10},
@@ -190,13 +164,58 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
         'Size Button': {
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB", "Min Size": None},
-                           {"Color": "Orange", "Max Size": "1 MB", "Min Size": "100 KB"},
-                           {"Color": "LightCoral", "Max Size": None, "Min Size": "1 MB"}]},
+                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
+                           {"Color": "Orange", "Max Size": "1 MB"},
+                           {"Color": "LightCoral", "Max Size": None}]},
             'Details Window': {
                 'Max Filename Length': 200,
                 'Max Files To Show': 10},
             'Enabled': True}}
+
+
+def test_write_config(config_loader: ConfigLoader, module_name: str, module_dir: Path) -> None:
+    __copy_config_json_to_addons_dir(module_name, module_dir)
+    config: Config = config_loader.load_config()
+    assert config.get_as_dict() == {
+        'Cache': {'Warmup Enabled': True},
+        'Deck Browser': {'Show Collection Size': True},
+        'Logging': {'Logger Level': 'INFO'},
+        'Size Button': {
+            "Color": {
+                "Enabled": True,
+                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
+                           {"Color": "Orange", "Max Size": "1 MB"},
+                           {"Color": "LightCoral", "Max Size": None}]},
+            'Details Window': {
+                'Max Filename Length': 100,
+                'Max Files To Show': 10},
+            'Enabled': True}}
+    config.set_cache_warmup_enabled(False)
+    config.set_deck_browser_show_collection_size(False)
+    config.set_log_level('DEBUG')
+    config.set_size_button_enabled(False)
+    config.set_size_button_details_formatter_max_filename_length(50)
+    config.set_size_button_details_formatter_max_files_to_show(5)
+    config.set_size_button_color_enabled(False)
+    config.set_size_button_color_levels([{"Color": "Green", "Max Size": "50 KB"},
+                                         {"Color": "Yellow", "Max Size": "2 MB"},
+                                         {"Color": "Red", "Max Size": "100 GB"}])
+    config_loader.write_config(config)
+    act_config: Config = config_loader.load_config()
+    assert act_config.get_as_dict() == {
+        'Cache': {'Warmup Enabled': False},
+        'Deck Browser': {'Show Collection Size': False},
+        'Logging': {'Logger Level': 'DEBUG'},
+        'Size Button': {
+            "Color": {
+                "Enabled": False,
+                "Levels": [{"Color": "Green", "Max Size": "50 KB"},
+                           {"Color": "Yellow", "Max Size": "2 MB"},
+                           {"Color": "Red", "Max Size": "100 GB"}]},
+            'Details Window': {
+                'Max Filename Length': 50,
+                'Max Files To Show': 5},
+            'Enabled': False}}
 
 
 def __write_meta_json_config(meta_json_config, module_dir: Path) -> None:

@@ -4,7 +4,7 @@ from ..types import SizeStr, ShortFilename, SizeBytes, MediaFile
 class SizeFormatter:
 
     @staticmethod
-    def bytes_to_str(size: SizeBytes) -> SizeStr:
+    def bytes_to_str(size: SizeBytes, precision: int = 1) -> SizeStr:
         divisor: int = 1024
         units: tuple[str, str, str] = 'B', 'KB', 'MB'
         final_unit: str = 'GB'
@@ -14,9 +14,9 @@ class SizeFormatter:
                 if unit == 'B':
                     return SizeStr(f'{num:0.0f} {unit}')
                 else:
-                    return SizeStr(f'{num:0.1f} {unit}')
+                    return SizeStr(f'{num:0.{precision}f} {unit}')
             num /= divisor
-        return SizeStr(f'{num:0.1f} {final_unit}')
+        return SizeStr(f'{num:0.{precision}f} {final_unit}')
 
     @staticmethod
     def str_to_bytes(size_str: SizeStr) -> SizeBytes:

@@ -19,10 +19,16 @@ class ConfigLoader:
 
     def load_config(self) -> Config:
         log.debug(f"Loading config for module {self.__module}")
-        defaults_opt: Optional[dict[str, Any]] = self.__addon_manager.addonConfigDefaults(self.__module)
+        defaults_opts: Optional[dict[str, Any]] = self.get_defaults()
         actual_opt: Optional[dict[str, Any]] = self.__addon_manager.getConfig(self.__module)
-        joined: dict[str, Any] = Config.join(defaults_opt, actual_opt)
+        joined: dict[str, Any] = Config.join(defaults_opts, actual_opt)
         self.__addon_manager.writeConfig(self.__module, joined)
         config: Config = Config(joined)
         log.info(f"Config was loaded: {config}")
         return config
+
+    def get_defaults(self) -> Optional[dict[str, Any]]:
+        return self.__addon_manager.addonConfigDefaults(self.__module)
+
+    def write_config(self, config: Config) -> None:
+        self.__addon_manager.writeConfig(self.__module, config.get_as_dict())

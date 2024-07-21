@@ -53,29 +53,66 @@ class Config:
                     base[k] = v
         return base
 
-    def cache_warm_up_enabled(self) -> bool:
+    def get_cache_warmup_enabled(self) -> bool:
         return self.__config[self.__key_1_cache][self.__key_2_warmup_enabled]
 
-    def deck_browser_show_collection_size(self) -> bool:
+    def set_cache_warmup_enabled(self, warmup_enabled: bool) -> None:
+        self.__set(warmup_enabled, self.__key_1_cache, self.__key_2_warmup_enabled)
+
+    def get_deck_browser_show_collection_size(self) -> bool:
         return self.__config[self.__key_1_deck_browser][self.__key_2_show_collection_size]
 
-    def log_level(self) -> str:
+    def set_deck_browser_show_collection_size(self, show_collection_size: bool) -> None:
+        self.__set(show_collection_size, self.__key_1_deck_browser, self.__key_2_show_collection_size)
+
+    def get_log_level(self) -> str:
         return self.__config[self.__key_1_logging][self.__key_2_logger_level]
 
-    def size_button_details_formatter_max_filename_length(self) -> int:
+    def set_log_level(self, log_level: str) -> None:
+        self.__set(log_level, self.__key_1_logging, self.__key_2_logger_level)
+
+    def get_size_button_details_formatter_max_filename_length(self) -> int:
         return self.__config[self.__key_1_size_button][self.__key_2_details_window][self.__key_3_max_filename_length]
 
-    def size_button_details_formatter_max_files_to_show(self) -> int:
+    def set_size_button_details_formatter_max_filename_length(self, max_filename_length: int) -> None:
+        self.__set(max_filename_length, self.__key_1_size_button, self.__key_2_details_window,
+                   self.__key_3_max_filename_length)
+
+    def get_size_button_details_formatter_max_files_to_show(self) -> int:
         return self.__config[self.__key_1_size_button][self.__key_2_details_window][self.__key_3_max_files_to_show]
 
-    def size_button_enabled(self) -> bool:
+    def set_size_button_details_formatter_max_files_to_show(self, max_files_to_show: int) -> None:
+        self.__set(max_files_to_show, self.__key_1_size_button, self.__key_2_details_window,
+                   self.__key_3_max_files_to_show)
+
+    def get_size_button_enabled(self) -> bool:
         return self.__config[self.__key_1_size_button][self.__key_2_size_button_enabled]
 
-    def size_button_color_enabled(self) -> bool:
+    def set_size_button_enabled(self, size_button_enabled: bool) -> None:
+        self.__set(size_button_enabled, self.__key_1_size_button, self.__key_2_size_button_enabled)
+
+    def get_size_button_color_enabled(self) -> bool:
         return self.__config[self.__key_1_size_button][self.__key_2_color][self.__key_3_color_enabled]
 
-    def size_button_color_levels(self) -> list[dict[str, str]]:
+    def set_size_button_color_enabled(self, color_enabled: bool) -> None:
+        self.__set(color_enabled, self.__key_1_size_button, self.__key_2_color, self.__key_3_color_enabled)
+
+    def get_size_button_color_levels(self) -> list[dict[str, str]]:
         return self.__config[self.__key_1_size_button][self.__key_2_color][self.__key_3_levels]
 
-    def as_dict(self) -> dict[str, Any]:
+    def set_size_button_color_levels(self, color_levels: list[dict[str, str]]) -> None:
+        self.__set(color_levels, self.__key_1_size_button, self.__key_2_color, self.__key_3_levels)
+
+    def get_as_dict(self) -> dict[str, Any]:
         return self.__config
+
+    def __set(self, value: Any, *keys: str) -> None:
+        d: dict[str, Any] = self.__config
+        for index, key in enumerate(keys):
+            is_last: bool = index == len(keys) - 1
+            if is_last:
+                d[key] = value
+            else:
+                if key not in d:
+                    d[key] = {}
+                d = d[key]

@@ -7,6 +7,7 @@ from aqt import gui_hooks
 from aqt.editor import Editor
 from aqt.utils import showInfo
 from aqt.webview import WebContent
+from aqt.qt import QWidget
 
 from .button_label import ButtonLabel
 from ..config.config import Config
@@ -20,6 +21,7 @@ log: Logger = logging.getLogger(__name__)
 class ButtonHooks:
     def __init__(self, details_formatter: DetailsFormatter, button_formatter: ButtonFormatter,
                  settings: Settings, config: Config):
+        self.editor: Optional[Editor] = None
         self.__config: Config = config
         self.__details_formatter: DetailsFormatter = details_formatter
         self.__button_formatter: ButtonFormatter = button_formatter
@@ -31,6 +33,7 @@ class ButtonHooks:
         self.__hook_editor_did_fire_typing_timer: Callable[[Note], None] = self.__on_editor_did_fire_typing_timer
         self.__hook_webview_will_set_content: Callable[[WebContent, Optional[object]], None] \
             = self.__add_size_button_css
+        self.__hook_focus_did_change: Callable[[Optional[QWidget], Optional[QWidget]], None] = self.__on_focus_changed
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def setup_hooks(self) -> None:
@@ -40,6 +43,7 @@ class ButtonHooks:
         gui_hooks.editor_did_unfocus_field.append(self.__hook_editor_did_unfocus_field)
         gui_hooks.editor_did_fire_typing_timer.append(self.__hook_editor_did_fire_typing_timer)
         gui_hooks.webview_will_set_content.append(self.__hook_webview_will_set_content)
+        gui_hooks.focus_did_change.append(self.__hook_focus_did_change)
         log.info(f"{self.__class__.__name__} are set")
 
     def remove_hooks(self) -> None:
@@ -49,15 +53,17 @@ class ButtonHooks:
         gui_hooks.editor_did_unfocus_field.remove(self.__hook_editor_did_unfocus_field)
         gui_hooks.editor_did_fire_typing_timer.remove(self.__hook_editor_did_fire_typing_timer)
         gui_hooks.webview_will_set_content.remove(self.__hook_webview_will_set_content)
+        gui_hooks.focus_did_change.remove(self.__hook_focus_did_change)
         log.info(f"{self.__class__.__name__} was set")
 
+    def __on_focus_changed(self, _: Optional[QWidget], __: Optional[QWidget]) -> None:
+        log.debug("On focus changed...")
+        self.__refresh_size_button(self.editor)
+
     def __on_editor_did_init(self, editor: Editor) -> None:
-        if self.__config.size_button_enabled():
-            log.debug("On Editor did init...")
-            self.editor: Editor = editor
-            self.__refresh_size_button(editor)
-        else:
-            log.debug(f"Size Button is disabled")
+        log.debug("On Editor did init...")
+        self.editor: Optional[Editor] = editor
+        self.__refresh_size_button(editor)
 
     def __on_size_button_click(self, editor: Editor) -> None:
         log.debug("On size button click...")
@@ -66,67 +72,69 @@ class ButtonHooks:
             showInfo(self.__details_formatter.format_note_detailed_text(note))
 
     def __on_editor_did_init_buttons(self, buttons: list[str], editor: Editor) -> None:
-        if self.__config.size_button_enabled():
-            log.debug("On Editor did init buttons...")
-            button: str = editor.addButton(id="size_button",
-                                           label=self.__button_formatter.get_zero_size_label().get_text(),
-                                           icon=None, cmd="size_button_cmd",
-                                           func=self.__on_size_button_click,
-                                           tip="Note size. Click for details",
-                                           disables=False)
-            buttons.append(button)
-            log.info("Size button was added to Editor")
-        else:
-            log.debug(f"Size Button is disabled")
+        log.debug("On Editor did init buttons...")
+        button: str = editor.addButton(id="size_button",
+                                       label=self.__button_formatter.get_zero_size_label().get_text(),
+                                       icon=None, cmd="size_button_cmd",
+                                       func=self.__on_size_button_click,
+                                       tip="Note size. Click for details",
+                                       disables=False)
+        buttons.append(button)
+        log.info("Size button was added to Editor")
 
     def __on_editor_did_load_note(self, editor: Editor) -> None:
-        if self.__config.size_button_enabled():
-            log.debug("On load note...")
-            self.__refresh_size_button(editor)
-        else:
-            log.debug(f"Size Button is disabled")
+        log.debug("On load note...")
+        self.__refresh_size_button(editor)
 
     def __on_editor_did_unfocus_field(self, _: bool, __: Note, ___: int) -> None:
-        if self.__config.size_button_enabled():
-            log.debug("On unfocus field...")
-            self.__refresh_size_button(self.editor)
-        else:
-            log.debug(f"Size Button is disabled")
+        log.debug("On unfocus field...")
+        self.__refresh_size_button(self.editor)
 
     def __on_editor_did_fire_typing_timer(self, _: Note) -> None:
-        if self.__config.size_button_enabled():
-            log.debug("On fire typing timer...")
-            self.__refresh_size_button(self.editor)
-        else:
-            log.info(f"Size Button is disabled")
+        log.debug("On fire typing timer...")
+        self.__refresh_size_button(self.editor)
 
     def __add_size_button_css(self, web_content: WebContent, _: Optional[object]) -> None:
-        if self.__config.size_button_enabled():
-            web_content.css.append(f"/_addons/{self.__addon_package}/web/size_button.css")
-        else:
-            log.debug(f"Size Button is disabled")
+        web_content.css.append(f"/_addons/{self.__addon_package}/web/size_button.css")
 
     @staticmethod
     def __eval_callback(val: Any):
         log.debug(f"Eval callback: {val}")
 
-    def __refresh_size_button(self, editor: Editor) -> None:
+    def __refresh_size_button(self, editor: Optional[Editor]) -> None:
         log.debug("Refresh size button...")
-        if editor.web:
-            label: ButtonLabel = self.__button_formatter.get_zero_size_label()
-            if editor.note:
-                if editor.addMode:
-                    label: ButtonLabel = self.__button_formatter.get_add_mode_label(editor.note)
-                else:
-                    label: ButtonLabel = self.__button_formatter.get_edit_mode_label(editor.note.id)
-            js: str = f"""
-                try {{
-                    document.getElementById('size_button').textContent = '{label.get_text()}'
-                    document.getElementById('size_button').style.backgroundColor = '{label.get_background_color()}';
-                }} catch (error) {{
-                  error.stack
-                }} """
-            editor.web.evalWithCallback(js, ButtonHooks.__eval_callback)
-            log.debug(f"Size button was refreshed: {label}")
+        if editor and editor.web:
+            if self.__config.get_size_button_enabled():
+                label: ButtonLabel = self.__button_formatter.get_zero_size_label()
+                if editor.note:
+                    if editor.addMode:
+                        label: ButtonLabel = self.__button_formatter.get_add_mode_label(editor.note)
+                    else:
+                        label: ButtonLabel = self.__button_formatter.get_edit_mode_label(editor.note.id)
+                js: str = f"""
+                    try {{
+                        const sizeButton = document.getElementById('size_button');
+                        if (sizeButton) {{
+                            sizeButton.style.display = 'block';
+                            sizeButton.textContent = '{label.get_text()}';
+                            sizeButton.style.backgroundColor = '{label.get_background_color()}';
+                        }}
+                    }} catch (error) {{
+                      error.stack
+                    }} """
+                editor.web.evalWithCallback(js, ButtonHooks.__eval_callback)
+                log.debug(f"Size button was refreshed: {label}")
+            else:
+                js: str = f"""
+                    try {{
+                        const sizeButton = document.getElementById('size_button');
+                        if (sizeButton) {{
+                            sizeButton.style.display = 'none';
+                        }}
+                    }} catch (error) {{
+                      error.stack
+                    }} """
+                editor.web.evalWithCallback(js, ButtonHooks.__eval_callback)
+                log.debug(f"Size button was hidden")
         else:
             log.debug("Skip size button refresh as editor.web is empty")

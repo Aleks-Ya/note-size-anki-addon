@@ -19,17 +19,14 @@
       "Levels": [
         {
           "Color": "PaleGreen",
-          "Min Size": null,
           "Max Size": "100 KB"
         },
         {
           "Color": "Orange",
-          "Min Size": "100 KB",
           "Max Size": "1 MB"
         },
         {
           "Color": "LightCoral",
-          "Min Size": "1 MB",
           "Max Size": null
         }
       ]

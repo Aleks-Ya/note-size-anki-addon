@@ -22,6 +22,8 @@ def test_format_note_detailed_text(col: Collection, td: Data, collection_size_fo
                 Total:&nbsp;
                 <span style='font-family:Consolas,monospace'>4.0 KB</span>
             </span>
+            <img height="12" onclick="pycmd('open-config-action')" 
+            src="/_addons/1188705668/web/setting.png" title="Open Configuration"/>
         </div>
         """
     exp_soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')

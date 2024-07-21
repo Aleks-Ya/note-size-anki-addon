@@ -2,6 +2,13 @@
 
 <!-- insertion marker -->
 
+## [v2.0.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.0.0) - 2024-07-26
+
+<small>[Compare with v1.15.0](https://github.com/Aleks-Ya/note-size-anki-addon/compare/v1.15.0...v2.0.0)</small>
+
+1. [FEATURE] GUI for configuration
+2. [MISC] Migrate from UnitTest to PyTest
+
 ## [v1.15.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v1.15.0) - 2024-07-15
 
 <small>[Compare with v1.14.0](https://github.com/Aleks-Ya/note-size-anki-addon/compare/v1.14.0...v1.15.0)</small>

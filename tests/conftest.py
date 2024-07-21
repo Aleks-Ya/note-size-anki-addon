@@ -3,6 +3,8 @@ from pathlib import Path
 
 import pytest
 from anki.collection import Collection
+from aqt.addons import AddonManager
+from mock.mock import MagicMock
 
 from note_size.button.button_formatter import ButtonFormatter
 from note_size.button.details_formatter import DetailsFormatter
@@ -12,8 +14,11 @@ from note_size.calculator.size_calculator import SizeCalculator
 from note_size.calculator.size_formatter import SizeFormatter
 from note_size.column.item_id_sorter import ItemIdSorter
 from note_size.config.config import Config
+from note_size.config.config_loader import ConfigLoader
+from note_size.config.config_ui import ConfigUi
 from note_size.config.settings import Settings
 from note_size.deck_browser.collection_size_formatter import CollectionSizeFormatter
+from note_size.log.logs import Logs
 from tests.data import Data
 
 
@@ -85,10 +90,42 @@ def size_formatter() -> SizeFormatter:
 
 
 @pytest.fixture
-def collection_size_formatter(col: Collection, media_cache: MediaCache) -> CollectionSizeFormatter:
-    return CollectionSizeFormatter(col, media_cache)
+def collection_size_formatter(col: Collection, media_cache: MediaCache, settings: Settings) -> CollectionSizeFormatter:
+    return CollectionSizeFormatter(col, media_cache, settings)
 
 
 @pytest.fixture
 def details_formatter(config: Config, settings: Settings, size_calculator: SizeCalculator) -> DetailsFormatter:
     return DetailsFormatter(size_calculator, settings, config)
+
+
+@pytest.fixture
+def addons_dir() -> Path:
+    return Path(tempfile.mkdtemp())
+
+
+@pytest.fixture
+def module_dir(addons_dir: Path, module_name: str) -> Path:
+    return addons_dir.joinpath(module_name)
+
+
+@pytest.fixture
+def addon_manager(addons_dir: Path) -> AddonManager:
+    mw: MagicMock = MagicMock()
+    mw.pm.addonFolder.return_value = addons_dir
+    return AddonManager(mw)
+
+
+@pytest.fixture
+def config_loader(addon_manager: AddonManager, settings: Settings) -> ConfigLoader:
+    return ConfigLoader(addon_manager, settings)
+
+
+@pytest.fixture
+def logs(settings: Settings) -> Logs:
+    return Logs(settings)
+
+
+@pytest.fixture
+def config_ui() -> ConfigUi:
+    return MagicMock()

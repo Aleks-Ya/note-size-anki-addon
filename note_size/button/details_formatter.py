@@ -60,14 +60,14 @@ class DetailsFormatter:
     def __add_files(self, note: Note, soup: BeautifulSoup) -> None:
         file_sizes: dict[MediaFile, SizeBytes] = self.__size_calculator.file_sizes(note, use_cache=False)
         file_sizes_sorted: dict[MediaFile, SizeBytes] = SizeCalculator.sort_by_size_desc(file_sizes)
-        max_files_number = self.__config.size_button_details_formatter_max_files_to_show()
+        max_files_number = self.__config.get_size_button_details_formatter_max_files_to_show()
         limited_keys: list[MediaFile] = list(file_sizes_sorted.keys())[:max_files_number]
         file_sizes_limited: dict[MediaFile, SizeBytes] = {key: file_sizes_sorted[key] for key in limited_keys}
         is_empty_files: bool = len(file_sizes_limited) == 0
         files_li: Tag = soup.new_tag('li')
         files_li.string = "Files (big to small):" if not is_empty_files else "Files: (no files)"
         soup.append(files_li)
-        max_length: int = self.__config.size_button_details_formatter_max_filename_length()
+        max_length: int = self.__config.get_size_button_details_formatter_max_filename_length()
         if not is_empty_files:
             ol: Tag = soup.new_tag('ol')
             for file, size in file_sizes_limited.items():

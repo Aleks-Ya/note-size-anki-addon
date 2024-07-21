@@ -130,7 +130,6 @@ By default, the button background can be painted in 3 colors:
 - Possible values:
     - `Levels`: array of one or more levels:
         - `Color`: string with name of any HTML color
-        - `Min Size`: string in format `"123 KB"` or `null` for zero
         - `Max Size`: string in format `"123 KB"` or `null` for infinity
 
 ---

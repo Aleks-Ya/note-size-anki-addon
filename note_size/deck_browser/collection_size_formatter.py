@@ -5,6 +5,7 @@ from pathlib import Path
 from anki.collection import Collection
 from bs4 import BeautifulSoup, Tag
 
+from ..config.settings import Settings
 from ..types import SizeBytes
 from ..cache.media_cache import MediaCache
 from ..calculator.size_formatter import SizeFormatter
@@ -14,11 +15,13 @@ log: Logger = logging.getLogger(__name__)
 
 class CollectionSizeFormatter:
     __code_style: str = "font-family:Consolas,monospace"
+    __open_config_action: str = "open-config-action"
 
-    def __init__(self, col: Collection, media_cache: MediaCache):
+    def __init__(self, col: Collection, media_cache: MediaCache, settings: Settings):
         self.__media_cache: MediaCache = media_cache
         self.__collection_file_path: Path = Path(col.path)
         self.__media_folder_path: Path = Path(col.media.dir())
+        self.__addon_package: str = settings.addon_package()
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def format_collection_size_html(self) -> str:
@@ -32,6 +35,14 @@ class CollectionSizeFormatter:
                                f'Size of folder "{self.__media_folder_path}" ({media_file_number_str} files)'))
         div.append(self.__span(soup, "Total", self.__total_size(),
                                f'Total size of collection file and media folder'))
+        config_icon: Tag = soup.new_tag('img', attrs={
+            "title": 'Open Configuration',
+            "src": f"/_addons/{self.__addon_package}/web/setting.png",
+            "height": "12",
+            "onclick": f"pycmd('{self.__open_config_action}')"
+        })
+        div.append(config_icon)
+
         soup.append(div)
         return str(soup.prettify())
 

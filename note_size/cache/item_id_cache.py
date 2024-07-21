@@ -36,7 +36,7 @@ class ItemIdCache:
 
     def warm_up_cache(self) -> None:
         try:
-            if not self.__config.cache_warm_up_enabled():
+            if not self.__config.get_cache_warmup_enabled():
                 log.info("Cache warmup is disabled")
                 return
             log.info("Warming up cache...")
