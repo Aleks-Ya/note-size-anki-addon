@@ -1,6 +1,3 @@
-import tempfile
-import unittest
-
 from anki.collection import Collection
 from anki.notes import Note
 
@@ -14,56 +11,42 @@ from note_size.types import SizeBytes
 from tests.data import Data
 
 
-class TestButtonFormatter(unittest.TestCase):
-
-    def setUp(self):
-        self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
-        self.td: Data = Data(self.col)
-        config: Config = Data.read_config()
-        media_cache: MediaCache = MediaCache(self.col, config)
-        self.size_calculator: SizeCalculator = SizeCalculator(media_cache)
-        item_id_cache: ItemIdCache = ItemIdCache(self.col, self.size_calculator, config)
-        self.button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, self.size_calculator, config)
-
-    def test_get_zero_size_label(self):
-        label: ButtonLabel = self.button_formatter.get_zero_size_label()
-        self.assertEqual(ButtonLabel("0 B", "PaleGreen"), label)
-
-    def test_get_add_mode_label(self):
-        note: Note = self.td.create_note_with_files()
-        label: ButtonLabel = self.button_formatter.get_add_mode_label(note)
-        self.assertEqual(ButtonLabel("143 B", "PaleGreen"), label)
-
-    def test_get_edit_mode_label(self):
-        note: Note = self.td.create_note_with_files()
-        label: ButtonLabel = self.button_formatter.get_edit_mode_label(note.id)
-        self.assertEqual(SizeBytes(143), self.size_calculator.calculate_note_size(note, use_cache=False))
-        self.assertEqual(ButtonLabel("143 B", "PaleGreen"), label)
-
-    def test_get_edit_mode_label_no_cache(self):
-        note: Note = self.td.create_note_with_files()
-        label: ButtonLabel = self.button_formatter.get_edit_mode_label(note.id)
-        self.assertEqual(SizeBytes(143), self.size_calculator.calculate_note_size(note, use_cache=False))
-        self.assertEqual(ButtonLabel("143 B", "PaleGreen"), label)
-        Data.update_front_field(note, 'updated')
-        self.assertEqual(SizeBytes(86), self.size_calculator.calculate_note_size(self.col.get_note(note.id),
-                                                                                 use_cache=False))
-        self.assertEqual(ButtonLabel("86 B", "PaleGreen"), self.button_formatter.get_edit_mode_label(note.id))
-
-    def test_disabled_color(self):
-        config: Config = Data.read_config_updated({'Size Button': {'Color': {'Enabled': False}}})
-        media_cache: MediaCache = MediaCache(self.col, config)
-        size_calculator: SizeCalculator = SizeCalculator(media_cache)
-        item_id_cache: ItemIdCache = ItemIdCache(self.col, size_calculator, config)
-        button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, size_calculator, config)
-        self.assertEqual(ButtonLabel("0 B", ""), button_formatter.get_zero_size_label())
-        note: Note = self.td.create_note_with_files()
-        self.assertEqual(ButtonLabel("143 B", ""), button_formatter.get_add_mode_label(note))
-        self.assertEqual(ButtonLabel("143 B", ""), button_formatter.get_edit_mode_label(note.id))
-
-    def tearDown(self):
-        self.col.close()
+def test_get_zero_size_label(button_formatter: ButtonFormatter):
+    label: ButtonLabel = button_formatter.get_zero_size_label()
+    assert label == ButtonLabel("0 B", "PaleGreen")
 
 
-if __name__ == '__main__':
-    unittest.main()
+def test_get_add_mode_label(td: Data, button_formatter: ButtonFormatter):
+    note: Note = td.create_note_with_files()
+    label: ButtonLabel = button_formatter.get_add_mode_label(note)
+    assert label == ButtonLabel("143 B", "PaleGreen")
+
+
+def test_get_edit_mode_label(td: Data, button_formatter: ButtonFormatter, size_calculator: SizeCalculator):
+    note: Note = td.create_note_with_files()
+    label: ButtonLabel = button_formatter.get_edit_mode_label(note.id)
+    assert size_calculator.calculate_note_size(note, use_cache=False) == SizeBytes(143)
+    assert label == ButtonLabel("143 B", "PaleGreen")
+
+
+def test_get_edit_mode_label_no_cache(col: Collection, td: Data, button_formatter: ButtonFormatter,
+                                      size_calculator: SizeCalculator):
+    note: Note = td.create_note_with_files()
+    label: ButtonLabel = button_formatter.get_edit_mode_label(note.id)
+    assert size_calculator.calculate_note_size(note, use_cache=False) == SizeBytes(143)
+    assert label == ButtonLabel("143 B", "PaleGreen")
+    Data.update_front_field(note, 'updated')
+    assert size_calculator.calculate_note_size(col.get_note(note.id), use_cache=False) == SizeBytes(86)
+    assert button_formatter.get_edit_mode_label(note.id) == ButtonLabel("86 B", "PaleGreen")
+
+
+def test_disabled_color(col: Collection, td: Data):
+    config: Config = Data.read_config_updated({'Size Button': {'Color': {'Enabled': False}}})
+    media_cache: MediaCache = MediaCache(col, config)
+    size_calculator = SizeCalculator(media_cache)
+    item_id_cache: ItemIdCache = ItemIdCache(col, size_calculator, config)
+    button_formatter = ButtonFormatter(item_id_cache, size_calculator, config)
+    assert button_formatter.get_zero_size_label() == ButtonLabel("0 B", "")
+    note: Note = td.create_note_with_files()
+    assert button_formatter.get_add_mode_label(note) == ButtonLabel("143 B", "")
+    assert button_formatter.get_edit_mode_label(note.id) == ButtonLabel("143 B", "")

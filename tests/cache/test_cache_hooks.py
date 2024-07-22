@@ -1,88 +1,78 @@
-import tempfile
 import time
-import unittest
 from pathlib import Path
 
+import pytest
 from anki.collection import Collection
 from anki import hooks
 from anki.notes import Note
 from aqt import gui_hooks
 
 from note_size.cache.cache_hooks import CacheHooks
-from note_size.config.config import Config
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.size_calculator import SizeCalculator
 from tests.data import Data
 
 
-class TestCacheHooks(unittest.TestCase):
-
-    def setUp(self):
-        self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
-        self.td: Data = Data(self.col)
-        config: Config = Data.read_config()
-        self.media_cache: MediaCache = MediaCache(self.col, config)
-        self.size_calculator: SizeCalculator = SizeCalculator(self.media_cache)
-        self.item_id_cache: ItemIdCache = ItemIdCache(self.col, self.size_calculator, config)
-        self.cache_hooks: CacheHooks = CacheHooks(self.media_cache, self.item_id_cache, self.size_calculator)
-
-    def test_setup_hooks(self):
-        self.assertEqual(0, gui_hooks.add_cards_did_add_note.count())
-        self.assertEqual(0, hooks.notes_will_be_deleted.count())
-        self.assertEqual(0, gui_hooks.media_sync_did_start_or_stop.count())
-        self.assertEqual(0, gui_hooks.media_sync_did_progress.count())
-        self.cache_hooks.setup_hooks()
-        self.assertEqual(1, gui_hooks.add_cards_did_add_note.count())
-        self.assertEqual(1, hooks.notes_will_be_deleted.count())
-        self.assertEqual(1, gui_hooks.media_sync_did_start_or_stop.count())
-        self.assertEqual(1, gui_hooks.media_sync_did_progress.count())
-        self.cache_hooks.remove_hooks()
-        self.assertEqual(0, gui_hooks.add_cards_did_add_note.count())
-        self.assertEqual(0, hooks.notes_will_be_deleted.count())
-        self.assertEqual(0, gui_hooks.media_sync_did_start_or_stop.count())
-        self.assertEqual(0, gui_hooks.media_sync_did_progress.count())
-
-    def test_add_cards_did_add_note(self):
-        self.cache_hooks.setup_hooks()
-        self.assertEqual(0, self.item_id_cache.get_total_texts_size())
-        self.td.create_note_with_files()
-        self.assertEqual(122, self.item_id_cache.get_total_texts_size())
-
-    def test_notes_will_be_deleted(self):
-        self.cache_hooks.setup_hooks()
-        note: Note = self.td.create_note_with_files()
-        self.assertEqual(122, self.item_id_cache.get_total_texts_size())
-        self.col.remove_notes([note.id])
-        self.assertEqual(0, self.item_id_cache.get_total_texts_size())
-
-    def test_media_sync_did_start_or_stop(self):
-        self.cache_hooks.setup_hooks()
-        self.td.create_note_with_files()
-        self.assertEqual(21, self.media_cache.get_total_files_size())
-        Path(self.col.media.dir(), "image.png").write_text("abc")
-        self.assertEqual(21, self.media_cache.get_total_files_size())
-        gui_hooks.media_sync_did_start_or_stop(True)
-        self.assertEqual(21, self.media_cache.get_total_files_size())
-        gui_hooks.media_sync_did_start_or_stop(False)
-        self.assertEqual(24, self.media_cache.get_total_files_size())
-
-    def test_media_sync_did_progress(self):
-        self.cache_hooks.setup_hooks()
-        self.td.create_note_with_files()
-        self.assertEqual(21, self.media_cache.get_total_files_size())
-        Path(self.col.media.dir(), "image.png").write_text("abc")
-        self.assertEqual(21, self.media_cache.get_total_files_size())
-        gui_hooks.media_sync_did_progress("")
-        self.assertEqual(21, self.media_cache.get_total_files_size())
-        time.sleep(3)
-        gui_hooks.media_sync_did_progress("")
-        self.assertEqual(24, self.media_cache.get_total_files_size())
-
-    def tearDown(self):
-        self.cache_hooks.remove_hooks()
-        self.col.close()
+@pytest.fixture
+def cache_hooks(media_cache: MediaCache, size_calculator: SizeCalculator, item_id_cache: ItemIdCache) -> CacheHooks:
+    cache_hooks = CacheHooks(media_cache, item_id_cache, size_calculator)
+    yield cache_hooks
+    cache_hooks.remove_hooks()
 
 
-if __name__ == '__main__':
-    unittest.main()
+def test_setup_hooks(cache_hooks: CacheHooks):
+    assert gui_hooks.add_cards_did_add_note.count() == 0
+    assert hooks.notes_will_be_deleted.count() == 0
+    assert gui_hooks.media_sync_did_start_or_stop.count() == 0
+    assert gui_hooks.media_sync_did_progress.count() == 0
+    cache_hooks.setup_hooks()
+    assert gui_hooks.add_cards_did_add_note.count() == 1
+    assert hooks.notes_will_be_deleted.count() == 1
+    assert gui_hooks.media_sync_did_start_or_stop.count() == 1
+    assert gui_hooks.media_sync_did_progress.count() == 1
+    cache_hooks.remove_hooks()
+    assert gui_hooks.add_cards_did_add_note.count() == 0
+    assert hooks.notes_will_be_deleted.count() == 0
+    assert gui_hooks.media_sync_did_start_or_stop.count() == 0
+    assert gui_hooks.media_sync_did_progress.count() == 0
+
+
+def test_add_cards_did_add_note(td: Data, cache_hooks: CacheHooks, item_id_cache: ItemIdCache):
+    cache_hooks.setup_hooks()
+    assert item_id_cache.get_total_texts_size() == 0
+    td.create_note_with_files()
+    assert item_id_cache.get_total_texts_size() == 122
+
+
+def test_notes_will_be_deleted(col: Collection, td: Data, cache_hooks: CacheHooks, item_id_cache: ItemIdCache):
+    cache_hooks.setup_hooks()
+    note: Note = td.create_note_with_files()
+    assert item_id_cache.get_total_texts_size() == 122
+    col.remove_notes([note.id])
+    assert item_id_cache.get_total_texts_size() == 0
+
+
+def test_media_sync_did_start_or_stop(col: Collection, td: Data, cache_hooks: CacheHooks, media_cache: MediaCache):
+    cache_hooks.setup_hooks()
+    td.create_note_with_files()
+    assert media_cache.get_total_files_size() == 21
+    Path(col.media.dir(), "image.png").write_text("abc")
+    assert media_cache.get_total_files_size() == 21
+    gui_hooks.media_sync_did_start_or_stop(True)
+    assert media_cache.get_total_files_size() == 21
+    gui_hooks.media_sync_did_start_or_stop(False)
+    assert media_cache.get_total_files_size() == 24
+
+
+def test_media_sync_did_progress(col: Collection, td: Data, cache_hooks: CacheHooks, media_cache: MediaCache):
+    cache_hooks.setup_hooks()
+    td.create_note_with_files()
+    assert media_cache.get_total_files_size() == 21
+    Path(col.media.dir(), "image.png").write_text("abc")
+    assert media_cache.get_total_files_size() == 21
+    gui_hooks.media_sync_did_progress("")
+    assert media_cache.get_total_files_size() == 21
+    time.sleep(3)
+    gui_hooks.media_sync_did_progress("")
+    assert media_cache.get_total_files_size() == 24

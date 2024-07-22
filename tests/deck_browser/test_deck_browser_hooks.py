@@ -1,6 +1,4 @@
-import tempfile
-import unittest
-
+import pytest
 from anki.collection import Collection
 from aqt import gui_hooks
 
@@ -11,37 +9,28 @@ from tests.data import Data
 from note_size.deck_browser.deck_browser_hooks import DeckBrowserHooks
 
 
-class TestDeckBrowserHooks(unittest.TestCase):
-
-    def setUp(self):
-        self.col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
-        config: Config = Data.read_config()
-        media_cache: MediaCache = MediaCache(self.col, config)
-        collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(self.col, media_cache)
-        self.deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter, config)
-
-    def test_setup_hooks_enabled(self):
-        self.assertEqual(0, gui_hooks.deck_browser_will_render_content.count())
-        self.deck_browser_hooks.setup_hooks()
-        self.assertEqual(1, gui_hooks.deck_browser_will_render_content.count())
-        self.deck_browser_hooks.remove_hooks()
-        self.assertEqual(0, gui_hooks.deck_browser_will_render_content.count())
-
-    def test_setup_hooks_disabled(self):
-        config: Config = Data.read_config_updated({'Deck Browser': {'Show Full Collection Size': False}})
-        media_cache: MediaCache = MediaCache(self.col, config)
-        collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(self.col, media_cache)
-        deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter, config)
-        self.assertEqual(0, gui_hooks.deck_browser_will_render_content.count())
-        deck_browser_hooks.setup_hooks()
-        self.assertEqual(0, gui_hooks.deck_browser_will_render_content.count())
-        deck_browser_hooks.remove_hooks()
-        self.assertEqual(0, gui_hooks.deck_browser_will_render_content.count())
-
-    def tearDown(self):
-        self.deck_browser_hooks.remove_hooks()
-        self.col.close()
+@pytest.fixture
+def deck_browser_hooks(config: Config, collection_size_formatter: CollectionSizeFormatter) -> DeckBrowserHooks:
+    deck_browser_hooks = DeckBrowserHooks(collection_size_formatter, config)
+    yield deck_browser_hooks
+    deck_browser_hooks.remove_hooks()
 
 
-if __name__ == '__main__':
-    unittest.main()
+def test_setup_hooks_enabled(deck_browser_hooks: DeckBrowserHooks):
+    assert gui_hooks.deck_browser_will_render_content.count() == 0
+    deck_browser_hooks.setup_hooks()
+    assert gui_hooks.deck_browser_will_render_content.count() == 1
+    deck_browser_hooks.remove_hooks()
+    assert gui_hooks.deck_browser_will_render_content.count() == 0
+
+
+def test_setup_hooks_disabled(col: Collection):
+    config: Config = Data.read_config_updated({'Deck Browser': {'Show Full Collection Size': False}})
+    media_cache: MediaCache = MediaCache(col, config)
+    collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(col, media_cache)
+    deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter, config)
+    assert gui_hooks.deck_browser_will_render_content.count() == 0
+    deck_browser_hooks.setup_hooks()
+    assert gui_hooks.deck_browser_will_render_content.count() == 0
+    deck_browser_hooks.remove_hooks()
+    assert gui_hooks.deck_browser_will_render_content.count() == 0
