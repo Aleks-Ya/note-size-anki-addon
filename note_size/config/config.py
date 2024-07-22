@@ -8,6 +8,20 @@ log: Logger = logging.getLogger(__name__)
 
 
 class Config:
+    __key_1_cache: str = 'Cache'
+    __key_1_deck_browser: str = 'Deck Browser'
+    __key_1_logging: str = 'Logging'
+    __key_1_size_button: str = 'Size Button'
+    __key_2_warmup_enabled: str = 'Warmup Enabled'
+    __key_2_show_full_collection_size: str = 'Show Full Collection Size'
+    __key_2_logger_level: str = 'Logger Level'
+    __key_2_details_window: str = 'Details Window'
+    __key_2_size_button_enabled: str = 'Enabled'
+    __key_2_color: str = 'Color'
+    __key_3_max_filename_length: str = 'Max Filename Length'
+    __key_3_max_files_to_show: str = 'Max Files To Show'
+    __key_3_color_enabled: str = 'Enabled'
+    __key_3_levels: str = 'Levels'
 
     def __init__(self, config: dict[str, Any]):
         self.__config: dict[str, Any] = config
@@ -40,28 +54,28 @@ class Config:
         return base
 
     def cache_warm_up_enabled(self) -> bool:
-        return self.__config['Cache']['Warmup Enabled']
+        return self.__config[self.__key_1_cache][self.__key_2_warmup_enabled]
 
     def deck_browser_show_full_collection_size(self) -> bool:
-        return self.__config['Deck Browser']['Show Full Collection Size']
+        return self.__config[self.__key_1_deck_browser][self.__key_2_show_full_collection_size]
 
     def log_level(self) -> str:
-        return self.__config['Logging']['Logger Level']
+        return self.__config[self.__key_1_logging][self.__key_2_logger_level]
 
     def size_button_details_formatter_max_filename_length(self) -> int:
-        return self.__config['Size Button']['Details Window']['Max Filename Length']
+        return self.__config[self.__key_1_size_button][self.__key_2_details_window][self.__key_3_max_filename_length]
 
     def size_button_details_formatter_max_files_to_show(self) -> int:
-        return self.__config['Size Button']['Details Window']['Max Files To Show']
+        return self.__config[self.__key_1_size_button][self.__key_2_details_window][self.__key_3_max_files_to_show]
 
     def size_button_enabled(self) -> bool:
-        return self.__config['Size Button']['Enabled']
+        return self.__config[self.__key_1_size_button][self.__key_2_size_button_enabled]
 
     def size_button_color_enabled(self) -> bool:
-        return self.__config['Size Button']['Color']['Enabled']
+        return self.__config[self.__key_1_size_button][self.__key_2_color][self.__key_3_color_enabled]
 
     def size_button_color_levels(self) -> list[dict[str, str]]:
-        return self.__config['Size Button']['Color']['Levels']
+        return self.__config[self.__key_1_size_button][self.__key_2_color][self.__key_3_levels]
 
     def as_dict(self) -> dict[str, Any]:
         return self.__config
