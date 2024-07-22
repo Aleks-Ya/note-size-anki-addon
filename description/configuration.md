@@ -8,7 +8,7 @@
     - [Logging](#logging)
         - [Logging Level](#logging-level)
     - [Deck Browser](#deck-browser)
-        - [Show Full Collection Size](#show-full-collection-size)
+        - [Show Collection Size](#show-collection-size)
     - [Size Button](#size-button)
         - [Enabled](#enabled)
         - [Max Filename Length](#max-filename-length)
@@ -52,12 +52,12 @@ Output log file on Windows: `c:\Users\%USERNAME%\AppData\Roaming\Anki2\logs\addo
 
 ### Deck Browser
 
-#### Show Full Collection Size
+#### Show Collection Size
 
 Display or hide the Collection size in the Deck Browser:  
 ![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/collection_size.png)
 
-- Property name: `Deck Browser` - `Show Full Collection Size`
+- Property name: `Deck Browser` - `Show Collection Size`
 - Type: Boolean
 - Default value: `true`
 - Possible values: `true` or `false`

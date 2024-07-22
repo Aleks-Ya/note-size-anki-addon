@@ -13,7 +13,7 @@ class Config:
     __key_1_logging: str = 'Logging'
     __key_1_size_button: str = 'Size Button'
     __key_2_warmup_enabled: str = 'Warmup Enabled'
-    __key_2_show_full_collection_size: str = 'Show Full Collection Size'
+    __key_2_show_collection_size: str = 'Show Collection Size'
     __key_2_logger_level: str = 'Logger Level'
     __key_2_details_window: str = 'Details Window'
     __key_2_size_button_enabled: str = 'Enabled'
@@ -56,8 +56,8 @@ class Config:
     def cache_warm_up_enabled(self) -> bool:
         return self.__config[self.__key_1_cache][self.__key_2_warmup_enabled]
 
-    def deck_browser_show_full_collection_size(self) -> bool:
-        return self.__config[self.__key_1_deck_browser][self.__key_2_show_full_collection_size]
+    def deck_browser_show_collection_size(self) -> bool:
+        return self.__config[self.__key_1_deck_browser][self.__key_2_show_collection_size]
 
     def log_level(self) -> str:
         return self.__config[self.__key_1_logging][self.__key_2_logger_level]

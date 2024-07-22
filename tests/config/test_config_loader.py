@@ -46,7 +46,7 @@ def test_default_values(config_loader: ConfigLoader, module_name: str, module_di
     config: Config = config_loader.load_config()
     assert config.as_dict() == {
         'Cache': {'Warmup Enabled': True},
-        'Deck Browser': {'Show Full Collection Size': True},
+        'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'INFO'},
         'Size Button': {
             "Color": {
@@ -64,7 +64,7 @@ def test_actual_values_all(config_loader: ConfigLoader, module_name: str, module
     __copy_config_json_to_addons_dir(module_name, module_dir)
     meta_json_config: dict[str, Any] = {
         'Cache': {'Warmup Enabled': False},
-        'Deck Browser': {'Show Full Collection Size': True},
+        'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'DEBUG'},
         'Size Button': {
             "Color": {
@@ -87,7 +87,7 @@ def test_actual_values_partial(module_name: str, module_dir: Path, config_loader
     config: Config = config_loader.load_config()
     assert config.as_dict() == {
         'Cache': {'Warmup Enabled': True},
-        'Deck Browser': {'Show Full Collection Size': True},
+        'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'INFO'},
         'Size Button': {
             "Color": {
@@ -119,7 +119,7 @@ def test_delete_unused_properties(module_name: str, module_dir: Path, config_loa
     config: Config = config_loader.load_config()
     assert config.as_dict() == {
         'Cache': {'Warmup Enabled': True},
-        'Deck Browser': {'Show Full Collection Size': True},
+        'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'INFO'},
         'Size Button': {
             "Color": {
@@ -137,7 +137,7 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
                             module_dir: Path):
     __copy_config_json_to_addons_dir(module_name, module_dir)
     __write_meta_json_config({
-        'Deck Browser': {'Show Full Collection Size': True},
+        'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'INFO'},
         'Size Button': {
             "Color": {
@@ -154,7 +154,7 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
     config_origin: Optional[dict[str, Any]] = addon_manager.getConfig(module_name)
     assert config_origin == {
         'Cache': {'Warmup Enabled': True},
-        'Deck Browser': {'Show Full Collection Size': True},
+        'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'INFO'},
         'Size Button': {
             "Color": {
@@ -170,7 +170,7 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
     config: Config = config_loader.load_config()
     assert config.as_dict() == {
         'Cache': {'Warmup Enabled': True},
-        'Deck Browser': {'Show Full Collection Size': True},
+        'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'INFO'},
         'Size Button': {
             "Color": {
@@ -185,7 +185,7 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
     config_saved: Optional[dict[str, Any]] = addon_manager.getConfig(module_name)
     assert config_saved == {
         'Cache': {'Warmup Enabled': True},
-        'Deck Browser': {'Show Full Collection Size': True},
+        'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'INFO'},
         'Size Button': {
             "Color": {

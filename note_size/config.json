@@ -3,7 +3,7 @@
     "Warmup Enabled": true
   },
   "Deck Browser": {
-    "Show Full Collection Size": true
+    "Show Collection Size": true
   },
   "Logging": {
     "Logger Level": "INFO"

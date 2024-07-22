@@ -1,7 +1,7 @@
 **"Note Size"** addon displays:
 
 1. Size of Notes including attachments in the Browser and in the Editor
-2. Full Collection size in the Deck Browser
+2. Collection size in the Deck Browser
 
 For more details see
 [User Manual](https://github.com/Aleks-Ya/note-size-anki-addon/blob/main/description/user_manual.md).  

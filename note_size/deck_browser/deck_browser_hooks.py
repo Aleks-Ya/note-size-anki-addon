@@ -13,7 +13,7 @@ log: Logger = logging.getLogger(__name__)
 class DeckBrowserHooks:
 
     def __init__(self, collection_size_formatter: CollectionSizeFormatter, config: Config):
-        self.__enabled: bool = config.deck_browser_show_full_collection_size()
+        self.__enabled: bool = config.deck_browser_show_collection_size()
         self.__collection_size_formatter: CollectionSizeFormatter = collection_size_formatter
         self.__hook_deck_browser_will_render_content: Callable[[Any, Any], None] = self.__on_action
         log.debug(f"{self.__class__.__name__} was instantiated")

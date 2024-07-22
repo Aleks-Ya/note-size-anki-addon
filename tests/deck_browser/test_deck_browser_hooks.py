@@ -25,7 +25,7 @@ def test_setup_hooks_enabled(deck_browser_hooks: DeckBrowserHooks):
 
 
 def test_setup_hooks_disabled(col: Collection):
-    config: Config = Data.read_config_updated({'Deck Browser': {'Show Full Collection Size': False}})
+    config: Config = Data.read_config_updated({'Deck Browser': {'Show Collection Size': False}})
     media_cache: MediaCache = MediaCache(col, config)
     collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(col, media_cache)
     deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter, config)
