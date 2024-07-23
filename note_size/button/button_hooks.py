@@ -20,7 +20,7 @@ log: Logger = logging.getLogger(__name__)
 class ButtonHooks:
     def __init__(self, details_formatter: DetailsFormatter, button_formatter: ButtonFormatter,
                  settings: Settings, config: Config):
-        self.__enabled: bool = config.size_button_enabled()
+        self.__config: Config = config
         self.__details_formatter: DetailsFormatter = details_formatter
         self.__button_formatter: ButtonFormatter = button_formatter
         self.__addon_package: str = settings.addon_package()
@@ -34,16 +34,13 @@ class ButtonHooks:
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def setup_hooks(self) -> None:
-        if self.__enabled:
-            gui_hooks.editor_did_init.append(self.__hook_editor_did_init)
-            gui_hooks.editor_did_init_buttons.append(self.__hook_editor_did_init_buttons)
-            gui_hooks.editor_did_load_note.append(self.__hook_editor_did_load_note)
-            gui_hooks.editor_did_unfocus_field.append(self.__hook_editor_did_unfocus_field)
-            gui_hooks.editor_did_fire_typing_timer.append(self.__hook_editor_did_fire_typing_timer)
-            gui_hooks.webview_will_set_content.append(self.__hook_webview_will_set_content)
-            log.info(f"{self.__class__.__name__} are set")
-        else:
-            log.info(f"Size Button is disabled")
+        gui_hooks.editor_did_init.append(self.__hook_editor_did_init)
+        gui_hooks.editor_did_init_buttons.append(self.__hook_editor_did_init_buttons)
+        gui_hooks.editor_did_load_note.append(self.__hook_editor_did_load_note)
+        gui_hooks.editor_did_unfocus_field.append(self.__hook_editor_did_unfocus_field)
+        gui_hooks.editor_did_fire_typing_timer.append(self.__hook_editor_did_fire_typing_timer)
+        gui_hooks.webview_will_set_content.append(self.__hook_webview_will_set_content)
+        log.info(f"{self.__class__.__name__} are set")
 
     def remove_hooks(self) -> None:
         gui_hooks.editor_did_init.remove(self.__hook_editor_did_init)
@@ -55,9 +52,12 @@ class ButtonHooks:
         log.info(f"{self.__class__.__name__} was set")
 
     def __on_editor_did_init(self, editor: Editor) -> None:
-        log.debug("On Editor did init...")
-        self.editor: Editor = editor
-        self.__refresh_size_button(editor)
+        if self.__config.size_button_enabled():
+            log.debug("On Editor did init...")
+            self.editor: Editor = editor
+            self.__refresh_size_button(editor)
+        else:
+            log.debug(f"Size Button is disabled")
 
     def __on_size_button_click(self, editor: Editor) -> None:
         log.debug("On size button click...")
@@ -66,30 +66,45 @@ class ButtonHooks:
             showInfo(self.__details_formatter.format_note_detailed_text(note))
 
     def __on_editor_did_init_buttons(self, buttons: list[str], editor: Editor) -> None:
-        log.debug("On Editor did init buttons...")
-        button: str = editor.addButton(id="size_button",
-                                       label=self.__button_formatter.get_zero_size_label().get_text(),
-                                       icon=None, cmd="size_button_cmd",
-                                       func=self.__on_size_button_click,
-                                       tip="Note size. Click for details",
-                                       disables=False)
-        buttons.append(button)
-        log.info("Size button was added to Editor")
+        if self.__config.size_button_enabled():
+            log.debug("On Editor did init buttons...")
+            button: str = editor.addButton(id="size_button",
+                                           label=self.__button_formatter.get_zero_size_label().get_text(),
+                                           icon=None, cmd="size_button_cmd",
+                                           func=self.__on_size_button_click,
+                                           tip="Note size. Click for details",
+                                           disables=False)
+            buttons.append(button)
+            log.info("Size button was added to Editor")
+        else:
+            log.debug(f"Size Button is disabled")
 
     def __on_editor_did_load_note(self, editor: Editor) -> None:
-        log.debug("On load note...")
-        self.__refresh_size_button(editor)
+        if self.__config.size_button_enabled():
+            log.debug("On load note...")
+            self.__refresh_size_button(editor)
+        else:
+            log.debug(f"Size Button is disabled")
 
     def __on_editor_did_unfocus_field(self, _: bool, __: Note, ___: int) -> None:
-        log.debug("On unfocus field...")
-        self.__refresh_size_button(self.editor)
+        if self.__config.size_button_enabled():
+            log.debug("On unfocus field...")
+            self.__refresh_size_button(self.editor)
+        else:
+            log.debug(f"Size Button is disabled")
 
     def __on_editor_did_fire_typing_timer(self, _: Note) -> None:
-        log.debug("On fire typing timer...")
-        self.__refresh_size_button(self.editor)
+        if self.__config.size_button_enabled():
+            log.debug("On fire typing timer...")
+            self.__refresh_size_button(self.editor)
+        else:
+            log.info(f"Size Button is disabled")
 
     def __add_size_button_css(self, web_content: WebContent, _: Optional[object]) -> None:
-        web_content.css.append(f"/_addons/{self.__addon_package}/web/size_button.css")
+        if self.__config.size_button_enabled():
+            web_content.css.append(f"/_addons/{self.__addon_package}/web/size_button.css")
+        else:
+            log.debug(f"Size Button is disabled")
 
     @staticmethod
     def __eval_callback(val: Any):

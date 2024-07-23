@@ -15,7 +15,7 @@ log: Logger = logging.getLogger(__name__)
 class MediaCache:
 
     def __init__(self, col: Collection, config: Config):
-        self.__warmup_enabled: bool = config.cache_warm_up_enabled()
+        self.__config: Config = config
         self.__col: Collection = col
         self.__file_sizes_cache: dict[MediaFile, SizeBytes] = {}
         self.__total_files_size: SizeBytes = SizeBytes(0)
@@ -24,7 +24,7 @@ class MediaCache:
 
     def warm_up_cache(self):
         with self.__lock:
-            if not self.__warmup_enabled:
+            if not self.__config.cache_warm_up_enabled():
                 log.info("Cache warmup is disabled")
                 return
             log.info("Warming up cache...")

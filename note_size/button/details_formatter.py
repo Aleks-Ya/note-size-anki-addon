@@ -19,10 +19,9 @@ class DetailsFormatter:
     __code_style: str = "font-family:Consolas,monospace"
 
     def __init__(self, size_calculator: SizeCalculator, settings: Settings, config: Config):
+        self.__config: Config = config
         self.__icons_dir: Path = settings.addon_dir().joinpath("button").joinpath("icon")
         self.__size_calculator: SizeCalculator = size_calculator
-        self.__max_length = config.size_button_details_formatter_max_filename_length()
-        self.__max_files_number = config.size_button_details_formatter_max_files_to_show()
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def format_note_detailed_text(self, note: Note) -> str:
@@ -61,16 +60,18 @@ class DetailsFormatter:
     def __add_files(self, note: Note, soup: BeautifulSoup) -> None:
         file_sizes: dict[MediaFile, SizeBytes] = self.__size_calculator.file_sizes(note, use_cache=False)
         file_sizes_sorted: dict[MediaFile, SizeBytes] = SizeCalculator.sort_by_size_desc(file_sizes)
-        limited_keys: list[MediaFile] = list(file_sizes_sorted.keys())[:self.__max_files_number]
+        max_files_number = self.__config.size_button_details_formatter_max_files_to_show()
+        limited_keys: list[MediaFile] = list(file_sizes_sorted.keys())[:max_files_number]
         file_sizes_limited: dict[MediaFile, SizeBytes] = {key: file_sizes_sorted[key] for key in limited_keys}
         is_empty_files: bool = len(file_sizes_limited) == 0
         files_li: Tag = soup.new_tag('li')
         files_li.string = "Files (big to small):" if not is_empty_files else "Files: (no files)"
         soup.append(files_li)
+        max_length: int = self.__config.size_button_details_formatter_max_filename_length()
         if not is_empty_files:
             ol: Tag = soup.new_tag('ol')
             for file, size in file_sizes_limited.items():
-                filename, size_text = SizeFormatter.file_size_to_str(file, size, self.__max_length)
+                filename, size_text = SizeFormatter.file_size_to_str(file, size, max_length)
                 icon_path: Path = self.__get_file_icon(filename)
                 alt: str = DetailsFormatter.__get_img_alt(icon_path)
                 img: Tag = soup.new_tag("img", attrs={
