@@ -1,5 +1,4 @@
-import logging
-from logging import Logger, FileHandler, Formatter
+from logging import Logger
 from pathlib import Path
 from threading import Thread
 
@@ -11,22 +10,7 @@ from .cache.media_cache import MediaCache
 from .cache.item_id_cache import ItemIdCache
 from .config.settings import Settings
 from .deck_browser.collection_size_formatter import CollectionSizeFormatter
-
-
-def __configure_logging(settings: Settings) -> Logger:
-    log_dir: Path = settings.logs_folder()
-    log_dir.mkdir(exist_ok=True, parents=True)
-    log_file: Path = log_dir.joinpath("note_size.log")
-    logger: Logger = logging.getLogger(__name__)
-    handler: FileHandler = FileHandler(log_file)
-    level: int = logging.DEBUG
-    handler.setLevel(level)
-    formatter: Formatter = Formatter('%(asctime)s %(levelname)s %(name)s %(funcName)s %(threadName)s %(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    logger.setLevel(level)
-    logger.info(f"\n\n{'#' * 100}\nLogger was configured: level={logging.getLevelName(level)}, file={log_file}")
-    return logger
+from .log.logs import Logs
 
 
 def __warm_up_caches(media_cache: MediaCache, item_id_cache: ItemIdCache):
@@ -51,13 +35,14 @@ def __initialize(col: Collection):
     settings: Settings = Settings(addon_dir, module,
                                   mw.addonManager.logs_folder(module),
                                   mw.addonManager.addonFromModule(__name__))
-    log: Logger = __configure_logging(settings)
+    logs: Logs = Logs(settings)
+    log: Logger = logs.root_logger()
     log.info(f"NoteSize addon version: {settings.addon_dir().joinpath('version.txt').read_text()}")
     config_loader: ConfigLoader = ConfigLoader(mw.addonManager, settings)
     config: Config = config_loader.load_config()
     log_level: str = config.log_level()
     log.info(f"Set log level from Config: {log_level}")
-    log.setLevel(log_level)
+    logs.set_level(log_level)
     media_cache: MediaCache = MediaCache(col, config)
     size_calculator: SizeCalculator = SizeCalculator(media_cache)
     item_id_cache: ItemIdCache = ItemIdCache(col, size_calculator, config)
