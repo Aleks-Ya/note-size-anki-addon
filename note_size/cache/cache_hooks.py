@@ -17,7 +17,7 @@ log: Logger = logging.getLogger(__name__)
 
 class CacheHooks:
 
-    def __init__(self, media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator):
+    def __init__(self, media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator) -> None:
         self.__media_cache: MediaCache = media_cache
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__size_calculator: SizeCalculator = size_calculator
@@ -27,6 +27,8 @@ class CacheHooks:
         self.__hook_media_sync_did_start_or_stop: Callable[[bool], None] = self.__media_sync_did_start_or_stop
         self.__hook_media_sync_did_progress: Callable[[str], None] = self.__media_sync_did_progress
         self.__hook_note_will_flush: Callable[[Note], None] = self.__on_note_will_flush
+        self.__hook_profile_did_open: Callable[[], None] = self.__read_cache_from_file
+        self.__hook_profile_will_close: Callable[[], None] = self.__save_cache_to_file
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def setup_hooks(self) -> None:
@@ -35,6 +37,8 @@ class CacheHooks:
         gui_hooks.media_sync_did_start_or_stop.append(self.__hook_media_sync_did_start_or_stop)
         gui_hooks.media_sync_did_progress.append(self.__hook_media_sync_did_progress)
         hooks.note_will_flush.append(self.__hook_note_will_flush)
+        gui_hooks.profile_did_open.append(self.__hook_profile_did_open)
+        gui_hooks.profile_will_close.append(self.__hook_profile_will_close)
         log.info(f"{self.__class__.__name__} are set")
 
     def remove_hooks(self) -> None:
@@ -43,7 +47,15 @@ class CacheHooks:
         gui_hooks.media_sync_did_start_or_stop.remove(self.__hook_media_sync_did_start_or_stop)
         gui_hooks.media_sync_did_progress.remove(self.__hook_media_sync_did_progress)
         hooks.note_will_flush.remove(self.__hook_note_will_flush)
+        gui_hooks.profile_did_open.remove(self.__hook_profile_did_open)
+        gui_hooks.profile_will_close.remove(self.__hook_profile_will_close)
         log.info(f"{self.__class__.__name__} was removed")
+
+    def __read_cache_from_file(self):
+        self.__item_id_cache.read_caches_from_file()
+
+    def __save_cache_to_file(self):
+        self.__item_id_cache.save_caches_to_file()
 
     def __on_note_will_flush(self, note: Note) -> None:
         if note and note.id:

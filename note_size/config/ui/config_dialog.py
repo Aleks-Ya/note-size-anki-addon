@@ -75,6 +75,7 @@ class ConfigDialog(QDialog):
         self.__config.set_size_button_color_levels(self.__model.size_button_color_levels)
         self.__config.set_log_level(self.__model.log_level)
         self.__config.set_cache_warmup_enabled(self.__model.cache_warmup_enabled)
+        self.__config.set_store_cache_in_file_enabled(self.__model.store_cache_in_file_enabled)
         self.__config_loader.write_config(self.__config)
         if aqt.mw.deckBrowser:
             aqt.mw.deckBrowser.refresh()
@@ -105,3 +106,4 @@ class ConfigDialog(QDialog):
         model.size_button_color_levels = config.get_size_button_color_levels()
         model.log_level = config.get_log_level()
         model.cache_warmup_enabled = config.get_cache_warmup_enabled()
+        model.store_cache_in_file_enabled = config.get_store_cache_in_file_enabled()

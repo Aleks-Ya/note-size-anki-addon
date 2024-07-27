@@ -5,7 +5,9 @@ from tests.data import Data
 def test_setters(td: Data):
     config: Config = td.read_config()
     assert config.get_as_dict() == {
-        'Cache': {'Warmup Enabled': True},
+        'Cache': {
+            'Store Cache In File Enabled': True,
+            'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'INFO'},
         'Size Button': {
@@ -29,7 +31,9 @@ def test_setters(td: Data):
                                          {"Color": "Yellow", "Max Size": "2 MB"},
                                          {"Color": "Red", "Max Size": "100 GB"}])
     assert config.get_as_dict() == {
-        'Cache': {'Warmup Enabled': False},
+        'Cache': {
+            'Store Cache In File Enabled': True,
+            'Warmup Enabled': False},
         'Deck Browser': {'Show Collection Size': False},
         'Logging': {'Logger Level': 'DEBUG'},
         'Size Button': {

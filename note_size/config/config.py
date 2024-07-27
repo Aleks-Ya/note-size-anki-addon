@@ -13,6 +13,7 @@ class Config:
     __key_1_logging: str = 'Logging'
     __key_1_size_button: str = 'Size Button'
     __key_2_warmup_enabled: str = 'Warmup Enabled'
+    __key_2_store_cache_in_file_enabled: str = 'Store Cache In File Enabled'
     __key_2_show_collection_size: str = 'Show Collection Size'
     __key_2_logger_level: str = 'Logger Level'
     __key_2_details_window: str = 'Details Window'
@@ -58,6 +59,12 @@ class Config:
 
     def set_cache_warmup_enabled(self, warmup_enabled: bool) -> None:
         self.__set(warmup_enabled, self.__key_1_cache, self.__key_2_warmup_enabled)
+
+    def get_store_cache_in_file_enabled(self) -> bool:
+        return self.__config[self.__key_1_cache][self.__key_2_store_cache_in_file_enabled]
+
+    def set_store_cache_in_file_enabled(self, store_cache_in_file_enabled: bool) -> None:
+        self.__set(store_cache_in_file_enabled, self.__key_1_cache, self.__key_2_store_cache_in_file_enabled)
 
     def get_deck_browser_show_collection_size(self) -> bool:
         return self.__config[self.__key_1_deck_browser][self.__key_2_show_collection_size]

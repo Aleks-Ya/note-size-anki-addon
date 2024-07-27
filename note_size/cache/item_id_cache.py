@@ -1,14 +1,18 @@
 import logging
+import os
+import pickle
 from datetime import datetime
 from logging import Logger
+from pathlib import Path
 from threading import RLock
-from typing import Sequence
+from typing import Sequence, Any
 
 from anki.cards import CardId
 from anki.collection import Collection
 from anki.notes import NoteId
 
 from ..config.config import Config
+from ..config.settings import Settings
 from ..types import SizeStr, SizeBytes, SizeType, size_types
 from ..calculator.size_calculator import SizeCalculator
 from ..calculator.size_formatter import SizeFormatter
@@ -18,7 +22,7 @@ log: Logger = logging.getLogger(__name__)
 
 class ItemIdCache:
 
-    def __init__(self, col: Collection, size_calculator: SizeCalculator, config: Config):
+    def __init__(self, col: Collection, size_calculator: SizeCalculator, config: Config, settings: Settings):
         self.__config: Config = config
         self.__initialized: bool = False
         self.__lock: RLock = RLock()
@@ -31,6 +35,7 @@ class ItemIdCache:
         self.__size_str_caches: dict[SizeType, dict[NoteId, SizeStr]] = {SizeType.TOTAL: {},
                                                                          SizeType.TEXTS: {},
                                                                          SizeType.FILES: {}}
+        self.__cache_file: Path = settings.module_dir.joinpath("cache.tmp")
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def warm_up_cache(self) -> None:
@@ -38,7 +43,10 @@ class ItemIdCache:
             if not self.__config.get_cache_warmup_enabled():
                 log.info("Cache warmup is disabled")
                 return
-            log.info("Warming up cache...")
+            log.info(f"Cache warmup started: "
+                     f"size_bytes_cache_lengths={self.__size_bytes_cache_lengths()}, "
+                     f"size_str_cache_lengths={self.__size_str_cache_lengths()}, "
+                     f"id_cache_length={len(self.__id_cache.keys())}")
             start_time: datetime = datetime.now()
             all_note_ids: Sequence[NoteId] = self.__col.find_notes("deck:*")
             for note_id in all_note_ids:
@@ -50,13 +58,10 @@ class ItemIdCache:
                 self.get_note_id_by_card_id(card_id)
             end_time: datetime = datetime.now()
             duration_sec: int = round((end_time - start_time).total_seconds())
-            size_bytes_cache_lengths: str = str([f"{cache[0]}={len(cache[1].keys())}"
-                                                 for cache in self.__size_bytes_caches.items()])
-            size_str_cache_lengths: str = str([f"{cache[0]}={len(cache[1].keys())}"
-                                               for cache in self.__size_str_caches.items()])
-            log.info(f"Cache warming up finished: notes={len(all_note_ids)}, cards={len(all_card_ids)}, "
-                     f"duration_sec={duration_sec}, size_bytes_cache_lengths={size_bytes_cache_lengths}, "
-                     f"size_str_cache_lengths={size_str_cache_lengths}, id_cache_length={len(self.__id_cache.keys())}")
+            log.info(f"Cache warmup finished: notes={len(all_note_ids)}, cards={len(all_card_ids)}, "
+                     f"duration_sec={duration_sec}, size_bytes_cache_lengths={self.__size_bytes_cache_lengths()}, "
+                     f"size_str_cache_lengths={self.__size_str_cache_lengths()}, "
+                     f"id_cache_length={len(self.__id_cache.keys())}")
             with self.__lock:
                 self.__initialized = True
         except Exception:
@@ -114,3 +119,40 @@ class ItemIdCache:
             for cid, nid in list(self.__id_cache.items()):
                 if nid == note_id and note_id in self.__id_cache:
                     del self.__id_cache[cid]
+
+    def as_dict_list(self) -> list[dict[str, Any]]:
+        return [self.__id_cache, self.__size_bytes_caches, self.__size_str_caches]
+
+    def save_caches_to_file(self):
+        if self.__config.get_store_cache_in_file_enabled():
+            with self.__lock:
+                log.info(f"Saving cache file: {self.__cache_file}")
+                pickle.dump(self.as_dict_list(), self.__cache_file.open("wb"))
+                log.info(f"Caches were saved to file: {self.__cache_file}")
+        else:
+            log.info("Saving cache file is disabled")
+            if self.__cache_file.exists():
+                os.remove(self.__cache_file)
+                log.info(f"Deleted cache file: {self.__cache_file}")
+
+    def read_caches_from_file(self):
+        if self.__config.get_store_cache_in_file_enabled():
+            if self.__cache_file.exists():
+                log.info(f"Reading cache file: {self.__cache_file}")
+                with self.__lock:
+                    caches: list[dict] = pickle.load(open(self.__cache_file, 'rb'))
+                    self.__id_cache: dict[CardId, NoteId] = caches[0]
+                    self.__size_bytes_caches: dict[SizeType, dict[NoteId, SizeBytes]] = caches[1]
+                    self.__size_str_caches: dict[SizeType, dict[NoteId, SizeStr]] = caches[2]
+                    log.info(f"Caches were read from file: {self.__cache_file}")
+                    return caches
+            else:
+                log.info(f"Skip reading absent cache file: {self.__cache_file}")
+        else:
+            log.info("Reading cache file is disabled")
+
+    def __size_bytes_cache_lengths(self) -> str:
+        return str([f"{cache[0]}={len(cache[1].keys())}" for cache in self.__size_bytes_caches.items()])
+
+    def __size_str_cache_lengths(self) -> str:
+        return str([f"{cache[0]}={len(cache[1].keys())}" for cache in self.__size_str_caches.items()])

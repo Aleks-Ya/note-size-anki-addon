@@ -1,6 +1,7 @@
 {
   "Cache": {
-    "Warmup Enabled": true
+    "Warmup Enabled": true,
+    "Store Cache In File Enabled": true
   },
   "Deck Browser": {
     "Show Collection Size": true

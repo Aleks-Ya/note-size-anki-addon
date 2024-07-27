@@ -17,6 +17,7 @@
         - [Color - Levels](#color---levels)
     - [Cache](#cache)
         - [Warmup Enabled](#warmup-enabled)
+        - [Store cache on disk](#store-cache-on-disk)
 
 ---
 
@@ -148,5 +149,19 @@ Cached sizes are individually updated when you edit or add notes.
 - Type: Boolean
 - Default value: `true`
 - Possible values: `true` or `false`
+
+#### Store cache on disk
+
+Sizes of notes are cached in memory to allow the Browser show any number of notes without any delays.  
+On Anki startup, the in-memory cache is populated with all existing notes ("warmup").  
+Cache populating can take several seconds depending on the collection size.
+It's possible to eliminate this delay, if cache is stored on disk when Anki closing.  
+If this option is enabled:
+
+- On Anki closing, the in-memory cache can be stored to a file.
+- On Anki startup, the cache is read from the file. It eliminates the delay on cache populating.
+
+
+- Default value: `true`
 
 ---
