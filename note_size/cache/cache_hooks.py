@@ -26,6 +26,7 @@ class CacheHooks:
         self.__hook_notes_will_be_deleted: Callable[[Collection, Sequence[NoteId]], None] = self.__notes_will_be_deleted
         self.__hook_media_sync_did_start_or_stop: Callable[[bool], None] = self.__media_sync_did_start_or_stop
         self.__hook_media_sync_did_progress: Callable[[str], None] = self.__media_sync_did_progress
+        self.__hook_note_will_flush: Callable[[Note], None] = self.__on_note_will_flush
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def setup_hooks(self) -> None:
@@ -33,6 +34,7 @@ class CacheHooks:
         hooks.notes_will_be_deleted.append(self.__hook_notes_will_be_deleted)
         gui_hooks.media_sync_did_start_or_stop.append(self.__hook_media_sync_did_start_or_stop)
         gui_hooks.media_sync_did_progress.append(self.__hook_media_sync_did_progress)
+        hooks.note_will_flush.append(self.__hook_note_will_flush)
         log.info(f"{self.__class__.__name__} are set")
 
     def remove_hooks(self) -> None:
@@ -40,18 +42,21 @@ class CacheHooks:
         hooks.notes_will_be_deleted.remove(self.__hook_notes_will_be_deleted)
         gui_hooks.media_sync_did_start_or_stop.remove(self.__hook_media_sync_did_start_or_stop)
         gui_hooks.media_sync_did_progress.remove(self.__hook_media_sync_did_progress)
+        hooks.note_will_flush.remove(self.__hook_note_will_flush)
         log.info(f"{self.__class__.__name__} was removed")
+
+    def __on_note_will_flush(self, note: Note) -> None:
+        if note and note.id:
+            self.__item_id_cache.evict_note(note.id)
 
     def __add_cards_did_add_note(self, note: Note) -> None:
         log.info(f"Note was added: note={note.id}")
         self.__item_id_cache.refresh_note(note.id)
 
-    def __notes_will_be_deleted(self, col: Collection, note_ids: Sequence[NoteId]) -> None:
+    def __notes_will_be_deleted(self, _: Collection, note_ids: Sequence[NoteId]) -> None:
         log.info(f"Notes will be deleted: note_ids={note_ids}")
         for note_id in note_ids:
             self.__item_id_cache.evict_note(note_id)
-            note: Note = col.get_note(note_id)
-            self.__size_calculator.file_sizes(note, use_cache=True)
 
     def __media_sync_did_start_or_stop(self, running: bool) -> None:
         log.info(f"MediaSyncDidStartOrStop: running={running}")

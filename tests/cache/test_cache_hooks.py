@@ -28,16 +28,19 @@ def test_setup_hooks(cache_hooks: CacheHooks):
     assert hooks.notes_will_be_deleted.count() == 0
     assert gui_hooks.media_sync_did_start_or_stop.count() == 0
     assert gui_hooks.media_sync_did_progress.count() == 0
+    assert hooks.note_will_flush.count() == 0
     cache_hooks.setup_hooks()
     assert gui_hooks.add_cards_did_add_note.count() == 1
     assert hooks.notes_will_be_deleted.count() == 1
     assert gui_hooks.media_sync_did_start_or_stop.count() == 1
     assert gui_hooks.media_sync_did_progress.count() == 1
+    assert hooks.note_will_flush.count() == 1
     cache_hooks.remove_hooks()
     assert gui_hooks.add_cards_did_add_note.count() == 0
     assert hooks.notes_will_be_deleted.count() == 0
     assert gui_hooks.media_sync_did_start_or_stop.count() == 0
     assert gui_hooks.media_sync_did_progress.count() == 0
+    assert hooks.note_will_flush.count() == 0
 
 
 def test_add_cards_did_add_note(td: Data, cache_hooks: CacheHooks, item_id_cache: ItemIdCache):
