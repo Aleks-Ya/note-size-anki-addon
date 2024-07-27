@@ -111,6 +111,6 @@ class ItemIdCache:
             for cache in self.__size_str_caches.values():
                 if note_id in cache:
                     del cache[note_id]
-            for cid, nid in self.__id_cache.items():
+            for cid, nid in list(self.__id_cache.items()):
                 if nid == note_id and note_id in self.__id_cache:
                     del self.__id_cache[cid]

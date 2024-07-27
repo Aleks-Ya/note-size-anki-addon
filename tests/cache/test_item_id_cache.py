@@ -1,5 +1,10 @@
 import timeit
+from typing import Sequence
 
+import pytest
+from anki.cards import CardId
+from anki.collection import Collection
+from anki.errors import NotFoundError
 from anki.notes import NoteId, Note
 
 from note_size.cache.item_id_cache import ItemIdCache
@@ -110,3 +115,15 @@ def test_is_initialized(item_id_cache: ItemIdCache):
 def test_absent_note(item_id_cache: ItemIdCache):
     with pytest.raises(NotFoundError):
         item_id_cache.get_note_size_str(NoteId(123), SizeType.TOTAL, use_cache=True)
+
+
+def test_get_note_id_by_card_id(td: Data, col: Collection, item_id_cache: ItemIdCache):
+    note: Note = td.create_note_with_files()
+    card_ids: Sequence[int] = col.card_ids_of_note(note.id)
+    card_id: CardId = card_ids[0]
+    assert item_id_cache.get_note_id_by_card_id(card_id) == note.id
+    col.remove_notes([note.id])
+    assert item_id_cache.get_note_id_by_card_id(card_id) == note.id
+    item_id_cache.evict_note(note.id)
+    with pytest.raises(NotFoundError):
+        item_id_cache.get_note_id_by_card_id(card_id)
