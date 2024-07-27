@@ -4,6 +4,7 @@ from pathlib import Path
 import pytest
 from anki.collection import Collection
 from anki import hooks
+from anki.errors import NotFoundError
 from anki.notes import Note
 from aqt import gui_hooks
 
@@ -11,6 +12,7 @@ from note_size.cache.cache_hooks import CacheHooks
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.size_calculator import SizeCalculator
+from note_size.types import SizeType
 from tests.data import Data
 
 
@@ -40,17 +42,17 @@ def test_setup_hooks(cache_hooks: CacheHooks):
 
 def test_add_cards_did_add_note(td: Data, cache_hooks: CacheHooks, item_id_cache: ItemIdCache):
     cache_hooks.setup_hooks()
-    assert item_id_cache.get_total_texts_size() == 0
-    td.create_note_with_files()
-    assert item_id_cache.get_total_texts_size() == 122
+    note: Note = td.create_note_with_files()
+    assert item_id_cache.get_note_size_bytes(note.id, SizeType.TOTAL, use_cache=True) == 143
 
 
 def test_notes_will_be_deleted(col: Collection, td: Data, cache_hooks: CacheHooks, item_id_cache: ItemIdCache):
     cache_hooks.setup_hooks()
     note: Note = td.create_note_with_files()
-    assert item_id_cache.get_total_texts_size() == 122
+    assert item_id_cache.get_note_size_bytes(note.id, SizeType.TOTAL, use_cache=True) == 143
     col.remove_notes([note.id])
-    assert item_id_cache.get_total_texts_size() == 0
+    with pytest.raises(NotFoundError):
+        assert item_id_cache.get_note_size_bytes(note.id, SizeType.TOTAL, use_cache=True) == 0
 
 
 def test_media_sync_did_start_or_stop(col: Collection, td: Data, cache_hooks: CacheHooks, media_cache: MediaCache):

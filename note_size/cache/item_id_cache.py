@@ -31,7 +31,6 @@ class ItemIdCache:
         self.__size_str_caches: dict[SizeType, dict[NoteId, SizeStr]] = {SizeType.TOTAL: {},
                                                                          SizeType.TEXTS: {},
                                                                          SizeType.FILES: {}}
-        self.__total_texts_size: SizeBytes = SizeBytes(0)
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def warm_up_cache(self) -> None:
@@ -84,7 +83,6 @@ class ItemIdCache:
                                                 self.get_note_size_bytes(note_id, SizeType.FILES, use_cache))
                 if size_type == SizeType.TEXTS:
                     size: SizeBytes = self.__size_calculator.calculate_texts_size(self.__col.get_note(note_id))
-                    self.__update_total_texts_size(cache[note_id] if note_id in cache else 0, size)
                 if size_type == SizeType.FILES:
                     size: SizeBytes = self.__size_calculator.calculate_files_size(self.__col.get_note(note_id),
                                                                                   use_cache)
@@ -101,18 +99,12 @@ class ItemIdCache:
                 cache[note_id] = SizeFormatter.bytes_to_str(size)
                 return cache[note_id]
 
-    def get_total_texts_size(self) -> SizeBytes:
-        with self.__lock:
-            return self.__total_texts_size
-
     def refresh_note(self, note_id: NoteId):
         for size_type in size_types:
             self.get_note_size_str(note_id, size_type, use_cache=False)
 
     def evict_note(self, note_id: NoteId):
         with self.__lock:
-            old_size: SizeBytes = self.__size_bytes_caches[SizeType.TEXTS][note_id]
-            self.__update_total_texts_size(old_size, SizeBytes(0))
             for cache in self.__size_bytes_caches.values():
                 if note_id in cache:
                     del cache[note_id]
@@ -122,6 +114,3 @@ class ItemIdCache:
             for cid, nid in self.__id_cache.items():
                 if nid == note_id and note_id in self.__id_cache:
                     del self.__id_cache[cid]
-
-    def __update_total_texts_size(self, old_size: SizeBytes, new_size: SizeBytes) -> None:
-        self.__total_texts_size = SizeBytes(self.__total_texts_size - old_size + new_size)

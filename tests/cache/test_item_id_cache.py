@@ -73,31 +73,20 @@ def test_get_note_size_str_use_cache(td: Data, item_id_cache: ItemIdCache):
     assert act_size_2 == "143 B"
 
 
-def test_get_total_texts_size(td: Data, item_id_cache: ItemIdCache):
-    assert item_id_cache.get_total_texts_size() == SizeBytes(0)
-
-    note1: Note = td.create_note_with_files()
-    size1: SizeBytes = item_id_cache.get_note_size_bytes(note1.id, SizeType.TEXTS, use_cache=True)
-    assert size1 == item_id_cache.get_total_texts_size()
-
-    note2: Note = td.create_note_without_files()
-    size2: SizeBytes = item_id_cache.get_note_size_bytes(note2.id, SizeType.TEXTS, use_cache=True)
-    assert size1 + size2 == item_id_cache.get_total_texts_size()
-
-
 def test_evict_note(td: Data, item_id_cache: ItemIdCache):
-    assert item_id_cache.get_total_texts_size() == SizeBytes(0)
+    note: Note = td.create_note_with_files()
 
-    note1: Note = td.create_note_with_files()
-    size1: SizeBytes = item_id_cache.get_note_size_bytes(note1.id, SizeType.TEXTS, use_cache=True)
-    assert size1 == item_id_cache.get_total_texts_size()
+    size1: SizeBytes = item_id_cache.get_note_size_bytes(note.id, SizeType.TOTAL, use_cache=True)
+    assert size1 == 143
 
-    note2: Note = td.create_note_without_files()
-    size2: SizeBytes = item_id_cache.get_note_size_bytes(note2.id, SizeType.TEXTS, use_cache=True)
-    assert size1 + size2 == item_id_cache.get_total_texts_size()
+    content: str = 'updated'
+    Data.update_front_field(note, content)
+    size2: SizeBytes = item_id_cache.get_note_size_bytes(note.id, SizeType.TOTAL, use_cache=True)
+    assert size2 == size1
 
-    item_id_cache.evict_note(note1.id)
-    assert size2 == item_id_cache.get_total_texts_size()
+    item_id_cache.evict_note(note.id)
+    size3: SizeBytes = item_id_cache.get_note_size_bytes(note.id, SizeType.TOTAL, use_cache=True)
+    assert size3 == 86
 
 
 def test_refresh_note(td: Data, item_id_cache: ItemIdCache):
@@ -116,3 +105,8 @@ def test_is_initialized(item_id_cache: ItemIdCache):
     assert not item_id_cache.is_initialized()
     item_id_cache.warm_up_cache()
     assert item_id_cache.is_initialized()
+
+
+def test_absent_note(item_id_cache: ItemIdCache):
+    with pytest.raises(NotFoundError):
+        item_id_cache.get_note_size_str(NoteId(123), SizeType.TOTAL, use_cache=True)
