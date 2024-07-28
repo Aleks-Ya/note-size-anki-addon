@@ -61,5 +61,10 @@ class MediaCache:
         with self.__lock:
             return self.__total_files_size
 
+    def invalidate_cache(self):
+        with self.__lock:
+            self.__file_sizes_cache.clear()
+            self.__total_files_size: SizeBytes = SizeBytes(0)
+
     def __update_total_files_size(self, old_size: SizeBytes, new_size: SizeBytes) -> None:
         self.__total_files_size = SizeBytes(self.__total_files_size - old_size + new_size)

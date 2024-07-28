@@ -128,6 +128,7 @@ def test_get_note_id_by_card_id(td: Data, col: Collection, item_id_cache: ItemId
     card_id: CardId = card_ids[0]
     assert item_id_cache.get_note_id_by_card_id(card_id) == note.id
     col.remove_notes([note.id])
+    col.flush()
     assert item_id_cache.get_note_id_by_card_id(card_id) == note.id
     item_id_cache.evict_note(note.id)
     with pytest.raises(NotFoundError):

@@ -16,6 +16,7 @@ from .log.logs import Logs
 
 
 def __warm_up_caches(media_cache: MediaCache, item_id_cache: ItemIdCache):
+    media_cache.invalidate_cache()
     media_cache.warm_up_cache()
     item_id_cache.warm_up_cache()
 
