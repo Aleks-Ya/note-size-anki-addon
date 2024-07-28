@@ -103,7 +103,7 @@ class InfoButton(QPushButton):
     def __init__(self, url: str, settings: Settings):
         super().__init__()
         self.__url: str = url
-        icon: Path = settings.addon_dir().joinpath("config").joinpath("ui").joinpath("question.png")
+        icon: Path = settings.module_dir().joinpath("config").joinpath("ui").joinpath("question.png")
         self.setIcon(QIcon(str(icon)))
         size: int = 15
         self.setIconSize(QSize(size, size))

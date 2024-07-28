@@ -41,7 +41,7 @@ def test_get_edit_mode_label_no_cache(col: Collection, td: Data, button_formatte
 
 
 def test_disabled_color(col: Collection, td: Data):
-    config: Config = Data.read_config_updated({'Size Button': {'Color': {'Enabled': False}}})
+    config: Config = td.read_config_updated({'Size Button': {'Color': {'Enabled': False}}})
     media_cache: MediaCache = MediaCache(col, config)
     size_calculator = SizeCalculator(media_cache)
     item_id_cache: ItemIdCache = ItemIdCache(col, size_calculator, config)

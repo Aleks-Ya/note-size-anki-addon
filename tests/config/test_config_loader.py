@@ -1,5 +1,5 @@
 import json
-import shutil
+import os
 from pathlib import Path
 from typing import Any, Optional
 
@@ -10,13 +10,12 @@ from note_size.config.config_loader import ConfigLoader
 
 
 def test_empty_addon_dir(config_loader: ConfigLoader, module_dir: Path) -> None:
-    __write_meta_json_config({}, module_dir)
+    os.remove(module_dir.joinpath("config.json"))
     config: Config = config_loader.load_config()
     assert config.get_as_dict() == {}
 
 
-def test_default_values(config_loader: ConfigLoader, module_name: str, module_dir: Path):
-    __copy_config_json_to_addons_dir(module_name, module_dir)
+def test_default_values(config_loader: ConfigLoader, module_dir: Path):
     config: Config = config_loader.load_config()
     assert config.get_as_dict() == {
         'Cache': {'Warmup Enabled': True},
@@ -34,8 +33,7 @@ def test_default_values(config_loader: ConfigLoader, module_name: str, module_di
             'Enabled': True}}
 
 
-def test_actual_values_all(config_loader: ConfigLoader, module_name: str, module_dir: Path):
-    __copy_config_json_to_addons_dir(module_name, module_dir)
+def test_actual_values_all(config_loader: ConfigLoader, module_dir: Path):
     meta_json_config: dict[str, Any] = {
         'Cache': {'Warmup Enabled': False},
         'Deck Browser': {'Show Collection Size': True},
@@ -55,8 +53,7 @@ def test_actual_values_all(config_loader: ConfigLoader, module_name: str, module
     assert meta_json_config == config.get_as_dict()
 
 
-def test_actual_values_partial(module_name: str, module_dir: Path, config_loader: ConfigLoader):
-    __copy_config_json_to_addons_dir(module_name, module_dir)
+def test_actual_values_partial(module_dir: Path, config_loader: ConfigLoader):
     __write_meta_json_config({'Size Button': {'Details Window': {'Max Filename Length': 200}}}, module_dir)
     config: Config = config_loader.load_config()
     assert config.get_as_dict() == {
@@ -75,8 +72,7 @@ def test_actual_values_partial(module_name: str, module_dir: Path, config_loader
             'Enabled': True}}
 
 
-def test_delete_unused_properties(module_name: str, module_dir: Path, config_loader: ConfigLoader):
-    __copy_config_json_to_addons_dir(module_name, module_dir)
+def test_delete_unused_properties(module_dir: Path, config_loader: ConfigLoader):
     __write_meta_json_config({
         'Logging': {'Logger Level': 'INFO'},
         'Size Button': {
@@ -109,7 +105,6 @@ def test_delete_unused_properties(module_name: str, module_dir: Path, config_loa
 
 def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLoader, module_name: str,
                             module_dir: Path):
-    __copy_config_json_to_addons_dir(module_name, module_dir)
     __write_meta_json_config({
         'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'INFO'},
@@ -173,8 +168,7 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
             'Enabled': True}}
 
 
-def test_write_config(config_loader: ConfigLoader, module_name: str, module_dir: Path) -> None:
-    __copy_config_json_to_addons_dir(module_name, module_dir)
+def test_write_config(config_loader: ConfigLoader, module_dir: Path) -> None:
     config: Config = config_loader.load_config()
     assert config.get_as_dict() == {
         'Cache': {'Warmup Enabled': True},
@@ -226,10 +220,3 @@ def __write_meta_json_config(meta_json_config, module_dir: Path) -> None:
     }
     with open(meta_json, 'w') as fp:
         json.dump(meta_json_content, fp, indent=2)
-
-
-def __copy_config_json_to_addons_dir(module_name: str, module_dir: Path) -> None:
-    project_dir: Path = Path(__file__).parent.parent.parent
-    config_json: Path = project_dir.joinpath(module_name).joinpath("config.json")
-    module_dir.mkdir(exist_ok=True)
-    shutil.copy(config_json, module_dir)

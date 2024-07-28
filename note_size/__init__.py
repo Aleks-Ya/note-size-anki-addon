@@ -31,15 +31,13 @@ def __initialize(col: Collection):
     from .config.config_loader import ConfigLoader
     from .deck_browser.deck_browser_hooks import DeckBrowserHooks
 
-    mw.addonManager.setWebExports(__name__, r"web/.*(css|js|png)")
-    addon_dir: Path = Path(__file__).parent
-    module: str = addon_dir.stem
-    settings: Settings = Settings(addon_dir, module,
-                                  mw.addonManager.logs_folder(module),
-                                  mw.addonManager.addonFromModule(__name__))
+    module_dir: Path = Path(__file__).parent
+    module_name: str = module_dir.stem
+    mw.addonManager.setWebExports(module_name, r"web/.*(css|js|png)")
+    settings: Settings = Settings(module_dir, module_name, mw.addonManager.logs_folder(module_name))
     logs: Logs = Logs(settings)
     log: Logger = logs.root_logger()
-    log.info(f"NoteSize addon version: {settings.addon_dir().joinpath('version.txt').read_text()}")
+    log.info(f"NoteSize addon version: {settings.module_dir().joinpath('version.txt').read_text()}")
     config_loader: ConfigLoader = ConfigLoader(mw.addonManager, settings)
     config: Config = config_loader.load_config()
     log_level: str = config.get_log_level()

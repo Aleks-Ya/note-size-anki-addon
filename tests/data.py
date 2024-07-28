@@ -26,10 +26,11 @@ class DefaultFields:
 
 class Data:
 
-    def __init__(self, col: Collection):
+    def __init__(self, col: Collection, module_dir: Path):
         self.col: Collection = col
         self.note_type: NotetypeDict = self.col.models.by_name('Basic')
         self.deck_id: DeckId = self.col.decks.get_current_id()
+        self.config_json: Path = module_dir.joinpath("config.json")
 
     def create_note_with_files(self) -> Note:
         note: Note = self.create_note_with_given_files({
@@ -81,15 +82,11 @@ class Data:
         note[DefaultFields.front_field_name] = content
         note.col.update_note(note)
 
-    @staticmethod
-    def read_config() -> Config:
-        config_json: Path = Path(__file__).parent.parent.joinpath("note_size").joinpath("config.json")
-        return Config.from_path(config_json)
+    def read_config(self) -> Config:
+        return Config.from_path(self.config_json)
 
-    @staticmethod
-    def read_config_updated(overwrites: dict[str, Any]) -> Config:
-        config_json: Path = Path(__file__).parent.parent.joinpath("note_size").joinpath("config.json")
-        return Config.from_path_updated(config_json, overwrites)
+    def read_config_updated(self, overwrites: dict[str, Any]) -> Config:
+        return Config.from_path_updated(self.config_json, overwrites)
 
     def __new_note(self) -> Note:
         note_type: NotetypeDict = self.col.models.by_name('Basic')

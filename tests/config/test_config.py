@@ -2,8 +2,8 @@ from note_size.config.config import Config
 from tests.data import Data
 
 
-def test_setters():
-    config: Config = Data.read_config()
+def test_setters(td: Data):
+    config: Config = td.read_config()
     assert config.get_as_dict() == {
         'Cache': {'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},

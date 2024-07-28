@@ -1,5 +1,7 @@
+import shutil
 import tempfile
 from pathlib import Path
+from typing import Callable, Any
 
 import pytest
 from anki.collection import Collection
@@ -24,7 +26,7 @@ from tests.data import Data
 
 @pytest.fixture
 def module_name() -> str:
-    return "note_size"
+    return "1188705668"
 
 
 @pytest.fixture
@@ -35,28 +37,37 @@ def col() -> Collection:
 
 
 @pytest.fixture
-def td(col: Collection) -> Data:
-    return Data(col)
+def td(col: Collection, module_dir: Path) -> Data:
+    return Data(col, module_dir)
 
 
 @pytest.fixture
-def project_dir(col: Collection, td: Data) -> Path:
+def project_dir() -> Path:
     return Path(__file__).parent.parent
 
 
 @pytest.fixture
-def addon_dir(project_dir: Path) -> Path:
-    return project_dir.joinpath("note_size")
+def addons_dir() -> Path:
+    return Path(tempfile.mkdtemp())
 
 
 @pytest.fixture
-def settings(col: Collection, addon_dir: Path, module_name: str) -> Settings:
-    return Settings(addon_dir, module_name, Path(), "1188705668")
+def module_dir(addons_dir: Path, module_name: str, project_dir: Path) -> Path:
+    addon_project_dir: Path = project_dir.joinpath("note_size")
+    module_dir: Path = addons_dir.joinpath(module_name)
+    ignore_patterns: Callable[[Any, list[str]], set[str]] = shutil.ignore_patterns("__pycache__")
+    shutil.copytree(addon_project_dir, module_dir, ignore=ignore_patterns)
+    return module_dir
+
+
+@pytest.fixture
+def settings(col: Collection, module_dir: Path, module_name: str) -> Settings:
+    return Settings(module_dir, module_name, Path())
 
 
 @pytest.fixture
 def config(col: Collection, td: Data) -> Config:
-    return Data.read_config()
+    return td.read_config()
 
 
 @pytest.fixture
@@ -97,16 +108,6 @@ def collection_size_formatter(col: Collection, media_cache: MediaCache, settings
 @pytest.fixture
 def details_formatter(config: Config, settings: Settings, size_calculator: SizeCalculator) -> DetailsFormatter:
     return DetailsFormatter(size_calculator, settings, config)
-
-
-@pytest.fixture
-def addons_dir() -> Path:
-    return Path(tempfile.mkdtemp())
-
-
-@pytest.fixture
-def module_dir(addons_dir: Path, module_name: str) -> Path:
-    return addons_dir.joinpath(module_name)
 
 
 @pytest.fixture

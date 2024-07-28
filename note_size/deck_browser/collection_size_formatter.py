@@ -21,7 +21,7 @@ class CollectionSizeFormatter:
         self.__media_cache: MediaCache = media_cache
         self.__collection_file_path: Path = Path(col.path)
         self.__media_folder_path: Path = Path(col.media.dir())
-        self.__addon_package: str = settings.addon_package()
+        self.__module_name: str = settings.module_name()
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def format_collection_size_html(self) -> str:
@@ -37,7 +37,7 @@ class CollectionSizeFormatter:
                                f'Total size of collection file and media folder'))
         config_icon: Tag = soup.new_tag('img', attrs={
             "title": 'Open Configuration',
-            "src": f"/_addons/{self.__addon_package}/web/setting.png",
+            "src": f"/_addons/{self.__module_name}/web/setting.png",
             "height": "12",
             "onclick": f"pycmd('{self.__open_config_action}')"
         })
