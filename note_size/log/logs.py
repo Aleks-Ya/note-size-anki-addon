@@ -7,7 +7,7 @@ from ..config.settings import Settings
 
 class Logs:
     def __init__(self, settings: Settings):
-        log_dir: Path = settings.logs_folder()
+        log_dir: Path = settings.logs_folder
         log_dir.mkdir(exist_ok=True, parents=True)
         self.__log_file: Path = log_dir.joinpath("note_size.log")
         self.__root_logger: Logger = self.__configure_logging()

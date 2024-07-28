@@ -20,7 +20,7 @@ class DetailsFormatter:
 
     def __init__(self, size_calculator: SizeCalculator, settings: Settings, config: Config):
         self.__config: Config = config
-        self.__icons_dir: Path = settings.module_dir().joinpath("button").joinpath("icon")
+        self.__icons_dir: Path = settings.module_dir.joinpath("button").joinpath("icon")
         self.__size_calculator: SizeCalculator = size_calculator
         log.debug(f"{self.__class__.__name__} was instantiated")
 

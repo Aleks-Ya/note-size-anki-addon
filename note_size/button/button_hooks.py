@@ -25,7 +25,7 @@ class ButtonHooks:
         self.__config: Config = config
         self.__details_formatter: DetailsFormatter = details_formatter
         self.__button_formatter: ButtonFormatter = button_formatter
-        self.__module_name: str = settings.module_name()
+        self.__module_name: str = settings.module_name
         self.__hook_editor_did_init: Callable[[Editor], None] = self.__on_editor_did_init
         self.__hook_editor_did_init_buttons: Callable[[list[str], Editor], None] = self.__on_editor_did_init_buttons
         self.__hook_editor_did_load_note: Callable[[Editor], None] = self.__on_editor_did_load_note

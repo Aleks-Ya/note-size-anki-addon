@@ -21,7 +21,7 @@ class CollectionSizeFormatter:
         self.__media_cache: MediaCache = media_cache
         self.__collection_file_path: Path = Path(col.path)
         self.__media_folder_path: Path = Path(col.media.dir())
-        self.__module_name: str = settings.module_name()
+        self.__module_name: str = settings.module_name
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def format_collection_size_html(self) -> str:

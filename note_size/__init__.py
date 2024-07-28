@@ -37,7 +37,7 @@ def __initialize(col: Collection):
     settings: Settings = Settings(module_dir, module_name, mw.addonManager.logs_folder(module_name))
     logs: Logs = Logs(settings)
     log: Logger = logs.root_logger()
-    log.info(f"NoteSize addon version: {settings.module_dir().joinpath('version.txt').read_text()}")
+    log.info(f"NoteSize addon version: {settings.module_dir.joinpath('version.txt').read_text()}")
     config_loader: ConfigLoader = ConfigLoader(mw.addonManager, settings)
     config: Config = config_loader.load_config()
     log_level: str = config.get_log_level()
