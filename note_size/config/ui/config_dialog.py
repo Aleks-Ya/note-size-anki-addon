@@ -5,6 +5,7 @@ from typing import Optional, Any
 import aqt
 from aqt.qt import QDialog, QVBoxLayout, QDialogButtonBox, QTabWidget, QPushButton
 
+from .model_converter import ModelConverter
 from ..config_loader import ConfigLoader
 from ..settings import Settings
 from ..ui.cache_tab import CacheTab
@@ -25,7 +26,7 @@ class ConfigDialog(QDialog):
         self.__logs: Logs = logs
         self.__model: UiModel = model
         self.__config_loader: ConfigLoader = config_loader
-        self.__update_model_from_config(model, config)
+        ModelConverter.apply_config_to_model(model, config)
         self.setWindowTitle('"Note Size" addon configuration')
 
         self.deck_browser_tab: DeckBrowserTab = DeckBrowserTab(self.__model, settings)
@@ -65,17 +66,7 @@ class ConfigDialog(QDialog):
         self.cache_tab.refresh_from_model()
 
     def __accept(self):
-        self.__config.set_deck_browser_show_collection_size(self.__model.deck_browser_show_collection_size)
-        self.__config.set_size_button_enabled(self.__model.size_button_enabled)
-        self.__config.set_size_button_details_formatter_max_filename_length(
-            self.__model.size_button_details_formatter_max_filename_length)
-        self.__config.set_size_button_details_formatter_max_files_to_show(
-            self.__model.size_button_details_formatter_max_files_to_show)
-        self.__config.set_size_button_color_enabled(self.__model.size_button_color_enabled)
-        self.__config.set_size_button_color_levels(self.__model.size_button_color_levels)
-        self.__config.set_log_level(self.__model.log_level)
-        self.__config.set_cache_warmup_enabled(self.__model.cache_warmup_enabled)
-        self.__config.set_store_cache_in_file_enabled(self.__model.store_cache_in_file_enabled)
+        ModelConverter.apply_model_to_config(self.__model, self.__config)
         self.__config_loader.write_config(self.__config)
         if aqt.mw.deckBrowser:
             aqt.mw.deckBrowser.refresh()
@@ -91,19 +82,5 @@ class ConfigDialog(QDialog):
         log.info("Restore defaults")
         defaults: Optional[dict[str, Any]] = self.__config_loader.get_defaults()
         config: Config = Config(defaults)
-        self.__update_model_from_config(self.__model, config)
+        ModelConverter.apply_config_to_model(self.__model, config)
         self.refresh_from_model()
-
-    @staticmethod
-    def __update_model_from_config(model: UiModel, config: Config):
-        model.deck_browser_show_collection_size = config.get_deck_browser_show_collection_size()
-        model.size_button_enabled = config.get_size_button_enabled()
-        model.size_button_details_formatter_max_filename_length \
-            = config.get_size_button_details_formatter_max_filename_length()
-        model.size_button_details_formatter_max_files_to_show \
-            = config.get_size_button_details_formatter_max_files_to_show()
-        model.size_button_color_enabled = config.get_size_button_color_enabled()
-        model.size_button_color_levels = config.get_size_button_color_levels()
-        model.log_level = config.get_log_level()
-        model.cache_warmup_enabled = config.get_cache_warmup_enabled()
-        model.store_cache_in_file_enabled = config.get_store_cache_in_file_enabled()
