@@ -2,6 +2,13 @@
 
 <!-- insertion marker -->
 
+## [v2.1.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.1.0) - 2024-07-29
+
+<small>[Compare with v2.0.0](https://github.com/Aleks-Ya/note-size-anki-addon/compare/v2.0.0...v2.1.0)</small>
+
+1. [FEATURE] Update cache when other addons update notes
+2. [FEATURE] Store cache on disk on exit
+
 ## [v2.0.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.0.0) - 2024-07-26
 
 <small>[Compare with v1.15.0](https://github.com/Aleks-Ya/note-size-anki-addon/compare/v1.15.0...v2.0.0)</small>
