@@ -15,3 +15,7 @@ For questions, bugs, suggestions see
 ### In Deck Browser
 
 ![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/collection_size.png)
+
+### Configuration
+
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/open_config.png)
