@@ -1,6 +1,5 @@
 from logging import Logger
 from pathlib import Path
-from threading import Thread
 
 from anki.collection import Collection
 from aqt import mw, gui_hooks
@@ -13,12 +12,6 @@ from .config.config_ui import ConfigUi
 from .config.settings import Settings
 from .deck_browser.collection_size_formatter import CollectionSizeFormatter
 from .log.logs import Logs
-
-
-def __warm_up_caches(media_cache: MediaCache, item_id_cache: ItemIdCache):
-    media_cache.invalidate_cache()
-    media_cache.warm_up_cache()
-    item_id_cache.warm_up_cache()
 
 
 def __initialize(col: Collection):
@@ -62,8 +55,6 @@ def __initialize(col: Collection):
     cache_hooks.setup_hooks()
     config_hooks: ConfigHooks = ConfigHooks(config_ui)
     config_hooks.setup_hooks()
-    thread = Thread(target=__warm_up_caches, args=[media_cache, item_id_cache])
-    thread.start()
 
 
 gui_hooks.collection_did_load.append(__initialize)

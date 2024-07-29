@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime
 from logging import Logger
+from threading import Thread
 from typing import Sequence, Callable
 
 from anki import hooks
@@ -27,7 +28,7 @@ class CacheHooks:
         self.__hook_media_sync_did_start_or_stop: Callable[[bool], None] = self.__media_sync_did_start_or_stop
         self.__hook_media_sync_did_progress: Callable[[str], None] = self.__media_sync_did_progress
         self.__hook_note_will_flush: Callable[[Note], None] = self.__on_note_will_flush
-        self.__hook_profile_did_open: Callable[[], None] = self.__read_cache_from_file
+        self.__hook_profile_did_open: Callable[[], None] = self.__initialize_cache_on_startup
         self.__hook_profile_will_close: Callable[[], None] = self.__save_cache_to_file
         log.debug(f"{self.__class__.__name__} was instantiated")
 
@@ -51,8 +52,16 @@ class CacheHooks:
         gui_hooks.profile_will_close.remove(self.__hook_profile_will_close)
         log.info(f"{self.__class__.__name__} was removed")
 
-    def __read_cache_from_file(self):
+    def __initialize_cache_on_startup(self):
         self.__item_id_cache.read_caches_from_file()
+        thread = Thread(target=self.__warm_up_caches, args=[self.__media_cache, self.__item_id_cache])
+        thread.start()
+
+    @staticmethod
+    def __warm_up_caches(media_cache: MediaCache, item_id_cache: ItemIdCache):
+        media_cache.invalidate_cache()
+        media_cache.warm_up_cache()
+        item_id_cache.warm_up_cache()
 
     def __save_cache_to_file(self):
         self.__item_id_cache.save_caches_to_file()
