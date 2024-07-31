@@ -1,5 +1,6 @@
 import logging
 from logging import Logger
+from urllib.parse import urljoin
 
 from aqt.qt import QVBoxLayout, QWidget, Qt, QUrl, QDesktopServices, QPushButton
 
@@ -21,7 +22,7 @@ class LoggingTab(QWidget):
         levels: list[str] = ["NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
         self.__combo_box_layout: TitledComboBoxLayout = TitledComboBoxLayout(
             'Log level:', settings,
-            "https://github.com/Aleks-Ya/note-size-anki-addon/blob/main/description/configuration.md#logging-level",
+            urljoin(settings.docs_base_url, "description/configuration.md#logging-level"),
             levels)
         self.__combo_box_layout.add_current_text_changed_callback(self.__on_log_level_changed)
         open_log_file_button: QPushButton = QPushButton("Open log file")

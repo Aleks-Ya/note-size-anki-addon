@@ -1,5 +1,6 @@
 import logging
 from logging import Logger
+from urllib.parse import urljoin
 
 from aqt.qt import QVBoxLayout, QWidget, Qt
 
@@ -16,13 +17,12 @@ class CacheTab(QWidget):
     def __init__(self, model: UiModel, settings: Settings) -> None:
         super().__init__()
         self.__model: UiModel = model
-        warmup_enabled_url: str = \
-            "https://github.com/Aleks-Ya/note-size-anki-addon/blob/main/description/configuration.md#warmup-enabled"
+        warmup_enabled_url: str = urljoin(settings.docs_base_url, "description/configuration.md#warmup-enabled")
         self.__enable_warmup_checkbox: CheckboxWithInfo = CheckboxWithInfo(
             "Enable cache warm-up", warmup_enabled_url, settings)
         self.__enable_warmup_checkbox.add_checkbox_listener(self.__on_warmup_checkbox_state_changed)
-        store_cache_to_file_enabled_url: str = \
-            "https://github.com/Aleks-Ya/note-size-anki-addon/blob/main/description/configuration.md#store-cache-on-disk"
+        store_cache_to_file_enabled_url: str = urljoin(settings.docs_base_url,
+                                                       "description/configuration.md#store-cache-on-disk")
         self.__store_cache_to_file_checkbox: CheckboxWithInfo = CheckboxWithInfo(
             "Store cache in file on exit", store_cache_to_file_enabled_url, settings)
         self.__store_cache_to_file_checkbox.add_checkbox_listener(self.__on_store_to_file_checkbox_state_changed)

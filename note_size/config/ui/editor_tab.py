@@ -1,5 +1,6 @@
 import logging
 from logging import Logger
+from urllib.parse import urljoin
 
 from aqt.qt import QVBoxLayout, QWidget, Qt
 
@@ -18,7 +19,7 @@ class EditorTab(QWidget):
     def __init__(self, model: UiModel, settings: Settings):
         super().__init__()
         self.__model: UiModel = model
-        url: str = "https://github.com/Aleks-Ya/note-size-anki-addon/blob/main/description/configuration.md#enabled"
+        url: str = urljoin(settings.docs_base_url, "description/configuration.md#enabled")
         self.__size_button_enabled: CheckboxWithInfo = CheckboxWithInfo("Show note size in Editor", url, settings)
         self.__size_button_enabled.add_checkbox_listener(self.__on_size_button_enabled)
         self.__color_layout: ColorLayout = ColorLayout(self.__model, settings)

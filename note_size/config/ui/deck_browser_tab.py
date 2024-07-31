@@ -1,5 +1,6 @@
 import logging
 from logging import Logger
+from urllib.parse import urljoin
 
 from aqt.qt import QVBoxLayout, QWidget, Qt
 
@@ -16,7 +17,7 @@ class DeckBrowserTab(QWidget):
     def __init__(self, model: UiModel, settings: Settings):
         super().__init__()
         self.__model: UiModel = model
-        url: str = "https://github.com/Aleks-Ya/note-size-anki-addon/blob/main/description/configuration.md#show-collection-size"
+        url: str = urljoin(settings.docs_base_url, "description/configuration.md#show-collection-size")
         self.__checkbox: CheckboxWithInfo = CheckboxWithInfo("Show collection size in Deck Browser", url, settings)
         self.__checkbox.add_checkbox_listener(self.__on_checkbox_state_changed)
         layout: QVBoxLayout = QVBoxLayout()

@@ -1,5 +1,6 @@
 import logging
 from logging import Logger
+from urllib.parse import urljoin
 
 from aqt.qt import QVBoxLayout
 
@@ -16,12 +17,12 @@ class DetailsWindowLayout(QVBoxLayout):
         self.__model: UiModel = model
         self.__max_filename_length: TitledSpinBoxLayout = TitledSpinBoxLayout(
             'Max filename length:', settings,
-            "https://github.com/Aleks-Ya/note-size-anki-addon/blob/main/description/configuration.md#max-filename-length",
+            urljoin(settings.docs_base_url, "description/configuration.md#max-filename-length"),
             0, 1000)
         self.__max_filename_length.add_editing_finished_callback(self.__max_filename_length_editing_finished)
         self.__max_files_to_show: TitledSpinBoxLayout = TitledSpinBoxLayout(
             'Max files to show:', settings,
-            "https://github.com/Aleks-Ya/note-size-anki-addon/blob/main/description/configuration.md#max-files-to-show",
+            urljoin(settings.docs_base_url, "description/configuration.md#max-files-to-show"),
             0, 100)
         self.__max_files_to_show.add_editing_finished_callback(self.__max_files_to_show_editing_finished)
         self.__group_box: GroupVBox = GroupVBox('Details Window')
