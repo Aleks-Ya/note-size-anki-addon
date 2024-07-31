@@ -19,6 +19,7 @@ from note_size.config.config import Config
 from note_size.config.config_loader import ConfigLoader
 from note_size.config.config_ui import ConfigUi
 from note_size.config.settings import Settings
+from note_size.config.ui.ui_model import UiModel
 from note_size.deck_browser.collection_size_formatter import CollectionSizeFormatter
 from note_size.log.logs import Logs
 from tests.data import Data
@@ -130,3 +131,8 @@ def logs(settings: Settings) -> Logs:
 @pytest.fixture
 def config_ui() -> ConfigUi:
     return MagicMock()
+
+
+@pytest.fixture
+def ui_model() -> UiModel:
+    return UiModel()

@@ -11,3 +11,4 @@ bumpversion
 GitPython
 mock
 pytest
+pytest-qt
