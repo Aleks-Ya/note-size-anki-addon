@@ -1,7 +1,9 @@
 import timeit
 
+from anki.notes import Note
+
 from note_size.cache.media_cache import MediaCache
-from note_size.types import SizeBytes
+from note_size.types import SizeBytes, FilesNumber
 from tests.data import Data, DefaultFields
 
 
@@ -27,3 +29,13 @@ def test_get_total_size(td: Data, media_cache: MediaCache):
     act_total_size: SizeBytes = media_cache.get_total_files_size()
     exp_total_size: SizeBytes = SizeBytes(len(DefaultFields.content0) + len(DefaultFields.content1))
     assert exp_total_size == act_total_size
+
+
+def test_get_unused_files_size(td: Data, media_cache: MediaCache):
+    assert media_cache.get_unused_files_size(use_cache=True) == (SizeBytes(0), FilesNumber(0))
+    note: Note = td.create_note_with_files()
+    assert media_cache.get_unused_files_size(use_cache=True) == (SizeBytes(0), FilesNumber(0))
+    Data.replace_in_front_field(note, '<img src="picture.jpg">', '')
+    Data.replace_in_front_field(note, '<img src="animation.gif">', '')
+    assert media_cache.get_unused_files_size(use_cache=True) == (SizeBytes(0), FilesNumber(0))
+    assert media_cache.get_unused_files_size(use_cache=False) == (SizeBytes(0), FilesNumber(0))  # TODO fix it

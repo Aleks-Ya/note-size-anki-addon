@@ -2,6 +2,7 @@ from enum import Enum
 from typing import NewType
 
 SizeBytes = NewType("SizeBytes", int)
+FilesNumber = NewType("FilesNumber", int)
 MediaFile = NewType("MediaFile", str)
 SizeStr = NewType("SizeStr", str)
 ShortFilename = NewType("ShortFilename", str)

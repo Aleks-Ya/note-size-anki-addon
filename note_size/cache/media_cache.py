@@ -5,9 +5,10 @@ from logging import Logger
 from threading import RLock
 
 from anki.collection import Collection
+from anki.media_pb2 import CheckMediaResponse
 
 from ..config.config import Config
-from ..types import MediaFile, SizeBytes
+from ..types import MediaFile, SizeBytes, FilesNumber
 
 log: Logger = logging.getLogger(__name__)
 
@@ -65,6 +66,18 @@ class MediaCache:
         with self.__lock:
             self.__file_sizes_cache.clear()
             self.__total_files_size: SizeBytes = SizeBytes(0)
+
+    def get_unused_files_size(self, use_cache: bool) -> (SizeBytes, FilesNumber):
+        log.debug("Calculating unused files size...")
+        check_result: CheckMediaResponse = self.__col.media.check()
+        unused_files: list[str] = list(check_result.unused)
+        total_size: SizeBytes = SizeBytes(0)
+        for unused_file in unused_files:
+            media_file: MediaFile = MediaFile(unused_file)
+            file_size: SizeBytes = self.get_file_size(media_file, use_cache)
+            total_size += file_size
+        log.debug(f"Calculated unused files size: {total_size}")
+        return total_size, FilesNumber(len(unused_files))
 
     def __update_total_files_size(self, old_size: SizeBytes, new_size: SizeBytes) -> None:
         self.__total_files_size = SizeBytes(self.__total_files_size - old_size + new_size)
