@@ -1,7 +1,6 @@
-import tempfile
+import logging
 import timeit
-from pathlib import Path
-from typing import Sequence
+from typing import Sequence, Any
 
 import pytest
 from anki.cards import CardId
@@ -15,6 +14,13 @@ from note_size.config.config import Config
 from note_size.config.settings import Settings
 from note_size.types import SizeBytes, SizeStr, SizeType
 from tests.data import Data, DefaultFields
+
+
+@pytest.fixture
+def empty_cache_dict() -> list[dict[str, Any]]:
+    return [{},
+            {SizeType.TOTAL: {}, SizeType.TEXTS: {}, SizeType.FILES: {}},
+            {SizeType.TOTAL: {}, SizeType.TEXTS: {}, SizeType.FILES: {}}]
 
 
 def test_get_note_size_bytes_no_cache(td: Data, item_id_cache: ItemIdCache):
@@ -136,7 +142,8 @@ def test_get_note_id_by_card_id(td: Data, col: Collection, item_id_cache: ItemId
 
 
 def test_write_read_cache_from_file(td: Data, col: Collection, item_id_cache: ItemIdCache,
-                                    size_calculator: SizeCalculator, config: Config, settings: Settings):
+                                    size_calculator: SizeCalculator, config: Config, settings: Settings,
+                                    empty_cache_dict: list[dict[str, Any]]):
     note1: Note = td.create_note_with_files()
     note2: Note = td.create_note_without_files()
 
@@ -148,13 +155,10 @@ def test_write_read_cache_from_file(td: Data, col: Collection, item_id_cache: It
     note_size1: SizeStr = item_id_cache.get_note_size_str(note1.id, SizeType.TOTAL, use_cache=True)
     note_size2: SizeStr = item_id_cache.get_note_size_str(note2.id, SizeType.TOTAL, use_cache=True)
 
-    file: Path = Path(tempfile.mktemp(suffix=".json"))
     item_id_cache.save_caches_to_file()
 
     item_id_cache_2: ItemIdCache = ItemIdCache(col, size_calculator, config, settings)
-    assert item_id_cache_2.as_dict_list() == [{},
-                                              {SizeType.TOTAL: {}, SizeType.TEXTS: {}, SizeType.FILES: {}},
-                                              {SizeType.TOTAL: {}, SizeType.TEXTS: {}, SizeType.FILES: {}}]
+    assert item_id_cache_2.as_dict_list() == empty_cache_dict
     item_id_cache_2.read_caches_from_file()
     assert item_id_cache_2.as_dict_list() == [{card_id1: note1.id,
                                                card_id2: note2.id},
@@ -168,3 +172,23 @@ def test_write_read_cache_from_file(td: Data, col: Collection, item_id_cache: It
     col.remove_notes([note1.id, note2.id])
     assert item_id_cache.get_note_size_str(note1.id, SizeType.TOTAL, use_cache=True) == note_size1
     assert item_id_cache.get_note_size_str(note2.id, SizeType.TOTAL, use_cache=True) == note_size2
+
+
+def test_read_invalid_cache_file(item_id_cache: ItemIdCache, settings: Settings,
+                                 empty_cache_dict: list[dict[str, Any]], caplog):
+    settings.cache_file.write_bytes(b'invalid cache content')
+    assert item_id_cache.as_dict_list() == empty_cache_dict
+    with caplog.at_level(logging.WARNING):
+        item_id_cache.read_caches_from_file()
+    assert item_id_cache.as_dict_list() == empty_cache_dict
+    assert "Cannot deserialize cache file:" in caplog.text
+
+
+def test_absent_cache_file(item_id_cache: ItemIdCache, settings: Settings,
+                           empty_cache_dict: list[dict[str, Any]], caplog):
+    assert not settings.cache_file.exists()
+    assert item_id_cache.as_dict_list() == empty_cache_dict
+    with caplog.at_level(logging.INFO):
+        item_id_cache.read_caches_from_file()
+    assert item_id_cache.as_dict_list() == empty_cache_dict
+    assert "Skip reading absent cache file:" in caplog.text

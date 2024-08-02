@@ -35,7 +35,7 @@ class ItemIdCache:
         self.__size_str_caches: dict[SizeType, dict[NoteId, SizeStr]] = {SizeType.TOTAL: {},
                                                                          SizeType.TEXTS: {},
                                                                          SizeType.FILES: {}}
-        self.__cache_file: Path = settings.module_dir.joinpath("cache.tmp")
+        self.__cache_file: Path = settings.cache_file
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def warm_up_cache(self) -> None:
@@ -104,11 +104,11 @@ class ItemIdCache:
                 cache[note_id] = SizeFormatter.bytes_to_str(size)
                 return cache[note_id]
 
-    def refresh_note(self, note_id: NoteId):
+    def refresh_note(self, note_id: NoteId) -> None:
         for size_type in size_types:
             self.get_note_size_str(note_id, size_type, use_cache=False)
 
-    def evict_note(self, note_id: NoteId):
+    def evict_note(self, note_id: NoteId) -> None:
         with self.__lock:
             for cache in self.__size_bytes_caches.values():
                 if note_id in cache:
@@ -123,7 +123,7 @@ class ItemIdCache:
     def as_dict_list(self) -> list[dict[str, Any]]:
         return [self.__id_cache, self.__size_bytes_caches, self.__size_str_caches]
 
-    def save_caches_to_file(self):
+    def save_caches_to_file(self) -> None:
         if self.__config.get_store_cache_in_file_enabled():
             with self.__lock:
                 log.info(f"Saving cache file: {self.__cache_file}")
@@ -135,17 +135,19 @@ class ItemIdCache:
                 os.remove(self.__cache_file)
                 log.info(f"Deleted cache file: {self.__cache_file}")
 
-    def read_caches_from_file(self):
+    def read_caches_from_file(self) -> None:
         if self.__config.get_store_cache_in_file_enabled():
             if self.__cache_file.exists():
                 log.info(f"Reading cache file: {self.__cache_file}")
                 with self.__lock:
-                    caches: list[dict] = pickle.load(open(self.__cache_file, 'rb'))
-                    self.__id_cache: dict[CardId, NoteId] = caches[0]
-                    self.__size_bytes_caches: dict[SizeType, dict[NoteId, SizeBytes]] = caches[1]
-                    self.__size_str_caches: dict[SizeType, dict[NoteId, SizeStr]] = caches[2]
-                    log.info(f"Caches were read from file: {self.__cache_file}")
-                    return caches
+                    try:
+                        caches: list[dict] = pickle.load(open(self.__cache_file, 'rb'))
+                        self.__id_cache: dict[CardId, NoteId] = caches[0]
+                        self.__size_bytes_caches: dict[SizeType, dict[NoteId, SizeBytes]] = caches[1]
+                        self.__size_str_caches: dict[SizeType, dict[NoteId, SizeStr]] = caches[2]
+                        log.info(f"Caches were read from file: {self.__cache_file}")
+                    except pickle.UnpicklingError:
+                        log.warning(f"Cannot deserialize cache file: {self.__cache_file}", exc_info=True)
             else:
                 log.info(f"Skip reading absent cache file: {self.__cache_file}")
         else:
