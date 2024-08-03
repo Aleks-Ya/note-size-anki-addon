@@ -102,8 +102,9 @@ def size_formatter() -> SizeFormatter:
 
 
 @pytest.fixture
-def collection_size_formatter(col: Collection, media_cache: MediaCache, settings: Settings) -> CollectionSizeFormatter:
-    return CollectionSizeFormatter(col, media_cache, settings)
+def collection_size_formatter(col: Collection, item_id_cache: ItemIdCache, media_cache: MediaCache,
+                              settings: Settings) -> CollectionSizeFormatter:
+    return CollectionSizeFormatter(col, item_id_cache, media_cache, settings)
 
 
 @pytest.fixture

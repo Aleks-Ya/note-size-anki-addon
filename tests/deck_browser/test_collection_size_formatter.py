@@ -14,8 +14,12 @@ def test_format_note_detailed_text(col: Collection, td: Data, collection_size_fo
                 Collection:&nbsp;
                 <span style='font-family:Consolas,monospace'>4.0 KB</span>&nbsp;&nbsp;&nbsp;
             </span>
-            <span title='Size of folder "{col.media.dir()}" (3 files)'>
+            <span title='Size of 3 media files used in notes (do not include "Unused")'>
                 Media:&nbsp;
+                <span style='font-family:Consolas,monospace'>21 B</span>&nbsp;&nbsp;&nbsp;
+            </span>
+            <span title='Size of 0 media files not used in any notes (can be deleted)'>
+                Unused:&nbsp;
                 <span style='font-family:Consolas,monospace'>0 B</span>&nbsp;&nbsp;&nbsp;
             </span>
             <span title='Total size of collection file and media folder'>
