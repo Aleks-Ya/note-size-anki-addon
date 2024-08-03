@@ -11,6 +11,7 @@ from .config.config_hooks import ConfigHooks
 from .config.config_ui import ConfigUi
 from .config.settings import Settings
 from .deck_browser.collection_size_formatter import CollectionSizeFormatter
+from .deck_browser.trash import Trash
 from .log.logs import Logs
 
 
@@ -47,8 +48,9 @@ def __initialize(col: Collection):
     button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, size_calculator, config)
     button_hooks: ButtonHooks = ButtonHooks(details_formatter, button_formatter, settings, config)
     button_hooks.setup_hooks()
+    trash: Trash = Trash(col)
     collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(
-        col, item_id_cache, media_cache, settings)
+        col, item_id_cache, media_cache, trash, settings)
     config_ui: ConfigUi = ConfigUi(config, config_loader, logs, settings)
     deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter, config, config_ui)
     deck_browser_hooks.setup_hooks()

@@ -14,13 +14,17 @@ def test_format_note_detailed_text(col: Collection, td: Data, collection_size_fo
                 Collection:&nbsp;
                 <span style='font-family:Consolas,monospace'>4.0 KB</span>&nbsp;&nbsp;&nbsp;
             </span>
-            <span title='Size of 3 media files used in notes (do not include "Unused")'>
+            <span title='Size of 3 media files used in notes (do not include "Unused" and "Trash")'>
                 Media:&nbsp;
                 <span style='font-family:Consolas,monospace'>21 B</span>&nbsp;&nbsp;&nbsp;
             </span>
-            <span title='Size of 0 media files not used in any notes (can be deleted)'>
+            <span title='Size of 0 media files not used in any notes (can be moved to Trash)'>
                 Unused:&nbsp;
                 <span style='font-family:Consolas,monospace'>0 B</span>&nbsp;&nbsp;&nbsp;
+            </span>
+            <span title='Size of 1 media files in the Trash (can be emptied)'>
+                Trash:&nbsp;
+                <span style='font-family:Consolas,monospace'>6 B</span>&nbsp;&nbsp;&nbsp;
             </span>
             <span title='Total size of collection file and media folder'>
                 Total:&nbsp;

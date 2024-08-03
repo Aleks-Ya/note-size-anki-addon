@@ -21,6 +21,7 @@ from note_size.config.config_ui import ConfigUi
 from note_size.config.settings import Settings
 from note_size.config.ui.ui_model import UiModel
 from note_size.deck_browser.collection_size_formatter import CollectionSizeFormatter
+from note_size.deck_browser.trash import Trash
 from note_size.log.logs import Logs
 from tests.data import Data
 
@@ -102,9 +103,14 @@ def size_formatter() -> SizeFormatter:
 
 
 @pytest.fixture
+def trash(col: Collection) -> Trash:
+    return Trash(col)
+
+
+@pytest.fixture
 def collection_size_formatter(col: Collection, item_id_cache: ItemIdCache, media_cache: MediaCache,
-                              settings: Settings) -> CollectionSizeFormatter:
-    return CollectionSizeFormatter(col, item_id_cache, media_cache, settings)
+                              trash: Trash, settings: Settings) -> CollectionSizeFormatter:
+    return CollectionSizeFormatter(col, item_id_cache, media_cache, trash, settings)
 
 
 @pytest.fixture
