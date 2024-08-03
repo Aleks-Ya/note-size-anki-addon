@@ -2,9 +2,11 @@ import logging
 from logging import Logger
 from typing import Callable, Any
 
-from aqt import gui_hooks
+from aqt import gui_hooks, mw
+from aqt.mediacheck import check_media_db
 
 from .collection_size_formatter import CollectionSizeFormatter
+from .js_actions import JsActions
 from ..config.config import Config
 from ..config.config_ui import ConfigUi
 
@@ -12,7 +14,6 @@ log: Logger = logging.getLogger(__name__)
 
 
 class DeckBrowserHooks:
-    __open_config_action: str = "open-config-action"
 
     def __init__(self, collection_size_formatter: CollectionSizeFormatter, config: Config, config_ui: ConfigUi):
         self.__config: Config = config
@@ -41,7 +42,10 @@ class DeckBrowserHooks:
             log.debug(f"Showing collection size in DeckBrowser is disabled")
 
     def __on_js_message(self, handled: tuple[bool, Any], message: str, _: Any) -> tuple[bool, Any]:
-        if message == self.__open_config_action:
+        if message == JsActions.open_config_action:
             self.__config_ui.show_configuration_dialog()
+            return True, None
+        if message == JsActions.open_check_media_action:
+            check_media_db(mw)
             return True, None
         return handled

@@ -5,6 +5,7 @@ from pathlib import Path
 from anki.collection import Collection
 from bs4 import BeautifulSoup, Tag
 
+from .js_actions import JsActions
 from .trash import Trash
 from ..cache.item_id_cache import ItemIdCache
 from ..config.settings import Settings
@@ -16,8 +17,7 @@ log: Logger = logging.getLogger(__name__)
 
 
 class CollectionSizeFormatter:
-    __code_style: str = "font-family:Consolas,monospace"
-    __open_config_action: str = "open-config-action"
+    __code_style: str = "font-family:Consolas,monospace;display: inline-block;"
 
     def __init__(self, col: Collection, item_id_cache: ItemIdCache, media_cache: MediaCache, trash: Trash,
                  settings: Settings):
@@ -45,30 +45,44 @@ class CollectionSizeFormatter:
         div.append(self.__span(soup, "Media", used_files_size,
                                f'Size of {media_file_number_str} '
                                f'media files used in notes (do not include "Unused" and "Trash")'))
+        details_icon_unused: Tag = self.__details_icon(soup)
+        details_icon_trash: Tag = self.__details_icon(soup)
         div.append(self.__span(soup, "Unused", unused_files_size,
                                f'Size of {unused_files_number} '
-                               f'media files not used in any notes (can be moved to Trash)'))
+                               f'media files not used in any notes (can be moved to Trash)', details_icon_unused))
         div.append(self.__span(soup, "Trash", trash_dir_size,
-                               f'Size of {trash_files_number} media files in the Trash (can be emptied)'))
+                               f'Size of {trash_files_number} media files in the Trash (can be emptied)',
+                               details_icon_trash))
         div.append(self.__span(soup, "Total", total_size,
                                f'Total size of collection file and media folder'))
         config_icon: Tag = soup.new_tag('img', attrs={
             "title": 'Open Configuration',
             "src": f"/_addons/{self.__module_name}/web/setting.png",
             "height": "12",
-            "onclick": f"pycmd('{self.__open_config_action}')"
+            "onclick": f"pycmd('{JsActions.open_config_action}')"
         })
         div.append(config_icon)
 
         soup.append(div)
         return str(soup.prettify())
 
+    def __details_icon(self, soup: BeautifulSoup):
+        details_icon: Tag = soup.new_tag('img', attrs={
+            "title": 'Click to show details (open the Check Media dialog)',
+            "src": f"/_addons/{self.__module_name}/web/info.png",
+            "height": "12",
+            "onclick": f"pycmd('{JsActions.open_check_media_action}')",
+            "style": "margin-left: -0.2em; margin-right: 0.2em;"
+        })
+        return details_icon
+
     @staticmethod
-    def __span(soup: BeautifulSoup, name: str, size: SizeBytes, title: str) -> Tag:
+    def __span(soup: BeautifulSoup, name: str, size: SizeBytes, title: str, icon: Tag = None) -> Tag:
         inner_span: Tag = soup.new_tag('span', attrs={"style": CollectionSizeFormatter.__code_style})
         inner_span.string = SizeFormatter.bytes_to_str(size, precision=0)
-        outer_span: Tag = soup.new_tag('span', attrs={"title": f'{title}'})
+        outer_span: Tag = soup.new_tag('span', attrs={"title": f'{title}', "style": "margin-right: 0.5em;"})
         outer_span.string = f"{name}: "
         outer_span.append(inner_span)
-        outer_span.append("   ")
+        if icon:
+            outer_span.append(icon)
         return outer_span
