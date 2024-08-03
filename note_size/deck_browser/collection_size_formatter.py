@@ -54,7 +54,7 @@ class CollectionSizeFormatter:
                                f'Size of {trash_files_number} media files in the Trash (can be emptied)',
                                details_icon_trash))
         div.append(self.__span(soup, "Total", total_size,
-                               f'Total size of collection file and media folder'))
+                               f'Total size of collection, media files, unused files and trash files'))
         config_icon: Tag = soup.new_tag('img', attrs={
             "title": 'Open Configuration',
             "src": f"/_addons/{self.__module_name}/web/setting.png",
@@ -68,7 +68,7 @@ class CollectionSizeFormatter:
 
     def __details_icon(self, soup: BeautifulSoup):
         details_icon: Tag = soup.new_tag('img', attrs={
-            "title": 'Click to show details (open the Check Media dialog)',
+            "title": 'Click to show details',
             "src": f"/_addons/{self.__module_name}/web/info.png",
             "height": "12",
             "onclick": f"pycmd('{JsActions.open_check_media_action}')",
@@ -78,11 +78,19 @@ class CollectionSizeFormatter:
 
     @staticmethod
     def __span(soup: BeautifulSoup, name: str, size: SizeBytes, title: str, icon: Tag = None) -> Tag:
-        inner_span: Tag = soup.new_tag('span', attrs={"style": CollectionSizeFormatter.__code_style})
-        inner_span.string = SizeFormatter.bytes_to_str(size, precision=0)
+        separator: str = " "
+        size_split: list[str] = SizeFormatter.bytes_to_str(size, precision=0, unit_separator=separator).split(separator)
+        number: str = size_split[0]
+        unit: str = size_split[1]
+        number_span: Tag = soup.new_tag('span', attrs={"style": CollectionSizeFormatter.__code_style})
+        number_span.string = number
+        unit_span: Tag = soup.new_tag('span', attrs={"style": CollectionSizeFormatter.__code_style})
+        unit_span.string = unit
         outer_span: Tag = soup.new_tag('span', attrs={"title": f'{title}', "style": "margin-right: 0.5em;"})
         outer_span.string = f"{name}: "
-        outer_span.append(inner_span)
+        outer_span.append(number_span)
+        outer_span.append(" ")
+        outer_span.append(unit_span)
         if icon:
             outer_span.append(icon)
         return outer_span
