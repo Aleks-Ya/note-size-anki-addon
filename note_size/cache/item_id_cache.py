@@ -13,7 +13,7 @@ from anki.notes import NoteId, Note
 
 from ..config.config import Config
 from ..config.settings import Settings
-from ..types import SizeStr, SizeBytes, SizeType, size_types, MediaFile
+from ..types import SizeStr, SizeBytes, SizeType, size_types, MediaFile, FilesNumber
 from ..calculator.size_calculator import SizeCalculator
 from ..calculator.size_formatter import SizeFormatter
 
@@ -164,6 +164,13 @@ class ItemIdCache:
                 files: list[MediaFile] = self.__size_calculator.note_files(note)
                 self.__note_files_cache[note_id] = files
                 return files
+
+    def get_used_files_size(self, use_cache: bool) -> (SizeBytes, FilesNumber):
+        all_note_ids: Sequence[NoteId] = self.__col.find_notes("deck:*")
+        files_list: list[list[MediaFile]] = [self.get_note_files(note_id, use_cache) for note_id in all_note_ids]
+        files: set[MediaFile] = {file for sublist in files_list for file in sublist}
+        files_size: SizeBytes = self.__size_calculator.calculate_size_of_files(files, use_cache)
+        return files_size, FilesNumber(len(files))
 
     def __size_bytes_cache_lengths(self) -> str:
         return str([f"{cache[0]}={len(cache[1].keys())}" for cache in self.__size_bytes_caches.items()])
