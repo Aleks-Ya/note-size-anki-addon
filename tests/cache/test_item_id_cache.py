@@ -24,7 +24,7 @@ def empty_cache_dict() -> list[dict[str, Any]]:
             {}]
 
 
-def test_get_note_size_bytes_no_cache(td: Data, item_id_cache: ItemIdCache):
+def test_get_note_size_bytes(td: Data, item_id_cache: ItemIdCache):
     exp_size_1: SizeBytes = SizeBytes(len(DefaultFields.front_field_content.encode()) +
                                       len(DefaultFields.back_field_content.encode()) +
                                       len(DefaultFields.content0) + len(DefaultFields.content1) +
@@ -36,28 +36,15 @@ def test_get_note_size_bytes_no_cache(td: Data, item_id_cache: ItemIdCache):
 
     content: str = 'updated'
     Data.update_front_field(note, content)
-    act_size_2: SizeBytes = item_id_cache.get_note_size_bytes(note_id, SizeType.TOTAL, use_cache=False)
-    exp_size_2: SizeBytes = SizeBytes(len(content.encode()) +
-                                      len(DefaultFields.back_field_content.encode()) +
-                                      len(DefaultFields.content0) +
-                                      len(DefaultFields.content2))
-    assert act_size_2 == exp_size_2
 
+    act_size_cached: SizeBytes = item_id_cache.get_note_size_bytes(note_id, SizeType.TOTAL, use_cache=True)
+    assert act_size_cached == exp_size_1
 
-def test_get_note_size_bytes_use_cache(td: Data, item_id_cache: ItemIdCache):
-    exp_size_1: SizeBytes = SizeBytes(len(DefaultFields.front_field_content.encode()) +
-                                      len(DefaultFields.back_field_content.encode()) +
-                                      len(DefaultFields.content0) +
-                                      len(DefaultFields.content1) +
-                                      len(DefaultFields.content2))
-    note: Note = td.create_note_with_files()
-    note_id: NoteId = note.id
-    act_size_1: SizeBytes = item_id_cache.get_note_size_bytes(note_id, SizeType.TOTAL, use_cache=False)
-    assert act_size_1 == exp_size_1
-
-    Data.update_front_field(note, 'updated')
-    act_size_2: SizeBytes = item_id_cache.get_note_size_bytes(note_id, SizeType.TOTAL, use_cache=True)
-    assert act_size_2 == exp_size_1
+    act_size_uncached: SizeBytes = item_id_cache.get_note_size_bytes(note_id, SizeType.TOTAL, use_cache=False)
+    assert act_size_uncached == SizeBytes(len(content.encode()) +
+                                          len(DefaultFields.back_field_content.encode()) +
+                                          len(DefaultFields.content0) +
+                                          len(DefaultFields.content2))
 
 
 def test_get_note_size_bytes_performance(td: Data, item_id_cache: ItemIdCache):
@@ -68,26 +55,19 @@ def test_get_note_size_bytes_performance(td: Data, item_id_cache: ItemIdCache):
     assert execution_time <= 1
 
 
-def test_get_note_size_str_no_cache(td: Data, item_id_cache: ItemIdCache):
+def test_get_note_size_str(td: Data, item_id_cache: ItemIdCache):
     note: Note = td.create_note_with_files()
     note_id: NoteId = note.id
     act_size_1: SizeStr = item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False)
     assert act_size_1 == "143 B"
 
     Data.update_front_field(note, 'updated')
-    act_size_2: SizeStr = item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False)
-    assert act_size_2 == "86 B"
 
+    size_cached: SizeStr = item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=True)
+    assert size_cached == "143 B"
 
-def test_get_note_size_str_use_cache(td: Data, item_id_cache: ItemIdCache):
-    note: Note = td.create_note_with_files()
-    note_id: NoteId = note.id
-    act_size_1: SizeStr = item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False)
-    assert act_size_1 == "143 B"
-
-    Data.update_front_field(note, 'updated')
-    act_size_2: SizeStr = item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=True)
-    assert act_size_2 == "143 B"
+    size_uncached: SizeStr = item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False)
+    assert size_uncached == "86 B"
 
 
 def test_evict_note(td: Data, item_id_cache: ItemIdCache):
