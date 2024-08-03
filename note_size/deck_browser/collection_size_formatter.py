@@ -66,7 +66,7 @@ class CollectionSizeFormatter:
     @staticmethod
     def __span(soup: BeautifulSoup, name: str, size: SizeBytes, title: str) -> Tag:
         inner_span: Tag = soup.new_tag('span', attrs={"style": CollectionSizeFormatter.__code_style})
-        inner_span.string = SizeFormatter.bytes_to_str(size)
+        inner_span.string = SizeFormatter.bytes_to_str(size, precision=0)
         outer_span: Tag = soup.new_tag('span', attrs={"title": f'{title}'})
         outer_span.string = f"{name}: "
         outer_span.append(inner_span)
