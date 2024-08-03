@@ -1,4 +1,5 @@
 import pytest
+from anki.collection import Collection
 from anki.notes import Note
 
 from note_size.types import SizeBytes, MediaFile
@@ -72,3 +73,23 @@ def test_sort_by_size_desc():
     assert str(unsorted_dict) == "{'picture.jpg': 7, 'sound.mp3': 5, 'animation.gif': 9}"
     sorted_dict: dict[MediaFile, SizeBytes] = SizeCalculator.sort_by_size_desc(unsorted_dict)
     assert str(sorted_dict) == "{'animation.gif': 9, 'picture.jpg': 7, 'sound.mp3': 5}"
+
+
+def test_calculate_size_of_files(col: Collection, size_calculator: SizeCalculator):
+    content1: bytes = b"first"
+    content2: bytes = b"second"
+    file1: MediaFile = MediaFile(col.media.write_data("file1.txt", content1))
+    file2: MediaFile = MediaFile(col.media.write_data("file2.txt", content2))
+    file2_duplicate: MediaFile = file2
+    files: set[MediaFile] = {file1, file2, file2_duplicate}
+
+    size: SizeBytes = size_calculator.calculate_size_of_files(files, use_cache=True)
+    exp_size: SizeBytes = SizeBytes(len(content1) + len(content2))
+    assert size == exp_size
+
+    col.media.trash_files([file2])
+    size_cached: SizeBytes = size_calculator.calculate_size_of_files(files, use_cache=True)
+    assert size_cached == exp_size
+
+    size_uncached: SizeBytes = size_calculator.calculate_size_of_files(files, use_cache=False)
+    assert size_uncached == SizeBytes(len(content1))

@@ -40,6 +40,9 @@ class SizeCalculator:
             all_files += files
         return all_files
 
+    def calculate_size_of_files(self, files: set[MediaFile], use_cache: bool):
+        return SizeBytes(sum([self.__media_cache.get_file_size(file, use_cache) for file in files]))
+
     @staticmethod
     def sort_by_size_desc(file_sizes: dict[MediaFile, SizeBytes]) -> dict[MediaFile, SizeBytes]:
         return dict(sorted(file_sizes.items(), key=lambda item: item[1], reverse=True))
