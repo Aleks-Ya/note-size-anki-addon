@@ -9,11 +9,11 @@ from typing import Sequence, Any
 
 from anki.cards import CardId
 from anki.collection import Collection
-from anki.notes import NoteId
+from anki.notes import NoteId, Note
 
 from ..config.config import Config
 from ..config.settings import Settings
-from ..types import SizeStr, SizeBytes, SizeType, size_types
+from ..types import SizeStr, SizeBytes, SizeType, size_types, MediaFile
 from ..calculator.size_calculator import SizeCalculator
 from ..calculator.size_formatter import SizeFormatter
 
@@ -36,6 +36,7 @@ class ItemIdCache:
                                                                          SizeType.TEXTS: {},
                                                                          SizeType.FILES: {}}
         self.__cache_file: Path = settings.cache_file
+        self.__note_files_cache: dict[NoteId, list[MediaFile]] = {}
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def warm_up_cache(self) -> None:
@@ -121,7 +122,7 @@ class ItemIdCache:
                     del self.__id_cache[cid]
 
     def as_dict_list(self) -> list[dict[str, Any]]:
-        return [self.__id_cache, self.__size_bytes_caches, self.__size_str_caches]
+        return [self.__id_cache, self.__size_bytes_caches, self.__size_str_caches, self.__note_files_cache]
 
     def save_caches_to_file(self) -> None:
         if self.__config.get_store_cache_in_file_enabled():
@@ -145,6 +146,7 @@ class ItemIdCache:
                         self.__id_cache: dict[CardId, NoteId] = caches[0]
                         self.__size_bytes_caches: dict[SizeType, dict[NoteId, SizeBytes]] = caches[1]
                         self.__size_str_caches: dict[SizeType, dict[NoteId, SizeStr]] = caches[2]
+                        self.__note_files_cache: dict[NoteId, list[MediaFile]] = caches[3]
                         log.info(f"Caches were read from file: {self.__cache_file}")
                     except pickle.UnpicklingError:
                         log.warning(f"Cannot deserialize cache file: {self.__cache_file}", exc_info=True)
@@ -152,6 +154,16 @@ class ItemIdCache:
                 log.info(f"Skip reading absent cache file: {self.__cache_file}")
         else:
             log.info("Reading cache file is disabled")
+
+    def get_note_files(self, note_id: NoteId, use_cache: bool) -> list[MediaFile]:
+        with self.__lock:
+            if use_cache and note_id in self.__note_files_cache:
+                return self.__note_files_cache[note_id]
+            else:
+                note: Note = self.__col.get_note(note_id)
+                files: list[MediaFile] = self.__size_calculator.note_files(note)
+                self.__note_files_cache[note_id] = files
+                return files
 
     def __size_bytes_cache_lengths(self) -> str:
         return str([f"{cache[0]}={len(cache[1].keys())}" for cache in self.__size_bytes_caches.items()])

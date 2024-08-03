@@ -12,7 +12,7 @@ from note_size.cache.item_id_cache import ItemIdCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.config.config import Config
 from note_size.config.settings import Settings
-from note_size.types import SizeBytes, SizeStr, SizeType
+from note_size.types import SizeBytes, SizeStr, SizeType, MediaFile
 from tests.data import Data, DefaultFields
 
 
@@ -20,7 +20,8 @@ from tests.data import Data, DefaultFields
 def empty_cache_dict() -> list[dict[str, Any]]:
     return [{},
             {SizeType.TOTAL: {}, SizeType.TEXTS: {}, SizeType.FILES: {}},
-            {SizeType.TOTAL: {}, SizeType.TEXTS: {}, SizeType.FILES: {}}]
+            {SizeType.TOTAL: {}, SizeType.TEXTS: {}, SizeType.FILES: {}},
+            {}]
 
 
 def test_get_note_size_bytes_no_cache(td: Data, item_id_cache: ItemIdCache):
@@ -155,6 +156,9 @@ def test_write_read_cache_from_file(td: Data, col: Collection, item_id_cache: It
     note_size1: SizeStr = item_id_cache.get_note_size_str(note1.id, SizeType.TOTAL, use_cache=True)
     note_size2: SizeStr = item_id_cache.get_note_size_str(note2.id, SizeType.TOTAL, use_cache=True)
 
+    files1: list[MediaFile] = item_id_cache.get_note_files(note1.id, use_cache=True)
+    files2: list[MediaFile] = item_id_cache.get_note_files(note2.id, use_cache=True)
+
     item_id_cache.save_caches_to_file()
 
     item_id_cache_2: ItemIdCache = ItemIdCache(col, size_calculator, config, settings)
@@ -167,7 +171,9 @@ def test_write_read_cache_from_file(td: Data, col: Collection, item_id_cache: It
                                                SizeType.FILES: {note1.id: 21, note2.id: 0}},
                                               {SizeType.TOTAL: {note1.id: "143 B", note2.id: "70 B"},
                                                SizeType.TEXTS: {},
-                                               SizeType.FILES: {}}]
+                                               SizeType.FILES: {}},
+                                              {note1.id: ['picture.jpg', 'sound.mp3', 'picture.jpg', 'animation.gif'],
+                                               note2.id: []}]
 
     col.remove_notes([note1.id, note2.id])
     assert item_id_cache.get_note_size_str(note1.id, SizeType.TOTAL, use_cache=True) == note_size1
@@ -192,3 +198,16 @@ def test_absent_cache_file(item_id_cache: ItemIdCache, settings: Settings,
         item_id_cache.read_caches_from_file()
     assert item_id_cache.as_dict_list() == empty_cache_dict
     assert "Skip reading absent cache file:" in caplog.text
+
+
+def test_get_note_files(td: Data, item_id_cache: ItemIdCache):
+    note: Note = td.create_note_with_files()
+    note_id: NoteId = note.id
+    files: list[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=True)
+    assert files == ['picture.jpg', 'sound.mp3', 'picture.jpg', 'animation.gif']
+
+    Data.replace_in_front_field(note, '<img src="picture.jpg">', '')
+    files_cached: list[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=True)
+    assert files_cached == ['picture.jpg', 'sound.mp3', 'picture.jpg', 'animation.gif']
+    files_uncached: list[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=False)
+    assert files_uncached == ['sound.mp3', 'picture.jpg', 'animation.gif']

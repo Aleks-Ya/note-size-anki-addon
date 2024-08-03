@@ -26,13 +26,18 @@ class SizeCalculator:
         return SizeBytes(sum([size for size in self.file_sizes(note, use_cache).values()]))
 
     def file_sizes(self, note: Note, use_cache: bool) -> dict[MediaFile, SizeBytes]:
-        all_files: dict[MediaFile, SizeBytes] = dict[MediaFile, SizeBytes]()
+        file_sizes: dict[MediaFile, SizeBytes] = dict[MediaFile, SizeBytes]()
+        for file in self.note_files(note):
+            size: SizeBytes = self.__media_cache.get_file_size(file, use_cache=use_cache)
+            file_sizes[file] = size
+        return file_sizes
+
+    @staticmethod
+    def note_files(note: Note) -> list[MediaFile]:
+        all_files: list[MediaFile] = list[MediaFile]()
         for field in note.fields:
-            files: list[str] = note.col.media.files_in_str(note.mid, field)
-            sizes: dict[MediaFile, SizeBytes] = {}
-            for file in files:
-                sizes[MediaFile(file)] = self.__media_cache.get_file_size(MediaFile(file), use_cache=use_cache)
-            all_files.update(sizes)
+            files: list[MediaFile] = note.col.media.files_in_str(note.mid, field)
+            all_files += files
         return all_files
 
     @staticmethod

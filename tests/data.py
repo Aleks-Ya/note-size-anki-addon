@@ -82,6 +82,13 @@ class Data:
         note[DefaultFields.front_field_name] = content
         note.col.update_note(note)
 
+    @staticmethod
+    def replace_in_front_field(note: Note, old: str, new: str) -> None:
+        current_content: str = note[DefaultFields.front_field_name]
+        replaced_content: str = current_content.replace(old, new)
+        note[DefaultFields.front_field_name] = replaced_content
+        note.col.update_note(note)
+
     def read_config(self) -> Config:
         return Config.from_path(self.config_json)
 
