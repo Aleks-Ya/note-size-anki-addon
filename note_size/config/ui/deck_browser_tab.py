@@ -28,5 +28,5 @@ class DeckBrowserTab(QWidget):
     def refresh_from_model(self):
         self.__checkbox.set_checked(self.__model.deck_browser_show_collection_size)
 
-    def __on_checkbox_state_changed(self, deck_browser_show_collection_size: bool):
-        self.__model.deck_browser_show_collection_size = deck_browser_show_collection_size
+    def __on_checkbox_state_changed(self, _: int):
+        self.__model.deck_browser_show_collection_size = self.__checkbox.is_checked()

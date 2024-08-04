@@ -42,11 +42,11 @@ class CacheTab(QWidget):
         self.__enable_warmup_checkbox.set_checked(self.__model.cache_warmup_enabled)
         self.__store_cache_to_file_checkbox.set_checked(self.__model.store_cache_in_file_enabled)
 
-    def __on_warmup_checkbox_state_changed(self, cache_warm_up_enabled: bool):
-        self.__model.cache_warmup_enabled = cache_warm_up_enabled
+    def __on_warmup_checkbox_state_changed(self, _: int):
+        self.__model.cache_warmup_enabled = self.__enable_warmup_checkbox.is_checked()
 
-    def __on_store_to_file_checkbox_state_changed(self, store_cache_in_file_enabled: bool):
-        self.__model.store_cache_in_file_enabled = store_cache_in_file_enabled
+    def __on_store_to_file_checkbox_state_changed(self, _: int):
+        self.__model.store_cache_in_file_enabled = self.__store_cache_to_file_checkbox.is_checked()
 
     def __refresh_caches(self):
         self.__cache_updater.refresh_caches(parent=self)
