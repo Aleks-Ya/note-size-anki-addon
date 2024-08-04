@@ -12,6 +12,7 @@ from ..ui.cache_tab import CacheTab
 from ..ui.deck_browser_tab import DeckBrowserTab
 from ..ui.logging_tab import LoggingTab
 from ..ui.editor_tab import EditorTab
+from ...cache.cache_updater import CacheUpdater
 from ...config.ui.ui_model import UiModel
 from ...config.config import Config
 from ...log.logs import Logs
@@ -20,11 +21,12 @@ log: Logger = logging.getLogger(__name__)
 
 
 class ConfigDialog(QDialog):
-    def __init__(self, config: Config, config_loader: ConfigLoader, model: UiModel, logs: Logs, settings: Settings):
+    def __init__(self, config: Config, config_loader: ConfigLoader, model: UiModel, logs: Logs,
+                 cache_updater: CacheUpdater, settings: Settings):
         super().__init__(parent=None)
         self.__config: Config = config
-        self.__logs: Logs = logs
         self.__model: UiModel = model
+        self.__logs: Logs = logs
         self.__config_loader: ConfigLoader = config_loader
         ModelConverter.apply_config_to_model(model, config)
         self.setWindowTitle('"Note Size" addon configuration')
@@ -32,7 +34,7 @@ class ConfigDialog(QDialog):
         self.deck_browser_tab: DeckBrowserTab = DeckBrowserTab(self.__model, settings)
         self.editor_tab: EditorTab = EditorTab(self.__model, settings)
         self.logging_tab: LoggingTab = LoggingTab(self.__model, logs, settings)
-        self.cache_tab: CacheTab = CacheTab(self.__model, settings)
+        self.cache_tab: CacheTab = CacheTab(self.__model, cache_updater, settings)
 
         tab_widget: QTabWidget = QTabWidget(self)
         tab_widget.addTab(self.deck_browser_tab, DeckBrowserTab.name)

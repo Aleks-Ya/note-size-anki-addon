@@ -98,12 +98,6 @@ def test_refresh_note(td: Data, item_id_cache: ItemIdCache):
     assert item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=True) == "86 B"
 
 
-def test_is_initialized(item_id_cache: ItemIdCache):
-    assert not item_id_cache.is_initialized()
-    item_id_cache.warm_up_cache()
-    assert item_id_cache.is_initialized()
-
-
 def test_absent_note(item_id_cache: ItemIdCache):
     with pytest.raises(NotFoundError):
         item_id_cache.get_note_size_str(NoteId(123), SizeType.TOTAL, use_cache=True)
@@ -115,6 +109,7 @@ def test_get_note_id_by_card_id(td: Data, col: Collection, item_id_cache: ItemId
     card_id: CardId = card_ids[0]
     assert item_id_cache.get_note_id_by_card_id(card_id) == note.id
     col.remove_notes([note.id])
+    col.save()
     col.flush()
     assert item_id_cache.get_note_id_by_card_id(card_id) == note.id
     item_id_cache.evict_note(note.id)

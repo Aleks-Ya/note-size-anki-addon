@@ -9,6 +9,7 @@ from anki.notes import Note
 from aqt import gui_hooks
 
 from note_size.cache.cache_hooks import CacheHooks
+from note_size.cache.cache_updater import CacheUpdater
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.size_calculator import SizeCalculator
@@ -17,8 +18,9 @@ from tests.data import Data
 
 
 @pytest.fixture
-def cache_hooks(media_cache: MediaCache, size_calculator: SizeCalculator, item_id_cache: ItemIdCache) -> CacheHooks:
-    cache_hooks = CacheHooks(media_cache, item_id_cache, size_calculator)
+def cache_hooks(media_cache: MediaCache, size_calculator: SizeCalculator, item_id_cache: ItemIdCache,
+                cache_updater: CacheUpdater) -> CacheHooks:
+    cache_hooks = CacheHooks(media_cache, item_id_cache, size_calculator, cache_updater)
     yield cache_hooks
     cache_hooks.remove_hooks()
 

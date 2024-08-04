@@ -1,7 +1,6 @@
 import logging
 import os
 import pickle
-from datetime import datetime
 from logging import Logger
 from pathlib import Path
 from threading import RLock
@@ -24,10 +23,10 @@ class ItemIdCache:
 
     def __init__(self, col: Collection, size_calculator: SizeCalculator, config: Config, settings: Settings):
         self.__config: Config = config
-        self.__initialized: bool = False
         self.__lock: RLock = RLock()
         self.__col: Collection = col
         self.__size_calculator: SizeCalculator = size_calculator
+        self.__cache_file: Path = settings.cache_file
         self.__id_cache: dict[CardId, NoteId] = {}
         self.__size_bytes_caches: dict[SizeType, dict[NoteId, SizeBytes]] = {SizeType.TOTAL: {},
                                                                              SizeType.TEXTS: {},
@@ -35,42 +34,8 @@ class ItemIdCache:
         self.__size_str_caches: dict[SizeType, dict[NoteId, SizeStr]] = {SizeType.TOTAL: {},
                                                                          SizeType.TEXTS: {},
                                                                          SizeType.FILES: {}}
-        self.__cache_file: Path = settings.cache_file
         self.__note_files_cache: dict[NoteId, list[MediaFile]] = {}
         log.debug(f"{self.__class__.__name__} was instantiated")
-
-    def warm_up_cache(self) -> None:
-        try:
-            if not self.__config.get_cache_warmup_enabled():
-                log.info("Cache warmup is disabled")
-                return
-            log.info(f"Cache warmup started: "
-                     f"size_bytes_cache_lengths={self.__size_bytes_cache_lengths()}, "
-                     f"size_str_cache_lengths={self.__size_str_cache_lengths()}, "
-                     f"id_cache_length={len(self.__id_cache.keys())}")
-            start_time: datetime = datetime.now()
-            all_note_ids: Sequence[NoteId] = self.__col.find_notes("deck:*")
-            for note_id in all_note_ids:
-                for size_type in size_types:
-                    self.get_note_size_bytes(note_id, size_type, use_cache=True)
-                    self.get_note_size_str(note_id, size_type, use_cache=True)
-            all_card_ids: Sequence[int] = self.__col.find_cards("deck:*")
-            for card_id in all_card_ids:
-                self.get_note_id_by_card_id(card_id)
-            end_time: datetime = datetime.now()
-            duration_sec: int = round((end_time - start_time).total_seconds())
-            log.info(f"Cache warmup finished: notes={len(all_note_ids)}, cards={len(all_card_ids)}, "
-                     f"duration_sec={duration_sec}, size_bytes_cache_lengths={self.__size_bytes_cache_lengths()}, "
-                     f"size_str_cache_lengths={self.__size_str_cache_lengths()}, "
-                     f"id_cache_length={len(self.__id_cache.keys())}")
-            with self.__lock:
-                self.__initialized = True
-        except Exception:
-            log.exception("Cache warm-up failed")
-
-    def is_initialized(self):
-        with self.__lock:
-            return self.__initialized
 
     def get_note_id_by_card_id(self, card_id: CardId) -> NoteId:
         with self.__lock:
@@ -177,3 +142,22 @@ class ItemIdCache:
 
     def __size_str_cache_lengths(self) -> str:
         return str([f"{cache[0]}={len(cache[1].keys())}" for cache in self.__size_str_caches.items()])
+
+    def get_size(self) -> str:
+        return (f"size_bytes_cache_lengths={self.__size_bytes_cache_lengths()}, "
+                f"size_str_cache_lengths={self.__size_str_cache_lengths()}, "
+                f"id_cache_length={len(self.__id_cache.keys())}, "
+                f"note_files_cache={len(self.__note_files_cache.keys())}")
+
+    def invalidate_caches(self) -> None:
+        with self.__lock:
+            self.__id_cache.clear()
+            for size_type in size_types:
+                self.__size_bytes_caches[size_type].clear()
+                self.__size_str_caches[size_type].clear()
+            self.__note_files_cache.clear()
+
+    def delete_cache_file(self):
+        if self.__cache_file.exists():
+            os.remove(self.__cache_file)
+            log.info(f"Cache file was deleted: {self.__cache_file}")
