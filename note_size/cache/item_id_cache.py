@@ -90,35 +90,26 @@ class ItemIdCache:
         return [self.__id_cache, self.__size_bytes_caches, self.__size_str_caches, self.__note_files_cache]
 
     def save_caches_to_file(self) -> None:
-        if self.__config.get_store_cache_in_file_enabled():
-            with self.__lock:
-                log.info(f"Saving cache file: {self.__cache_file}")
-                pickle.dump(self.as_dict_list(), self.__cache_file.open("wb"))
-                log.info(f"Caches were saved to file: {self.__cache_file}")
-        else:
-            log.info("Saving cache file is disabled")
-            if self.__cache_file.exists():
-                os.remove(self.__cache_file)
-                log.info(f"Deleted cache file: {self.__cache_file}")
+        with self.__lock:
+            log.info(f"Saving cache file: {self.__cache_file}")
+            pickle.dump(self.as_dict_list(), self.__cache_file.open("wb"))
+            log.info(f"Caches were saved to file: {self.__cache_file}")
 
     def read_caches_from_file(self) -> None:
-        if self.__config.get_store_cache_in_file_enabled():
-            if self.__cache_file.exists():
-                log.info(f"Reading cache file: {self.__cache_file}")
-                with self.__lock:
-                    try:
-                        caches: list[dict] = pickle.load(open(self.__cache_file, 'rb'))
-                        self.__id_cache: dict[CardId, NoteId] = caches[0]
-                        self.__size_bytes_caches: dict[SizeType, dict[NoteId, SizeBytes]] = caches[1]
-                        self.__size_str_caches: dict[SizeType, dict[NoteId, SizeStr]] = caches[2]
-                        self.__note_files_cache: dict[NoteId, list[MediaFile]] = caches[3]
-                        log.info(f"Caches were read from file: {self.__cache_file}")
-                    except pickle.UnpicklingError:
-                        log.warning(f"Cannot deserialize cache file: {self.__cache_file}", exc_info=True)
-            else:
-                log.info(f"Skip reading absent cache file: {self.__cache_file}")
+        if self.__cache_file.exists():
+            log.info(f"Reading cache file: {self.__cache_file}")
+            with self.__lock:
+                try:
+                    caches: list[dict] = pickle.load(open(self.__cache_file, 'rb'))
+                    self.__id_cache: dict[CardId, NoteId] = caches[0]
+                    self.__size_bytes_caches: dict[SizeType, dict[NoteId, SizeBytes]] = caches[1]
+                    self.__size_str_caches: dict[SizeType, dict[NoteId, SizeStr]] = caches[2]
+                    self.__note_files_cache: dict[NoteId, list[MediaFile]] = caches[3]
+                    log.info(f"Caches were read from file: {self.__cache_file}")
+                except pickle.UnpicklingError:
+                    log.warning(f"Cannot deserialize cache file: {self.__cache_file}", exc_info=True)
         else:
-            log.info("Reading cache file is disabled")
+            log.info(f"Skip reading absent cache file: {self.__cache_file}")
 
     def get_note_files(self, note_id: NoteId, use_cache: bool) -> list[MediaFile]:
         with self.__lock:

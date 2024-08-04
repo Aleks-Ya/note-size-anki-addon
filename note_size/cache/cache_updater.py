@@ -32,19 +32,29 @@ class CacheUpdater:
         self.__warmup_caches(mw)
 
     def __read_cache_from_file(self):
-        op: QueryOp = QueryOp(parent=mw, op=self.__read_cache_file_background_op,
-                              success=self.__read_cache_file_success)
-        op.with_progress().run_in_background()
+        if self.__config.get_store_cache_in_file_enabled():
+            op: QueryOp = QueryOp(parent=mw, op=self.__read_cache_file_background_op,
+                                  success=self.__read_cache_file_success)
+            op.with_progress().run_in_background()
+        else:
+            log.info("Reading cache file is disabled")
 
     def save_cache_to_file(self):
-        op: QueryOp = QueryOp(parent=mw, op=self.__save_cache_file_background_op,
-                              success=self.__save_cache_file_success)
-        op.with_progress().run_in_background()
+        if self.__config.get_store_cache_in_file_enabled():
+            op: QueryOp = QueryOp(parent=mw, op=self.__save_cache_file_background_op,
+                                  success=self.__save_cache_file_success)
+            op.with_progress().run_in_background()
+        else:
+            log.info("Saving cache file is disabled")
+            self.__item_id_cache.delete_cache_file()
 
     def __warmup_caches(self, parent: QWidget):
-        log.info("Warmup caches")
-        op: QueryOp = QueryOp(parent=parent, op=self.__warmup_background_op, success=self.__warmup_success)
-        op.with_progress().run_in_background()
+        if self.__config.get_cache_warmup_enabled():
+            log.info("Warmup caches")
+            op: QueryOp = QueryOp(parent=parent, op=self.__warmup_background_op, success=self.__warmup_success)
+            op.with_progress().run_in_background()
+        else:
+            log.info("Cache warmup is disabled")
 
     def refresh_caches(self, parent: QWidget):
         log.info("Refresh caches")
@@ -55,9 +65,6 @@ class CacheUpdater:
         op.with_progress().run_in_background()
 
     def __warmup_background_op(self, col: Collection) -> int:
-        if not self.__config.get_cache_warmup_enabled():
-            log.info("Cache warmup is disabled")
-            return 0
         log.info(f"Cache warmup started: {self.__item_id_cache.get_size()}")
         start_time: datetime = datetime.now()
 
