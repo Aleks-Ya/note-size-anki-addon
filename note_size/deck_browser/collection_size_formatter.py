@@ -31,6 +31,7 @@ class CollectionSizeFormatter:
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def format_collection_size_html(self) -> str:
+        log.debug("Formatting collection size started")
         media_file_number: int = len(list(self.__media_folder_path.glob('*')))
         media_file_number_str: str = self.__format_number(media_file_number)
         collection_size: SizeBytes = SizeBytes(self.__collection_file_path.stat().st_size)
@@ -71,7 +72,9 @@ class CollectionSizeFormatter:
         div.append(config_icon)
 
         soup.append(div)
-        return str(soup.prettify())
+        html = str(soup.prettify())
+        log.debug("Formatting collection size finished")
+        return html
 
     def __details_icon(self, soup: BeautifulSoup):
         details_icon: Tag = soup.new_tag('img', attrs={
