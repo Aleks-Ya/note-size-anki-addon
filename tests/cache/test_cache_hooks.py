@@ -12,7 +12,7 @@ from note_size.cache.cache_hooks import CacheHooks
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.size_calculator import SizeCalculator
-from note_size.types import SizeType
+from note_size.types import SizeType, MediaFile
 from tests.data import Data
 
 
@@ -67,23 +67,25 @@ def test_notes_will_be_deleted(col: Collection, td: Data, cache_hooks: CacheHook
 def test_media_sync_did_start_or_stop(col: Collection, td: Data, cache_hooks: CacheHooks, media_cache: MediaCache):
     cache_hooks.setup_hooks()
     td.create_note_with_files()
-    assert media_cache.get_total_files_size() == 21
-    Path(col.media.dir(), "image.png").write_text("abc")
-    assert media_cache.get_total_files_size() == 21
+    assert media_cache.get_file_size(MediaFile("image.png"), use_cache=True) == 0
+    content: str = "abc"
+    Path(col.media.dir(), "image.png").write_text(content)
+    assert media_cache.get_file_size(MediaFile("image.png"), use_cache=True) == 0
     gui_hooks.media_sync_did_start_or_stop(True)
-    assert media_cache.get_total_files_size() == 21
+    assert media_cache.get_file_size(MediaFile("image.png"), use_cache=True) == 0
     gui_hooks.media_sync_did_start_or_stop(False)
-    assert media_cache.get_total_files_size() == 24
+    assert media_cache.get_file_size(MediaFile("image.png"), use_cache=True) == len(content)
 
 
 def test_media_sync_did_progress(col: Collection, td: Data, cache_hooks: CacheHooks, media_cache: MediaCache):
     cache_hooks.setup_hooks()
     td.create_note_with_files()
-    assert media_cache.get_total_files_size() == 21
-    Path(col.media.dir(), "image.png").write_text("abc")
-    assert media_cache.get_total_files_size() == 21
+    assert media_cache.get_file_size(MediaFile("image.png"), use_cache=True) == 0
+    content: str = "abc"
+    Path(col.media.dir(), "image.png").write_text(content)
+    assert media_cache.get_file_size(MediaFile("image.png"), use_cache=True) == 0
     gui_hooks.media_sync_did_progress("")
-    assert media_cache.get_total_files_size() == 21
+    assert media_cache.get_file_size(MediaFile("image.png"), use_cache=True) == 0
     time.sleep(3)
     gui_hooks.media_sync_did_progress("")
-    assert media_cache.get_total_files_size() == 24
+    assert media_cache.get_file_size(MediaFile("image.png"), use_cache=True) == len(content)

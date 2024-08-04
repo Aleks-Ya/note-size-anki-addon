@@ -19,7 +19,6 @@ class MediaCache:
         self.__config: Config = config
         self.__col: Collection = col
         self.__file_sizes_cache: dict[MediaFile, SizeBytes] = {}
-        self.__total_files_size: SizeBytes = SizeBytes(0)
         self.__lock: RLock = RLock()
         log.debug(f"{self.__class__.__name__} was instantiated")
 
@@ -36,12 +35,10 @@ class MediaCache:
                 full_path: str = os.path.join(media_dir, file)
                 new_size: SizeBytes = SizeBytes(os.path.getsize(full_path) if os.path.isfile(full_path) else 0)
                 self.__file_sizes_cache[MediaFile(file)] = new_size
-            self.__total_files_size = sum(self.__file_sizes_cache.values())
             end_time: datetime = datetime.now()
             duration_sec: int = round((end_time - start_time).total_seconds())
             log.info(f"Cache warming up finished: files_number={len(listdir)}, "
                      f"cache_len={len(self.__file_sizes_cache.keys())}, "
-                     f"total_files_size={self.__total_files_size}, "
                      f"duration_sec={duration_sec}")
 
     def get_file_size(self, file: MediaFile, use_cache: bool) -> SizeBytes:
@@ -53,19 +50,12 @@ class MediaCache:
                 else:
                     log.warning(f"File absents: {full_path}")
                     new_size: SizeBytes = SizeBytes(0)
-                old_size: SizeBytes = self.__file_sizes_cache[file] if file in self.__file_sizes_cache else SizeBytes(0)
-                self.__update_total_files_size(old_size, new_size)
                 self.__file_sizes_cache[file] = new_size
             return self.__file_sizes_cache[file]
-
-    def get_total_files_size(self) -> SizeBytes:
-        with self.__lock:
-            return self.__total_files_size
 
     def invalidate_cache(self):
         with self.__lock:
             self.__file_sizes_cache.clear()
-            self.__total_files_size: SizeBytes = SizeBytes(0)
 
     def get_unused_files_size(self, use_cache: bool) -> (SizeBytes, FilesNumber):
         log.debug("Calculating unused files size...")
@@ -78,6 +68,3 @@ class MediaCache:
             total_size += file_size
         log.debug(f"Calculated unused files size: {total_size}")
         return total_size, FilesNumber(len(unused_files))
-
-    def __update_total_files_size(self, old_size: SizeBytes, new_size: SizeBytes) -> None:
-        self.__total_files_size = SizeBytes(self.__total_files_size - old_size + new_size)
