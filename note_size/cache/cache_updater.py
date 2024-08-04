@@ -32,7 +32,6 @@ class CacheUpdater:
     def __warmup_caches(self, parent: QWidget):
         log.info("Warmup caches")
         self.__media_cache.invalidate_cache()
-        self.__media_cache.warm_up_cache()
         op: QueryOp = QueryOp(parent=parent, op=self.__background_op, success=self.__success)
         op.with_progress().run_in_background()
 
@@ -41,7 +40,6 @@ class CacheUpdater:
         self.__item_id_cache.delete_cache_file()
         self.__media_cache.invalidate_cache()
         self.__item_id_cache.invalidate_caches()
-        self.__media_cache.warm_up_cache()
         op: QueryOp = QueryOp(parent=parent, op=self.__background_op, success=self.__success)
         op.with_progress().run_in_background()
 

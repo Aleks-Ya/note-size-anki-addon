@@ -77,10 +77,8 @@ class CacheHooks:
         log.info(f"MediaSyncDidStartOrStop: running={running}")
         if not running:
             self.__media_cache.invalidate_cache()
-            self.__media_cache.warm_up_cache()
 
     def __media_sync_did_progress(self, entry: str) -> None:
         log.info(f"MediaSyncDidProgress: entry={entry}")
         if (datetime.now() - self.__last_update_media_sync_did_progress).total_seconds() > 3:
             self.__media_cache.invalidate_cache()
-            self.__media_cache.warm_up_cache()

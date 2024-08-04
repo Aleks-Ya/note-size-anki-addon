@@ -1,6 +1,5 @@
 import logging
 import os
-from datetime import datetime
 from logging import Logger
 from threading import RLock
 
@@ -21,25 +20,6 @@ class MediaCache:
         self.__file_sizes_cache: dict[MediaFile, SizeBytes] = {}
         self.__lock: RLock = RLock()
         log.debug(f"{self.__class__.__name__} was instantiated")
-
-    def warm_up_cache(self):
-        with self.__lock:
-            if not self.__config.get_cache_warmup_enabled():
-                log.info("Cache warmup is disabled")
-                return
-            log.info("Warming up cache...")
-            start_time: datetime = datetime.now()
-            media_dir: str = self.__col.media.dir()
-            listdir: list[str] = os.listdir(media_dir)
-            for file in listdir:
-                full_path: str = os.path.join(media_dir, file)
-                new_size: SizeBytes = SizeBytes(os.path.getsize(full_path) if os.path.isfile(full_path) else 0)
-                self.__file_sizes_cache[MediaFile(file)] = new_size
-            end_time: datetime = datetime.now()
-            duration_sec: int = round((end_time - start_time).total_seconds())
-            log.info(f"Cache warming up finished: files_number={len(listdir)}, "
-                     f"cache_len={len(self.__file_sizes_cache.keys())}, "
-                     f"duration_sec={duration_sec}")
 
     def get_file_size(self, file: MediaFile, use_cache: bool) -> SizeBytes:
         with self.__lock:
