@@ -58,7 +58,7 @@ class CacheHooks:
         self.__cache_updater.initialize_caches()
 
     def __save_cache_to_file(self):
-        self.__item_id_cache.save_caches_to_file()
+        self.__cache_updater.save_cache_to_file()
 
     def __on_note_will_flush(self, note: Note) -> None:
         if note and note.id:

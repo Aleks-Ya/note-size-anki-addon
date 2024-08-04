@@ -34,6 +34,11 @@ class CacheUpdater:
                               success=self.__read_cache_file_success)
         op.with_progress().run_in_background()
 
+    def save_cache_to_file(self):
+        op: QueryOp = QueryOp(parent=mw, op=self.__save_cache_file_background_op,
+                              success=self.__save_cache_file_success)
+        op.with_progress().run_in_background()
+
     def __warmup_caches(self, parent: QWidget):
         log.info("Warmup caches")
         op: QueryOp = QueryOp(parent=parent, op=self.__warmup_background_op, success=self.__warmup_success)
@@ -76,6 +81,11 @@ class CacheUpdater:
         self.__item_id_cache.read_caches_from_file()
         return 0
 
+    def __save_cache_file_background_op(self, _: Collection) -> int:
+        mw.progress.update(label="Saving note size cache from file...")
+        self.__item_id_cache.save_caches_to_file()
+        return 0
+
     @staticmethod
     def __update_progress(label: str, value: int, max_value: int):
         if value % 1000 == 0:
@@ -89,3 +99,7 @@ class CacheUpdater:
     @staticmethod
     def __read_cache_file_success(_: int) -> None:
         log.info(f"Reading cache file finished")
+
+    @staticmethod
+    def __save_cache_file_success(_: int) -> None:
+        log.info(f"Saving cache file finished")
