@@ -21,6 +21,7 @@ class CollectionSizeFormatter:
 
     def __init__(self, col: Collection, item_id_cache: ItemIdCache, media_cache: MediaCache, trash: Trash,
                  settings: Settings):
+        self.__col: Collection = col
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__media_cache: MediaCache = media_cache
         self.__trash: Trash = trash
@@ -31,27 +32,33 @@ class CollectionSizeFormatter:
 
     def format_collection_size_html(self) -> str:
         media_file_number: int = len(list(self.__media_folder_path.glob('*')))
-        media_file_number_str: str = f"{media_file_number:,}".replace(',', ' ')
+        media_file_number_str: str = self.__format_number(media_file_number)
         collection_size: SizeBytes = SizeBytes(self.__collection_file_path.stat().st_size)
         used_files_size, used_files_number = self.__item_id_cache.get_used_files_size(use_cache=True)
         unused_files_size, unused_files_number = self.__media_cache.get_unused_files_size(use_cache=True)
         trash_dir_size: SizeBytes = self.__trash.get_trash_dir_size()
+        trash_dir_path: Path = self.__trash.get_trash_dir_path()
         trash_files_number: FilesNumber = self.__trash.get_trash_files_number()
         total_size: SizeBytes = SizeBytes(collection_size + used_files_size + unused_files_size + trash_dir_size)
+        note_number_str: str = self.__format_number(self.__col.note_count())
+        unused_files_size_str: str = self.__format_number(unused_files_number)
+        trash_files_number_str: str = self.__format_number(trash_files_number)
         soup: BeautifulSoup = BeautifulSoup()
         div: Tag = soup.new_tag('div')
         div.append(self.__span(soup, "Collection", collection_size,
-                               f'Size of file "{self.__collection_file_path}"'))
+                               f'Size of {note_number_str} notes\nFile "{self.__collection_file_path}"'))
         div.append(self.__span(soup, "Media", used_files_size,
                                f'Size of {media_file_number_str} '
-                               f'media files used in notes (do not include "Unused" and "Trash")'))
+                               f'media files used in notes (not include Unused and Trash)\n'
+                               f'Folder "{self.__media_folder_path}"'))
         details_icon_unused: Tag = self.__details_icon(soup)
         details_icon_trash: Tag = self.__details_icon(soup)
         div.append(self.__span(soup, "Unused", unused_files_size,
-                               f'Size of {unused_files_number} '
+                               f'Size of {unused_files_size_str} '
                                f'media files not used in any notes (can be moved to Trash)', details_icon_unused))
         div.append(self.__span(soup, "Trash", trash_dir_size,
-                               f'Size of {trash_files_number} media files in the Trash (can be emptied)',
+                               f'Size of {trash_files_number_str} media files in the Trash (can be emptied)\n'
+                               f'Folder "{trash_dir_path}"',
                                details_icon_trash))
         div.append(self.__span(soup, "Total", total_size,
                                f'Total size of collection, media files, unused files and trash files'))
@@ -94,3 +101,7 @@ class CollectionSizeFormatter:
         if icon:
             outer_span.append(icon)
         return outer_span
+
+    @staticmethod
+    def __format_number(num: int) -> str:
+        return f"{num:,}".replace(',', ' ')

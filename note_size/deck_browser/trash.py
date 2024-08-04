@@ -12,7 +12,7 @@ log: Logger = logging.getLogger(__name__)
 class Trash:
 
     def __init__(self, col: Collection):
-        self.__trash_dir: Path = Path(col.media.dir()).joinpath("..").joinpath("media.trash")
+        self.__trash_dir: Path = Path(col.media.dir()).parent.joinpath("media.trash")
         log.info(f"Trash dir: {self.__trash_dir}")
         log.debug(f"{self.__class__.__name__} was instantiated")
 
@@ -21,3 +21,6 @@ class Trash:
 
     def get_trash_dir_size(self) -> SizeBytes:
         return SizeBytes(sum(f.stat().st_size for f in self.__trash_dir.rglob('*') if f.is_file()))
+
+    def get_trash_dir_path(self) -> Path:
+        return self.__trash_dir
