@@ -1,6 +1,7 @@
 import logging
 import os
 from logging import Logger
+from pathlib import Path
 from threading import RLock
 
 from anki.collection import Collection
@@ -17,6 +18,7 @@ class MediaCache:
     def __init__(self, col: Collection, config: Config):
         self.__config: Config = config
         self.__col: Collection = col
+        self.__media_dir: Path = Path(col.media.dir())
         self.__file_sizes_cache: dict[MediaFile, SizeBytes] = {}
         self.__lock: RLock = RLock()
         log.debug(f"{self.__class__.__name__} was instantiated")
@@ -24,7 +26,7 @@ class MediaCache:
     def get_file_size(self, file: MediaFile, use_cache: bool) -> SizeBytes:
         with self.__lock:
             if not use_cache or file not in self.__file_sizes_cache:
-                full_path: str = os.path.join(self.__col.media.dir(), file)
+                full_path: Path = self.__media_dir.joinpath(file)
                 if os.path.exists(full_path):
                     new_size: SizeBytes = SizeBytes(os.path.getsize(full_path))
                 else:
