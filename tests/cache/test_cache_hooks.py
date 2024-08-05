@@ -1,4 +1,3 @@
-import time
 from pathlib import Path
 
 import pytest
@@ -29,7 +28,6 @@ def test_setup_hooks(cache_hooks: CacheHooks):
     assert gui_hooks.add_cards_did_add_note.count() == 0
     assert hooks.notes_will_be_deleted.count() == 0
     assert gui_hooks.media_sync_did_start_or_stop.count() == 0
-    assert gui_hooks.media_sync_did_progress.count() == 0
     assert hooks.note_will_flush.count() == 0
     assert gui_hooks.profile_did_open.count() == 0
     assert gui_hooks.profile_will_close.count() == 0
@@ -37,7 +35,6 @@ def test_setup_hooks(cache_hooks: CacheHooks):
     assert gui_hooks.add_cards_did_add_note.count() == 1
     assert hooks.notes_will_be_deleted.count() == 1
     assert gui_hooks.media_sync_did_start_or_stop.count() == 1
-    assert gui_hooks.media_sync_did_progress.count() == 1
     assert hooks.note_will_flush.count() == 1
     assert gui_hooks.profile_did_open.count() == 1
     assert gui_hooks.profile_will_close.count() == 1
@@ -45,7 +42,6 @@ def test_setup_hooks(cache_hooks: CacheHooks):
     assert gui_hooks.add_cards_did_add_note.count() == 0
     assert hooks.notes_will_be_deleted.count() == 0
     assert gui_hooks.media_sync_did_start_or_stop.count() == 0
-    assert gui_hooks.media_sync_did_progress.count() == 0
     assert hooks.note_will_flush.count() == 0
     assert gui_hooks.profile_did_open.count() == 0
     assert gui_hooks.profile_will_close.count() == 0
@@ -76,18 +72,4 @@ def test_media_sync_did_start_or_stop(col: Collection, td: Data, cache_hooks: Ca
     gui_hooks.media_sync_did_start_or_stop(True)
     assert media_cache.get_file_size(MediaFile("image.png"), use_cache=True) == 0
     gui_hooks.media_sync_did_start_or_stop(False)
-    assert media_cache.get_file_size(MediaFile("image.png"), use_cache=True) == len(content)
-
-
-def test_media_sync_did_progress(col: Collection, td: Data, cache_hooks: CacheHooks, media_cache: MediaCache):
-    cache_hooks.setup_hooks()
-    td.create_note_with_files()
-    assert media_cache.get_file_size(MediaFile("image.png"), use_cache=True) == 0
-    content: str = "abc"
-    Path(col.media.dir(), "image.png").write_text(content)
-    assert media_cache.get_file_size(MediaFile("image.png"), use_cache=True) == 0
-    gui_hooks.media_sync_did_progress("")
-    assert media_cache.get_file_size(MediaFile("image.png"), use_cache=True) == 0
-    time.sleep(3)
-    gui_hooks.media_sync_did_progress("")
     assert media_cache.get_file_size(MediaFile("image.png"), use_cache=True) == len(content)

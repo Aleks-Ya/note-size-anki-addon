@@ -28,7 +28,6 @@ class CacheHooks:
         self.__hook_add_cards_did_add_note: Callable[[Note], None] = self.__add_cards_did_add_note
         self.__hook_notes_will_be_deleted: Callable[[Collection, Sequence[NoteId]], None] = self.__notes_will_be_deleted
         self.__hook_media_sync_did_start_or_stop: Callable[[bool], None] = self.__media_sync_did_start_or_stop
-        self.__hook_media_sync_did_progress: Callable[[str], None] = self.__media_sync_did_progress
         self.__hook_note_will_flush: Callable[[Note], None] = self.__on_note_will_flush
         self.__hook_profile_did_open: Callable[[], None] = self.__initialize_cache_on_startup
         self.__hook_profile_will_close: Callable[[], None] = self.__save_cache_to_file
@@ -38,7 +37,6 @@ class CacheHooks:
         gui_hooks.add_cards_did_add_note.append(self.__hook_add_cards_did_add_note)
         hooks.notes_will_be_deleted.append(self.__hook_notes_will_be_deleted)
         gui_hooks.media_sync_did_start_or_stop.append(self.__hook_media_sync_did_start_or_stop)
-        gui_hooks.media_sync_did_progress.append(self.__hook_media_sync_did_progress)
         hooks.note_will_flush.append(self.__hook_note_will_flush)
         gui_hooks.profile_did_open.append(self.__hook_profile_did_open)
         gui_hooks.profile_will_close.append(self.__hook_profile_will_close)
@@ -48,7 +46,6 @@ class CacheHooks:
         gui_hooks.add_cards_did_add_note.remove(self.__hook_add_cards_did_add_note)
         hooks.notes_will_be_deleted.remove(self.__hook_notes_will_be_deleted)
         gui_hooks.media_sync_did_start_or_stop.remove(self.__hook_media_sync_did_start_or_stop)
-        gui_hooks.media_sync_did_progress.remove(self.__hook_media_sync_did_progress)
         hooks.note_will_flush.remove(self.__hook_note_will_flush)
         gui_hooks.profile_did_open.remove(self.__hook_profile_did_open)
         gui_hooks.profile_will_close.remove(self.__hook_profile_will_close)
@@ -76,9 +73,4 @@ class CacheHooks:
     def __media_sync_did_start_or_stop(self, running: bool) -> None:
         log.info(f"MediaSyncDidStartOrStop: running={running}")
         if not running:
-            self.__item_id_cache.refresh_notes_having_updated_files()
-
-    def __media_sync_did_progress(self, entry: str) -> None:
-        log.info(f"MediaSyncDidProgress: entry={entry}")
-        if (datetime.now() - self.__last_update_media_sync_did_progress).total_seconds() > 3:
             self.__item_id_cache.refresh_notes_having_updated_files()
