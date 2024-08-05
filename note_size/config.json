@@ -7,7 +7,7 @@
     "Show Collection Size": true
   },
   "Logging": {
-    "Logger Level": "INFO"
+    "Logger Level": "DEBUG"
   },
   "Size Button": {
     "Details Window": {

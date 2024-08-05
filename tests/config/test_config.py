@@ -9,7 +9,7 @@ def test_setters(td: Data):
             'Store Cache In File Enabled': True,
             'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},
-        'Logging': {'Logger Level': 'INFO'},
+        'Logging': {'Logger Level': 'DEBUG'},
         'Size Button': {
             "Color": {
                 "Enabled": True,
@@ -22,7 +22,7 @@ def test_setters(td: Data):
             'Enabled': True}}
     config.set_cache_warmup_enabled(False)
     config.set_deck_browser_show_collection_size(False)
-    config.set_log_level('DEBUG')
+    config.set_log_level('INFO')
     config.set_size_button_enabled(False)
     config.set_size_button_details_formatter_max_filename_length(50)
     config.set_size_button_details_formatter_max_files_to_show(5)
@@ -35,7 +35,7 @@ def test_setters(td: Data):
             'Store Cache In File Enabled': True,
             'Warmup Enabled': False},
         'Deck Browser': {'Show Collection Size': False},
-        'Logging': {'Logger Level': 'DEBUG'},
+        'Logging': {'Logger Level': 'INFO'},
         'Size Button': {
             "Color": {
                 "Enabled": False,

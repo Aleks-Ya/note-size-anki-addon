@@ -22,7 +22,7 @@ def test_default_values(config_loader: ConfigLoader, module_dir: Path):
             'Store Cache In File Enabled': True,
             'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},
-        'Logging': {'Logger Level': 'INFO'},
+        'Logging': {'Logger Level': 'DEBUG'},
         'Size Button': {
             "Color": {
                 "Enabled": True,
@@ -65,7 +65,7 @@ def test_actual_values_partial(module_dir: Path, config_loader: ConfigLoader):
             'Store Cache In File Enabled': True,
             'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},
-        'Logging': {'Logger Level': 'INFO'},
+        'Logging': {'Logger Level': 'DEBUG'},
         'Size Button': {
             "Color": {
                 "Enabled": True,
@@ -80,7 +80,7 @@ def test_actual_values_partial(module_dir: Path, config_loader: ConfigLoader):
 
 def test_delete_unused_properties(module_dir: Path, config_loader: ConfigLoader):
     __write_meta_json_config({
-        'Logging': {'Logger Level': 'INFO'},
+        'Logging': {'Logger Level': 'DEBUG'},
         'Size Button': {
             "Color": {
                 "Enabled": True,
@@ -98,7 +98,7 @@ def test_delete_unused_properties(module_dir: Path, config_loader: ConfigLoader)
             'Store Cache In File Enabled': True,
             'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},
-        'Logging': {'Logger Level': 'INFO'},
+        'Logging': {'Logger Level': 'DEBUG'},
         'Size Button': {
             "Color": {
                 "Enabled": True,
@@ -115,7 +115,7 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
                             module_dir: Path):
     __write_meta_json_config({
         'Deck Browser': {'Show Collection Size': True},
-        'Logging': {'Logger Level': 'INFO'},
+        'Logging': {'Logger Level': 'DEBUG'},
         'Size Button': {
             "Color": {
                 "Enabled": True,
@@ -134,7 +134,7 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
             'Store Cache In File Enabled': True,
             'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},
-        'Logging': {'Logger Level': 'INFO'},
+        'Logging': {'Logger Level': 'DEBUG'},
         'Size Button': {
             "Color": {
                 "Enabled": True,
@@ -152,7 +152,7 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
             'Store Cache In File Enabled': True,
             'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},
-        'Logging': {'Logger Level': 'INFO'},
+        'Logging': {'Logger Level': 'DEBUG'},
         'Size Button': {
             "Color": {
                 "Enabled": True,
@@ -169,7 +169,7 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
             'Store Cache In File Enabled': True,
             'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},
-        'Logging': {'Logger Level': 'INFO'},
+        'Logging': {'Logger Level': 'DEBUG'},
         'Size Button': {
             "Color": {
                 "Enabled": True,
@@ -189,7 +189,7 @@ def test_write_config(config_loader: ConfigLoader, module_dir: Path) -> None:
             'Store Cache In File Enabled': True,
             'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},
-        'Logging': {'Logger Level': 'INFO'},
+        'Logging': {'Logger Level': 'DEBUG'},
         'Size Button': {
             "Color": {
                 "Enabled": True,
@@ -202,7 +202,7 @@ def test_write_config(config_loader: ConfigLoader, module_dir: Path) -> None:
             'Enabled': True}}
     config.set_cache_warmup_enabled(False)
     config.set_deck_browser_show_collection_size(False)
-    config.set_log_level('DEBUG')
+    config.set_log_level('INFO')
     config.set_size_button_enabled(False)
     config.set_size_button_details_formatter_max_filename_length(50)
     config.set_size_button_details_formatter_max_files_to_show(5)
@@ -217,7 +217,7 @@ def test_write_config(config_loader: ConfigLoader, module_dir: Path) -> None:
             'Store Cache In File Enabled': True,
             'Warmup Enabled': False},
         'Deck Browser': {'Show Collection Size': False},
-        'Logging': {'Logger Level': 'DEBUG'},
+        'Logging': {'Logger Level': 'INFO'},
         'Size Button': {
             "Color": {
                 "Enabled": False,
