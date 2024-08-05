@@ -10,6 +10,7 @@ from anki.cards import CardId
 from anki.collection import Collection
 from anki.notes import NoteId, Note
 
+from .media_cache import MediaCache
 from ..config.config import Config
 from ..config.settings import Settings
 from ..types import SizeStr, SizeBytes, SizeType, size_types, MediaFile, FilesNumber
@@ -21,11 +22,13 @@ log: Logger = logging.getLogger(__name__)
 
 class ItemIdCache:
 
-    def __init__(self, col: Collection, size_calculator: SizeCalculator, config: Config, settings: Settings):
+    def __init__(self, col: Collection, size_calculator: SizeCalculator, media_cache: MediaCache, config: Config,
+                 settings: Settings):
         self.__config: Config = config
         self.__lock: RLock = RLock()
         self.__col: Collection = col
         self.__size_calculator: SizeCalculator = size_calculator
+        self.__media_cache: MediaCache = media_cache
         self.__cache_file: Path = settings.cache_file
         self.__id_cache: dict[CardId, NoteId] = {}
         self.__size_bytes_caches: dict[SizeType, dict[NoteId, SizeBytes]] = {SizeType.TOTAL: {},
@@ -73,6 +76,7 @@ class ItemIdCache:
     def refresh_note(self, note_id: NoteId) -> None:
         for size_type in size_types:
             self.get_note_size_str(note_id, size_type, use_cache=False)
+            self.get_note_files(note_id, use_cache=False)
 
     def evict_note(self, note_id: NoteId) -> None:
         with self.__lock:
@@ -152,3 +156,22 @@ class ItemIdCache:
         if self.__cache_file.exists():
             os.remove(self.__cache_file)
             log.info(f"Cache file was deleted: {self.__cache_file}")
+
+    def refresh_notes_having_updated_files(self):
+        log.debug("Refreshing notes having updated files started")
+        updated_files: list[MediaFile] = self.__media_cache.get_updated_files()
+        counter: int = 0
+        for updated_file in updated_files:
+            updated_note_ids: list[NoteId] = self.__note_ids_by_file(updated_file)
+            for note_id in updated_note_ids:
+                self.refresh_note(note_id)
+                counter += 1
+        log.debug(f"Refreshing notes having updated files finished: "
+                  f"refreshed {counter} notes with {len(updated_files)} files")
+
+    def __note_ids_by_file(self, file: MediaFile) -> list[NoteId]:
+        note_ids: list[NoteId] = []
+        for note_id, media_files in self.__note_files_cache.items():
+            if file in media_files:
+                note_ids.append(note_id)
+        return note_ids

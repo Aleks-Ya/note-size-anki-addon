@@ -9,6 +9,7 @@ from anki.errors import NotFoundError
 from anki.notes import NoteId, Note
 
 from note_size.cache.item_id_cache import ItemIdCache
+from note_size.cache.media_cache import MediaCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.config.config import Config
 from note_size.config.settings import Settings
@@ -119,7 +120,7 @@ def test_get_note_id_by_card_id(td: Data, col: Collection, item_id_cache: ItemId
 
 def test_write_read_cache_from_file(td: Data, col: Collection, item_id_cache: ItemIdCache,
                                     size_calculator: SizeCalculator, config: Config, settings: Settings,
-                                    empty_cache_dict: list[dict[str, Any]]):
+                                    empty_cache_dict: list[dict[str, Any]], media_cache: MediaCache):
     note1: Note = td.create_note_with_files()
     note2: Note = td.create_note_without_files()
 
@@ -136,7 +137,7 @@ def test_write_read_cache_from_file(td: Data, col: Collection, item_id_cache: It
 
     item_id_cache.save_caches_to_file()
 
-    item_id_cache_2: ItemIdCache = ItemIdCache(col, size_calculator, config, settings)
+    item_id_cache_2: ItemIdCache = ItemIdCache(col, size_calculator, media_cache, config, settings)
     assert item_id_cache_2.as_dict_list() == empty_cache_dict
     item_id_cache_2.read_caches_from_file()
     assert item_id_cache_2.as_dict_list() == [{card_id1: note1.id,
@@ -199,3 +200,15 @@ def test_get_used_files_size(td: Data, item_id_cache: ItemIdCache):
 
     files_uncached: list[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=False)
     assert files_uncached == ['sound.mp3', 'picture.jpg', 'animation.gif']
+
+
+def test_refresh_notes_having_updated_files(td: Data, item_id_cache: ItemIdCache):
+    note: Note = td.create_note_with_files()
+    item_id_cache.refresh_note(note.id)
+    size1: SizeBytes = item_id_cache.get_note_size_bytes(note.id, SizeType.TOTAL, use_cache=True)
+    td.write_file(DefaultFields.file0, "new file content")
+    size2: SizeBytes = item_id_cache.get_note_size_bytes(note.id, SizeType.TOTAL, use_cache=True)
+    assert size2 == size1
+    item_id_cache.refresh_notes_having_updated_files()
+    size3: SizeBytes = item_id_cache.get_note_size_bytes(note.id, SizeType.TOTAL, use_cache=True)
+    assert size3 != size1

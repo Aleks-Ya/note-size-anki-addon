@@ -104,6 +104,7 @@ class _WarmupCacheOp:
                 self.__update_progress("Caching note sizes", i, note_number)
                 self.__item_id_cache.get_note_size_bytes(note_id, size_type, use_cache=True)
                 self.__item_id_cache.get_note_size_str(note_id, size_type, use_cache=True)
+                self.__item_id_cache.get_note_files(note_id, use_cache=True)
 
         all_card_ids: Sequence[int] = col.find_cards("deck:*")
         card_number: int = len(all_card_ids)

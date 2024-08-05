@@ -77,6 +77,10 @@ class Data:
             field_content += f' <img src="{media_file}">'
         return field_content
 
+    def write_file(self, media_file: MediaFile, file_content: str) -> None:
+        full_path: Path = Path(self.col.media.dir()).joinpath(media_file)
+        full_path.write_text(file_content)
+
     @staticmethod
     def update_front_field(note: Note, content: str) -> None:
         note[DefaultFields.front_field_name] = content

@@ -41,7 +41,7 @@ def __initialize(col: Collection):
     logs.set_level(log_level)
     media_cache: MediaCache = MediaCache(col, config)
     size_calculator: SizeCalculator = SizeCalculator(media_cache)
-    item_id_cache: ItemIdCache = ItemIdCache(col, size_calculator, config, settings)
+    item_id_cache: ItemIdCache = ItemIdCache(col, size_calculator, media_cache, config, settings)
     item_id_sorter: ItemIdSorter = ItemIdSorter(item_id_cache)
     column_hooks: ColumnHooks = ColumnHooks(item_id_cache, item_id_sorter)
     column_hooks.setup_hooks()

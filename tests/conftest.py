@@ -84,8 +84,9 @@ def size_calculator(col: Collection, media_cache: MediaCache) -> SizeCalculator:
 
 
 @pytest.fixture
-def item_id_cache(col: Collection, config: Config, size_calculator: SizeCalculator, settings: Settings) -> ItemIdCache:
-    return ItemIdCache(col, size_calculator, config, settings)
+def item_id_cache(col: Collection, config: Config, size_calculator: SizeCalculator, settings: Settings,
+                  media_cache: MediaCache) -> ItemIdCache:
+    return ItemIdCache(col, size_calculator, media_cache, config, settings)
 
 
 @pytest.fixture

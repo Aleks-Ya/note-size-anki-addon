@@ -41,11 +41,11 @@ def test_get_edit_mode_label_no_cache(col: Collection, td: Data, button_formatte
     assert button_formatter.get_edit_mode_label(note.id) == ButtonLabel("86 B", "PaleGreen")
 
 
-def test_disabled_color(col: Collection, td: Data, settings: Settings):
+def test_disabled_color(col: Collection, td: Data, settings: Settings, media_cache: MediaCache):
     config: Config = td.read_config_updated({'Size Button': {'Color': {'Enabled': False}}})
     media_cache: MediaCache = MediaCache(col, config)
     size_calculator = SizeCalculator(media_cache)
-    item_id_cache: ItemIdCache = ItemIdCache(col, size_calculator, config, settings)
+    item_id_cache: ItemIdCache = ItemIdCache(col, size_calculator, media_cache, config, settings)
     button_formatter = ButtonFormatter(item_id_cache, size_calculator, config)
     assert button_formatter.get_zero_size_label() == ButtonLabel("0 B", "")
     note: Note = td.create_note_with_files()
