@@ -18,62 +18,17 @@ from ..types import size_types
 log: Logger = logging.getLogger(__name__)
 
 
-class _ReadCacheFromFileOp:
-
-    def __init__(self, item_id_cache: ItemIdCache, config: Config):
-        self.__item_id_cache: ItemIdCache = item_id_cache
-        self.__config: Config = config
-        log.debug(f"{self.__class__.__name__} was instantiated")
-
-    def read_cache_from_file_in_background(self):
-        if self.__config.get_store_cache_in_file_enabled():
-            QueryOp(parent=mw, op=self.__background_op,
-                    success=self.__on_success).run_in_background()
-        else:
-            log.info("Reading cache file is disabled")
-
-    def __background_op(self, _: Collection) -> int:
-        self.__item_id_cache.read_caches_from_file()
-        return 0
-
-    @staticmethod
-    def __on_success(_: int) -> None:
-        log.info(f"Reading cache file finished")
-
-
-class _SaveCacheFromFileOp:
-    def __init__(self, item_id_cache: ItemIdCache, config: Config):
-        self.__item_id_cache: ItemIdCache = item_id_cache
-        self.__config: Config = config
-        log.debug(f"{self.__class__.__name__} was instantiated")
-
-    def save_cache_to_file_in_background(self):
-        if self.__config.get_store_cache_in_file_enabled():
-            QueryOp(parent=mw, op=self.__background_op,
-                    success=self.__on_success).run_in_background()
-        else:
-            log.info("Saving cache file is disabled")
-            self.__item_id_cache.delete_cache_file()
-
-    def __background_op(self, _: Collection) -> int:
-        self.__item_id_cache.save_caches_to_file()
-        return 0
-
-    @staticmethod
-    def __on_success(_: int) -> None:
-        log.info(f"Saving cache file finished")
-
-
 class _WarmupCacheOp:
     __progress_dialog_title: str = '"Note Size" addon'
 
     def __init__(self, media_cache: MediaCache, item_id_cache: ItemIdCache, config: Config, parent: QWidget,
-                 with_progress: bool):
+                 with_progress: bool, read_cache_file: bool):
         self.__media_cache: MediaCache = media_cache
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__config: Config = config
         self.__parent: QWidget = parent
         self.__with_progress: bool = with_progress
+        self.__read_cache_file: bool = read_cache_file
         self.__on_success: Callable[[int], None] = self.__on_warmup_success
         log.debug(f"{self.__class__.__name__} was instantiated")
 
@@ -92,6 +47,11 @@ class _WarmupCacheOp:
         return self
 
     def __background_op(self, col: Collection) -> int:
+        if self.__read_cache_file:
+            if self.__config.get_store_cache_in_file_enabled():
+                self.__item_id_cache.read_caches_from_file()
+            else:
+                log.info("Reading cache file is disabled")
         if self.__with_progress:
             mw.progress.set_title(self.__progress_dialog_title)
         log.info(f"Cache warmup started: {self.__item_id_cache.get_size()}")
@@ -141,9 +101,8 @@ class CacheUpdater:
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def initialize_caches(self):
-        _ReadCacheFromFileOp(self.__item_id_cache, self.__config).read_cache_from_file_in_background()
         _WarmupCacheOp(self.__media_cache, self.__item_id_cache, self.__config, mw,
-                       with_progress=False).warmup_caches_in_background()
+                       with_progress=False, read_cache_file=True).warmup_caches_in_background()
 
     def refresh_caches(self, parent: QWidget):
         log.info("Refresh caches")
@@ -151,7 +110,12 @@ class CacheUpdater:
         self.__media_cache.invalidate_cache()
         self.__item_id_cache.invalidate_caches()
         _WarmupCacheOp(self.__media_cache, self.__item_id_cache, self.__config,
-                       parent, with_progress=True).with_on_refresh_success().warmup_caches_in_background()
+                       parent, with_progress=True,
+                       read_cache_file=False).with_on_refresh_success().warmup_caches_in_background()
 
     def save_cache_to_file(self):
-        _SaveCacheFromFileOp(self.__item_id_cache, self.__config).save_cache_to_file_in_background()
+        if self.__config.get_store_cache_in_file_enabled():
+            self.__item_id_cache.save_caches_to_file()
+        else:
+            log.info("Saving cache file is disabled")
+            self.__item_id_cache.delete_cache_file()
