@@ -132,8 +132,8 @@ def test_write_read_cache_from_file(td: Data, col: Collection, item_id_cache: It
     note_size1: SizeStr = item_id_cache.get_note_size_str(note1.id, SizeType.TOTAL, use_cache=True)
     note_size2: SizeStr = item_id_cache.get_note_size_str(note2.id, SizeType.TOTAL, use_cache=True)
 
-    files1: list[MediaFile] = item_id_cache.get_note_files(note1.id, use_cache=True)
-    files2: list[MediaFile] = item_id_cache.get_note_files(note2.id, use_cache=True)
+    item_id_cache.get_note_files(note1.id, use_cache=True)
+    item_id_cache.get_note_files(note2.id, use_cache=True)
 
     item_id_cache.save_caches_to_file()
 
@@ -212,3 +212,11 @@ def test_refresh_notes_having_updated_files(td: Data, item_id_cache: ItemIdCache
     item_id_cache.refresh_notes_having_updated_files()
     size3: SizeBytes = item_id_cache.get_note_size_bytes(note.id, SizeType.TOTAL, use_cache=True)
     assert size3 != size1
+
+
+def test_initialized(item_id_cache: ItemIdCache):
+    assert not item_id_cache.is_initialized()
+    item_id_cache.set_initialized(True)
+    assert item_id_cache.is_initialized()
+    item_id_cache.set_initialized(False)
+    assert not item_id_cache.is_initialized()

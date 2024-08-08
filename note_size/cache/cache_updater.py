@@ -41,6 +41,7 @@ class _WarmupCacheOp:
             op.run_in_background()
         else:
             log.info("Cache warmup is disabled")
+            self.__item_id_cache.set_initialized(True)
 
     def with_on_refresh_success(self):
         self.__on_success: Callable[[int], None] = self.__on_refresh_success
@@ -84,8 +85,8 @@ class _WarmupCacheOp:
                 mw.taskman.run_on_main(
                     lambda: mw.progress.update(label=f"{label}: {value} of {max_value}", value=value, max=max_value))
 
-    @staticmethod
-    def __on_warmup_success(count: int) -> None:
+    def __on_warmup_success(self, count: int) -> None:
+        self.__item_id_cache.set_initialized(True)
         log.info(f"Cache warmup finished: {count}")
 
     def __on_refresh_success(self, count: int) -> None:

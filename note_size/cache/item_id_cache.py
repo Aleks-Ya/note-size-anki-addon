@@ -38,7 +38,23 @@ class ItemIdCache:
                                                                          SizeType.TEXTS: {},
                                                                          SizeType.FILES: {}}
         self.__note_files_cache: dict[NoteId, list[MediaFile]] = {}
+        self.__initialized: bool = False
         log.debug(f"{self.__class__.__name__} was instantiated")
+
+    def is_initialized(self) -> bool:
+        initialized: bool = False
+        if self.__lock.acquire(blocking=False):
+            try:
+                initialized = self.__initialized
+            finally:
+                self.__lock.release()
+        log.debug(f"Is initialized: {initialized}")
+        return initialized
+
+    def set_initialized(self, initialized: bool) -> None:
+        with self.__lock:
+            self.__initialized = initialized
+            log.debug(f"Set initialized: {initialized}")
 
     def get_note_id_by_card_id(self, card_id: CardId) -> NoteId:
         with self.__lock:
