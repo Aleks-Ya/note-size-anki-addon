@@ -115,7 +115,7 @@ class ItemIdCache:
             pickle.dump(self.as_dict_list(), self.__cache_file.open("wb"))
             log.info(f"Caches were saved to file: {self.__cache_file}")
 
-    def read_caches_from_file(self) -> None:
+    def read_caches_from_file(self) -> bool:
         if self.__cache_file.exists():
             log.info(f"Reading cache file: {self.__cache_file}")
             with self.__lock:
@@ -126,10 +126,12 @@ class ItemIdCache:
                     self.__size_str_caches: dict[SizeType, dict[NoteId, SizeStr]] = caches[2]
                     self.__note_files_cache: dict[NoteId, list[MediaFile]] = caches[3]
                     log.info(f"Caches were read from file: {self.__cache_file}")
+                    return True
                 except pickle.UnpicklingError:
                     log.warning(f"Cannot deserialize cache file: {self.__cache_file}", exc_info=True)
         else:
             log.info(f"Skip reading absent cache file: {self.__cache_file}")
+        return False
 
     def get_note_files(self, note_id: NoteId, use_cache: bool) -> list[MediaFile]:
         with self.__lock:

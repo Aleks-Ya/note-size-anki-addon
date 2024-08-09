@@ -1,0 +1,35 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+participant Anki
+participant CacheHooks
+participant CacheTab
+
+Anki -> Anki: profile_did_open
+Anki -> CacheHooks: __initialize_cache_on_startup()
+CacheHooks -> CacheUpdater: initialize_caches()
+CacheUpdater -> _WarmupCacheOp: start()
+CacheUpdater <-- _WarmupCacheOp
+CacheHooks <-- CacheUpdater
+group in worker thread
+    _WarmupCacheOp -> ItemIdCache: read_caches_from_file()
+    _WarmupCacheOp -> Collection: find all Notes
+    loop for each Note
+        _WarmupCacheOp -> ItemIdCache: get_note_size_bytes()
+        _WarmupCacheOp -> ItemIdCache: get_note_size_str()
+        _WarmupCacheOp -> ItemIdCache: get_note_files()
+    end loop
+    _WarmupCacheOp -> Collection: find all Cards
+    loop for each Card
+        _WarmupCacheOp -> ItemIdCache: get_note_id_by_card_id()
+    end loop
+end group
+CacheTab -> CacheUpdater: refresh_caches()
+CacheUpdater -> ItemIdCache: delete_cache_file()
+CacheUpdater -> MediaCache: invalidate_cache()
+CacheUpdater -> ItemIdCache: invalidate_caches()
+CacheUpdater -> _WarmupCacheOp: start()
+
+@enduml

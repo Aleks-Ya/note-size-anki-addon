@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime
 from logging import Logger
-from typing import Sequence, Callable
+from typing import Sequence
 
 from anki.collection import Collection
 from anki.notes import NoteId
@@ -22,14 +22,13 @@ class _WarmupCacheOp:
     __progress_dialog_title: str = '"Note Size" addon'
 
     def __init__(self, media_cache: MediaCache, item_id_cache: ItemIdCache, config: Config, parent: QWidget,
-                 with_progress: bool, read_cache_file: bool):
+                 with_progress: bool, show_success_info: bool):
         self.__media_cache: MediaCache = media_cache
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__config: Config = config
         self.__parent: QWidget = parent
         self.__with_progress: bool = with_progress
-        self.__read_cache_file: bool = read_cache_file
-        self.__on_success: Callable[[int], None] = self.__on_warmup_success
+        self.__show_success_info: bool = show_success_info
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def warmup_caches_in_background(self):
@@ -43,41 +42,41 @@ class _WarmupCacheOp:
             log.info("Cache warmup is disabled")
             self.__item_id_cache.set_initialized(True)
 
-    def with_on_refresh_success(self):
-        self.__on_success: Callable[[int], None] = self.__on_refresh_success
-        return self
-
     def __background_op(self, col: Collection) -> int:
-        if self.__read_cache_file:
-            if self.__config.get_store_cache_in_file_enabled():
-                self.__item_id_cache.read_caches_from_file()
-            else:
-                log.info("Reading cache file is disabled")
-        if self.__with_progress:
-            mw.progress.set_title(self.__progress_dialog_title)
-        log.info(f"Cache warmup started: {self.__item_id_cache.get_size()}")
-        start_time: datetime = datetime.now()
+        read_from_file_success: bool = False
+        if self.__config.get_store_cache_in_file_enabled():
+            read_from_file_success = self.__item_id_cache.read_caches_from_file()
+        else:
+            log.info("Reading cache file is disabled")
+        if not read_from_file_success:
+            if self.__with_progress:
+                mw.progress.set_title(self.__progress_dialog_title)
+            log.info(f"Cache warmup started: {self.__item_id_cache.get_size()}")
+            start_time: datetime = datetime.now()
 
-        all_note_ids: Sequence[NoteId] = col.find_notes("deck:*")
-        note_number: int = len(all_note_ids)
-        for i, note_id in enumerate(all_note_ids):
-            for size_type in size_types:
-                self.__update_progress("Caching note sizes", i, note_number)
-                self.__item_id_cache.get_note_size_bytes(note_id, size_type, use_cache=True)
-                self.__item_id_cache.get_note_size_str(note_id, size_type, use_cache=True)
-                self.__item_id_cache.get_note_files(note_id, use_cache=True)
+            all_note_ids: Sequence[NoteId] = col.find_notes("deck:*")
+            note_number: int = len(all_note_ids)
+            for i, note_id in enumerate(all_note_ids):
+                for size_type in size_types:
+                    self.__update_progress("Caching note sizes", i, note_number)
+                    self.__item_id_cache.get_note_size_bytes(note_id, size_type, use_cache=True)
+                    self.__item_id_cache.get_note_size_str(note_id, size_type, use_cache=True)
+                    self.__item_id_cache.get_note_files(note_id, use_cache=True)
 
-        all_card_ids: Sequence[int] = col.find_cards("deck:*")
-        card_number: int = len(all_card_ids)
-        for i, card_id in enumerate(all_card_ids):
-            self.__update_progress("Caching card sizes", i, card_number)
-            self.__item_id_cache.get_note_id_by_card_id(card_id)
+            all_card_ids: Sequence[int] = col.find_cards("deck:*")
+            card_number: int = len(all_card_ids)
+            for i, card_id in enumerate(all_card_ids):
+                self.__update_progress("Caching card sizes", i, card_number)
+                self.__item_id_cache.get_note_id_by_card_id(card_id)
 
-        end_time: datetime = datetime.now()
-        duration_sec: int = round((end_time - start_time).total_seconds())
-        log.info(f"Cache warmup finished: notes={note_number}, cards={card_number}, "
-                 f"duration_sec={duration_sec}, {self.__item_id_cache.get_size()}")
-        return note_number + card_number
+            end_time: datetime = datetime.now()
+            duration_sec: int = round((end_time - start_time).total_seconds())
+            log.info(f"Cache warmup finished: notes={note_number}, cards={card_number}, "
+                     f"duration_sec={duration_sec}, {self.__item_id_cache.get_size()}")
+            return note_number + card_number
+        else:
+            log.info("Skip cache warmup because the cache was read from file")
+            return 0
 
     def __update_progress(self, label: str, value: int, max_value: int):
         if self.__with_progress:
@@ -85,13 +84,11 @@ class _WarmupCacheOp:
                 mw.taskman.run_on_main(
                     lambda: mw.progress.update(label=f"{label}: {value} of {max_value}", value=value, max=max_value))
 
-    def __on_warmup_success(self, count: int) -> None:
+    def __on_success(self, count: int) -> None:
         self.__item_id_cache.set_initialized(True)
         log.info(f"Cache warmup finished: {count}")
-
-    def __on_refresh_success(self, count: int) -> None:
-        log.info(f"Cache refresh finished: {count}")
-        showInfo(title=self.__progress_dialog_title, text=f"Cache was refreshed ({count} notes and cards)")
+        if self.__show_success_info:
+            showInfo(title=self.__progress_dialog_title, text=f"Cache was warmed up ({count} notes and cards)")
 
 
 class CacheUpdater:
@@ -103,16 +100,15 @@ class CacheUpdater:
 
     def initialize_caches(self):
         _WarmupCacheOp(self.__media_cache, self.__item_id_cache, self.__config, mw,
-                       with_progress=False, read_cache_file=True).warmup_caches_in_background()
+                       with_progress=False, show_success_info=False).warmup_caches_in_background()
 
     def refresh_caches(self, parent: QWidget):
         log.info("Refresh caches")
         self.__item_id_cache.delete_cache_file()
         self.__media_cache.invalidate_cache()
         self.__item_id_cache.invalidate_caches()
-        _WarmupCacheOp(self.__media_cache, self.__item_id_cache, self.__config,
-                       parent, with_progress=True,
-                       read_cache_file=False).with_on_refresh_success().warmup_caches_in_background()
+        _WarmupCacheOp(self.__media_cache, self.__item_id_cache, self.__config, parent, with_progress=True,
+                       show_success_info=True).warmup_caches_in_background()
 
     def save_cache_to_file(self):
         if self.__config.get_store_cache_in_file_enabled():

@@ -1,0 +1,32 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+skinparam ConditionEndStyle hline
+
+split
+    -[hidden]->
+    :"Profile Did Open" hook;
+    if (Read cache from file enabled?) then (yes)
+        if (Cache file exists?) then (yes)
+            :Load cache from file;
+            stop
+        else (no)
+        endif
+    else (no)
+    endif
+    if (Cache warmup enabled?) then (yes)
+        label w1
+        :Warmup cache;
+    else (no)
+    endif
+split again
+    -[hidden]->
+    :"Refresh cache" button;
+    :Delete cache file;
+    :Empty ItemIdCache;
+    :Empty MediaCache;
+    goto w1
+end split
+stop
+
+@enduml
