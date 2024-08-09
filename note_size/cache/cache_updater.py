@@ -36,7 +36,7 @@ class _WarmupCacheOp:
             log.info("Warmup caches")
             op = QueryOp(parent=self.__parent, op=self.__background_op, success=self.__on_success)
             if self.__with_progress:
-                op = op.with_progress()
+                op = op.with_progress("Note Size cache initializing")
             op.run_in_background()
         else:
             log.info("Cache warmup is disabled")
@@ -48,11 +48,12 @@ class _WarmupCacheOp:
             read_from_file_success = self.__item_id_cache.read_caches_from_file()
         else:
             log.info("Reading cache file is disabled")
+        self.__item_id_cache.delete_cache_file()
         if not read_from_file_success:
-            if self.__with_progress:
-                mw.progress.set_title(self.__progress_dialog_title)
             log.info(f"Cache warmup started: {self.__item_id_cache.get_size()}")
             start_time: datetime = datetime.now()
+            if self.__with_progress:
+                mw.progress.set_title(self.__progress_dialog_title)
 
             all_note_ids: Sequence[NoteId] = col.find_notes("deck:*")
             note_number: int = len(all_note_ids)
