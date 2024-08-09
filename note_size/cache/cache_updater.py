@@ -48,6 +48,7 @@ class _WarmupCacheOp:
             read_from_file_success = self.__item_id_cache.read_caches_from_file()
         else:
             log.info("Reading cache file is disabled")
+        self.__item_id_cache.delete_cache_file()
         if not read_from_file_success:
             if self.__with_progress:
                 mw.progress.set_title(self.__progress_dialog_title)
