@@ -1,5 +1,8 @@
 import logging
+import os.path
+import pickle
 import timeit
+from pathlib import Path
 from typing import Sequence, Any
 
 import pytest
@@ -118,9 +121,9 @@ def test_get_note_id_by_card_id(td: Data, col: Collection, item_id_cache: ItemId
         item_id_cache.get_note_id_by_card_id(card_id)
 
 
-def test_write_read_cache_from_file(td: Data, col: Collection, item_id_cache: ItemIdCache,
-                                    size_calculator: SizeCalculator, config: Config, settings: Settings,
-                                    empty_cache_dict: list[dict[str, Any]], media_cache: MediaCache):
+def test_write_read_cache_file(td: Data, col: Collection, item_id_cache: ItemIdCache,
+                               size_calculator: SizeCalculator, config: Config, settings: Settings,
+                               empty_cache_dict: list[dict[str, Any]], media_cache: MediaCache):
     note1: Note = td.create_note_with_files()
     note2: Note = td.create_note_without_files()
 
@@ -139,7 +142,8 @@ def test_write_read_cache_from_file(td: Data, col: Collection, item_id_cache: It
 
     item_id_cache_2: ItemIdCache = ItemIdCache(col, size_calculator, media_cache, config, settings)
     assert item_id_cache_2.as_dict_list() == empty_cache_dict
-    item_id_cache_2.read_caches_from_file()
+    read_success: bool = item_id_cache_2.read_caches_from_file()
+    assert read_success
     assert item_id_cache_2.as_dict_list() == [{card_id1: note1.id,
                                                card_id2: note2.id},
                                               {SizeType.TOTAL: {note1.id: 143, note2.id: 70},
@@ -158,22 +162,54 @@ def test_write_read_cache_from_file(td: Data, col: Collection, item_id_cache: It
 
 def test_read_invalid_cache_file(item_id_cache: ItemIdCache, settings: Settings,
                                  empty_cache_dict: list[dict[str, Any]], caplog):
-    settings.cache_file.write_bytes(b'invalid cache content')
+    cache_file: Path = settings.cache_file
+    cache_file.write_bytes(b'invalid cache content')
+    assert os.path.exists(cache_file)
     assert item_id_cache.as_dict_list() == empty_cache_dict
     with caplog.at_level(logging.WARNING):
-        item_id_cache.read_caches_from_file()
+        read_success: bool = item_id_cache.read_caches_from_file()
+    assert not read_success
     assert item_id_cache.as_dict_list() == empty_cache_dict
     assert "Cannot deserialize cache file:" in caplog.text
+    assert not os.path.exists(cache_file)
 
 
-def test_absent_cache_file(item_id_cache: ItemIdCache, settings: Settings,
-                           empty_cache_dict: list[dict[str, Any]], caplog):
+def test_read_absent_cache_file(item_id_cache: ItemIdCache, settings: Settings,
+                                empty_cache_dict: list[dict[str, Any]], caplog):
     assert not settings.cache_file.exists()
     assert item_id_cache.as_dict_list() == empty_cache_dict
     with caplog.at_level(logging.INFO):
-        item_id_cache.read_caches_from_file()
+        read_success: bool = item_id_cache.read_caches_from_file()
+    assert not read_success
     assert item_id_cache.as_dict_list() == empty_cache_dict
     assert "Skip reading absent cache file:" in caplog.text
+    assert not settings.cache_file.exists()
+
+
+def test_read_partially_invalid_cache_file(td: Data, col: Collection, item_id_cache: ItemIdCache,
+                                           size_calculator: SizeCalculator, config: Config, settings: Settings,
+                                           empty_cache_dict: list[dict[str, Any]], media_cache: MediaCache, caplog):
+    note1: Note = td.create_note_with_files()
+    card_id1: CardId = col.card_ids_of_note(note1.id)[0]
+    item_id_cache.get_note_id_by_card_id(card_id1)
+    item_id_cache.get_note_size_str(note1.id, SizeType.TOTAL, use_cache=True)
+    item_id_cache.get_note_files(note1.id, use_cache=True)
+
+    partially_invalid_cache: list[dict[str, Any]] = item_id_cache.as_dict_list()
+    del partially_invalid_cache[0]
+
+    cache_file: Path = settings.cache_file
+    pickle.dump(partially_invalid_cache, cache_file.open("wb"))
+    assert os.path.exists(cache_file)
+
+    item_id_cache_2: ItemIdCache = ItemIdCache(col, size_calculator, media_cache, config, settings)
+    assert item_id_cache_2.as_dict_list() == empty_cache_dict
+    with caplog.at_level(logging.WARNING):
+        read_success: bool = item_id_cache_2.read_caches_from_file()
+    assert not read_success
+    assert "Cannot deserialize cache file:" in caplog.text
+    assert item_id_cache_2.as_dict_list() == empty_cache_dict
+    assert not os.path.exists(cache_file)
 
 
 def test_get_note_files(td: Data, item_id_cache: ItemIdCache):

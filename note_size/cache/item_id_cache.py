@@ -30,14 +30,11 @@ class ItemIdCache:
         self.__size_calculator: SizeCalculator = size_calculator
         self.__media_cache: MediaCache = media_cache
         self.__cache_file: Path = settings.cache_file
-        self.__id_cache: dict[CardId, NoteId] = {}
-        self.__size_bytes_caches: dict[SizeType, dict[NoteId, SizeBytes]] = {SizeType.TOTAL: {},
-                                                                             SizeType.TEXTS: {},
-                                                                             SizeType.FILES: {}}
-        self.__size_str_caches: dict[SizeType, dict[NoteId, SizeStr]] = {SizeType.TOTAL: {},
-                                                                         SizeType.TEXTS: {},
-                                                                         SizeType.FILES: {}}
-        self.__note_files_cache: dict[NoteId, list[MediaFile]] = {}
+        self.__id_cache: dict[CardId, NoteId]
+        self.__size_bytes_caches: dict[SizeType, dict[NoteId, SizeBytes]]
+        self.__size_str_caches: dict[SizeType, dict[NoteId, SizeStr]]
+        self.__note_files_cache: dict[NoteId, list[MediaFile]]
+        self.invalidate_caches()
         self.__initialized: bool = False
         log.debug(f"{self.__class__.__name__} was instantiated")
 
@@ -127,8 +124,10 @@ class ItemIdCache:
                     self.__note_files_cache: dict[NoteId, list[MediaFile]] = caches[3]
                     log.info(f"Caches were read from file: {self.__cache_file}")
                     return True
-                except pickle.UnpicklingError:
+                except Exception:
                     log.warning(f"Cannot deserialize cache file: {self.__cache_file}", exc_info=True)
+                    self.invalidate_caches()
+                    self.delete_cache_file()
         else:
             log.info(f"Skip reading absent cache file: {self.__cache_file}")
         return False
@@ -164,11 +163,14 @@ class ItemIdCache:
 
     def invalidate_caches(self) -> None:
         with self.__lock:
-            self.__id_cache.clear()
-            for size_type in size_types:
-                self.__size_bytes_caches[size_type].clear()
-                self.__size_str_caches[size_type].clear()
-            self.__note_files_cache.clear()
+            self.__id_cache: dict[CardId, NoteId] = {}
+            self.__size_bytes_caches: dict[SizeType, dict[NoteId, SizeBytes]] = {SizeType.TOTAL: {},
+                                                                                 SizeType.TEXTS: {},
+                                                                                 SizeType.FILES: {}}
+            self.__size_str_caches: dict[SizeType, dict[NoteId, SizeStr]] = {SizeType.TOTAL: {},
+                                                                             SizeType.TEXTS: {},
+                                                                             SizeType.FILES: {}}
+            self.__note_files_cache: dict[NoteId, list[MediaFile]] = {}
 
     def delete_cache_file(self):
         if self.__cache_file.exists():
