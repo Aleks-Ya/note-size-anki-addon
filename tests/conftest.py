@@ -34,8 +34,14 @@ def module_name() -> str:
 
 
 @pytest.fixture
-def col() -> Collection:
-    col: Collection = Collection(tempfile.mkstemp(suffix=".anki2")[1])
+def profile_dir() -> Path:
+    return Path(tempfile.mkdtemp(prefix="profile-"))
+
+
+@pytest.fixture
+def col(profile_dir: Path) -> Collection:
+    collection_file: Path = profile_dir.joinpath("collection.anki2")
+    col: Collection = Collection(str(collection_file))
     yield col
     col.close()
 
