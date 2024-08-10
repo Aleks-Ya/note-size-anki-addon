@@ -1,6 +1,7 @@
 import logging
 import os.path
 import pickle
+import shutil
 import timeit
 from pathlib import Path
 from typing import Sequence, Any
@@ -158,6 +159,14 @@ def test_write_read_cache_file(td: Data, col: Collection, item_id_cache: ItemIdC
     col.remove_notes([note1.id, note2.id])
     assert item_id_cache.get_note_size_str(note1.id, SizeType.TOTAL, use_cache=True) == note_size1
     assert item_id_cache.get_note_size_str(note2.id, SizeType.TOTAL, use_cache=True) == note_size2
+
+
+def test_write_cache_file_error(item_id_cache: ItemIdCache, settings: Settings, caplog):
+    shutil.rmtree(settings.cache_file.parent)
+    with caplog.at_level(logging.WARNING):
+        item_id_cache.save_caches_to_file()
+    assert not settings.cache_file.exists()
+    assert "Cannot save cache file:" in caplog.text
 
 
 def test_read_invalid_cache_file(item_id_cache: ItemIdCache, settings: Settings,

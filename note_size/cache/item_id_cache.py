@@ -108,9 +108,12 @@ class ItemIdCache:
 
     def save_caches_to_file(self) -> None:
         with self.__lock:
-            log.info(f"Saving cache file: {self.__cache_file}")
-            pickle.dump(self.as_dict_list(), self.__cache_file.open("wb"))
-            log.info(f"Caches were saved to file: {self.__cache_file}")
+            try:
+                log.info(f"Saving cache file: {self.__cache_file}")
+                pickle.dump(self.as_dict_list(), self.__cache_file.open("wb"))
+                log.info(f"Caches were saved to file: {self.__cache_file}")
+            except Exception:
+                log.warning(f"Cannot save cache file: {self.__cache_file}", exc_info=True)
 
     def read_caches_from_file(self) -> bool:
         if self.__cache_file.exists():
