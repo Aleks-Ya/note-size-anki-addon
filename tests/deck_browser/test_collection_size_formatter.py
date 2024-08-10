@@ -22,7 +22,7 @@ def test_format_note_detailed_text(col: Collection, td: Data, collection_size_fo
     td.create_note_without_files()
     exp_html: str = f"""
     <div>
-        <span style='margin-right: 0.5em;' title='Size of 2 notes\nFile "{col.path}"'>
+        <span style='margin-right: 0.5em;' title='Size of 2 notes in file "{col.path}"'>
             Collection:&nbsp;
             <span style='font-family:Consolas,monospace;display: inline-block;'>4</span>&nbsp;&nbsp;&nbsp;
             <span style="font-family:Consolas,monospace;display: inline-block;">KB</span>
@@ -72,7 +72,7 @@ def test_item_id_cache_not_initialized(col: Collection, td: Data, collection_siz
     td.create_note_without_files()
     exp_html: str = f"""
     <div>
-        <span style='margin-right: 0.5em;' title='Size of ⏳ notes\nFile "{col.path}"'>
+        <span style='margin-right: 0.5em;' title='Size of ⏳ notes in file "{col.path}"'>
             Collection:&nbsp;
             <span style='font-size: 80%'>⏳</span>&nbsp;&nbsp;&nbsp;
         </span>
@@ -110,7 +110,7 @@ def test_empty_unused_and_trash(col: Collection, td: Data, collection_size_forma
     td.create_note_without_files()
     exp_html: str = f"""
     <div>
-        <span style='margin-right: 0.5em;' title='Size of 2 notes\nFile "{col.path}"'>
+        <span style='margin-right: 0.5em;' title='Size of 2 notes in file "{col.path}"'>
             Collection:&nbsp;
             <span style='font-family:Consolas,monospace;display: inline-block;'>4</span>&nbsp;&nbsp;&nbsp;
             <span style="font-family:Consolas,monospace;display: inline-block;">KB</span>

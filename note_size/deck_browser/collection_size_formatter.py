@@ -59,7 +59,7 @@ class CollectionSizeFormatter:
         trash_dir_path: Path = self.__trash.get_trash_dir_path()
         soup: BeautifulSoup = BeautifulSoup()
         div: Tag = soup.new_tag('div')
-        collection_title: str = f'Size of {note_number_str} notes\nFile "{self.__collection_file_path}"'
+        collection_title: str = f'Size of {note_number_str} notes in file "{self.__collection_file_path}"'
         media_title: str = f'Size of {used_files_number_str} ' \
                            f'media files used in notes (not include Unused and Trash)\n' \
                            f'Folder "{self.__media_folder_path}"'
