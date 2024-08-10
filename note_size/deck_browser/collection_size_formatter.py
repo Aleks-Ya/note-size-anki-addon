@@ -82,7 +82,7 @@ class CollectionSizeFormatter:
         div.append(config_icon)
 
         soup.append(div)
-        html = str(soup.prettify())
+        html = str(soup)
         log.debug("Formatting collection size finished")
         return html
 
@@ -92,7 +92,7 @@ class CollectionSizeFormatter:
             "src": f"/_addons/{self.__module_name}/web/info.png",
             "height": "12",
             "onclick": f"pycmd('{JsActions.open_check_media_action}')",
-            "style": "margin-left: -0.2em; margin-right: 0.2em;"
+            "style": "margin-right: 0.2em;"
         })
         return details_icon
 

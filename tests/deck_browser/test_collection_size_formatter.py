@@ -31,7 +31,7 @@ def test_format_note_detailed_text(col: Collection, td: Data, collection_size_fo
             <span style='font-family:Consolas,monospace;display: inline-block;'>3</span>&nbsp;&nbsp;&nbsp;
             <span style="font-family:Consolas,monospace;display: inline-block;">B</span>
         <img height="12" onclick="pycmd(\'open-check-media-action\')"
-         src="/_addons/1188705668/web/info.png" style="margin-left: -0.2em; margin-right: 0.2em;" 
+         src="/_addons/1188705668/web/info.png" style="margin-right: 0.2em;" 
          title="Click to show details"/>
          </span>
         <span style='margin-right: 0.5em;' 
@@ -40,7 +40,7 @@ def test_format_note_detailed_text(col: Collection, td: Data, collection_size_fo
             <span style='font-family:Consolas,monospace;display: inline-block;'>6</span>&nbsp;&nbsp;&nbsp;
             <span style="font-family:Consolas,monospace;display: inline-block;">B</span>
         <img height="12" onclick="pycmd(\'open-check-media-action\')"
-         src="/_addons/1188705668/web/info.png" style="margin-left: -0.2em; margin-right: 0.2em;" 
+         src="/_addons/1188705668/web/info.png" style="margin-right: 0.2em;" 
          title="Click to show details"/>
          </span>
         <span style='margin-right: 0.5em;' title='Total size of collection, media files, unused files and trash files'>
@@ -53,9 +53,8 @@ def test_format_note_detailed_text(col: Collection, td: Data, collection_size_fo
     </div>
     """
     exp_soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
-    exp_text: str = str(exp_soup.prettify())
-    act_html: str = collection_size_formatter.format_collection_size_html()
-    assert act_html == exp_text
+    act_soup: BeautifulSoup = BeautifulSoup(collection_size_formatter.format_collection_size_html(), 'html.parser')
+    assert act_soup.prettify() == exp_soup.prettify()
 
 
 def test_item_id_cache_not_initialized(col: Collection, td: Data, collection_size_formatter: CollectionSizeFormatter,
@@ -92,7 +91,6 @@ def test_item_id_cache_not_initialized(col: Collection, td: Data, collection_siz
         src="/_addons/1188705668/web/setting.png" title="Open Configuration"/>
     </div>
     """
-    exp_soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
-    exp_text: str = str(exp_soup.prettify())
-    act_html: str = collection_size_formatter.format_collection_size_html()
-    assert act_html == exp_text
+    exp: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
+    act: BeautifulSoup = BeautifulSoup(collection_size_formatter.format_collection_size_html(), 'html.parser')
+    assert exp.prettify() == act.prettify()

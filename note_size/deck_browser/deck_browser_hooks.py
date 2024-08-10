@@ -37,7 +37,7 @@ class DeckBrowserHooks:
         if self.__config.get_deck_browser_show_collection_size():
             html: str = self.__collection_size_formatter.format_collection_size_html()
             content.stats += html
-            log.debug(f"DeckBrowserContent stats (edited): {content.stats}\n\n")
+            log.debug(f"DeckBrowserContent stats (edited): {content.stats}")
         else:
             log.debug(f"Showing collection size in DeckBrowser is disabled")
 
