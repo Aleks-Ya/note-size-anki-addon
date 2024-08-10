@@ -97,6 +97,7 @@ class CollectionSizeFormatter:
         return details_icon
 
     def __span(self, soup: BeautifulSoup, name: str, size: Optional[SizeBytes], title: str, icon: Tag = None) -> Tag:
+        log.debug(f"Create span for: name={name}, size={size}")
         outer_span: Tag = soup.new_tag('span', attrs={"title": f'{title}', "style": "margin-right: 0.5em;"})
         outer_span.string = f"{name}: "
         if size:

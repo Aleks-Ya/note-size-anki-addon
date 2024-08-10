@@ -17,10 +17,14 @@ class Trash:
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def get_trash_files_number(self) -> FilesNumber:
-        return FilesNumber(len(list(self.__trash_dir.iterdir())))
+        files_number: FilesNumber = FilesNumber(len(list(self.__trash_dir.iterdir())))
+        log.debug(f"Trash files number: {files_number}")
+        return files_number
 
     def get_trash_dir_size(self) -> SizeBytes:
-        return SizeBytes(sum(f.stat().st_size for f in self.__trash_dir.rglob('*') if f.is_file()))
+        size: SizeBytes = SizeBytes(sum(f.stat().st_size for f in self.__trash_dir.rglob('*') if f.is_file()))
+        log.debug(f"Trash dir size: {size}")
+        return size
 
     def get_trash_dir_path(self) -> Path:
         return self.__trash_dir

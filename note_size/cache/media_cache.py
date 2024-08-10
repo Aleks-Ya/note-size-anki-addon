@@ -48,8 +48,9 @@ class MediaCache:
             media_file: MediaFile = MediaFile(unused_file)
             file_size: SizeBytes = self.get_file_size(media_file, use_cache)
             total_size += file_size
-        log.debug(f"Calculated unused files size: {total_size}")
-        return total_size, FilesNumber(len(unused_files))
+        files_number: FilesNumber = FilesNumber(len(unused_files))
+        log.debug(f"Calculated unused: total_size={total_size}, files_number={files_number}")
+        return total_size, files_number
 
     def get_updated_files(self) -> list[MediaFile]:
         updated_files: list[MediaFile] = []
