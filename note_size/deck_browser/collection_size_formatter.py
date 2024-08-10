@@ -100,7 +100,7 @@ class CollectionSizeFormatter:
         log.debug(f"Create span for: name={name}, size={size}")
         outer_span: Tag = soup.new_tag('span', attrs={"title": f'{title}', "style": "margin-right: 0.5em;"})
         outer_span.string = f"{name}: "
-        if size:
+        if size is not None:
             separator: str = " "
             size_split: list[str] = SizeFormatter.bytes_to_str(size, precision=0, unit_separator=separator).split(
                 separator)
