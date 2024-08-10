@@ -1,6 +1,11 @@
 # Installation
 
 1. Get addon: `Tools` -> `Add-ons` -> `Get Add-ons...` -> `Code: 1188705668` -> **Restart Anki**
-2. Show columns in the Browser:
 
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/install.png)
+2. Wait for cache initialization (happens once on the 1st start)
+
+    ![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/cache_initialization_progress.png)
+
+3. Show columns in the Browser:
+
+    ![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/install.png)
