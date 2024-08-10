@@ -1,5 +1,25 @@
 # Changelog for "Note Size" Anki addon
 
+## [v2.2.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.2.0) - 2024-08-11
+
+1. __[FEATURE]__ Display "Unused" and "Trash" collection sizes in Deck Browser
+2. __[FEATURE]__ Show cache initialization progress dialog
+3. __[FEATURE]__ Add "Info" menu item
+4. __[FEATURE]__ Refresh note sizes that were modified during media sync
+5. __[FEATURE]__ Display collection size after cache initialization
+6. __[FEATURE]__ Set 0 precision for collection size
+7. __[FEATURE]__ Refresh note sizes only after media sync finished
+8. __[FEATURE]__ Delete cache file after reading on startup
+9. __[BUG]__ Ignore cache file reading errors
+10. __[BUG]__ Incorrect storing boolean settings
+11. __[BUG]__ Reading partially invalid cache file
+12. __[BUG]__ Ignore error on saving cache file
+13. __[DOCS]__ Migrate from `git-changelog` to manual changelog updates
+14. __[DOCS]__ Simplify changelog structure
+15. __[DOCS]__ Update documentation
+16. __[MISC]__ Set DEBUG default log level
+17. __[MISC]__ Reduce size of some long log entries
+
 ## [v2.1.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.1.0) - 2024-07-29
 
 1. __[FEATURE]__ Update cache when other addons update notes
