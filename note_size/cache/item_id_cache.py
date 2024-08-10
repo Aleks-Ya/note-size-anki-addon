@@ -176,16 +176,19 @@ class ItemIdCache:
             log.info(f"Cache file was deleted: {self.__cache_file}")
 
     def refresh_notes_having_updated_files(self):
-        log.debug("Refreshing notes having updated files started")
-        updated_files: list[MediaFile] = self.__media_cache.get_updated_files()
-        counter: int = 0
-        for updated_file in updated_files:
-            updated_note_ids: list[NoteId] = self.__note_ids_by_file(updated_file)
-            for note_id in updated_note_ids:
-                self.refresh_note(note_id)
-                counter += 1
-        log.debug(f"Refreshing notes having updated files finished: "
-                  f"refreshed {counter} notes with {len(updated_files)} files")
+        if self.is_initialized():
+            log.debug("Refreshing notes having updated files started")
+            updated_files: list[MediaFile] = self.__media_cache.get_updated_files()
+            counter: int = 0
+            for updated_file in updated_files:
+                updated_note_ids: list[NoteId] = self.__note_ids_by_file(updated_file)
+                for note_id in updated_note_ids:
+                    self.refresh_note(note_id)
+                    counter += 1
+            log.debug(f"Refreshing notes having updated files finished: "
+                      f"refreshed {counter} notes with {len(updated_files)} files")
+        else:
+            log.debug("Skip refreshing notes having updated files because ItemIdCache is not initialized")
 
     def __note_ids_by_file(self, file: MediaFile) -> list[NoteId]:
         note_ids: list[NoteId] = []

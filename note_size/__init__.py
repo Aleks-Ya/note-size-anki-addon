@@ -50,7 +50,7 @@ def __initialize(col: Collection):
     button_hooks: ButtonHooks = ButtonHooks(details_formatter, button_formatter, settings, config)
     button_hooks.setup_hooks()
     trash: Trash = Trash(col)
-    cache_updater: CacheUpdater = CacheUpdater(media_cache, item_id_cache, config)
+    cache_updater: CacheUpdater = CacheUpdater(mw, media_cache, item_id_cache, config)
     collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(
         col, item_id_cache, media_cache, trash, settings)
     config_ui: ConfigUi = ConfigUi(config, config_loader, logs, cache_updater, settings)

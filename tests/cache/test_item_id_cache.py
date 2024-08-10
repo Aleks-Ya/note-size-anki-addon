@@ -209,9 +209,16 @@ def test_refresh_notes_having_updated_files(td: Data, item_id_cache: ItemIdCache
     td.write_file(DefaultFields.file0, "new file content")
     size2: SizeBytes = item_id_cache.get_note_size_bytes(note.id, SizeType.TOTAL, use_cache=True)
     assert size2 == size1
+
+    assert not item_id_cache.is_initialized()
     item_id_cache.refresh_notes_having_updated_files()
     size3: SizeBytes = item_id_cache.get_note_size_bytes(note.id, SizeType.TOTAL, use_cache=True)
-    assert size3 != size1
+    assert size3 == size1
+
+    item_id_cache.set_initialized(True)
+    item_id_cache.refresh_notes_having_updated_files()
+    size4: SizeBytes = item_id_cache.get_note_size_bytes(note.id, SizeType.TOTAL, use_cache=True)
+    assert size4 != size1
 
 
 def test_initialized(item_id_cache: ItemIdCache):

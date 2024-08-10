@@ -5,6 +5,7 @@ from typing import Callable, Any
 
 import pytest
 from anki.collection import Collection
+from aqt import AnkiQt
 from aqt.addons import AddonManager
 from mock.mock import MagicMock
 
@@ -90,8 +91,8 @@ def item_id_cache(col: Collection, config: Config, size_calculator: SizeCalculat
 
 
 @pytest.fixture
-def cache_updater(media_cache: MediaCache, item_id_cache: ItemIdCache, config: Config) -> CacheUpdater:
-    return CacheUpdater(media_cache, item_id_cache, config)
+def cache_updater(mw: AnkiQt, media_cache: MediaCache, item_id_cache: ItemIdCache, config: Config) -> CacheUpdater:
+    return CacheUpdater(mw, media_cache, item_id_cache, config)
 
 
 @pytest.fixture
@@ -144,6 +145,11 @@ def logs(settings: Settings) -> Logs:
 
 @pytest.fixture
 def config_ui() -> ConfigUi:
+    return MagicMock()
+
+
+@pytest.fixture
+def mw() -> AnkiQt:
     return MagicMock()
 
 
