@@ -17,6 +17,10 @@ For questions, bugs, suggestions see
 
 ![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/collection_size.png)
 
+### In Editor when adding new note
+
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/add_note.png)
+
 ### Configuration
 
 ![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/open_config.png)
