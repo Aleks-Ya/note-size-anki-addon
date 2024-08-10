@@ -5,7 +5,7 @@ from anki.collection import Collection
 from aqt import mw, gui_hooks
 
 from .cache.cache_hooks import CacheHooks
-from .cache.cache_updater import CacheUpdater
+from .cache.cache_initializer import CacheInitializer
 from .cache.media_cache import MediaCache
 from .cache.item_id_cache import ItemIdCache
 from .config.config_hooks import ConfigHooks
@@ -50,7 +50,7 @@ def __initialize(col: Collection):
     button_hooks: ButtonHooks = ButtonHooks(details_formatter, button_formatter, settings, config)
     button_hooks.setup_hooks()
     trash: Trash = Trash(col)
-    cache_updater: CacheUpdater = CacheUpdater(mw, media_cache, item_id_cache, config)
+    cache_updater: CacheInitializer = CacheInitializer(mw, media_cache, item_id_cache, config)
     collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(
         col, item_id_cache, media_cache, trash, settings)
     config_ui: ConfigUi = ConfigUi(config, config_loader, logs, cache_updater, settings)

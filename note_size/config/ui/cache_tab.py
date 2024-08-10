@@ -6,7 +6,7 @@ from aqt.qt import QVBoxLayout, QWidget, Qt, QPushButton
 
 from .widgets import CheckboxWithInfo
 from ..settings import Settings
-from ...cache.cache_updater import CacheUpdater
+from ...cache.cache_initializer import CacheInitializer
 from ...config.ui.ui_model import UiModel
 
 log: Logger = logging.getLogger(__name__)
@@ -15,10 +15,10 @@ log: Logger = logging.getLogger(__name__)
 class CacheTab(QWidget):
     name: str = "Cache"
 
-    def __init__(self, model: UiModel, cache_updater: CacheUpdater, settings: Settings) -> None:
+    def __init__(self, model: UiModel, cache_updater: CacheInitializer, settings: Settings) -> None:
         super().__init__()
         self.__model: UiModel = model
-        self.__cache_updater: CacheUpdater = cache_updater
+        self.__cache_updater: CacheInitializer = cache_updater
         warmup_enabled_url: str = urljoin(settings.docs_base_url, "description/configuration.md#warmup-enabled")
         self.__enable_warmup_checkbox: CheckboxWithInfo = CheckboxWithInfo(
             "Enable cache warm-up", warmup_enabled_url, settings)

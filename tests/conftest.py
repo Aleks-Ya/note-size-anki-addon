@@ -11,7 +11,7 @@ from mock.mock import MagicMock
 
 from note_size.button.button_formatter import ButtonFormatter
 from note_size.button.details_formatter import DetailsFormatter
-from note_size.cache.cache_updater import CacheUpdater
+from note_size.cache.cache_initializer import CacheInitializer
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.size_calculator import SizeCalculator
@@ -91,8 +91,9 @@ def item_id_cache(col: Collection, config: Config, size_calculator: SizeCalculat
 
 
 @pytest.fixture
-def cache_updater(mw: AnkiQt, media_cache: MediaCache, item_id_cache: ItemIdCache, config: Config) -> CacheUpdater:
-    return CacheUpdater(mw, media_cache, item_id_cache, config)
+def cache_initializer(mw: AnkiQt, media_cache: MediaCache, item_id_cache: ItemIdCache,
+                      config: Config) -> CacheInitializer:
+    return CacheInitializer(mw, media_cache, item_id_cache, config)
 
 
 @pytest.fixture

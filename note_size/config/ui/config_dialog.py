@@ -12,7 +12,7 @@ from ..ui.cache_tab import CacheTab
 from ..ui.deck_browser_tab import DeckBrowserTab
 from ..ui.logging_tab import LoggingTab
 from ..ui.editor_tab import EditorTab
-from ...cache.cache_updater import CacheUpdater
+from ...cache.cache_initializer import CacheInitializer
 from ...config.ui.ui_model import UiModel
 from ...config.config import Config
 from ...log.logs import Logs
@@ -22,7 +22,7 @@ log: Logger = logging.getLogger(__name__)
 
 class ConfigDialog(QDialog):
     def __init__(self, config: Config, config_loader: ConfigLoader, model: UiModel, logs: Logs,
-                 cache_updater: CacheUpdater, settings: Settings):
+                 cache_updater: CacheInitializer, settings: Settings):
         super().__init__(parent=None)
         self.__config: Config = config
         self.__model: UiModel = model

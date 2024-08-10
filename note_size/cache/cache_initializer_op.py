@@ -18,7 +18,7 @@ from ..types import size_types
 log: Logger = logging.getLogger(__name__)
 
 
-class _WarmupCacheOp:
+class CacheInitializerOp:
     __progress_dialog_title: str = '"Note Size" addon'
 
     def __init__(self, mw: AnkiQt, media_cache: MediaCache, item_id_cache: ItemIdCache, config: Config, parent: QWidget,
@@ -31,13 +31,13 @@ class _WarmupCacheOp:
         self.__show_success_info: bool = show_success_info
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def warmup_caches_in_background(self):
+    def initialize_cache_in_background(self):
         if self.__config.get_cache_warmup_enabled():
-            log.info("Warmup caches")
+            log.info("Initialize cache")
             QueryOp(parent=self.__parent, op=self.__background_op, success=self.__on_success).failure(
                 self.__on_failure).with_progress("Note Size cache initializing").run_in_background()
         else:
-            log.info("Cache warmup is disabled")
+            log.info("Cache initialization is disabled")
             self.__item_id_cache.set_initialized(True)
 
     def __background_op(self, col: Collection) -> int:
@@ -48,7 +48,7 @@ class _WarmupCacheOp:
             log.info("Reading cache file is disabled")
         self.__item_id_cache.delete_cache_file()
         if not read_from_file_success:
-            log.info(f"Cache warmup started: {self.__item_id_cache.get_size()}")
+            log.info(f"Cache initialization started: {self.__item_id_cache.get_size()}")
             start_time: datetime = datetime.now()
             self.__update_progress("Note Size cache initializing", None, None)
 
@@ -73,11 +73,11 @@ class _WarmupCacheOp:
 
             end_time: datetime = datetime.now()
             duration_sec: int = round((end_time - start_time).total_seconds())
-            log.info(f"Cache warmup finished: notes={note_number}, cards={card_number}, "
+            log.info(f"Cache initialization finished: notes={note_number}, cards={card_number}, "
                      f"duration_sec={duration_sec}, {self.__item_id_cache.get_size()}")
             return note_number + card_number
         else:
-            log.info("Skip cache warmup because the cache was read from file")
+            log.info("Skip cache initialization because the cache was read from file")
             return 0
 
     def __update_progress(self, label: str, value: Optional[int], max_value: Optional[int]):
@@ -95,33 +95,5 @@ class _WarmupCacheOp:
             showInfo(title=self.__progress_dialog_title, text=f"Cache was initialized ({count} notes and cards)")
 
     def __on_failure(self, e: Exception) -> None:
-        log.error("Error during cache warmup", exc_info=e)
+        log.error("Error during cache initialization", exc_info=e)
         show_critical(title=self.__progress_dialog_title, text="Cache initialization failed (see logs)")
-
-
-class CacheUpdater:
-    def __init__(self, mw: AnkiQt, media_cache: MediaCache, item_id_cache: ItemIdCache, config: Config):
-        self.__mw: AnkiQt = mw
-        self.__media_cache: MediaCache = media_cache
-        self.__item_id_cache: ItemIdCache = item_id_cache
-        self.__config: Config = config
-        log.debug(f"{self.__class__.__name__} was instantiated")
-
-    def initialize_caches(self):
-        _WarmupCacheOp(self.__mw, self.__media_cache, self.__item_id_cache, self.__config, self.__mw,
-                       show_success_info=False).warmup_caches_in_background()
-
-    def refresh_caches(self, parent: QWidget):
-        log.info("Refresh caches")
-        self.__item_id_cache.delete_cache_file()
-        self.__media_cache.invalidate_cache()
-        self.__item_id_cache.invalidate_caches()
-        _WarmupCacheOp(self.__mw, self.__media_cache, self.__item_id_cache, self.__config, parent,
-                       show_success_info=True).warmup_caches_in_background()
-
-    def save_cache_to_file(self):
-        if self.__config.get_store_cache_in_file_enabled():
-            self.__item_id_cache.save_caches_to_file()
-        else:
-            log.info("Saving cache file is disabled")
-            self.__item_id_cache.delete_cache_file()

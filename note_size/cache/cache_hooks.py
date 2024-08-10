@@ -8,7 +8,7 @@ from anki.collection import Collection
 from anki.notes import NoteId, Note
 from aqt import gui_hooks
 
-from .cache_updater import CacheUpdater
+from .cache_initializer import CacheInitializer
 from ..cache.item_id_cache import ItemIdCache
 from ..cache.media_cache import MediaCache
 from ..calculator.size_calculator import SizeCalculator
@@ -19,11 +19,11 @@ log: Logger = logging.getLogger(__name__)
 class CacheHooks:
 
     def __init__(self, media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
-                 cache_updater: CacheUpdater) -> None:
+                 cache_updater: CacheInitializer) -> None:
         self.__media_cache: MediaCache = media_cache
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__size_calculator: SizeCalculator = size_calculator
-        self.__cache_updater: CacheUpdater = cache_updater
+        self.__cache_updater: CacheInitializer = cache_updater
         self.__last_update_media_sync_did_progress: datetime = datetime.now()
         self.__hook_add_cards_did_add_note: Callable[[Note], None] = self.__add_cards_did_add_note
         self.__hook_notes_will_be_deleted: Callable[[Collection, Sequence[NoteId]], None] = self.__notes_will_be_deleted
