@@ -87,6 +87,12 @@ class Data:
         note.col.update_note(note)
 
     @staticmethod
+    def append_front_field(note: Note, content: str) -> None:
+        old_content: str = note[DefaultFields.front_field_name]
+        new_content: str = old_content + content
+        Data.update_front_field(note, new_content)
+
+    @staticmethod
     def replace_in_front_field(note: Note, old: str, new: str) -> None:
         current_content: str = note[DefaultFields.front_field_name]
         replaced_content: str = current_content.replace(old, new)

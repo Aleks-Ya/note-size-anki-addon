@@ -8,10 +8,13 @@ import pytest
 from anki.collection import Collection
 from aqt import AnkiQt, ProfileManager, QApplication
 from aqt.addons import AddonManager
+from aqt.theme import ThemeManager
 from mock.mock import MagicMock
+from pytestqt.qtbot import QtBot
 
 from note_size.button.button_formatter import ButtonFormatter
 from note_size.button.details_formatter import DetailsFormatter
+from note_size.button.ui.details_dialog import DetailsDialog
 from note_size.cache.cache_initializer import CacheInitializer
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
@@ -22,6 +25,7 @@ from note_size.config.config import Config
 from note_size.config.config_loader import ConfigLoader
 from note_size.config.config_ui import ConfigUi
 from note_size.config.settings import Settings
+from note_size.config.ui.model_converter import ModelConverter
 from note_size.config.ui.ui_model import UiModel
 from note_size.deck_browser.collection_size_formatter import CollectionSizeFormatter
 from note_size.deck_browser.trash import Trash
@@ -178,8 +182,9 @@ def logs(settings: Settings) -> Logs:
 
 
 @pytest.fixture
-def config_ui() -> ConfigUi:
-    return MagicMock()
+def config_ui(config: Config, config_loader: ConfigLoader, logs: Logs, cache_initializer: CacheInitializer,
+              settings: Settings) -> ConfigUi:
+    return ConfigUi(config, config_loader, logs, cache_initializer, settings)
 
 
 @pytest.fixture
@@ -194,3 +199,18 @@ def mw(profile_manager: ProfileManager, qapp: QApplication) -> AnkiQt:
 @pytest.fixture
 def ui_model() -> UiModel:
     return UiModel()
+
+
+@pytest.fixture
+def details_dialog(qtbot: QtBot, size_calculator: SizeCalculator, config_ui: ConfigUi, config: Config,
+                   settings: Settings, ui_model: UiModel, theme_manager: ThemeManager) -> DetailsDialog:
+    ModelConverter.apply_config_to_model(ui_model, config)
+    details_dialog: DetailsDialog = DetailsDialog(size_calculator, config_ui, config, settings)
+    theme_manager.apply_style()
+    qtbot.addWidget(details_dialog)
+    return details_dialog
+
+
+@pytest.fixture
+def theme_manager() -> ThemeManager:
+    return ThemeManager()

@@ -12,7 +12,8 @@ from note_size.config.ui.widgets import CheckboxWithInfo
 
 
 @pytest.fixture
-def cache_tab(qtbot: QtBot, config: Config, cache_initializer: CacheInitializer, settings: Settings, ui_model: UiModel):
+def cache_tab(qtbot: QtBot, config: Config, cache_initializer: CacheInitializer, settings: Settings,
+              ui_model: UiModel) -> CacheTab:
     ModelConverter.apply_config_to_model(ui_model, config)
     cache_tab: CacheTab = CacheTab(ui_model, cache_initializer, settings)
     cache_tab.refresh_from_model()

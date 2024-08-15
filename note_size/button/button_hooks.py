@@ -5,11 +5,11 @@ from typing import Any, Callable, Optional
 from anki.notes import Note
 from aqt import gui_hooks
 from aqt.editor import Editor
-from aqt.utils import showInfo
 from aqt.webview import WebContent
 from aqt.qt import QWidget
 
 from .button_label import ButtonLabel
+from .ui.details_dialog import DetailsDialog
 from ..config.config import Config
 from ..config.settings import Settings
 from .button_formatter import ButtonFormatter
@@ -20,7 +20,7 @@ log: Logger = logging.getLogger(__name__)
 
 class ButtonHooks:
     def __init__(self, details_formatter: DetailsFormatter, button_formatter: ButtonFormatter,
-                 settings: Settings, config: Config):
+                 details_dialog: DetailsDialog, settings: Settings, config: Config):
         self.editor: Optional[Editor] = None
         self.__config: Config = config
         self.__details_formatter: DetailsFormatter = details_formatter
@@ -34,6 +34,7 @@ class ButtonHooks:
         self.__hook_webview_will_set_content: Callable[[WebContent, Optional[object]], None] \
             = self.__add_size_button_css
         self.__hook_focus_did_change: Callable[[Optional[QWidget], Optional[QWidget]], None] = self.__on_focus_changed
+        self.__details_dialog: DetailsDialog = details_dialog
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def setup_hooks(self) -> None:
@@ -69,7 +70,7 @@ class ButtonHooks:
         log.debug("On size button click...")
         note: Note = editor.note
         if note:
-            showInfo(self.__details_formatter.format_note_detailed_text(note))
+            self.__details_dialog.show_note(note)
 
     def __on_editor_did_init_buttons(self, buttons: list[str], editor: Editor) -> None:
         log.debug("On Editor did init buttons...")

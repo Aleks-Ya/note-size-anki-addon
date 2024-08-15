@@ -4,6 +4,7 @@ from pathlib import Path
 from anki.collection import Collection
 from aqt import mw, gui_hooks
 
+from .button.ui.details_dialog import DetailsDialog
 from .cache.cache_hooks import CacheHooks
 from .cache.cache_initializer import CacheInitializer
 from .cache.media_cache import MediaCache
@@ -47,13 +48,14 @@ def __initialize(col: Collection):
     column_hooks.setup_hooks()
     details_formatter: DetailsFormatter = DetailsFormatter(size_calculator, settings, config)
     button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, size_calculator, config)
-    button_hooks: ButtonHooks = ButtonHooks(details_formatter, button_formatter, settings, config)
-    button_hooks.setup_hooks()
     trash: Trash = Trash(col)
     cache_updater: CacheInitializer = CacheInitializer(mw, media_cache, item_id_cache, config)
     collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(
         col, item_id_cache, media_cache, trash, settings)
     config_ui: ConfigUi = ConfigUi(config, config_loader, logs, cache_updater, settings)
+    details_dialog: DetailsDialog = DetailsDialog(size_calculator, config_ui, config, settings)
+    button_hooks: ButtonHooks = ButtonHooks(details_formatter, button_formatter, details_dialog, settings, config)
+    button_hooks.setup_hooks()
     deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter, config, config_ui)
     deck_browser_hooks.setup_hooks()
     cache_hooks: CacheHooks = CacheHooks(media_cache, item_id_cache, size_calculator, cache_updater)
