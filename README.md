@@ -33,9 +33,9 @@ Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
 
 1. Update `CHANGELOG.md` manually
 2. Increment version:
-    1. Major: `bumpversion major`
-    2. Minor: `bumpversion minor`
-    3. Patch: `bumpversion patch`
+    1. Major: `bump-my-version bump major`
+    2. Minor: `bump-my-version bump minor`
+    3. Patch: `bump-my-version bump patch`
 3. Build ZIP: `python setup.py dist`
 4. Upload ZIP to the Addon page: https://ankiweb.net/shared/info/1188705668
 5. Push Git branch and tags: `git push --follow-tags`

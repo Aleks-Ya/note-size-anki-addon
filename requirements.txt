@@ -7,7 +7,7 @@ PyQt6-WebEngine-Qt6==6.6.1
 setuptools
 tox
 bs4
-bumpversion
+bump-my-version
 GitPython
 mock
 pytest
