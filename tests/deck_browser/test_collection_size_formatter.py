@@ -7,7 +7,6 @@ from note_size.cache.item_id_cache import ItemIdCache
 from note_size.deck_browser.collection_size_formatter import CollectionSizeFormatter
 from note_size.deck_browser.trash import Trash
 from note_size.types import MediaFile
-from tests.conftest import profile_dir
 from tests.data import Data
 
 

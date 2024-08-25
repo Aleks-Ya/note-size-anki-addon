@@ -3,9 +3,10 @@ import tempfile
 from pathlib import Path
 from typing import Callable, Any
 
+import aqt
 import pytest
 from anki.collection import Collection
-from aqt import AnkiQt
+from aqt import AnkiQt, ProfileManager, QApplication
 from aqt.addons import AddonManager
 from mock.mock import MagicMock
 
@@ -34,14 +35,25 @@ def module_name() -> str:
 
 
 @pytest.fixture
-def profile_dir() -> Path:
-    return Path(tempfile.mkdtemp(prefix="profile-"))
+def profile_manager(base_dir: Path, profile_name: str) -> ProfileManager:
+    anki_base_dir: Path = ProfileManager.get_created_base_folder(str(base_dir))
+    pm: ProfileManager = ProfileManager(base=anki_base_dir)
+    pm.setupMeta()
+    pm.create(profile_name)
+    pm.openProfile(profile_name)
+    pm.save()
+    return pm
 
 
 @pytest.fixture
-def col(profile_dir: Path) -> Collection:
-    collection_file: Path = profile_dir.joinpath("collection.anki2")
-    col: Collection = Collection(str(collection_file))
+def profile_dir(profile_manager: ProfileManager) -> Path:
+    return Path(profile_manager.profileFolder())
+
+
+@pytest.fixture
+def col(profile_manager: ProfileManager) -> Collection:
+    collection_file: str = profile_manager.collectionPath()
+    col: Collection = Collection(collection_file)
     yield col
     col.close()
 
@@ -57,8 +69,23 @@ def project_dir() -> Path:
 
 
 @pytest.fixture
-def addons_dir() -> Path:
-    return Path(tempfile.mkdtemp())
+def base_dir() -> Path:
+    return Path(tempfile.mkdtemp(prefix="anki-base-dir"))
+
+
+@pytest.fixture
+def logs_dir(base_dir: Path, module_name: str) -> Path:
+    return base_dir / "logs" / "addons" / module_name
+
+
+@pytest.fixture
+def profile_name() -> str:
+    return "User1"
+
+
+@pytest.fixture
+def addons_dir(base_dir: Path) -> Path:
+    return base_dir / "addons21"
 
 
 @pytest.fixture
@@ -71,8 +98,8 @@ def module_dir(addons_dir: Path, module_name: str, project_dir: Path) -> Path:
 
 
 @pytest.fixture
-def settings(col: Collection, module_dir: Path, module_name: str) -> Settings:
-    return Settings(module_dir, module_name, Path())
+def settings(module_dir: Path, module_name: str, logs_dir: Path) -> Settings:
+    return Settings(module_dir, module_name, logs_dir)
 
 
 @pytest.fixture
@@ -156,8 +183,12 @@ def config_ui() -> ConfigUi:
 
 
 @pytest.fixture
-def mw() -> AnkiQt:
-    return MagicMock()
+def mw(profile_manager: ProfileManager, qapp: QApplication) -> AnkiQt:
+    mw_mock: MagicMock = MagicMock()
+    mw_mock.pm = profile_manager
+    mw_mock.app = qapp
+    aqt.mw = mw_mock
+    return mw_mock
 
 
 @pytest.fixture
