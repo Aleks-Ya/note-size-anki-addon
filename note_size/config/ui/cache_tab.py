@@ -19,12 +19,12 @@ class CacheTab(QWidget):
         super().__init__()
         self.__model: UiModel = model
         self.__cache_updater: CacheInitializer = cache_updater
-        warmup_enabled_url: str = urljoin(settings.docs_base_url, "description/configuration.md#warmup-enabled")
+        warmup_enabled_url: str = urljoin(settings.docs_base_url, "docs/configuration.md#warmup-enabled")
         self.__enable_warmup_checkbox: CheckboxWithInfo = CheckboxWithInfo(
             "Enable cache warm-up", warmup_enabled_url, settings)
         self.__enable_warmup_checkbox.add_checkbox_listener(self.__on_warmup_checkbox_state_changed)
         store_cache_to_file_enabled_url: str = urljoin(settings.docs_base_url,
-                                                       "description/configuration.md#store-cache-on-disk")
+                                                       "docs/configuration.md#store-cache-on-disk")
         self.__store_cache_to_file_checkbox: CheckboxWithInfo = CheckboxWithInfo(
             "Store cache in file on exit", store_cache_to_file_enabled_url, settings)
         self.__store_cache_to_file_checkbox.add_checkbox_listener(self.__on_store_to_file_checkbox_state_changed)

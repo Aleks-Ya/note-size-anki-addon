@@ -2,28 +2,13 @@
 
 **Table of content**
 
-- [Open configuration in Anki interface](#open-configuration-in-anki-interface)
-- [Supported properties](#supported-properties)
-    - [Default values](#default-values)
-    - [Logging](#logging)
-        - [Logging Level](#logging-level)
-    - [Deck Browser](#deck-browser)
-        - [Show Collection Size](#show-collection-size)
-    - [Size Button](#size-button)
-        - [Enabled](#enabled)
-        - [Max Filename Length](#max-filename-length)
-        - [Max Files To Show](#max-files-to-show)
-        - [Color - Enabled](#color---enabled)
-        - [Color - Levels](#color---levels)
-    - [Cache](#cache)
-        - [Warmup Enabled](#warmup-enabled)
-        - [Store cache on disk](#store-cache-on-disk)
+<!--TOC-->
 
 ---
 
 ## Open configuration in Anki interface
 
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/open_config.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/open_config.png)
 
 ---
 
@@ -56,7 +41,7 @@ Output log file on Windows: `c:\Users\%USERNAME%\AppData\Roaming\Anki2\logs\addo
 #### Show Collection Size
 
 Display or hide the Collection size in the Deck Browser:  
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/collection_size.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/collection_size.png)
 
 - Property name: `Deck Browser` - `Show Collection Size`
 - Type: Boolean
@@ -81,7 +66,7 @@ Display or hide the Size Button in the Browser, in the Editor and in the Adding 
 #### Max Filename Length
 
 Shorten long filenames which cannot fit on the screen:
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/config_max_filename_length.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/config_max_filename_length.png)
 
 - Property name: `Size Button` - `Details Window` - `Max Filename Length`
 - Type: Integer
@@ -93,7 +78,7 @@ Shorten long filenames which cannot fit on the screen:
 #### Max Files To Show
 
 Limit number of files displayed in the details windows:
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/config_max_files_to_show.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/config_max_files_to_show.png)
 
 - Property name: `Size Button` - `Details Window` - `Max Files To Show`
 - Type: Integer
@@ -105,8 +90,8 @@ Limit number of files displayed in the details windows:
 #### Color - Enabled
 
 Enable or disable marking big notes with color in the Size button.  
-Enabled: ![](images/red_size_button.png)  
-Disabled: ![img.png](images/size_button_color_disabled.png)
+Enabled: ![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/red_size_button.png)  
+Disabled: ![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/size_button_color_disabled.png)
 
 - Property name: `Size Button` - `Color` - `Enabled`
 - Type: Boolean

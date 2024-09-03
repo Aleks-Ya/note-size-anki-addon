@@ -22,7 +22,7 @@ class LoggingTab(QWidget):
         levels: list[str] = ["NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
         self.__combo_box_layout: TitledComboBoxLayout = TitledComboBoxLayout(
             'Log level:', settings,
-            urljoin(settings.docs_base_url, "description/configuration.md#logging-level"),
+            urljoin(settings.docs_base_url, "docs/configuration.md#logging-level"),
             levels)
         self.__combo_box_layout.add_current_text_changed_callback(self.__on_log_level_changed)
         open_log_file_button: QPushButton = QPushButton("Open log file")

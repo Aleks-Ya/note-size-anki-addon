@@ -2,14 +2,11 @@
 
 **Table of content**
 
-- [How note size is calculated](#how-note-size-is-calculated)
-- [How collection size is calculated](#how-collection-size-is-calculated)
-- [Implemented features](#implemented-features)
-    - [In Deck Browser](#in-deck-browser)
-    - [In Browser](#in-browser)
-    - [In Editor when adding new note](#in-editor-when-adding-new-note)
+<!--TOC-->
 
-## How note size is calculated
+---
+
+## How note size is calculated?
 
 A note size comprises:
 
@@ -21,9 +18,9 @@ For example, a space can consume 6 bytes because it can be represented internall
 Also, Unicode symbols can consume from 1 to 4 bytes each (`A` consumes 1 byte, while `𝛴` consumes 4 bytes).  
 Often Anki automatically wraps your text with HTML tags which consume additional bytes.
 
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/calculate_note_size.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/calculate_note_size.png)
 
-## How collection size is calculated
+## How collection size is calculated?
 
 _Collection size_ is the size of file `collection.anki2` located in the current profile folder.  
 _Media size_ is the size of folder `collection.media` located in the current profile folder.  
@@ -38,12 +35,12 @@ _Total size_ is the sum of the collection and media sizes.
 
 ### In Deck Browser
 
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/collection_size.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/collection_size.png)
 
 ### In Browser
 
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/edit_note.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/edit_note.png)
 
 ### In Editor when adding new note
 
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/description/images/add_note.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/add_note.png)

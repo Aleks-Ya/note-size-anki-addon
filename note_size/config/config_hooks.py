@@ -51,7 +51,7 @@ class ConfigHooks:
 
         open_user_manual_action: QAction = QAction("User manual...", mw)
         qconnect(open_user_manual_action.triggered, lambda: self.__open_web_page(
-            "https://github.com/Aleks-Ya/note-size-anki-addon/blob/main/description/user_manual.md"))
+            "https://github.com/Aleks-Ya/note-size-anki-addon/blob/main/docs/user-manual.md"))
 
         open_addon_page_action: QAction = QAction("Addon page...", mw)
         qconnect(open_addon_page_action.triggered,

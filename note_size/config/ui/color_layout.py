@@ -25,7 +25,7 @@ class ColorLayout(QVBoxLayout):
     def __init__(self, model: UiModel, settings: Settings):
         super().__init__()
         self.__model: UiModel = model
-        url: str = urljoin(settings.docs_base_url, "description/configuration.md#color---enabled")
+        url: str = urljoin(settings.docs_base_url, "docs/configuration.md#color---enabled")
         self.__color_enabled_checkbox: CheckboxWithInfo = CheckboxWithInfo("Enable colors", url, settings)
         self.__color_enabled_checkbox.add_checkbox_listener(self.__on_color_enabled_checkbox_state_changed)
         headers: list[str] = ["Min Size", "Max Size", "Color"]
@@ -45,7 +45,7 @@ class ColorLayout(QVBoxLayout):
         self.__remove_button.setToolTip("Remove selected color level")
         self.__remove_button.setFixedWidth(self.__remove_button.sizeHint().width())
         self.__remove_button.clicked.connect(self.__remove_row)
-        button_url: str = urljoin(settings.docs_base_url, "description/configuration.md#color---levels")
+        button_url: str = urljoin(settings.docs_base_url, "docs/configuration.md#color---levels")
         info_button: InfoButton = InfoButton(button_url, settings)
         add_remove_level_layout.addWidget(self.__add_button)
         add_remove_level_layout.addWidget(self.__remove_button)
