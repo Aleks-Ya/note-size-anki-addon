@@ -30,6 +30,7 @@ class CacheTab(QWidget):
         self.__store_cache_to_file_checkbox.add_checkbox_listener(self.__on_store_to_file_checkbox_state_changed)
         refresh_cache_button: QPushButton = QPushButton("Refresh cache")
         refresh_cache_button.setFixedWidth(refresh_cache_button.sizeHint().width())
+        # noinspection PyUnresolvedReferences
         refresh_cache_button.clicked.connect(self.__refresh_caches)
         layout: QVBoxLayout = QVBoxLayout()
         layout.setAlignment(Qt.AlignmentFlag.AlignTop)

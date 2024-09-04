@@ -27,6 +27,7 @@ class LoggingTab(QWidget):
         self.__combo_box_layout.add_current_text_changed_callback(self.__on_log_level_changed)
         open_log_file_button: QPushButton = QPushButton("Open log file")
         open_log_file_button.setFixedWidth(open_log_file_button.sizeHint().width())
+        # noinspection PyUnresolvedReferences
         open_log_file_button.clicked.connect(self.__on_open_log_file_click)
         layout: QVBoxLayout = QVBoxLayout()
         layout.setAlignment(Qt.AlignmentFlag.AlignTop)

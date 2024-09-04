@@ -45,6 +45,7 @@ class TitledComboBoxLayout(QHBoxLayout):
         self.__combo_box.setCurrentText(current_text)
 
     def add_current_text_changed_callback(self, callback: Callable[[Any], None]) -> None:
+        # noinspection PyUnresolvedReferences
         self.__combo_box.currentTextChanged.connect(callback)
 
 
@@ -77,6 +78,7 @@ class TitledSpinBoxLayout(QHBoxLayout):
         self.__spin_box.setEnabled(enabled)
 
     def add_editing_finished_callback(self, callback: Callable[[], None]) -> None:
+        # noinspection PyUnresolvedReferences
         self.__spin_box.editingFinished.connect(callback)
 
 
@@ -90,6 +92,7 @@ class CheckboxWithInfo(QHBoxLayout):
         self.addWidget(button)
 
     def add_checkbox_listener(self, callback: Callable[[bool], None]) -> None:
+        # noinspection PyUnresolvedReferences
         self.__checkbox.stateChanged.connect(callback)
 
     def is_checked(self) -> bool:
@@ -108,6 +111,7 @@ class InfoButton(QPushButton):
         size: int = 15
         self.setIconSize(QSize(size, size))
         self.setFixedWidth(size + 6)
+        # noinspection PyUnresolvedReferences
         self.clicked.connect(self.__open_link)
         self.setToolTip("Open documentation in browser")
         self.setStyleSheet("border: none;")
