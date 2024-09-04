@@ -49,10 +49,10 @@ class SizeCalculator:
                 self.__note_files_cache[note.id] = all_files
                 return all_files
 
-    def calculate_size_of_files(self, files: set[MediaFile], use_cache: bool):
+    def calculate_size_of_files(self, files: set[MediaFile], use_cache: bool) -> SizeBytes:
         return SizeBytes(sum([self.__media_cache.get_file_size(file, use_cache) for file in files]))
 
-    def evict_note(self, note_id: NoteId):
+    def evict_note(self, note_id: NoteId) -> None:
         with self.__lock:
             if note_id in self.__note_files_cache:
                 del self.__note_files_cache[note_id]

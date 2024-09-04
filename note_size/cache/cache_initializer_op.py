@@ -31,7 +31,7 @@ class CacheInitializerOp:
         self.__show_success_info: bool = show_success_info
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def initialize_cache_in_background(self):
+    def initialize_cache_in_background(self) -> None:
         if self.__config.get_cache_warmup_enabled():
             log.info("Initialize cache")
             QueryOp(parent=self.__parent, op=self.__background_op, success=self.__on_success).failure(
@@ -80,11 +80,11 @@ class CacheInitializerOp:
             log.info("Skip cache initialization because the cache was read from file")
             return 0
 
-    def __update_progress(self, label: str, value: Optional[int], max_value: Optional[int]):
+    def __update_progress(self, label: str, value: Optional[int], max_value: Optional[int]) -> None:
         if value and value % 1000 == 0:
             self.__mw.taskman.run_on_main(lambda: self.__update_progress_in_main(label, value, max_value))
 
-    def __update_progress_in_main(self, label: str, value: Optional[int], max_value: Optional[int]):
+    def __update_progress_in_main(self, label: str, value: Optional[int], max_value: Optional[int]) -> None:
         self.__mw.progress.set_title(self.__progress_dialog_title)
         self.__mw.progress.update(label=label, value=value, max=max_value)
 

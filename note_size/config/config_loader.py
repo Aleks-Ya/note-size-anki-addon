@@ -12,7 +12,7 @@ log: Logger = logging.getLogger(__name__)
 
 class ConfigLoader:
 
-    def __init__(self, addon_manager: AddonManager, settings: Settings):
+    def __init__(self, addon_manager: AddonManager, settings: Settings) -> None:
         self.__module_name: str = settings.module_name
         self.__addon_manager: AddonManager = addon_manager
         log.debug(f"{self.__class__.__name__} was instantiated")

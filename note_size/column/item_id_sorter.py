@@ -14,7 +14,7 @@ log: Logger = logging.getLogger(__name__)
 
 class ItemIdSorter:
 
-    def __init__(self, item_id_cache: ItemIdCache):
+    def __init__(self, item_id_cache: ItemIdCache) -> None:
         self.__item_id_cache: ItemIdCache = item_id_cache
         log.debug(f"{self.__class__.__name__} was instantiated")
 

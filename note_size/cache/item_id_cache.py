@@ -176,12 +176,12 @@ class ItemIdCache:
                                                                              SizeType.FILES: {}}
             self.__note_files_cache: dict[NoteId, list[MediaFile]] = {}
 
-    def delete_cache_file(self):
+    def delete_cache_file(self) -> None:
         if self.__cache_file.exists():
             os.remove(self.__cache_file)
             log.info(f"Cache file was deleted: {self.__cache_file}")
 
-    def refresh_notes_having_updated_files(self):
+    def refresh_notes_having_updated_files(self) -> None:
         if self.is_initialized():
             log.debug("Refreshing notes having updated files started")
             updated_files: list[MediaFile] = self.__media_cache.get_updated_files()

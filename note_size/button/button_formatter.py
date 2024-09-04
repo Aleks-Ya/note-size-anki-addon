@@ -17,7 +17,7 @@ log: Logger = logging.getLogger(__name__)
 
 
 class ButtonFormatter:
-    def __init__(self, item_id_cache: ItemIdCache, size_calculator: SizeCalculator, config: Config):
+    def __init__(self, item_id_cache: ItemIdCache, size_calculator: SizeCalculator, config: Config) -> None:
         self.__config: Config = config
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__size_calculator: SizeCalculator = size_calculator

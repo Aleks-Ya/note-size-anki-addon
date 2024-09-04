@@ -26,7 +26,7 @@ class ColumnHooks:
     __column_files_label: str = "Size (files)"
     __column_files_tooltip: str = "Note size (files only, texts are not included)"
 
-    def __init__(self, item_id_cache: ItemIdCache, item_id_sorter: ItemIdSorter):
+    def __init__(self, item_id_cache: ItemIdCache, item_id_sorter: ItemIdSorter) -> None:
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__item_id_sorter: ItemIdSorter = item_id_sorter
         self.__hook_browser_did_fetch_columns: Callable[[dict[str, Column]], None] = ColumnHooks.__add_custom_column

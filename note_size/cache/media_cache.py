@@ -15,7 +15,7 @@ log: Logger = logging.getLogger(__name__)
 
 class MediaCache:
 
-    def __init__(self, col: Collection, config: Config):
+    def __init__(self, col: Collection, config: Config) -> None:
         self.__config: Config = config
         self.__col: Collection = col
         self.__media_dir: Path = Path(col.media.dir())
@@ -35,7 +35,7 @@ class MediaCache:
                 self.__file_sizes_cache[file] = new_size
             return self.__file_sizes_cache[file]
 
-    def invalidate_cache(self):
+    def invalidate_cache(self) -> None:
         with self.__lock:
             self.__file_sizes_cache.clear()
 

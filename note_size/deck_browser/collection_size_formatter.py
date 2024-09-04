@@ -86,7 +86,7 @@ class CollectionSizeFormatter:
         log.debug("Formatting collection size finished")
         return html
 
-    def __details_icon(self, soup: BeautifulSoup):
+    def __details_icon(self, soup: BeautifulSoup) -> Tag:
         details_icon: Tag = soup.new_tag('img', attrs={
             "title": 'Click to show details',
             "src": f"/_addons/{self.__module_name}/web/info.png",

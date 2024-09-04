@@ -3,26 +3,26 @@ import sys
 from logging import Logger
 from typing import Optional
 
-from ..types import SizeStr, SizeBytes
 from ..calculator.size_formatter import SizeFormatter
+from ..types import SizeStr, SizeBytes
 
 log: Logger = logging.getLogger(__name__)
 
 
 class Level:
     def __init__(self, color: str, min_size_bytes: SizeBytes, max_size_bytes: SizeBytes,
-                 min_size_str: SizeStr, max_size_str: SizeStr):
+                 min_size_str: SizeStr, max_size_str: SizeStr) -> None:
         self.color: str = color
         self.min_size_bytes: SizeBytes = min_size_bytes
         self.max_size_bytes: SizeBytes = max_size_bytes
         self.min_size_str: SizeStr = min_size_str
         self.max_size_str: SizeStr = max_size_str
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (f"Level: {self.color}, {self.min_size_bytes}, {self.max_size_bytes}, "
                 f"{self.min_size_str}, {self.max_size_str}")
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return isinstance(other, Level) and \
             self.color == other.color and \
             self.min_size_bytes == other.min_size_bytes and \
@@ -36,7 +36,7 @@ class LevelParser:
     __min_size_key: str = 'Min Size'
     __max_size_key: str = 'Max Size'
 
-    def __init__(self):
+    def __init__(self) -> None:
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     @staticmethod
@@ -79,7 +79,7 @@ class LevelParser:
         return level_list
 
     @staticmethod
-    def __parse_level(level: dict[str, str]):
+    def __parse_level(level: dict[str, str]) -> Level:
         color: str = level.get("Color")
         min_size_opt: Optional[SizeStr] = SizeStr(level.get("Min Size"))
         max_size_opt: Optional[SizeStr] = SizeStr(level.get("Max Size"))

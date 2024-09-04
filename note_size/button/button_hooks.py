@@ -19,7 +19,7 @@ log: Logger = logging.getLogger(__name__)
 
 class ButtonHooks:
     def __init__(self, button_formatter: ButtonFormatter, details_dialog: DetailsDialog, settings: Settings,
-                 config: Config):
+                 config: Config) -> None:
         self.editor: Optional[Editor] = None
         self.__config: Config = config
         self.__button_formatter: ButtonFormatter = button_formatter
@@ -97,7 +97,7 @@ class ButtonHooks:
         web_content.css.append(f"/_addons/{self.__module_name}/web/size_button.css")
 
     @staticmethod
-    def __eval_callback(val: Any):
+    def __eval_callback(val: Any) -> None:
         log.debug(f"Eval callback: {val}")
 
     def __refresh_size_button(self, editor: Optional[Editor]) -> None:

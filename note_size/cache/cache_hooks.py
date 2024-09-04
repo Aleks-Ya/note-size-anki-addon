@@ -51,10 +51,10 @@ class CacheHooks:
         gui_hooks.profile_will_close.remove(self.__hook_profile_will_close)
         log.info(f"{self.__class__.__name__} was removed")
 
-    def __initialize_cache_on_startup(self):
+    def __initialize_cache_on_startup(self) -> None:
         self.__cache_updater.initialize_caches()
 
-    def __save_cache_to_file(self):
+    def __save_cache_to_file(self) -> None:
         self.__cache_updater.save_cache_to_file()
 
     def __on_note_will_flush(self, note: Note) -> None:

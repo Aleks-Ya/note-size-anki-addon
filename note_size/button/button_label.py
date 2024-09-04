@@ -6,7 +6,7 @@ log: Logger = logging.getLogger(__name__)
 
 class ButtonLabel:
 
-    def __init__(self, text: str, background_color: str):
+    def __init__(self, text: str, background_color: str) -> None:
         self.__text: str = text
         self.__background_color: str = background_color
         log.debug(f"{self.__class__.__name__} was instantiated")
@@ -17,10 +17,10 @@ class ButtonLabel:
     def get_background_color(self) -> str:
         return self.__background_color
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if isinstance(other, ButtonLabel):
             return self.get_text() == other.get_text() and self.get_background_color() == other.get_background_color()
         return False
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{self.__class__.__name__}(text='{self.__text}', background_color='{self.__background_color}')"
