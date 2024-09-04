@@ -10,10 +10,6 @@
     "Logger Level": "DEBUG"
   },
   "Size Button": {
-    "Details Window": {
-      "Max Filename Length": 100,
-      "Max Files To Show": 10
-    },
     "Enabled": true,
     "Color": {
       "Enabled": true,

@@ -16,11 +16,8 @@ class Config:
     __key_2_store_cache_in_file_enabled: str = 'Store Cache In File Enabled'
     __key_2_show_collection_size: str = 'Show Collection Size'
     __key_2_logger_level: str = 'Logger Level'
-    __key_2_details_window: str = 'Details Window'
     __key_2_size_button_enabled: str = 'Enabled'
     __key_2_color: str = 'Color'
-    __key_3_max_filename_length: str = 'Max Filename Length'
-    __key_3_max_files_to_show: str = 'Max Files To Show'
     __key_3_color_enabled: str = 'Enabled'
     __key_3_levels: str = 'Levels'
 
@@ -77,20 +74,6 @@ class Config:
 
     def set_log_level(self, log_level: str) -> None:
         self.__set(log_level, self.__key_1_logging, self.__key_2_logger_level)
-
-    def get_size_button_details_formatter_max_filename_length(self) -> int:
-        return self.__config[self.__key_1_size_button][self.__key_2_details_window][self.__key_3_max_filename_length]
-
-    def set_size_button_details_formatter_max_filename_length(self, max_filename_length: int) -> None:
-        self.__set(max_filename_length, self.__key_1_size_button, self.__key_2_details_window,
-                   self.__key_3_max_filename_length)
-
-    def get_size_button_details_formatter_max_files_to_show(self) -> int:
-        return self.__config[self.__key_1_size_button][self.__key_2_details_window][self.__key_3_max_files_to_show]
-
-    def set_size_button_details_formatter_max_files_to_show(self, max_files_to_show: int) -> None:
-        self.__set(max_files_to_show, self.__key_1_size_button, self.__key_2_details_window,
-                   self.__key_3_max_files_to_show)
 
     def get_size_button_enabled(self) -> bool:
         return self.__config[self.__key_1_size_button][self.__key_2_size_button_enabled]

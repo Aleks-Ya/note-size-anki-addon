@@ -1,8 +1,8 @@
 import logging
 from logging import Logger
 
-from ...config.ui.ui_model import UiModel
 from ...config.config import Config
+from ...config.ui.ui_model import UiModel
 
 log: Logger = logging.getLogger(__name__)
 
@@ -13,10 +13,6 @@ class ModelConverter:
     def apply_model_to_config(model: UiModel, config: Config):
         config.set_deck_browser_show_collection_size(model.deck_browser_show_collection_size)
         config.set_size_button_enabled(model.size_button_enabled)
-        config.set_size_button_details_formatter_max_filename_length(
-            model.size_button_details_formatter_max_filename_length)
-        config.set_size_button_details_formatter_max_files_to_show(
-            model.size_button_details_formatter_max_files_to_show)
         config.set_size_button_color_enabled(model.size_button_color_enabled)
         config.set_size_button_color_levels(model.size_button_color_levels)
         config.set_log_level(model.log_level)
@@ -27,10 +23,6 @@ class ModelConverter:
     def apply_config_to_model(model: UiModel, config: Config):
         model.deck_browser_show_collection_size = config.get_deck_browser_show_collection_size()
         model.size_button_enabled = config.get_size_button_enabled()
-        model.size_button_details_formatter_max_filename_length \
-            = config.get_size_button_details_formatter_max_filename_length()
-        model.size_button_details_formatter_max_files_to_show \
-            = config.get_size_button_details_formatter_max_files_to_show()
         model.size_button_color_enabled = config.get_size_button_color_enabled()
         model.size_button_color_levels = config.get_size_button_color_levels()
         model.log_level = config.get_log_level()

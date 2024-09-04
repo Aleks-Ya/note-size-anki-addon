@@ -63,30 +63,6 @@ Display or hide the Size Button in the Browser, in the Editor and in the Adding 
 
 ---
 
-#### Max Filename Length
-
-Shorten long filenames which cannot fit on the screen:
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/config_max_filename_length.png)
-
-- Property name: `Size Button` - `Details Window` - `Max Filename Length`
-- Type: Integer
-- Default value: `100`
-- Possible values: positive number
-
----
-
-#### Max Files To Show
-
-Limit number of files displayed in the details windows:
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/config_max_files_to_show.png)
-
-- Property name: `Size Button` - `Details Window` - `Max Files To Show`
-- Type: Integer
-- Default value: `10`
-- Possible values: positive number
-
----
-
 #### Color - Enabled
 
 Enable or disable marking big notes with color in the Size button.  

@@ -13,8 +13,6 @@
     - [Show Collection Size](#show-collection-size)
   - [Size Button](#size-button)
     - [Enabled](#enabled)
-    - [Max Filename Length](#max-filename-length)
-    - [Max Files To Show](#max-files-to-show)
     - [Color - Enabled](#color---enabled)
     - [Color - Levels](#color---levels)
   - [Cache](#cache)
@@ -79,30 +77,6 @@ Display or hide the Size Button in the Browser, in the Editor and in the Adding 
 - Type: Boolean
 - Default value: `true`
 - Possible values: `true` or `false`
-
----
-
-#### Max Filename Length
-
-Shorten long filenames which cannot fit on the screen:
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/config_max_filename_length.png)
-
-- Property name: `Size Button` - `Details Window` - `Max Filename Length`
-- Type: Integer
-- Default value: `100`
-- Possible values: positive number
-
----
-
-#### Max Files To Show
-
-Limit number of files displayed in the details windows:
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/config_max_files_to_show.png)
-
-- Property name: `Size Button` - `Details Window` - `Max Files To Show`
-- Type: Integer
-- Default value: `10`
-- Possible values: positive number
 
 ---
 
