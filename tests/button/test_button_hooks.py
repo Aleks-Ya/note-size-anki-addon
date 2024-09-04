@@ -3,16 +3,15 @@ from aqt import gui_hooks
 
 from note_size.button.button_formatter import ButtonFormatter
 from note_size.button.button_hooks import ButtonHooks
-from note_size.button.details_formatter import DetailsFormatter
 from note_size.button.ui.details_dialog import DetailsDialog
 from note_size.config.config import Config
 from note_size.config.settings import Settings
 
 
 @pytest.fixture
-def button_hooks(settings: Settings, config: Config, button_formatter: ButtonFormatter, details_dialog: DetailsDialog,
-                 details_formatter: DetailsFormatter) -> ButtonHooks:
-    button_hooks = ButtonHooks(details_formatter, button_formatter, details_dialog, settings, config)
+def button_hooks(settings: Settings, config: Config, button_formatter: ButtonFormatter,
+                 details_dialog: DetailsDialog) -> ButtonHooks:
+    button_hooks = ButtonHooks(button_formatter, details_dialog, settings, config)
     yield button_hooks
     button_hooks.remove_hooks()
 

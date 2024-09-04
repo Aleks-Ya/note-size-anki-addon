@@ -24,9 +24,6 @@ package NoteSize {
             setup_hooks()
         }
     }
-    class DetailsFormatter {
-        format_note_detailed_text(Note): str
-    }
     class ButtonFormatter {
         get_zero_size_label(): ButtonLabel
         get_add_mode_label(Note): ButtonLabel
@@ -59,14 +56,10 @@ Init --> ColumnHooks
 Init --> ButtonHooks
 
 ButtonHooks --> ButtonFormatter
-ButtonHooks --> DetailsFormatter
 
 ButtonFormatter --> ItemIdCache
 ButtonFormatter --> SizeCalculator
 ButtonFormatter --> SizeFormatter
-
-DetailsFormatter --> SizeFormatter
-DetailsFormatter --> SizeCalculator
 
 SizeCalculator --> MediaManager
 

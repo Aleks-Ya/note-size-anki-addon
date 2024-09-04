@@ -13,7 +13,6 @@ from mock.mock import MagicMock
 from pytestqt.qtbot import QtBot
 
 from note_size.button.button_formatter import ButtonFormatter
-from note_size.button.details_formatter import DetailsFormatter
 from note_size.button.ui.details_dialog import DetailsDialog
 from note_size.cache.cache_initializer import CacheInitializer
 from note_size.cache.item_id_cache import ItemIdCache
@@ -157,11 +156,6 @@ def trash(col: Collection) -> Trash:
 def collection_size_formatter(col: Collection, item_id_cache: ItemIdCache, media_cache: MediaCache,
                               trash: Trash, settings: Settings) -> CollectionSizeFormatter:
     return CollectionSizeFormatter(col, item_id_cache, media_cache, trash, settings)
-
-
-@pytest.fixture
-def details_formatter(config: Config, settings: Settings, size_calculator: SizeCalculator) -> DetailsFormatter:
-    return DetailsFormatter(size_calculator, settings, config)
 
 
 @pytest.fixture

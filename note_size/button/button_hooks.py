@@ -13,17 +13,15 @@ from .ui.details_dialog import DetailsDialog
 from ..config.config import Config
 from ..config.settings import Settings
 from .button_formatter import ButtonFormatter
-from .details_formatter import DetailsFormatter
 
 log: Logger = logging.getLogger(__name__)
 
 
 class ButtonHooks:
-    def __init__(self, details_formatter: DetailsFormatter, button_formatter: ButtonFormatter,
-                 details_dialog: DetailsDialog, settings: Settings, config: Config):
+    def __init__(self, button_formatter: ButtonFormatter, details_dialog: DetailsDialog, settings: Settings,
+                 config: Config):
         self.editor: Optional[Editor] = None
         self.__config: Config = config
-        self.__details_formatter: DetailsFormatter = details_formatter
         self.__button_formatter: ButtonFormatter = button_formatter
         self.__module_name: str = settings.module_name
         self.__hook_editor_did_init: Callable[[Editor], None] = self.__on_editor_did_init

@@ -7,8 +7,8 @@ from aqt import mw, gui_hooks
 from .button.ui.details_dialog import DetailsDialog
 from .cache.cache_hooks import CacheHooks
 from .cache.cache_initializer import CacheInitializer
-from .cache.media_cache import MediaCache
 from .cache.item_id_cache import ItemIdCache
+from .cache.media_cache import MediaCache
 from .config.config_hooks import ConfigHooks
 from .config.config_ui import ConfigUi
 from .config.settings import Settings
@@ -19,7 +19,6 @@ from .log.logs import Logs
 
 def __initialize(col: Collection):
     from .button.button_formatter import ButtonFormatter
-    from .button.details_formatter import DetailsFormatter
     from .button.button_hooks import ButtonHooks
     from .column.item_id_sorter import ItemIdSorter
     from .config.config import Config
@@ -46,7 +45,6 @@ def __initialize(col: Collection):
     item_id_sorter: ItemIdSorter = ItemIdSorter(item_id_cache)
     column_hooks: ColumnHooks = ColumnHooks(item_id_cache, item_id_sorter)
     column_hooks.setup_hooks()
-    details_formatter: DetailsFormatter = DetailsFormatter(size_calculator, settings, config)
     button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, size_calculator, config)
     trash: Trash = Trash(col)
     cache_updater: CacheInitializer = CacheInitializer(mw, media_cache, item_id_cache, config)
@@ -54,7 +52,7 @@ def __initialize(col: Collection):
         col, item_id_cache, media_cache, trash, settings)
     config_ui: ConfigUi = ConfigUi(config, config_loader, logs, cache_updater, settings)
     details_dialog: DetailsDialog = DetailsDialog(size_calculator, config_ui, config, settings)
-    button_hooks: ButtonHooks = ButtonHooks(details_formatter, button_formatter, details_dialog, settings, config)
+    button_hooks: ButtonHooks = ButtonHooks(button_formatter, details_dialog, settings, config)
     button_hooks.setup_hooks()
     deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter, config, config_ui)
     deck_browser_hooks.setup_hooks()
