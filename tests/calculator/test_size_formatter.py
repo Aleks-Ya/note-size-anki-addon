@@ -31,3 +31,12 @@ def test_bytes_to_str_performance(size_formatter: SizeFormatter):
 def __run_bytes_to_str(size_formatter: SizeFormatter):
     for i in range(0, 100_000):
         size_formatter.bytes_to_str(SizeBytes(i))
+
+def test_str_to_bytes_performance(size_formatter: SizeFormatter):
+    execution_time: float = timeit.timeit(lambda: __run_str_to_bytes(size_formatter), number=1)
+    assert execution_time <= 0.5
+
+
+def __run_str_to_bytes(size_formatter: SizeFormatter):
+    for i in range(0, 100_000):
+        size_formatter.str_to_bytes(SizeStr(f"{i} B"))
