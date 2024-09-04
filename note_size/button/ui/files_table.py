@@ -89,14 +89,14 @@ class FilesTable(QTableWidget):
     def show_files(self, file_sizes: dict[MediaFile, SizeBytes]):
         self.setRowCount(len(file_sizes))
         for i, (file, size) in enumerate(file_sizes.items()):
-            filename, size_text = SizeFormatter.file_size_to_str(file, size, 1_000_000)
-            icon_path: Path = self.__get_file_icon(filename)
+            size_str: SizeStr = SizeFormatter.bytes_to_str(size)
+            icon_path: Path = self.__get_file_icon(file)
             icon_item: _IconTableWidgetItem = _IconTableWidgetItem(icon_path)
 
-            filename_item: QTableWidgetItem = QTableWidgetItem(filename)
+            filename_item: QTableWidgetItem = QTableWidgetItem(file)
             filename_item.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
 
-            size_item: _SizeTableWidgetItem = _SizeTableWidgetItem(size, size_text)
+            size_item: _SizeTableWidgetItem = _SizeTableWidgetItem(size, size_str)
 
             self.setItem(i, self.__icon_column, icon_item)
             self.setItem(i, self.__filename_column, filename_item)
