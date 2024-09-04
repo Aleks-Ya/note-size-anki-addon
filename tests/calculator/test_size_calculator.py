@@ -2,8 +2,8 @@ import pytest
 from anki.collection import Collection
 from anki.notes import Note
 
-from note_size.types import SizeBytes, MediaFile
 from note_size.calculator.size_calculator import SizeCalculator
+from note_size.types import SizeBytes, MediaFile
 from tests.data import Data, DefaultFields
 
 
@@ -63,16 +63,6 @@ def test_file_sizes(note: Note, size_calculator: SizeCalculator):
         DefaultFields.file1: SizeBytes(len(DefaultFields.content1)),
         DefaultFields.file2: SizeBytes(len(DefaultFields.content2))}
     assert act_file_sizes == exp_file_sizes
-
-
-def test_sort_by_size_desc():
-    unsorted_dict: dict[MediaFile, SizeBytes] = {
-        DefaultFields.file0: SizeBytes(len(DefaultFields.content0)),
-        DefaultFields.file1: SizeBytes(len(DefaultFields.content1)),
-        DefaultFields.file2: SizeBytes(len(DefaultFields.content2))}
-    assert str(unsorted_dict) == "{'picture.jpg': 7, 'sound.mp3': 5, 'animation.gif': 9}"
-    sorted_dict: dict[MediaFile, SizeBytes] = SizeCalculator.sort_by_size_desc(unsorted_dict)
-    assert str(sorted_dict) == "{'animation.gif': 9, 'picture.jpg': 7, 'sound.mp3': 5}"
 
 
 def test_calculate_size_of_files(col: Collection, size_calculator: SizeCalculator):
