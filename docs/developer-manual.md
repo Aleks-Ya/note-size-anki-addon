@@ -4,6 +4,7 @@
 
 <!--TOC-->
 
+- [Setup Python virtual environment](#setup-python-virtual-environment)
 - [Logs](#logs)
 - [Tests](#tests)
 - [Local deploy](#local-deploy)
@@ -15,14 +16,33 @@
 
 ---
 
+## Setup Python virtual environment
+
+1. Install Tox:
+    1. Install PIPX: `pip install pipx`
+    2. Install Tox: `pipx install tox`
+2. Install PyEnv:
+    1. Install PyEnv: `brew install pyenv`
+    2. Install VirtualEnv: `brew install pyenv-virtualenv`
+3. Create virtual environment:
+    1. `pyenv install 3.9.18`
+    2. `pyenv virtualenv 3.9.18 note-size-anki-addon`
+4. Install Anki packages
+   1. Activate virtual environment: `pyenv activate note-size-anki-addon`
+   2. Install packages: `pip install -r requirements.txt`
+
 ## Logs
 
 See [Logging Level](configuration.md#logging-level)
 
 ## Tests
 
-- Run unit-tests: `tox`
-- [Manual test cases](manual-test-cases.md)
+Run automated tests:
+   1. Prerequisites: [Setup Python virtual environment](#setup-python-virtual-environment)
+   2. Activate virtual environment: `pyenv activate note-size-anki-addon` 
+   3. Run unit-tests: `tox`
+
+[Manual test cases](manual-test-cases.md)
 
 ## Local deploy
 
