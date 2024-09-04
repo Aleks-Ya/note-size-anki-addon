@@ -105,7 +105,8 @@ class CheckboxWithInfo(QHBoxLayout):
 class InfoButton(QPushButton):
     def __init__(self, url: str, settings: Settings):
         super().__init__()
-        self.__url: str = url
+        self.__url: QUrl = QUrl(url)
+        self.__desktop_services: QDesktopServices = QDesktopServices()
         icon: Path = settings.module_dir.joinpath("config").joinpath("ui").joinpath("question.png")
         self.setIcon(QIcon(str(icon)))
         size: int = 15
@@ -117,4 +118,4 @@ class InfoButton(QPushButton):
         self.setStyleSheet("border: none;")
 
     def __open_link(self) -> None:
-        QDesktopServices.openUrl(QUrl(self.__url))
+        self.__desktop_services.openUrl(self.__url)
