@@ -90,9 +90,9 @@ def test_calculate_size_of_files(col: Collection, size_calculator: SizeCalculato
 def test_note_files_performance(size_calculator: SizeCalculator, td: Data):
     note: Note = td.create_note_with_files()
     execution_time: float = timeit.timeit(lambda: __run_note_files(size_calculator, note), number=1)
-    assert execution_time <= 1
+    assert execution_time <= 0.5
 
 
 def __run_note_files(size_calculator: SizeCalculator, note: Note):
-    for i in range(0, 10_000):
-        size_calculator.note_files(note)
+    for i in range(0, 100_000):
+        size_calculator.note_files(note, True)

@@ -102,6 +102,7 @@ class ItemIdCache:
             for cid, nid in list(self.__id_cache.items()):
                 if nid == note_id and note_id in self.__id_cache:
                     del self.__id_cache[cid]
+            self.__size_calculator.evict_note(note_id)
 
     def as_dict_list(self) -> list[dict[str, Any]]:
         return [self.__id_cache, self.__size_bytes_caches, self.__size_str_caches, self.__note_files_cache]
@@ -141,7 +142,7 @@ class ItemIdCache:
                 return self.__note_files_cache[note_id]
             else:
                 note: Note = self.__col.get_note(note_id)
-                files: list[MediaFile] = self.__size_calculator.note_files(note)
+                files: list[MediaFile] = self.__size_calculator.note_files(note, use_cache)
                 self.__note_files_cache[note_id] = files
                 return files
 
