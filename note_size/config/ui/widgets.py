@@ -29,13 +29,14 @@ class GroupVBox(QGroupBox):
 
 
 class TitledComboBoxLayout(QHBoxLayout):
-    def __init__(self, title: str, settings: Settings, url: Optional[str] = None, items: Optional[list[str]] = None):
+    def __init__(self, title: str, desktop_services: QDesktopServices, settings: Settings, url: Optional[str] = None,
+                 items: Optional[list[str]] = None):
         super().__init__()
         label: QLabel = QLabel(title)
         self.__combo_box: QComboBox = QComboBox(None)
         if items:
             self.__combo_box.addItems(items)
-        button: InfoButton = InfoButton(url, settings)
+        button: InfoButton = InfoButton(url, desktop_services, settings)
         self.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self.addWidget(label)
         self.addWidget(self.__combo_box)
@@ -50,8 +51,8 @@ class TitledComboBoxLayout(QHBoxLayout):
 
 
 class TitledSpinBoxLayout(QHBoxLayout):
-    def __init__(self, title: str, settings: Settings, url: Optional[str] = None, minimum: Optional[int] = None,
-                 maximum: Optional[int] = None, value: Optional[int] = None):
+    def __init__(self, title: str, desktop_services: QDesktopServices, settings: Settings, url: Optional[str] = None,
+                 minimum: Optional[int] = None, maximum: Optional[int] = None, value: Optional[int] = None):
         super().__init__()
         self.__label: QLabel = QLabel(title)
         self.__spin_box: QSpinBox = QSpinBox(None)
@@ -61,7 +62,7 @@ class TitledSpinBoxLayout(QHBoxLayout):
             self.__spin_box.setMaximum(maximum)
         if value:
             self.__spin_box.setValue(value)
-        button: InfoButton = InfoButton(url, settings)
+        button: InfoButton = InfoButton(url, desktop_services, settings)
         self.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self.addWidget(self.__label)
         self.addWidget(self.__spin_box)
@@ -83,9 +84,9 @@ class TitledSpinBoxLayout(QHBoxLayout):
 
 
 class CheckboxWithInfo(QHBoxLayout):
-    def __init__(self, text: str, url: str, settings: Settings):
+    def __init__(self, text: str, url: str, desktop_services: QDesktopServices, settings: Settings):
         super().__init__()
-        button: InfoButton = InfoButton(url, settings)
+        button: InfoButton = InfoButton(url, desktop_services, settings)
         self.__checkbox: QCheckBox = QCheckBox(text)
         self.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self.addWidget(self.__checkbox)
@@ -103,10 +104,10 @@ class CheckboxWithInfo(QHBoxLayout):
 
 
 class InfoButton(QPushButton):
-    def __init__(self, url: str, settings: Settings):
+    def __init__(self, url: str, desktop_services: QDesktopServices, settings: Settings):
         super().__init__()
         self.__url: QUrl = QUrl(url)
-        self.__desktop_services: QDesktopServices = QDesktopServices()
+        self.__desktop_services: QDesktopServices = desktop_services
         icon: Path = settings.module_dir.joinpath("config").joinpath("ui").joinpath("question.png")
         self.setIcon(QIcon(str(icon)))
         size: int = 15

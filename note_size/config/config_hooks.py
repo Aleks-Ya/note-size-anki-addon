@@ -13,8 +13,9 @@ log: Logger = logging.getLogger(__name__)
 
 class ConfigHooks:
 
-    def __init__(self, config_ui: ConfigUi) -> None:
+    def __init__(self, config_ui: ConfigUi, desktop_services: QDesktopServices) -> None:
         self.__config_ui: ConfigUi = config_ui
+        self.__desktop_services: QDesktopServices = desktop_services
         self.__hook_main_window_did_init: Callable[[], None] = self.__add_deck_browser_menu_item
         self.__hook_browser_will_show: Callable[[Browser], None] = self.__add_browser_menu_item
         log.debug(f"{self.__class__.__name__} was instantiated")
@@ -36,9 +37,8 @@ class ConfigHooks:
     def __show_config(self) -> None:
         self.__config_ui.show_configuration_dialog()
 
-    @staticmethod
-    def __open_web_page(url: str) -> None:
-        QDesktopServices.openUrl(QUrl(url))
+    def __open_web_page(self, url: str) -> None:
+        self.__desktop_services.openUrl(QUrl(url))
 
     def __add_deck_browser_menu_item(self) -> None:
         log.debug("Main Window did init")

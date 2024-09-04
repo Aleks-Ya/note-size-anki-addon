@@ -2,7 +2,7 @@ from logging import Logger
 from pathlib import Path
 
 from anki.collection import Collection
-from aqt import mw, gui_hooks
+from aqt import mw, gui_hooks, QDesktopServices
 
 from .button.ui.details_dialog import DetailsDialog
 from .cache.cache_hooks import CacheHooks
@@ -50,7 +50,8 @@ def __initialize(col: Collection):
     cache_updater: CacheInitializer = CacheInitializer(mw, media_cache, item_id_cache, config)
     collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(
         col, item_id_cache, media_cache, trash, settings)
-    config_ui: ConfigUi = ConfigUi(config, config_loader, logs, cache_updater, settings)
+    desktop_services: QDesktopServices = QDesktopServices()
+    config_ui: ConfigUi = ConfigUi(config, config_loader, logs, cache_updater, desktop_services, settings)
     details_dialog: DetailsDialog = DetailsDialog(size_calculator, config_ui, config, settings)
     button_hooks: ButtonHooks = ButtonHooks(button_formatter, details_dialog, settings, config)
     button_hooks.setup_hooks()
@@ -58,7 +59,7 @@ def __initialize(col: Collection):
     deck_browser_hooks.setup_hooks()
     cache_hooks: CacheHooks = CacheHooks(media_cache, item_id_cache, size_calculator, cache_updater)
     cache_hooks.setup_hooks()
-    config_hooks: ConfigHooks = ConfigHooks(config_ui)
+    config_hooks: ConfigHooks = ConfigHooks(config_ui, desktop_services)
     config_hooks.setup_hooks()
 
 

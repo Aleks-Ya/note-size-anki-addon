@@ -6,7 +6,7 @@ from typing import Callable, Any
 import aqt
 import pytest
 from anki.collection import Collection
-from aqt import AnkiQt, ProfileManager, QApplication
+from aqt import AnkiQt, ProfileManager, QApplication, QDesktopServices
 from aqt.addons import AddonManager
 from aqt.theme import ThemeManager
 from mock.mock import MagicMock
@@ -176,9 +176,14 @@ def logs(settings: Settings) -> Logs:
 
 
 @pytest.fixture
+def desktop_services() -> QDesktopServices:
+    return QDesktopServices()
+
+
+@pytest.fixture
 def config_ui(config: Config, config_loader: ConfigLoader, logs: Logs, cache_initializer: CacheInitializer,
-              settings: Settings) -> ConfigUi:
-    return ConfigUi(config, config_loader, logs, cache_initializer, settings)
+              desktop_services: QDesktopServices, settings: Settings) -> ConfigUi:
+    return ConfigUi(config, config_loader, logs, cache_initializer, desktop_services, settings)
 
 
 @pytest.fixture

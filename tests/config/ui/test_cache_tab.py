@@ -1,6 +1,7 @@
 import pytest
+from aqt.qt import QCheckBox
+from aqt.qt import Qt, QDesktopServices
 from pytestqt.qtbot import QtBot
-from aqt.qt import Qt, QCheckBox
 
 from note_size.cache.cache_initializer import CacheInitializer
 from note_size.config.config import Config
@@ -12,10 +13,10 @@ from note_size.config.ui.widgets import CheckboxWithInfo
 
 
 @pytest.fixture
-def cache_tab(qtbot: QtBot, config: Config, cache_initializer: CacheInitializer, settings: Settings,
-              ui_model: UiModel) -> CacheTab:
+def cache_tab(qtbot: QtBot, config: Config, cache_initializer: CacheInitializer, desktop_services: QDesktopServices,
+              settings: Settings, ui_model: UiModel) -> CacheTab:
     ModelConverter.apply_config_to_model(ui_model, config)
-    cache_tab: CacheTab = CacheTab(ui_model, cache_initializer, settings)
+    cache_tab: CacheTab = CacheTab(ui_model, cache_initializer, desktop_services, settings)
     cache_tab.refresh_from_model()
     cache_tab.show()
     qtbot.addWidget(cache_tab)
