@@ -2,6 +2,7 @@ import logging
 from logging import Logger
 from threading import RLock
 
+from anki.collection import Collection
 from anki.notes import Note, NoteId
 
 from ..cache.media_cache import MediaCache
@@ -12,8 +13,9 @@ log: Logger = logging.getLogger(__name__)
 
 class SizeCalculator:
 
-    def __init__(self, media_cache: MediaCache):
+    def __init__(self, col: Collection, media_cache: MediaCache):
         self.__lock: RLock = RLock()
+        self.__col: Collection = col
         self.__note_files_cache: dict[NoteId, list[MediaFile]] = {}
         self.__media_cache: MediaCache = media_cache
         log.debug(f"{self.__class__.__name__} was instantiated")
@@ -42,7 +44,7 @@ class SizeCalculator:
             else:
                 all_files: list[MediaFile] = list[MediaFile]()
                 for field in note.fields:
-                    files: list[MediaFile] = note.col.media.files_in_str(note.mid, field)
+                    files: list[MediaFile] = self.__col.media.files_in_str(note.mid, field)
                     all_files += files
                 self.__note_files_cache[note.id] = all_files
                 return all_files

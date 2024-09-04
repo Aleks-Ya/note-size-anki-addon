@@ -117,7 +117,7 @@ def media_cache(col: Collection, config: Config) -> MediaCache:
 
 @pytest.fixture
 def size_calculator(col: Collection, media_cache: MediaCache) -> SizeCalculator:
-    return SizeCalculator(media_cache)
+    return SizeCalculator(col, media_cache)
 
 
 @pytest.fixture
