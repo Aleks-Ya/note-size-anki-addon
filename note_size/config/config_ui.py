@@ -23,4 +23,5 @@ class ConfigUi:
 
     def show_configuration_dialog(self) -> None:
         self.__dialog.refresh_from_model()
+        # noinspection PyUnresolvedReferences
         self.__dialog.show()

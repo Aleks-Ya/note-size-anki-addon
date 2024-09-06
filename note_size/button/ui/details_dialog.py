@@ -16,6 +16,7 @@ from ...types import SizeStr, MediaFile, SizeBytes
 log: Logger = logging.getLogger(__name__)
 
 
+# noinspection PyUnresolvedReferences
 class DetailsDialog(QDialog):
     __total_size_row: int = 0
     __texts_size_row: int = 1
@@ -35,12 +36,12 @@ class DetailsDialog(QDialog):
         self.__files_table: FilesTable = FilesTable(config, settings)
 
         button_box: QDialogButtonBox = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
-        # noinspection PyUnresolvedReferences
         button_box.rejected.connect(self.close)
 
         layout: QGridLayout = QGridLayout(self)
 
         layout.addWidget(self.__total_size_label, self.__total_size_row, 0)
+        # noinspection PyArgumentList
         layout.addWidget(self.__configuration_button(), self.__total_size_row, 1, alignment=Qt.AlignmentFlag.AlignRight)
         layout.addWidget(self.__texts_size_label, self.__texts_size_row, 0)
         layout.addWidget(self.__files_size_label, self.__files_size_row, 0)
@@ -74,7 +75,6 @@ class DetailsDialog(QDialog):
         button.setIconSize(button.sizeHint())
         button.setFixedSize(icon.actualSize(button.iconSize()))
         button.setStyleSheet("border: none;")
-        # noinspection PyUnresolvedReferences
         button.clicked.connect(self.__on_configuration_button_clicked)
         margin: int = 1
         icon_size: QSize = button.size().shrunkBy(QMargins(margin, margin, margin, margin))

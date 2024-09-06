@@ -20,6 +20,7 @@ from ...log.logs import Logs
 log: Logger = logging.getLogger(__name__)
 
 
+# noinspection PyUnresolvedReferences
 class ConfigDialog(QDialog):
     def __init__(self, config: Config, config_loader: ConfigLoader, model: UiModel, logs: Logs,
                  cache_updater: CacheInitializer, desktop_services: QDesktopServices, settings: Settings):
@@ -46,14 +47,11 @@ class ConfigDialog(QDialog):
         button_box: QDialogButtonBox = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok |
                                                         QDialogButtonBox.StandardButton.Cancel |
                                                         QDialogButtonBox.StandardButton.RestoreDefaults)
-        # noinspection PyUnresolvedReferences
         button_box.accepted.connect(self.__accept)
-        # noinspection PyUnresolvedReferences
         button_box.rejected.connect(self.__reject)
         restore_defaults_button: QPushButton = button_box.button(QDialogButtonBox.StandardButton.RestoreDefaults)
         restore_defaults_button.setToolTip(
             'Reset settings in this dialog to defaults. You will need to click the "OK" button to apply it.')
-        # noinspection PyUnresolvedReferences
         restore_defaults_button.clicked.connect(self.__restore_defaults)
 
         layout: QVBoxLayout = QVBoxLayout(self)

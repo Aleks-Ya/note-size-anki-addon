@@ -1,7 +1,5 @@
 import logging
-import sys
 from logging import Logger
-from typing import Optional
 
 from anki.notes import NoteId, Note
 

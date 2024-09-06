@@ -18,6 +18,7 @@ def cache_tab(qtbot: QtBot, config: Config, cache_initializer: CacheInitializer,
     ModelConverter.apply_config_to_model(ui_model, config)
     cache_tab: CacheTab = CacheTab(ui_model, cache_initializer, desktop_services, settings)
     cache_tab.refresh_from_model()
+    # noinspection PyUnresolvedReferences
     cache_tab.show()
     qtbot.addWidget(cache_tab)
     return cache_tab

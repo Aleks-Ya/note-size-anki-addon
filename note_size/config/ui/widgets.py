@@ -103,6 +103,7 @@ class CheckboxWithInfo(QHBoxLayout):
         self.__checkbox.setChecked(checked)
 
 
+# noinspection PyUnresolvedReferences
 class InfoButton(QPushButton):
     def __init__(self, url: str, desktop_services: QDesktopServices, settings: Settings):
         super().__init__()
@@ -113,7 +114,6 @@ class InfoButton(QPushButton):
         size: int = 15
         self.setIconSize(QSize(size, size))
         self.setFixedWidth(size + 6)
-        # noinspection PyUnresolvedReferences
         self.clicked.connect(self.__open_link)
         self.setToolTip("Open documentation in browser")
         self.setStyleSheet("border: none;")

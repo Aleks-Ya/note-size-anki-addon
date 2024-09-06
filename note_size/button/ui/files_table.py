@@ -23,7 +23,9 @@ class _IconTableWidgetItem(QTableWidgetItem):
         self.setFlags(self.flags() & ~Qt.ItemFlag.ItemIsEditable & ~Qt.ItemFlag.ItemIsSelectable)
 
     def __lt__(self, other: object):
-        return self.icon_path < other.icon_path
+        if isinstance(other, _IconTableWidgetItem):
+            return self.icon_path < other.icon_path
+        return NotImplemented
 
 
 class _SizeTableWidgetItem(QTableWidgetItem):
@@ -33,9 +35,12 @@ class _SizeTableWidgetItem(QTableWidgetItem):
         self.size_bytes: SizeBytes = size_bytes
 
     def __lt__(self, other: object):
-        return self.size_bytes < other.size_bytes
+        if isinstance(other, _SizeTableWidgetItem):
+            return self.size_bytes < other.size_bytes
+        return NotImplemented
 
 
+# noinspection PyUnresolvedReferences
 class FilesTable(QTableWidget):
     __icon_column: int = 0
     __filename_column: int = 1
