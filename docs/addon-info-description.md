@@ -11,16 +11,16 @@ For questions, bugs, suggestions see
 
 ### In Browser
 
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/edit_note.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/edit-note.png)
 
 ### In Deck Browser
 
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/collection_size.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/collection-size.png)
 
 ### In Editor when adding new note
 
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/add_note.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/add-note.png)
 
 ### Configuration
 
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/open_config.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/open-config.png)

@@ -25,7 +25,7 @@
 
 ## Open configuration in Anki interface
 
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/open_config.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/open-config.png)
 
 ---
 
@@ -58,7 +58,7 @@ Output log file on Windows: `c:\Users\%USERNAME%\AppData\Roaming\Anki2\logs\addo
 #### Show Collection Size
 
 Display or hide the Collection size in the Deck Browser:  
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/collection_size.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/collection-size.png)
 
 - Property name: `Deck Browser` - `Show Collection Size`
 - Type: Boolean
@@ -83,8 +83,8 @@ Display or hide the Size Button in the Browser, in the Editor and in the Adding 
 #### Color - Enabled
 
 Enable or disable marking big notes with color in the Size button.  
-Enabled: ![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/red_size_button.png)  
-Disabled: ![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/size_button_color_disabled.png)
+Enabled: ![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/red-size-button.png)  
+Disabled: ![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/size-button-color-disabled.png)
 
 - Property name: `Size Button` - `Color` - `Enabled`
 - Type: Boolean

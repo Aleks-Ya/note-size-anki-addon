@@ -7,9 +7,9 @@ See [User Manual](docs/user-manual.md) for details.
 
 Screenshots:
 
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/collection_size.png)
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/edit_note.png)
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/open_config.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/collection-size.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/edit-note.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/open-config.png)
 
 ## Links
 

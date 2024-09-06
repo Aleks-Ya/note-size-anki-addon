@@ -4,7 +4,7 @@
 
 2. Wait for cache initialization (happens once on the 1st start)
 
-    ![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/cache_initialization_progress.png)
+    ![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/cache-initialization-progress.png)
 
 3. Show columns in the Browser:
 

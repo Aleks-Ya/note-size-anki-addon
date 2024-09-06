@@ -27,7 +27,7 @@ For example, a space can consume 6 bytes because it can be represented internall
 Also, Unicode symbols can consume from 1 to 4 bytes each (`A` consumes 1 byte, while `𝛴` consumes 4 bytes).  
 Often Anki automatically wraps your text with HTML tags which consume additional bytes.
 
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/calculate_note_size.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/calculate-note-size.png)
 
 ## How collection size is calculated?
 
@@ -44,12 +44,12 @@ _Total size_ is the sum of the collection and media sizes.
 
 ### In Deck Browser
 
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/collection_size.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/collection-size.png)
 
 ### In Browser
 
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/edit_note.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/edit-note.png)
 
 ### In Editor when adding new note
 
-![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/add_note.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/add-note.png)
