@@ -1,5 +1,13 @@
 # Changelog for "Note Size" Anki addon
 
+## [v2.3.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.3.0) - 2024-09-06
+
+1. __[FEATURE]__ New note size details dialog
+2. __[FEATURE]__ Speed up cache initialization
+3. __[DOCS]__ Extract developer manual
+4. __[DOCS]__ Setup auto rendering of table of content in MarkDown
+5. __[MISC]__ Migrate to bump-my-version
+
 ## [v2.2.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.2.0) - 2024-08-11
 
 1. __[FEATURE]__ Display "Unused" and "Trash" collection sizes in Deck Browser
