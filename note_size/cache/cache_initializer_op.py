@@ -56,7 +56,8 @@ class CacheInitializerOp:
             note_number: int = len(all_note_ids)
             for i, note_id in enumerate(all_note_ids):
                 if self.__mw.progress.want_cancel():
-                    return 0
+                    log.info(f"User cancelled notes cache initialization at {i}")
+                    return i
                 self.__update_progress(f"Caching note sizes: {i} of {note_number}", i, note_number)
                 for size_type in size_types:
                     self.__item_id_cache.get_note_size_bytes(note_id, size_type, use_cache=True)
@@ -67,7 +68,8 @@ class CacheInitializerOp:
             card_number: int = len(all_card_ids)
             for i, card_id in enumerate(all_card_ids):
                 if self.__mw.progress.want_cancel():
-                    return 0
+                    log.info(f"User cancelled cards cache initialization at {i}")
+                    return note_number + i
                 self.__update_progress(f"Caching card sizes: {i} of {card_number}", i, card_number)
                 self.__item_id_cache.get_note_id_by_card_id(card_id)
 
