@@ -12,3 +12,4 @@ GitPython
 mock
 pytest
 pytest-qt
+PyQtPath
