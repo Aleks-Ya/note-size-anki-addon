@@ -107,10 +107,12 @@ class FilesTable(QTableWidget):
             self.setItem(i, self.__filename_column, filename_item)
             self.setItem(i, self.__size_column, size_item)
         self.sortItems(self.__size_column, Qt.SortOrder.DescendingOrder)
+        self.show()
 
     def recalculate_window_sizes(self):
         self.resizeRowsToContents()
         self.resizeColumnsToContents()
+        self.adjustSize()
 
     def __get_file_icon(self, filename: str) -> Path:
         icon_path: Path = self.__icons_dir.joinpath("other.png")

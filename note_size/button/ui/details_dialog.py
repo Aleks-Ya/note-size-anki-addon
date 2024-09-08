@@ -105,7 +105,6 @@ class DetailsDialog(QDialog):
         self.__refresh_files_size(note)
         file_sizes: dict[MediaFile, SizeBytes] = self.__size_calculator.file_sizes(note, use_cache=False)
         if len(file_sizes) > 0:
-            self.__files_table.show()
             self.__files_table.show_files(file_sizes)
             self.show()
             self.__files_table.recalculate_window_sizes()
