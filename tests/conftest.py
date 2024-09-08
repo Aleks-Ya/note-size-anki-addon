@@ -54,6 +54,11 @@ def profile_dir(profile_manager: ProfileManager) -> Path:
 
 
 @pytest.fixture
+def media_trash_dir(profile_dir: Path) -> Path:
+    return profile_dir / "media.trash"
+
+
+@pytest.fixture
 def col(profile_manager: ProfileManager) -> Collection:
     collection_file: str = profile_manager.collectionPath()
     col: Collection = Collection(collection_file)

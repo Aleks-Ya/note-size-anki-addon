@@ -1,4 +1,5 @@
 import logging
+import os.path
 from logging import Logger
 from pathlib import Path
 from typing import Optional
@@ -75,7 +76,7 @@ class CollectionSizeFormatter:
         div.append(self.__span(soup, "Total", total_size, total_title))
         config_icon: Tag = soup.new_tag('img', attrs={
             "title": 'Open Configuration',
-            "src": f"/_addons/{self.__module_name}/web/setting.png",
+            "src": os.path.join("_addons", self.__module_name, "web", "setting.png"),
             "height": "12",
             "onclick": f"pycmd('{JsActions.open_config_action}')"
         })
@@ -89,7 +90,7 @@ class CollectionSizeFormatter:
     def __details_icon(self, soup: BeautifulSoup) -> Tag:
         details_icon: Tag = soup.new_tag('img', attrs={
             "title": 'Click to show details',
-            "src": f"/_addons/{self.__module_name}/web/info.png",
+            "src": os.path.join("_addons", self.__module_name, "web", "info.png"),
             "height": "12",
             "onclick": f"pycmd('{JsActions.open_check_media_action}')",
             "style": "margin-right: 0.2em;"
