@@ -5,10 +5,10 @@ from pathlib import Path
 
 from aqt.qt import QTableWidget, Qt, QTableWidgetItem, QIcon, QHeaderView
 
-from ...calculator.size_formatter import SizeFormatter
-from ...config.config import Config
-from ...config.settings import Settings
-from ...types import MediaFile, SizeBytes, SizeStr
+from ..calculator.size_formatter import SizeFormatter
+from ..config.config import Config
+from ..config.settings import Settings
+from ..types import MediaFile, SizeBytes, SizeStr
 
 log: Logger = logging.getLogger(__name__)
 
@@ -49,7 +49,7 @@ class FilesTable(QTableWidget):
     def __init__(self, config: Config, settings: Settings):
         super().__init__(parent=None)
         self.__config: Config = config
-        self.__icons_dir: Path = settings.module_dir / "button" / "ui" / "icon"
+        self.__icons_dir: Path = settings.module_dir / "details_dialog" / "icon"
         self.setColumnCount(3)
         self.setHorizontalHeaderLabels(["", "File", "Size"])
         self.setSizeAdjustPolicy(QTableWidget.SizeAdjustPolicy.AdjustToContents)

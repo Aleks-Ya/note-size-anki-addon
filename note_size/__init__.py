@@ -4,7 +4,6 @@ from pathlib import Path
 from anki.collection import Collection
 from aqt import mw, gui_hooks, QDesktopServices
 
-from .button.ui.details_dialog import DetailsDialog
 from .cache.cache_hooks import CacheHooks
 from .cache.cache_initializer import CacheInitializer
 from .cache.item_id_cache import ItemIdCache
@@ -14,6 +13,7 @@ from .config.config_ui import ConfigUi
 from .config.settings import Settings
 from .deck_browser.collection_size_formatter import CollectionSizeFormatter
 from .deck_browser.trash import Trash
+from .details_dialog.details_dialog import DetailsDialog
 from .log.logs import Logs
 
 

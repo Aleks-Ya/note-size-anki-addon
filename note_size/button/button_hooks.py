@@ -9,10 +9,10 @@ from aqt.webview import WebContent
 from aqt.qt import QWidget
 
 from .button_label import ButtonLabel
-from .ui.details_dialog import DetailsDialog
 from ..config.config import Config
 from ..config.settings import Settings
 from .button_formatter import ButtonFormatter
+from ..details_dialog.details_dialog import DetailsDialog
 
 log: Logger = logging.getLogger(__name__)
 

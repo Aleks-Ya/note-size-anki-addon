@@ -13,7 +13,6 @@ from mock.mock import MagicMock
 from pytestqt.qtbot import QtBot
 
 from note_size.button.button_formatter import ButtonFormatter
-from note_size.button.ui.details_dialog import DetailsDialog
 from note_size.cache.cache_initializer import CacheInitializer
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
@@ -28,6 +27,7 @@ from note_size.config.ui.model_converter import ModelConverter
 from note_size.config.ui.ui_model import UiModel
 from note_size.deck_browser.collection_size_formatter import CollectionSizeFormatter
 from note_size.deck_browser.trash import Trash
+from note_size.details_dialog.details_dialog import DetailsDialog
 from note_size.log.logs import Logs
 from tests.data import Data
 

@@ -2,7 +2,7 @@ import pytest
 from anki.notes import Note
 from pytestqt.qtbot import QtBot
 
-from note_size.button.ui.details_dialog import DetailsDialog
+from note_size.details_dialog.details_dialog import DetailsDialog
 from note_size.types import MediaFile
 from tests.data import Data
 
@@ -58,6 +58,7 @@ def test_details_dialog_higher_than_screen(details_dialog: DetailsDialog, td: Da
     details_dialog.show_note(note)
     qtbot.wait_for_window_shown(details_dialog)
     qtbot.stop()
+
 
 @pytest.mark.skip(reason="For manual running")
 def test_details_dialog_larger_than_screen(details_dialog: DetailsDialog, td: Data, qtbot: QtBot):

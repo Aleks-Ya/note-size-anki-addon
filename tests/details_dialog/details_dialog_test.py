@@ -2,8 +2,8 @@ from anki.notes import Note
 from aqt.qt import QLabel
 from PyQtPath.path_chain_pyqt6 import path
 
-from note_size.button.ui.details_dialog import DetailsDialog
-from note_size.button.ui.files_table import FilesTable
+from note_size.details_dialog.details_dialog import DetailsDialog
+from note_size.details_dialog.files_table import FilesTable
 from tests.data import Data
 
 

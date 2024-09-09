@@ -6,12 +6,12 @@ from anki.notes import Note
 from aqt.qt import QDialog, QLabel, QIcon, QGridLayout, QPushButton, QFont, QSize, QMargins, QDialogButtonBox, Qt
 
 from .files_table import FilesTable
-from ...calculator.size_calculator import SizeCalculator
-from ...calculator.size_formatter import SizeFormatter
-from ...config.config import Config
-from ...config.config_ui import ConfigUi
-from ...config.settings import Settings
-from ...types import SizeStr, MediaFile, SizeBytes
+from ..calculator.size_calculator import SizeCalculator
+from ..calculator.size_formatter import SizeFormatter
+from ..config.config import Config
+from ..config.config_ui import ConfigUi
+from ..config.settings import Settings
+from ..types import SizeStr, MediaFile, SizeBytes
 
 log: Logger = logging.getLogger(__name__)
 
