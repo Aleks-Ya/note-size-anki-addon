@@ -6,8 +6,8 @@ from typing import Sequence
 from anki.notes import NoteId
 from aqt.browser import ItemId
 
-from ..cache.item_id_cache import ItemIdCache
-from ..types import SizeBytes, SizeType
+from ...cache.item_id_cache import ItemIdCache
+from ...types import SizeBytes, SizeType
 
 log: Logger = logging.getLogger(__name__)
 

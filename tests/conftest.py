@@ -12,13 +12,11 @@ from aqt.theme import ThemeManager
 from mock.mock import MagicMock
 from pytestqt.qtbot import QtBot
 
-from note_size.button.button_formatter import ButtonFormatter
 from note_size.cache.cache_initializer import CacheInitializer
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.calculator.size_formatter import SizeFormatter
-from note_size.column.item_id_sorter import ItemIdSorter
 from note_size.config.config import Config
 from note_size.config.config_loader import ConfigLoader
 from note_size.config.config_ui import ConfigUi
@@ -28,6 +26,8 @@ from note_size.config.ui.ui_model import UiModel
 from note_size.deck_browser.collection_size_formatter import CollectionSizeFormatter
 from note_size.deck_browser.trash import Trash
 from note_size.details_dialog.details_dialog import DetailsDialog
+from note_size.editor.button.button_formatter import ButtonFormatter
+from note_size.editor.column.item_id_sorter import ItemIdSorter
 from note_size.log.logs import Logs
 from tests.data import Data
 

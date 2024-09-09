@@ -3,7 +3,7 @@ from typing import Sequence
 from anki.notes import Note
 from aqt.browser import ItemId
 
-from note_size.column.item_id_sorter import ItemIdSorter
+from note_size.editor.column.item_id_sorter import ItemIdSorter
 from note_size.types import SizeType
 from tests.data import Data
 

@@ -4,12 +4,12 @@ from logging import Logger
 from anki.notes import NoteId, Note
 
 from .button_label import ButtonLabel
-from ..cache.item_id_cache import ItemIdCache
-from ..config.config import Config
-from ..config.level_parser import Level, LevelParser
-from ..types import SizeStr, SizeBytes, SizeType
-from ..calculator.size_calculator import SizeCalculator
-from ..calculator.size_formatter import SizeFormatter
+from ...cache.item_id_cache import ItemIdCache
+from ...config.config import Config
+from ...config.level_parser import Level, LevelParser
+from ...types import SizeStr, SizeBytes, SizeType
+from ...calculator.size_calculator import SizeCalculator
+from ...calculator.size_formatter import SizeFormatter
 
 log: Logger = logging.getLogger(__name__)
 

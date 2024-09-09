@@ -4,28 +4,27 @@ from pathlib import Path
 from anki.collection import Collection
 from aqt import mw, gui_hooks, QDesktopServices
 
-from .cache.cache_hooks import CacheHooks
-from .cache.cache_initializer import CacheInitializer
-from .cache.item_id_cache import ItemIdCache
-from .cache.media_cache import MediaCache
-from .config.config_hooks import ConfigHooks
-from .config.config_ui import ConfigUi
-from .config.settings import Settings
-from .deck_browser.collection_size_formatter import CollectionSizeFormatter
-from .deck_browser.trash import Trash
-from .details_dialog.details_dialog import DetailsDialog
-from .log.logs import Logs
-
 
 def __initialize(col: Collection):
-    from .button.button_formatter import ButtonFormatter
-    from .button.button_hooks import ButtonHooks
-    from .column.item_id_sorter import ItemIdSorter
+    from .editor.button.button_formatter import ButtonFormatter
+    from .editor.button.button_hooks import ButtonHooks
+    from .editor.column.item_id_sorter import ItemIdSorter
+    from .editor.column.column_hooks import ColumnHooks
     from .config.config import Config
-    from .calculator.size_calculator import SizeCalculator
-    from .column.column_hooks import ColumnHooks
     from .config.config_loader import ConfigLoader
+    from .config.config_hooks import ConfigHooks
+    from .config.config_ui import ConfigUi
+    from .config.settings import Settings
+    from .calculator.size_calculator import SizeCalculator
     from .deck_browser.deck_browser_hooks import DeckBrowserHooks
+    from .deck_browser.collection_size_formatter import CollectionSizeFormatter
+    from .deck_browser.trash import Trash
+    from .cache.cache_hooks import CacheHooks
+    from .cache.cache_initializer import CacheInitializer
+    from .cache.item_id_cache import ItemIdCache
+    from .cache.media_cache import MediaCache
+    from .details_dialog.details_dialog import DetailsDialog
+    from .log.logs import Logs
 
     module_dir: Path = Path(__file__).parent
     module_name: str = module_dir.stem

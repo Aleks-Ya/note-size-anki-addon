@@ -7,9 +7,9 @@ from aqt import gui_hooks
 from aqt.browser import Column, ItemId, CellRow, Cell, SearchContext
 from mock.mock import MagicMock
 
-from note_size.column.column_hooks import ColumnHooks
 from note_size.cache.item_id_cache import ItemIdCache
-from note_size.column.item_id_sorter import ItemIdSorter
+from note_size.editor.column.column_hooks import ColumnHooks
+from note_size.editor.column.item_id_sorter import ItemIdSorter
 from tests.data import Data
 
 

@@ -9,8 +9,8 @@ from aqt.browser import Column, Cell, SearchContext
 from aqt.browser import ItemId, CellRow
 
 from .item_id_sorter import ItemIdSorter
-from ..cache.item_id_cache import ItemIdCache
-from ..types import SizeType
+from ...cache.item_id_cache import ItemIdCache
+from ...types import SizeType
 
 log: Logger = logging.getLogger(__name__)
 

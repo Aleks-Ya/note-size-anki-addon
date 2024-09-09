@@ -1,11 +1,11 @@
 import pytest
 from aqt import gui_hooks
 
-from note_size.button.button_formatter import ButtonFormatter
-from note_size.button.button_hooks import ButtonHooks
 from note_size.config.config import Config
 from note_size.config.settings import Settings
 from note_size.details_dialog.details_dialog import DetailsDialog
+from note_size.editor.button.button_formatter import ButtonFormatter
+from note_size.editor.button.button_hooks import ButtonHooks
 
 
 @pytest.fixture
