@@ -66,7 +66,7 @@ class DetailsDialog(QDialog):
         return label
 
     def __configuration_button(self) -> QPushButton:
-        icon_path: Path = self.__settings.module_dir.joinpath("web").joinpath("setting.png")
+        icon_path: Path = self.__settings.module_dir / "web" / "setting.png"
         log.info("Icon path: " + str(icon_path))
         log.info("Current dir: " + str(Path.cwd()))
         icon: QIcon = QIcon(str(icon_path))

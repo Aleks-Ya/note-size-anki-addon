@@ -49,7 +49,7 @@ class FilesTable(QTableWidget):
     def __init__(self, config: Config, settings: Settings):
         super().__init__(parent=None)
         self.__config: Config = config
-        self.__icons_dir: Path = settings.module_dir.joinpath("button").joinpath("icon")
+        self.__icons_dir: Path = settings.module_dir / "button" / "ui" / "icon"
         self.setColumnCount(3)
         self.setHorizontalHeaderLabels(["", "File", "Size"])
         self.setSizeAdjustPolicy(QTableWidget.SizeAdjustPolicy.AdjustToContents)
