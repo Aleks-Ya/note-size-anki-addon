@@ -92,7 +92,8 @@ class FilesTable(QTableWidget):
         horizontal_header.setSectionResizeMode(self.__size_column, QHeaderView.ResizeMode.ResizeToContents)
 
     def show_files(self, file_sizes: dict[MediaFile, SizeBytes]):
-        self.setRowCount(len(file_sizes))
+        files_number: int = len(file_sizes)
+        self.setRowCount(files_number)
         for i, (file, size) in enumerate(file_sizes.items()):
             size_str: SizeStr = SizeFormatter.bytes_to_str(size)
             icon_path: Path = self.__get_file_icon(file)
@@ -107,7 +108,10 @@ class FilesTable(QTableWidget):
             self.setItem(i, self.__filename_column, filename_item)
             self.setItem(i, self.__size_column, size_item)
         self.sortItems(self.__size_column, Qt.SortOrder.DescendingOrder)
-        self.show()
+        if files_number > 0:
+            self.show()
+        else:
+            self.hide()
 
     def recalculate_window_sizes(self):
         self.resizeRowsToContents()
