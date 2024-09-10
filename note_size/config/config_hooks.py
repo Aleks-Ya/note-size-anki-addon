@@ -6,7 +6,7 @@ from aqt import gui_hooks, mw
 from aqt.browser import Browser
 from aqt.qt import qconnect, QAction, QMenu, QDesktopServices, QUrl
 
-from ..config.config_ui import ConfigUi
+from ..ui.config.config_ui import ConfigUi
 
 log: Logger = logging.getLogger(__name__)
 

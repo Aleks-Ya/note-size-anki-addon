@@ -6,29 +6,29 @@ from aqt import mw, gui_hooks, QDesktopServices
 
 
 def __initialize(col: Collection):
-    from .editor.button.button_formatter import ButtonFormatter
-    from .editor.button.button_hooks import ButtonHooks
-    from .editor.column.item_id_sorter import ItemIdSorter
-    from .editor.column.column_hooks import ColumnHooks
     from .config.config import Config
     from .config.config_loader import ConfigLoader
     from .config.config_hooks import ConfigHooks
-    from .config.config_ui import ConfigUi
+    from .ui.config.config_ui import ConfigUi
     from .config.settings import Settings
     from .calculator.size_calculator import SizeCalculator
-    from .deck_browser.deck_browser_hooks import DeckBrowserHooks
-    from .deck_browser.collection_size_formatter import CollectionSizeFormatter
-    from .deck_browser.trash import Trash
     from .cache.cache_hooks import CacheHooks
     from .cache.cache_initializer import CacheInitializer
     from .cache.item_id_cache import ItemIdCache
     from .cache.media_cache import MediaCache
-    from .details_dialog.details_dialog import DetailsDialog
     from .log.logs import Logs
+    from .ui.deck_browser.collection_size_formatter import CollectionSizeFormatter
+    from .ui.deck_browser.deck_browser_hooks import DeckBrowserHooks
+    from .ui.deck_browser.trash import Trash
+    from .ui.details_dialog.details_dialog import DetailsDialog
+    from .ui.editor.button.button_formatter import ButtonFormatter
+    from .ui.editor.button.button_hooks import ButtonHooks
+    from .ui.editor.column.column_hooks import ColumnHooks
+    from .ui.editor.column.item_id_sorter import ItemIdSorter
 
     module_dir: Path = Path(__file__).parent
     module_name: str = module_dir.stem
-    mw.addonManager.setWebExports(module_name, r"web/.*(css|js|png)")
+    mw.addonManager.setWebExports(module_name, r"ui/web/.*(css|js|png)")
     settings: Settings = Settings(module_dir, module_name, mw.addonManager.logs_folder(module_name))
     logs: Logs = Logs(settings)
     log: Logger = logs.root_logger()

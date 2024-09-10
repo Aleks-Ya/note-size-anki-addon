@@ -2,7 +2,7 @@ import pytest
 from aqt import gui_hooks, QDesktopServices
 
 from note_size.config.config_hooks import ConfigHooks
-from note_size.config.config_ui import ConfigUi
+from note_size.ui.config.config_ui import ConfigUi
 
 
 @pytest.fixture

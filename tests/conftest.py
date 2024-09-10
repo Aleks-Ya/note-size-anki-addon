@@ -19,15 +19,15 @@ from note_size.calculator.size_calculator import SizeCalculator
 from note_size.calculator.size_formatter import SizeFormatter
 from note_size.config.config import Config
 from note_size.config.config_loader import ConfigLoader
-from note_size.config.config_ui import ConfigUi
 from note_size.config.settings import Settings
-from note_size.config.ui.model_converter import ModelConverter
-from note_size.config.ui.ui_model import UiModel
-from note_size.deck_browser.collection_size_formatter import CollectionSizeFormatter
-from note_size.deck_browser.trash import Trash
-from note_size.details_dialog.details_dialog import DetailsDialog
-from note_size.editor.button.button_formatter import ButtonFormatter
-from note_size.editor.column.item_id_sorter import ItemIdSorter
+from note_size.ui.config.config_ui import ConfigUi
+from note_size.ui.config.model_converter import ModelConverter
+from note_size.ui.config.ui_model import UiModel
+from note_size.ui.deck_browser.collection_size_formatter import CollectionSizeFormatter
+from note_size.ui.deck_browser.trash import Trash
+from note_size.ui.details_dialog.details_dialog import DetailsDialog
+from note_size.ui.editor.button.button_formatter import ButtonFormatter
+from note_size.ui.editor.column.item_id_sorter import ItemIdSorter
 from note_size.log.logs import Logs
 from tests.data import Data
 
