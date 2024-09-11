@@ -1,0 +1,89 @@
+@startuml
+skinparam linetype ortho
+skinparam class {
+    ArrowColor blue
+}
+'https://plantuml.com/class-diagram
+
+package OS {
+    class SQLite
+    class FileSystem
+}
+
+package Anki {
+    class Collection
+}
+
+package NoteSizeAddon {
+
+    package calculator {
+        class SizeCalculator {
+            note_total_size_cache: dict[NoteId, SizeBytes]
+            note_texts_size_cache: dict[NoteId, SizeBytes]
+            note_files_size_cache: dict[NoteId, SizeBytes]
+            note_files_cache: dict[NoteId, set[MediaFile]]
+            note_file_sizes_cache: dict[NoteId, dict[MediaFile, SizeBytes]]
+        }
+        class SizeFormatter {
+            bytes_to_str_cache: dict[SizeBytes, SizeStr]
+        }
+    }
+
+    package cache {
+        class CacheHooks
+        class ItemIdCache {
+            id_cache: dict[CardId, NoteId]
+            size_bytes_caches: dict[SizeType, dict[NoteId, SizeBytes]]
+            size_str_caches: dict[SizeType, dict[NoteId, SizeStr]]
+            note_files_cache: dict[NoteId, set[MediaFile]]
+        }
+        class MediaCache {
+            file_sizes_cache: dict[MediaFile, SizeBytes]
+        }
+    }
+
+    package ui {
+        together {
+            class ButtonHooks
+            class ButtonFormatter
+        }
+        class BrowserButton
+        class CollectionSizeFormatter
+        together {
+            class ColumnHooks
+            class ItemIdSorter
+        }
+    }
+}
+
+BrowserButton --> ItemIdCache
+
+ButtonHooks --> ButtonFormatter
+
+ColumnHooks --> ItemIdCache
+ColumnHooks --> ItemIdSorter
+
+ItemIdSorter --> ItemIdCache
+
+CacheHooks --> ItemIdCache
+
+Collection --> SQLite
+
+ButtonFormatter --> ItemIdCache
+ButtonFormatter --> SizeCalculator
+ButtonFormatter --> SizeFormatter
+
+CollectionSizeFormatter --> ItemIdCache
+
+SizeCalculator --> Collection
+SizeCalculator --> MediaCache
+
+ItemIdCache --> Collection
+ItemIdCache --> SizeCalculator
+ItemIdCache --> SizeFormatter
+ItemIdCache --> MediaCache
+
+MediaCache --> Collection
+MediaCache --> FileSystem
+
+@enduml
