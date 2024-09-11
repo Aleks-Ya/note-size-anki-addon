@@ -1,24 +1,28 @@
 import logging
 from logging import Logger
-from threading import RLock
+from typing import Any
 
 from anki.collection import Collection
 from anki.notes import Note, NoteId
 
+from ..cache.cache import Cache
 from ..cache.media_cache import MediaCache
 from ..types import SizeBytes, MediaFile
 
 log: Logger = logging.getLogger(__name__)
 
 
-class SizeCalculator:
+class SizeCalculator(Cache):
 
     def __init__(self, col: Collection, media_cache: MediaCache):
-        self.__lock: RLock = RLock()
+        super().__init__()
         self.__col: Collection = col
         self.__note_files_cache: dict[NoteId, list[MediaFile]] = {}
         self.__media_cache: MediaCache = media_cache
         log.debug(f"{self.__class__.__name__} was instantiated")
+
+    def cache_id(self) -> str:
+        return "size_calculator"
 
     def calculate_note_total_size(self, note: Note, use_cache: bool) -> SizeBytes:
         return SizeBytes(
@@ -39,7 +43,7 @@ class SizeCalculator:
         return file_sizes
 
     def note_files(self, note: Note, use_cache: bool) -> list[MediaFile]:
-        with self.__lock:
+        with self._lock:
             if use_cache and note.id in self.__note_files_cache:
                 return self.__note_files_cache[note.id]
             else:
@@ -54,6 +58,18 @@ class SizeCalculator:
         return SizeBytes(sum([self.__media_cache.get_file_size(file, use_cache) for file in files]))
 
     def evict_note(self, note_id: NoteId) -> None:
-        with self.__lock:
+        with self._lock:
             if note_id in self.__note_files_cache:
                 del self.__note_files_cache[note_id]
+
+    def invalidate_cache(self) -> None:
+        with self._lock:
+            self.__note_files_cache.clear()
+
+    def as_dict_list(self) -> list[dict[Any, Any]]:
+        return [self.__note_files_cache]
+
+    def read_from_dict_list(self, caches: list[dict[Any, Any]]):
+        with self._lock:
+            self.__note_files_cache = caches[0]
+            log.info(f"Caches were read dict list")

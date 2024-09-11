@@ -10,8 +10,10 @@ from aqt.operations import QueryOp
 from aqt.qt import QWidget
 from aqt.utils import showInfo, show_critical
 
+from .cache_storage import CacheStorage
 from .item_id_cache import ItemIdCache
 from .media_cache import MediaCache
+from ..calculator.size_calculator import SizeCalculator
 from ..config.config import Config
 from ..types import size_types
 
@@ -21,13 +23,15 @@ log: Logger = logging.getLogger(__name__)
 class CacheInitializerOp:
     __progress_dialog_title: str = '"Note Size" addon'
 
-    def __init__(self, mw: AnkiQt, media_cache: MediaCache, item_id_cache: ItemIdCache, config: Config, parent: QWidget,
-                 show_success_info: bool):
+    def __init__(self, mw: AnkiQt, media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
+                 config: Config, parent: QWidget, cache_storage: CacheStorage, show_success_info: bool):
         self.__mw: AnkiQt = mw
         self.__media_cache: MediaCache = media_cache
         self.__item_id_cache: ItemIdCache = item_id_cache
+        self.__size_calculator: SizeCalculator = size_calculator
         self.__config: Config = config
         self.__parent: QWidget = parent
+        self.__cache_storage: CacheStorage = cache_storage
         self.__show_success_info: bool = show_success_info
         log.debug(f"{self.__class__.__name__} was instantiated")
 
@@ -39,14 +43,17 @@ class CacheInitializerOp:
         else:
             log.info("Cache initialization is disabled")
             self.__item_id_cache.set_initialized(True)
+            self.__size_calculator.set_initialized(True)
+            self.__media_cache.set_initialized(True)
 
     def __background_op(self, col: Collection) -> int:
         read_from_file_success: bool = False
         if self.__config.get_store_cache_in_file_enabled():
-            read_from_file_success = self.__item_id_cache.read_caches_from_file()
+            read_from_file_success = self.__cache_storage.read_caches_from_file(
+                [self.__item_id_cache, self.__size_calculator])
         else:
             log.info("Reading cache file is disabled")
-        self.__item_id_cache.delete_cache_file()
+        self.__cache_storage.delete_cache_file()
         if not read_from_file_success:
             log.info(f"Cache initialization started: {self.__item_id_cache.get_size()}")
             start_time: datetime = datetime.now()
@@ -92,6 +99,8 @@ class CacheInitializerOp:
 
     def __on_success(self, count: int) -> None:
         self.__item_id_cache.set_initialized(True)
+        self.__size_calculator.set_initialized(True)
+        self.__media_cache.set_initialized(True)
         log.info(f"Cache initialization finished: {count}")
         if self.__show_success_info:
             showInfo(title=self.__progress_dialog_title, text=f"Cache was initialized ({count} notes and cards)")

@@ -15,11 +15,11 @@ log: Logger = logging.getLogger(__name__)
 
 
 class ConfigUi:
-    def __init__(self, config: Config, config_loader: ConfigLoader, logs: Logs, cache_updater: CacheInitializer,
+    def __init__(self, config: Config, config_loader: ConfigLoader, logs: Logs, cache_initializer: CacheInitializer,
                  desktop_services: QDesktopServices, settings: Settings) -> None:
         model: UiModel = UiModel()
-        self.__dialog: ConfigDialog = ConfigDialog(config, config_loader, model, logs, cache_updater, desktop_services,
-                                                   settings)
+        self.__dialog: ConfigDialog = ConfigDialog(config, config_loader, model, logs, cache_initializer,
+                                                   desktop_services, settings)
 
     def show_configuration_dialog(self) -> None:
         self.__dialog.refresh_from_model()

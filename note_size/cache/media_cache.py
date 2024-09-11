@@ -2,29 +2,33 @@ import logging
 import os
 from logging import Logger
 from pathlib import Path
-from threading import RLock
+from typing import Any
 
 from anki.collection import Collection
 from anki.media_pb2 import CheckMediaResponse
 
+from .cache import Cache
 from ..config.config import Config
 from ..types import MediaFile, SizeBytes, FilesNumber
 
 log: Logger = logging.getLogger(__name__)
 
 
-class MediaCache:
+class MediaCache(Cache):
 
     def __init__(self, col: Collection, config: Config) -> None:
+        super().__init__()
         self.__config: Config = config
         self.__col: Collection = col
         self.__media_dir: Path = Path(col.media.dir())
         self.__file_sizes_cache: dict[MediaFile, SizeBytes] = {}
-        self.__lock: RLock = RLock()
         log.debug(f"{self.__class__.__name__} was instantiated")
 
+    def cache_id(self) -> str:
+        return "media_cache"
+
     def get_file_size(self, file: MediaFile, use_cache: bool) -> SizeBytes:
-        with self.__lock:
+        with self._lock:
             if not use_cache or file not in self.__file_sizes_cache:
                 full_path: Path = self.__media_dir.joinpath(file)
                 if os.path.exists(full_path):
@@ -36,7 +40,7 @@ class MediaCache:
             return self.__file_sizes_cache[file]
 
     def invalidate_cache(self) -> None:
-        with self.__lock:
+        with self._lock:
             self.__file_sizes_cache.clear()
 
     def get_unused_files_size(self, use_cache: bool) -> (SizeBytes, FilesNumber):
@@ -63,3 +67,9 @@ class MediaCache:
                     updated_files.append(media_file)
         log.debug(f"Found updated files: {len(updated_files)}")
         return updated_files
+
+    def as_dict_list(self) -> list[dict[Any, Any]]:
+        pass
+
+    def read_from_dict_list(self, dict_list: list[dict[Any, Any]]):
+        pass

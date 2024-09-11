@@ -15,11 +15,11 @@ log: Logger = logging.getLogger(__name__)
 class CacheTab(QWidget):
     name: str = "Cache"
 
-    def __init__(self, model: UiModel, cache_updater: CacheInitializer, desktop_services: QDesktopServices,
+    def __init__(self, model: UiModel, cache_initializer: CacheInitializer, desktop_services: QDesktopServices,
                  settings: Settings) -> None:
         super().__init__()
         self.__model: UiModel = model
-        self.__cache_updater: CacheInitializer = cache_updater
+        self.__cache_initializer: CacheInitializer = cache_initializer
         warmup_enabled_url: str = urljoin(settings.docs_base_url, "docs/configuration.md#warmup-enabled")
         self.__enable_warmup_checkbox: CheckboxWithInfo = CheckboxWithInfo(
             "Enable cache warm-up", warmup_enabled_url, desktop_services, settings)
@@ -51,4 +51,4 @@ class CacheTab(QWidget):
         self.__model.store_cache_in_file_enabled = self.__store_cache_to_file_checkbox.is_checked()
 
     def __refresh_caches(self):
-        self.__cache_updater.refresh_caches(parent=self)
+        self.__cache_initializer.refresh_caches(parent=self)

@@ -23,7 +23,7 @@ log: Logger = logging.getLogger(__name__)
 # noinspection PyUnresolvedReferences
 class ConfigDialog(QDialog):
     def __init__(self, config: Config, config_loader: ConfigLoader, model: UiModel, logs: Logs,
-                 cache_updater: CacheInitializer, desktop_services: QDesktopServices, settings: Settings):
+                 cache_initializer: CacheInitializer, desktop_services: QDesktopServices, settings: Settings):
         super().__init__(parent=None)
         self.__config: Config = config
         self.__model: UiModel = model
@@ -35,7 +35,7 @@ class ConfigDialog(QDialog):
         self.deck_browser_tab: DeckBrowserTab = DeckBrowserTab(self.__model, desktop_services, settings)
         self.editor_tab: EditorTab = EditorTab(self.__model, desktop_services, settings)
         self.logging_tab: LoggingTab = LoggingTab(self.__model, logs, desktop_services, settings)
-        self.cache_tab: CacheTab = CacheTab(self.__model, cache_updater, desktop_services, settings)
+        self.cache_tab: CacheTab = CacheTab(self.__model, cache_initializer, desktop_services, settings)
 
         tab_widget: QTabWidget = QTabWidget(self)
         tab_widget.addTab(self.deck_browser_tab, DeckBrowserTab.name)

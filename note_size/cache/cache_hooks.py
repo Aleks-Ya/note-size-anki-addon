@@ -19,11 +19,11 @@ log: Logger = logging.getLogger(__name__)
 class CacheHooks:
 
     def __init__(self, media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
-                 cache_updater: CacheInitializer) -> None:
+                 cache_initializer: CacheInitializer) -> None:
         self.__media_cache: MediaCache = media_cache
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__size_calculator: SizeCalculator = size_calculator
-        self.__cache_updater: CacheInitializer = cache_updater
+        self.__cache_initializer: CacheInitializer = cache_initializer
         self.__last_update_media_sync_did_progress: datetime = datetime.now()
         self.__hook_add_cards_did_add_note: Callable[[Note], None] = self.__add_cards_did_add_note
         self.__hook_notes_will_be_deleted: Callable[[Collection, Sequence[NoteId]], None] = self.__notes_will_be_deleted
@@ -52,10 +52,10 @@ class CacheHooks:
         log.info(f"{self.__class__.__name__} was removed")
 
     def __initialize_cache_on_startup(self) -> None:
-        self.__cache_updater.initialize_caches()
+        self.__cache_initializer.initialize_caches()
 
     def __save_cache_to_file(self) -> None:
-        self.__cache_updater.save_cache_to_file()
+        self.__cache_initializer.save_cache_to_file()
 
     def __on_note_will_flush(self, note: Note) -> None:
         if note and note.id:

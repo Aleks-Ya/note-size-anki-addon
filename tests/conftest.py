@@ -13,6 +13,7 @@ from mock.mock import MagicMock
 from pytestqt.qtbot import QtBot
 
 from note_size.cache.cache_initializer import CacheInitializer
+from note_size.cache.cache_storage import CacheStorage
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.size_calculator import SizeCalculator
@@ -126,15 +127,19 @@ def size_calculator(col: Collection, media_cache: MediaCache) -> SizeCalculator:
 
 
 @pytest.fixture
-def item_id_cache(col: Collection, config: Config, size_calculator: SizeCalculator, settings: Settings,
-                  media_cache: MediaCache) -> ItemIdCache:
-    return ItemIdCache(col, size_calculator, media_cache, config, settings)
+def item_id_cache(col: Collection, size_calculator: SizeCalculator, media_cache: MediaCache) -> ItemIdCache:
+    return ItemIdCache(col, size_calculator, media_cache)
 
 
 @pytest.fixture
-def cache_initializer(mw: AnkiQt, media_cache: MediaCache, item_id_cache: ItemIdCache,
-                      config: Config) -> CacheInitializer:
-    return CacheInitializer(mw, media_cache, item_id_cache, config)
+def cache_storage(settings: Settings) -> CacheStorage:
+    return CacheStorage(settings)
+
+
+@pytest.fixture
+def cache_initializer(mw: AnkiQt, media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
+                      cache_storage: CacheStorage, config: Config) -> CacheInitializer:
+    return CacheInitializer(mw, media_cache, item_id_cache, size_calculator, cache_storage, config)
 
 
 @pytest.fixture
