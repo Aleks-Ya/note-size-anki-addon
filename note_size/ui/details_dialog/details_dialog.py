@@ -85,17 +85,20 @@ class DetailsDialog(QDialog):
         self.__config_ui.show_configuration_dialog()
 
     def __refresh_total_note_size(self, note: Note) -> None:
-        size: SizeStr = SizeFormatter.bytes_to_str(self.__size_calculator.calculate_note_total_size(note, use_cache=False))
+        size: SizeStr = SizeFormatter.bytes_to_str(
+            self.__size_calculator.calculate_note_total_size(note, use_cache=False))
         text: str = f"Total note size: {size}"
         self.__total_size_label.setText(text)
 
     def __refresh_texts_size(self, note: Note) -> None:
-        size: SizeStr = SizeFormatter.bytes_to_str(SizeCalculator.calculate_note_texts_size(note))
+        size: SizeStr = SizeFormatter.bytes_to_str(
+            self.__size_calculator.calculate_note_texts_size(note, use_cache=False))
         text: str = f"Texts size: {size}"
         self.__texts_size_label.setText(text)
 
     def __refresh_files_size(self, note: Note) -> None:
-        size: SizeStr = SizeFormatter.bytes_to_str(self.__size_calculator.calculate_note_files_size(note, use_cache=False))
+        size: SizeStr = SizeFormatter.bytes_to_str(
+            self.__size_calculator.calculate_note_files_size(note, use_cache=False))
         text: str = f"Files size: {size}"
         self.__files_size_label.setText(text)
 

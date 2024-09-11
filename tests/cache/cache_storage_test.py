@@ -45,22 +45,31 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Colle
     item_id_cache.get_note_files(note1.id, use_cache=True)
     item_id_cache.get_note_files(note2.id, use_cache=True)
 
-    cache_storage.save_caches_to_file([item_id_cache])
+    cache_storage.save_caches_to_file([item_id_cache, size_calculator, media_cache])
 
     item_id_cache_2: ItemIdCache = ItemIdCache(col, size_calculator, media_cache)
+    media_cache_2: MediaCache = MediaCache(col, config)
+    size_calculator_2: SizeCalculator = SizeCalculator(col, media_cache_2)
     assert item_id_cache_2.as_dict_list() == empty_cache_dict
-    read_success: bool = cache_storage.read_caches_from_file([item_id_cache_2])
+    read_success: bool = cache_storage.read_caches_from_file([item_id_cache_2, size_calculator_2, media_cache_2])
     assert read_success
     assert item_id_cache_2.as_dict_list() == [{card_id1: note1.id,
                                                card_id2: note2.id},
                                               {SizeType.TOTAL: {note1.id: 143, note2.id: 70},
-                                               SizeType.TEXTS: {note1.id: 122, note2.id: 70},
-                                               SizeType.FILES: {note1.id: 21, note2.id: 0}},
+                                               SizeType.TEXTS: {},
+                                               SizeType.FILES: {}},
                                               {SizeType.TOTAL: {note1.id: "143 B", note2.id: "70 B"},
                                                SizeType.TEXTS: {},
                                                SizeType.FILES: {}},
                                               {note1.id: ['picture.jpg', 'sound.mp3', 'picture.jpg', 'animation.gif'],
                                                note2.id: []}]
+    assert size_calculator_2.as_dict_list() == [{note1.id: 143, note2.id: 70},
+                                                {note1.id: 122, note2.id: 70},
+                                                {note1.id: ['picture.jpg', 'sound.mp3', 'picture.jpg', 'animation.gif'],
+                                                 note2.id: []},
+                                                {note1.id: {'animation.gif': 9, 'picture.jpg': 7, 'sound.mp3': 5},
+                                                 note2.id: {}}]
+    assert media_cache_2.as_dict_list() is None
 
     col.remove_notes([note1.id, note2.id])
     assert item_id_cache.get_note_size_str(note1.id, SizeType.TOTAL, use_cache=True) == note_size1
