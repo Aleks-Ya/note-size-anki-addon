@@ -20,17 +20,18 @@ class SizeCalculator:
         self.__media_cache: MediaCache = media_cache
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def calculate_note_size(self, note: Note, use_cache: bool) -> SizeBytes:
-        return SizeBytes(SizeCalculator.calculate_texts_size(note) + self.calculate_files_size(note, use_cache))
+    def calculate_note_total_size(self, note: Note, use_cache: bool) -> SizeBytes:
+        return SizeBytes(
+            SizeCalculator.calculate_note_texts_size(note) + self.calculate_note_files_size(note, use_cache))
 
     @staticmethod
-    def calculate_texts_size(note: Note) -> SizeBytes:
+    def calculate_note_texts_size(note: Note) -> SizeBytes:
         return SizeBytes(sum([len(field.encode()) for field in note.fields]))
 
-    def calculate_files_size(self, note: Note, use_cache: bool) -> SizeBytes:
-        return SizeBytes(sum([size for size in self.file_sizes(note, use_cache).values()]))
+    def calculate_note_files_size(self, note: Note, use_cache: bool) -> SizeBytes:
+        return SizeBytes(sum([size for size in self.note_file_sizes(note, use_cache).values()]))
 
-    def file_sizes(self, note: Note, use_cache: bool) -> dict[MediaFile, SizeBytes]:
+    def note_file_sizes(self, note: Note, use_cache: bool) -> dict[MediaFile, SizeBytes]:
         file_sizes: dict[MediaFile, SizeBytes] = dict[MediaFile, SizeBytes]()
         for file in self.note_files(note, use_cache):
             size: SizeBytes = self.__media_cache.get_file_size(file, use_cache)

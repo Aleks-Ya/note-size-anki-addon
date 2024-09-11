@@ -14,31 +14,31 @@ def note(td: Data) -> Note:
     return td.create_note_with_files()
 
 
-def test_calculate_texts_size(note: Note):
-    act_size: SizeBytes = SizeCalculator.calculate_texts_size(note)
+def test_calculate_note_texts_size(note: Note):
+    act_size: SizeBytes = SizeCalculator.calculate_note_texts_size(note)
     exp_size: SizeBytes = SizeBytes(len(DefaultFields.front_field_content.encode()) +
                                     len(DefaultFields.back_field_content.encode()))
     assert act_size == exp_size
 
 
-def test_calculate_texts_size_unicode(td: Data):
+def test_calculate_note_texts_size_unicode(td: Data):
     note: Note = td.create_note_without_files()
     note[DefaultFields.front_field_name] = '∑￡'
     note[DefaultFields.back_field_name] = '∆∏∦'
-    size: SizeBytes = SizeCalculator.calculate_texts_size(note)
+    size: SizeBytes = SizeCalculator.calculate_note_texts_size(note)
     assert size == SizeBytes(15)
 
 
-def test_calculate_files_size(note: Note, size_calculator: SizeCalculator):
-    act_size: SizeBytes = size_calculator.calculate_files_size(note, use_cache=False)
+def test_calculate_note_files_size(note: Note, size_calculator: SizeCalculator):
+    act_size: SizeBytes = size_calculator.calculate_note_files_size(note, use_cache=False)
     exp_size: SizeBytes = SizeBytes(len(DefaultFields.content0) +
                                     len(DefaultFields.content1) +
                                     len(DefaultFields.content2))
     assert act_size == exp_size
 
 
-def test_calculate_note_size(note: Note, size_calculator: SizeCalculator):
-    act_size: SizeBytes = size_calculator.calculate_note_size(note, use_cache=False)
+def test_calculate_note_total_size(note: Note, size_calculator: SizeCalculator):
+    act_size: SizeBytes = size_calculator.calculate_note_total_size(note, use_cache=False)
     exp_size: SizeBytes = SizeBytes(len(DefaultFields.front_field_content.encode()) +
                                     len(DefaultFields.back_field_content.encode()) +
                                     len(DefaultFields.content0) +
@@ -47,10 +47,10 @@ def test_calculate_note_size(note: Note, size_calculator: SizeCalculator):
     assert act_size == exp_size
 
 
-def test_calculate_note_size_missing_file(note: Note, size_calculator: SizeCalculator):
+def test_calculate_note_total_size_missing_file(note: Note, size_calculator: SizeCalculator):
     content: str = 'Missing file: <img src="absents.png"> ￡'
     note[DefaultFields.front_field_name] = content
-    act_size: SizeBytes = size_calculator.calculate_note_size(note, use_cache=False)
+    act_size: SizeBytes = size_calculator.calculate_note_total_size(note, use_cache=False)
     exp_size: SizeBytes = SizeBytes(len(content.encode()) +
                                     len(DefaultFields.back_field_content.encode()) +
                                     len(DefaultFields.content0) +
@@ -58,8 +58,8 @@ def test_calculate_note_size_missing_file(note: Note, size_calculator: SizeCalcu
     assert act_size == exp_size
 
 
-def test_file_sizes(note: Note, size_calculator: SizeCalculator):
-    act_file_sizes: dict[MediaFile, SizeBytes] = size_calculator.file_sizes(note, use_cache=False)
+def test_note_file_sizes(note: Note, size_calculator: SizeCalculator):
+    act_file_sizes: dict[MediaFile, SizeBytes] = size_calculator.note_file_sizes(note, use_cache=False)
     exp_file_sizes: dict[MediaFile, SizeBytes] = {
         DefaultFields.file0: SizeBytes(len(DefaultFields.content0)),
         DefaultFields.file1: SizeBytes(len(DefaultFields.content1)),
