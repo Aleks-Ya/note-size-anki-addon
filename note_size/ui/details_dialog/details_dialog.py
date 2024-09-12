@@ -11,6 +11,7 @@ from ...config.config import Config
 from ..config.config_ui import ConfigUi
 from ...config.settings import Settings
 from ...types import SizeStr, MediaFile, SizeBytes
+from .file_type_helper import FileTypeHelper
 
 log: Logger = logging.getLogger(__name__)
 
@@ -23,7 +24,8 @@ class DetailsDialog(QDialog):
     __files_table_row: int = 3
     __button_box_row: int = 4
 
-    def __init__(self, size_calculator: SizeCalculator, config_ui: ConfigUi, config: Config, settings: Settings):
+    def __init__(self, size_calculator: SizeCalculator, file_type_helper: FileTypeHelper, config_ui: ConfigUi,
+                 config: Config, settings: Settings):
         super().__init__(parent=None)
         self.__size_calculator: SizeCalculator = size_calculator
         self.__config_ui: ConfigUi = config_ui
@@ -31,7 +33,7 @@ class DetailsDialog(QDialog):
         self.__total_size_label: QLabel = self.__total_size_label()
         self.__texts_size_label: QLabel = QLabel()
         self.__files_size_label: QLabel = QLabel()
-        self.__files_table: FilesTable = FilesTable(config, settings)
+        self.__files_table: FilesTable = FilesTable(file_type_helper, config, settings)
 
         self.__settings_icon: QIcon = QIcon(str(settings.module_dir / "ui" / "web" / "setting.png"))
 

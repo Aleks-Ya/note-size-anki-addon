@@ -27,6 +27,7 @@ from note_size.ui.config.ui_model import UiModel
 from note_size.ui.deck_browser.collection_size_formatter import CollectionSizeFormatter
 from note_size.ui.deck_browser.trash import Trash
 from note_size.ui.details_dialog.details_dialog import DetailsDialog
+from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
 from note_size.ui.editor.button.button_formatter import ButtonFormatter
 from note_size.ui.editor.column.item_id_sorter import ItemIdSorter
 from note_size.log.logs import Logs
@@ -212,9 +213,10 @@ def ui_model() -> UiModel:
 
 @pytest.fixture
 def details_dialog(qtbot: QtBot, size_calculator: SizeCalculator, config_ui: ConfigUi, config: Config,
-                   settings: Settings, ui_model: UiModel, theme_manager: ThemeManager) -> DetailsDialog:
+                   settings: Settings, ui_model: UiModel, theme_manager: ThemeManager,
+                   file_type_helper: FileTypeHelper) -> DetailsDialog:
     ModelConverter.apply_config_to_model(ui_model, config)
-    details_dialog: DetailsDialog = DetailsDialog(size_calculator, config_ui, config, settings)
+    details_dialog: DetailsDialog = DetailsDialog(size_calculator, file_type_helper, config_ui, config, settings)
     theme_manager.apply_style()
     qtbot.addWidget(details_dialog)
     return details_dialog
@@ -223,3 +225,8 @@ def details_dialog(qtbot: QtBot, size_calculator: SizeCalculator, config_ui: Con
 @pytest.fixture
 def theme_manager() -> ThemeManager:
     return ThemeManager()
+
+
+@pytest.fixture
+def file_type_helper() -> FileTypeHelper:
+    return FileTypeHelper()

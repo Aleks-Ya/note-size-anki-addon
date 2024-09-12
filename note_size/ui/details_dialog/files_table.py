@@ -1,29 +1,29 @@
 import logging
-import mimetypes
 from logging import Logger
 from pathlib import Path
 
 from aqt.qt import QTableWidget, Qt, QTableWidgetItem, QIcon, QHeaderView
 
+from .file_type_helper import FileTypeHelper
 from ...calculator.size_formatter import SizeFormatter
 from ...config.config import Config
 from ...config.settings import Settings
-from ...types import MediaFile, SizeBytes, SizeStr
+from ...types import MediaFile, SizeBytes, SizeStr, FileType
 
 log: Logger = logging.getLogger(__name__)
 
 
 class _IconTableWidgetItem(QTableWidgetItem):
-    def __init__(self, icon: QIcon, general_mime_type: str):
+    def __init__(self, icon: QIcon, file_type: FileType):
         super().__init__()
-        self.__general_mime_type: str = general_mime_type
+        self.__file_type: FileType = file_type
         self.setIcon(icon)
         self.setData(Qt.ItemDataRole.DisplayRole, None)
         self.setFlags(self.flags() & ~Qt.ItemFlag.ItemIsEditable & ~Qt.ItemFlag.ItemIsSelectable)
 
     def __lt__(self, other: object):
         if isinstance(other, _IconTableWidgetItem):
-            return self.__general_mime_type < other.__general_mime_type
+            return self.__file_type.value < other.__file_type.value
         return NotImplemented
 
 
@@ -46,11 +46,17 @@ class FilesTable(QTableWidget):
     __size_column: int = 2
     __default_general_mime_type: str = "other"
 
-    def __init__(self, config: Config, settings: Settings):
+    def __init__(self, file_type_helper: FileTypeHelper, config: Config, settings: Settings):
         super().__init__(parent=None)
         self.__config: Config = config
+        self.__file_type_helper: FileTypeHelper = file_type_helper
         icons_dir: Path = settings.module_dir / "ui" / "details_dialog" / "icon"
-        self.__icons: dict[str, QIcon] = self.__get_icons(icons_dir)
+        self.__icons: dict[FileType, QIcon] = {
+            FileType.OTHER: QIcon(str(icons_dir / "other.png")),
+            FileType.IMAGE: QIcon(str(icons_dir / "image.png")),
+            FileType.AUDIO: QIcon(str(icons_dir / "audio.png")),
+            FileType.VIDEO: QIcon(str(icons_dir / "video.png")),
+        }
 
         self.setColumnCount(3)
         self.setHorizontalHeaderLabels(["", "File", "Size"])
@@ -115,32 +121,15 @@ class FilesTable(QTableWidget):
             self.hide()
 
     def __create_icon_item(self, file):
-        general_mime_type: str = self.__get_general_mime_type(file)
-        if general_mime_type not in self.__icons:
-            general_mime_type = self.__default_general_mime_type
-        icon: QIcon = self.__icons[general_mime_type]
-        icon_item: _IconTableWidgetItem = _IconTableWidgetItem(icon, general_mime_type)
+        file_type: FileType = self.__file_type_helper.get_file_type(file)
+        icon: QIcon = self.__icons[file_type]
+        icon_item: _IconTableWidgetItem = _IconTableWidgetItem(icon, file_type)
         return icon_item
 
     def recalculate_window_sizes(self) -> None:
         self.resizeRowsToContents()
         self.resizeColumnsToContents()
         self.adjustSize()
-
-    def __get_general_mime_type(self, filename: str) -> str:
-        full_mime_type: str = mimetypes.guess_type(filename)[0]
-        if not full_mime_type:
-            return self.__default_general_mime_type
-        return full_mime_type.split("/")[0]
-
-    def __get_icons(self, icons_dir: Path) -> dict[str, QIcon]:
-        icons: dict[str, QIcon] = {}
-        for icon_path in icons_dir.iterdir():
-            if icon_path.is_file() and icon_path.suffix == ".png":
-                general_mime_type: str = icon_path.stem
-                icon: QIcon = QIcon(str(icon_path))
-                icons[general_mime_type] = icon
-        return icons
 
     def clear_rows(self):
         self.setRowCount(0)

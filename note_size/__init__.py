@@ -26,6 +26,7 @@ def __initialize(col: Collection):
     from .ui.editor.button.button_hooks import ButtonHooks
     from .ui.editor.column.column_hooks import ColumnHooks
     from .ui.editor.column.item_id_sorter import ItemIdSorter
+    from .ui.details_dialog.file_type_helper import FileTypeHelper
 
     module_dir: Path = Path(__file__).parent
     module_name: str = module_dir.stem
@@ -54,7 +55,8 @@ def __initialize(col: Collection):
         col, item_id_cache, media_cache, trash, settings)
     desktop_services: QDesktopServices = QDesktopServices()
     config_ui: ConfigUi = ConfigUi(config, config_loader, logs, cache_initializer, desktop_services, settings)
-    details_dialog: DetailsDialog = DetailsDialog(size_calculator, config_ui, config, settings)
+    file_type_helper: FileTypeHelper = FileTypeHelper()
+    details_dialog: DetailsDialog = DetailsDialog(size_calculator, file_type_helper, config_ui, config, settings)
     button_hooks: ButtonHooks = ButtonHooks(button_formatter, details_dialog, settings, config)
     button_hooks.setup_hooks()
     deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter, config, config_ui)
