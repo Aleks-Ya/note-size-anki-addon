@@ -36,11 +36,11 @@ class LevelParser:
     __min_size_key: str = 'Min Size'
     __max_size_key: str = 'Max Size'
 
-    def __init__(self) -> None:
+    def __init__(self, size_formatter: SizeFormatter) -> None:
+        self.__size_formatter: SizeFormatter = size_formatter
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    @staticmethod
-    def add_level(levels: list[dict[str, str]]) -> None:
+    def add_level(self, levels: list[dict[str, str]]) -> None:
         if len(levels) > 0:
             previous_level: dict[str, str] = levels[len(levels) - 1]
             if len(levels) > 1:
@@ -48,8 +48,8 @@ class LevelParser:
                 penultimate_max_size_str: SizeStr = SizeStr(penultimate_level[LevelParser.__max_size_key])
                 penultimate_max_size_bytes: SizeBytes = SizeFormatter.str_to_bytes(penultimate_max_size_str)
                 new_previous_level_size_bytes: SizeBytes = SizeBytes(penultimate_max_size_bytes * 2)
-                new_previous_level_size_str: SizeStr = SizeFormatter.bytes_to_str(new_previous_level_size_bytes,
-                                                                                  precision=0)
+                new_previous_level_size_str: SizeStr = self.__size_formatter.bytes_to_str(new_previous_level_size_bytes,
+                                                                                          precision=0)
                 previous_level[LevelParser.__max_size_key] = new_previous_level_size_str
             else:
                 previous_level[LevelParser.__max_size_key] = "100 KB"

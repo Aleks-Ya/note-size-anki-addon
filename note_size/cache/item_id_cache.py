@@ -24,10 +24,12 @@ class _Caches:
 
 class ItemIdCache(Cache):
 
-    def __init__(self, col: Collection, size_calculator: SizeCalculator, media_cache: MediaCache) -> None:
+    def __init__(self, col: Collection, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
+                 media_cache: MediaCache) -> None:
         super().__init__()
         self.__col: Collection = col
         self.__size_calculator: SizeCalculator = size_calculator
+        self.__size_formatter: SizeFormatter = size_formatter
         self.__caches: _Caches = _Caches()
         self.__media_cache: MediaCache = media_cache
         self.invalidate_cache()
@@ -68,7 +70,7 @@ class ItemIdCache(Cache):
                 return cache[note_id]
             else:
                 size: SizeBytes = self.get_note_size_bytes(note_id, size_type, use_cache)
-                cache[note_id] = SizeFormatter.bytes_to_str(size)
+                cache[note_id] = self.__size_formatter.bytes_to_str(size)
                 return cache[note_id]
 
     def refresh_note(self, note_id: NoteId) -> None:

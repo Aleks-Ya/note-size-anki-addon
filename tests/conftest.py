@@ -20,6 +20,7 @@ from note_size.calculator.size_calculator import SizeCalculator
 from note_size.calculator.size_formatter import SizeFormatter
 from note_size.config.config import Config
 from note_size.config.config_loader import ConfigLoader
+from note_size.config.level_parser import LevelParser
 from note_size.config.settings import Settings
 from note_size.ui.config.config_ui import ConfigUi
 from note_size.ui.config.model_converter import ModelConverter
@@ -128,8 +129,9 @@ def size_calculator(col: Collection, media_cache: MediaCache) -> SizeCalculator:
 
 
 @pytest.fixture
-def item_id_cache(col: Collection, size_calculator: SizeCalculator, media_cache: MediaCache) -> ItemIdCache:
-    return ItemIdCache(col, size_calculator, media_cache)
+def item_id_cache(col: Collection, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
+                  media_cache: MediaCache) -> ItemIdCache:
+    return ItemIdCache(col, size_calculator, size_formatter, media_cache)
 
 
 @pytest.fixture
@@ -139,8 +141,8 @@ def cache_storage(settings: Settings) -> CacheStorage:
 
 @pytest.fixture
 def cache_initializer(mw: AnkiQt, media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
-                      cache_storage: CacheStorage, config: Config) -> CacheInitializer:
-    return CacheInitializer(mw, media_cache, item_id_cache, size_calculator, cache_storage, config)
+                      size_formatter: SizeFormatter, cache_storage: CacheStorage, config: Config) -> CacheInitializer:
+    return CacheInitializer(mw, media_cache, item_id_cache, size_calculator, size_formatter, cache_storage, config)
 
 
 @pytest.fixture
@@ -149,8 +151,9 @@ def item_id_sorter(item_id_cache: ItemIdCache) -> ItemIdSorter:
 
 
 @pytest.fixture
-def button_formatter(config: Config, size_calculator: SizeCalculator, item_id_cache: ItemIdCache) -> ButtonFormatter:
-    return ButtonFormatter(item_id_cache, size_calculator, config)
+def button_formatter(config: Config, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
+                     item_id_cache: ItemIdCache) -> ButtonFormatter:
+    return ButtonFormatter(item_id_cache, size_calculator, size_formatter, config)
 
 
 @pytest.fixture
@@ -165,8 +168,9 @@ def trash(col: Collection) -> Trash:
 
 @pytest.fixture
 def collection_size_formatter(col: Collection, item_id_cache: ItemIdCache, media_cache: MediaCache,
-                              trash: Trash, settings: Settings) -> CollectionSizeFormatter:
-    return CollectionSizeFormatter(col, item_id_cache, media_cache, trash, settings)
+                              size_formatter: SizeFormatter, trash: Trash,
+                              settings: Settings) -> CollectionSizeFormatter:
+    return CollectionSizeFormatter(col, item_id_cache, media_cache, trash, size_formatter, settings)
 
 
 @pytest.fixture
@@ -212,11 +216,12 @@ def ui_model() -> UiModel:
 
 
 @pytest.fixture
-def details_dialog(qtbot: QtBot, size_calculator: SizeCalculator, config_ui: ConfigUi, config: Config,
-                   settings: Settings, ui_model: UiModel, theme_manager: ThemeManager,
+def details_dialog(qtbot: QtBot, size_calculator: SizeCalculator, size_formatter: SizeFormatter, config_ui: ConfigUi,
+                   config: Config, settings: Settings, ui_model: UiModel, theme_manager: ThemeManager,
                    file_type_helper: FileTypeHelper) -> DetailsDialog:
     ModelConverter.apply_config_to_model(ui_model, config)
-    details_dialog: DetailsDialog = DetailsDialog(size_calculator, file_type_helper, config_ui, config, settings)
+    details_dialog: DetailsDialog = DetailsDialog(size_calculator, size_formatter, file_type_helper, config_ui, config,
+                                                  settings)
     theme_manager.apply_style()
     qtbot.addWidget(details_dialog)
     return details_dialog
@@ -230,3 +235,8 @@ def theme_manager() -> ThemeManager:
 @pytest.fixture
 def file_type_helper() -> FileTypeHelper:
     return FileTypeHelper()
+
+
+@pytest.fixture
+def level_parser(size_formatter: SizeFormatter) -> LevelParser:
+    return LevelParser(size_formatter)

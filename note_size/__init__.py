@@ -11,6 +11,7 @@ def __initialize(col: Collection):
     from .config.config_hooks import ConfigHooks
     from .config.settings import Settings
     from .calculator.size_calculator import SizeCalculator
+    from .calculator.size_formatter import SizeFormatter
     from .cache.cache_hooks import CacheHooks
     from .cache.cache_initializer import CacheInitializer
     from .cache.item_id_cache import ItemIdCache
@@ -42,21 +43,23 @@ def __initialize(col: Collection):
     logs.set_level(log_level)
     media_cache: MediaCache = MediaCache(col, config)
     size_calculator: SizeCalculator = SizeCalculator(col, media_cache)
-    item_id_cache: ItemIdCache = ItemIdCache(col, size_calculator, media_cache)
+    size_formatter: SizeFormatter = SizeFormatter()
+    item_id_cache: ItemIdCache = ItemIdCache(col, size_calculator, size_formatter, media_cache)
     item_id_sorter: ItemIdSorter = ItemIdSorter(item_id_cache)
     column_hooks: ColumnHooks = ColumnHooks(item_id_cache, item_id_sorter)
     column_hooks.setup_hooks()
-    button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, size_calculator, config)
+    button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, size_calculator, size_formatter, config)
     trash: Trash = Trash(col)
     cache_storage: CacheStorage = CacheStorage(settings)
     cache_initializer: CacheInitializer = CacheInitializer(mw, media_cache, item_id_cache, size_calculator,
-                                                           cache_storage, config)
+                                                           size_formatter, cache_storage, config)
     collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(
-        col, item_id_cache, media_cache, trash, settings)
+        col, item_id_cache, media_cache, trash, size_formatter, settings)
     desktop_services: QDesktopServices = QDesktopServices()
     config_ui: ConfigUi = ConfigUi(config, config_loader, logs, cache_initializer, desktop_services, settings)
     file_type_helper: FileTypeHelper = FileTypeHelper()
-    details_dialog: DetailsDialog = DetailsDialog(size_calculator, file_type_helper, config_ui, config, settings)
+    details_dialog: DetailsDialog = DetailsDialog(size_calculator, size_formatter, file_type_helper, config_ui, config,
+                                                  settings)
     button_hooks: ButtonHooks = ButtonHooks(button_formatter, details_dialog, settings, config)
     button_hooks.setup_hooks()
     deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter, config, config_ui)

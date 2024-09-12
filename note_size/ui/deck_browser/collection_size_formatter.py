@@ -23,11 +23,12 @@ class CollectionSizeFormatter:
     __sand_clock: str = "⏳"
 
     def __init__(self, col: Collection, item_id_cache: ItemIdCache, media_cache: MediaCache, trash: Trash,
-                 settings: Settings):
+                 size_formatter: SizeFormatter, settings: Settings):
         self.__col: Collection = col
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__media_cache: MediaCache = media_cache
         self.__trash: Trash = trash
+        self.__size_formatter: SizeFormatter = size_formatter
         self.__collection_file_path: Path = Path(col.path)
         self.__media_folder_path: Path = Path(col.media.dir())
         self.__web_dir: str = os.path.join("_addons", settings.module_name, "ui", "web")
@@ -103,8 +104,8 @@ class CollectionSizeFormatter:
         outer_span.string = f"{name}: "
         if size is not None:
             separator: str = " "
-            size_split: list[str] = SizeFormatter.bytes_to_str(size, precision=0, unit_separator=separator).split(
-                separator)
+            size_split: list[str] = self.__size_formatter.bytes_to_str(size, precision=0,
+                                                                       unit_separator=separator).split(separator)
             number: str = size_split[0]
             unit: str = size_split[1]
             number_span: Tag = soup.new_tag('span', attrs={"style": CollectionSizeFormatter.__code_style})

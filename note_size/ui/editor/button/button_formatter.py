@@ -15,15 +15,17 @@ log: Logger = logging.getLogger(__name__)
 
 
 class ButtonFormatter:
-    def __init__(self, item_id_cache: ItemIdCache, size_calculator: SizeCalculator, config: Config) -> None:
+    def __init__(self, item_id_cache: ItemIdCache, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
+                 config: Config) -> None:
         self.__config: Config = config
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__size_calculator: SizeCalculator = size_calculator
+        self.__size_formatter: SizeFormatter = size_formatter
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def get_zero_size_label(self) -> ButtonLabel:
         size_bytes: SizeBytes = SizeBytes(0)
-        size: SizeStr = SizeFormatter.bytes_to_str(size_bytes)
+        size: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
         color: str = self.__get_color(size_bytes)
         label: ButtonLabel = ButtonLabel(f"{size}", color)
         log.debug(f"Zero size label was created: {label}")
@@ -31,7 +33,7 @@ class ButtonFormatter:
 
     def get_add_mode_label(self, note: Note) -> ButtonLabel:
         size_bytes: SizeBytes = self.__size_calculator.calculate_note_total_size(note, use_cache=False)
-        size_str: SizeStr = SizeFormatter.bytes_to_str(size_bytes)
+        size_str: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
         color: str = self.__get_color(size_bytes)
         label: ButtonLabel = ButtonLabel(f"{size_str}", color)
         log.debug(f"Add mode label created for NoteId {note.id}: {label}")

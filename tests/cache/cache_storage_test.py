@@ -14,6 +14,7 @@ from note_size.cache.cache_storage import CacheStorage
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.size_calculator import SizeCalculator
+from note_size.calculator.size_formatter import SizeFormatter
 from note_size.config.config import Config
 from note_size.config.settings import Settings
 from note_size.types import SizeStr, SizeType
@@ -29,8 +30,9 @@ def empty_cache_dict() -> list[dict[str, Any]]:
 
 
 def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Collection, item_id_cache: ItemIdCache,
-                               size_calculator: SizeCalculator, config: Config, settings: Settings,
-                               empty_cache_dict: list[dict[str, Any]], media_cache: MediaCache):
+                               size_calculator: SizeCalculator, size_formatter: SizeFormatter,
+                               config: Config, settings: Settings, empty_cache_dict: list[dict[str, Any]],
+                               media_cache: MediaCache):
     note1: Note = td.create_note_with_files()
     note2: Note = td.create_note_without_files()
 
@@ -47,7 +49,7 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Colle
 
     cache_storage.save_caches_to_file([item_id_cache, size_calculator, media_cache])
 
-    item_id_cache_2: ItemIdCache = ItemIdCache(col, size_calculator, media_cache)
+    item_id_cache_2: ItemIdCache = ItemIdCache(col, size_calculator, size_formatter, media_cache)
     media_cache_2: MediaCache = MediaCache(col, config)
     size_calculator_2: SizeCalculator = SizeCalculator(col, media_cache_2)
     assert item_id_cache_2.as_dict_list() == empty_cache_dict
@@ -112,9 +114,9 @@ def test_read_absent_cache_file(cache_storage: CacheStorage, item_id_cache: Item
 
 
 def test_read_partially_invalid_cache_file(cache_storage: CacheStorage, td: Data, col: Collection,
-                                           item_id_cache: ItemIdCache, size_calculator: SizeCalculator, config: Config,
-                                           settings: Settings, empty_cache_dict: list[dict[str, Any]],
-                                           media_cache: MediaCache, caplog):
+                                           item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
+                                           size_formatter: SizeFormatter, config: Config, settings: Settings,
+                                           empty_cache_dict: list[dict[str, Any]], media_cache: MediaCache, caplog):
     note1: Note = td.create_note_with_files()
     card_id1: CardId = col.card_ids_of_note(note1.id)[0]
     item_id_cache.get_note_id_by_card_id(card_id1)
@@ -128,7 +130,7 @@ def test_read_partially_invalid_cache_file(cache_storage: CacheStorage, td: Data
     pickle.dump(partially_invalid_cache, cache_file.open("wb"))
     assert os.path.exists(cache_file)
 
-    item_id_cache_2: ItemIdCache = ItemIdCache(col, size_calculator, media_cache)
+    item_id_cache_2: ItemIdCache = ItemIdCache(col, size_calculator, size_formatter, media_cache)
     assert item_id_cache_2.as_dict_list() == empty_cache_dict
     with caplog.at_level(logging.WARNING):
         read_success: bool = cache_storage.read_caches_from_file([item_id_cache_2])

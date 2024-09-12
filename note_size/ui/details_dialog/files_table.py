@@ -46,10 +46,12 @@ class FilesTable(QTableWidget):
     __size_column: int = 2
     __default_general_mime_type: str = "other"
 
-    def __init__(self, file_type_helper: FileTypeHelper, config: Config, settings: Settings):
+    def __init__(self, file_type_helper: FileTypeHelper, size_formatter: SizeFormatter, config: Config,
+                 settings: Settings):
         super().__init__(parent=None)
         self.__config: Config = config
         self.__file_type_helper: FileTypeHelper = file_type_helper
+        self.__size_formatter: SizeFormatter = size_formatter
         icons_dir: Path = settings.module_dir / "ui" / "details_dialog" / "icon"
         self.__icons: dict[FileType, QIcon] = {
             FileType.OTHER: QIcon(str(icons_dir / "other.png")),
@@ -108,7 +110,7 @@ class FilesTable(QTableWidget):
             filename_item: QTableWidgetItem = QTableWidgetItem(file)
             filename_item.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
 
-            size_str: SizeStr = SizeFormatter.bytes_to_str(size)
+            size_str: SizeStr = self.__size_formatter.bytes_to_str(size)
             size_item: _SizeTableWidgetItem = _SizeTableWidgetItem(size, size_str)
 
             self.setItem(i, self.__icon_column, icon_item)

@@ -30,7 +30,7 @@ def test_parse_levels_single():
     ]
 
 
-def test_add_level():
+def test_add_level(level_parser: LevelParser):
     levels_dict: list[dict[str, str]] = [
         {"Color": "PaleGreen",
          "Max Size": "100 KB"},
@@ -38,7 +38,7 @@ def test_add_level():
          "Max Size": "1 MB"},
         {"Color": "LightCoral",
          "Max Size": None}]
-    LevelParser.add_level(levels_dict)
+    level_parser.add_level(levels_dict)
     assert levels_dict == [
         {"Color": "PaleGreen",
          "Max Size": "100 KB"},
@@ -50,13 +50,13 @@ def test_add_level():
          "Max Size": None}]
 
 
-def test_add_level_to_two():
+def test_add_level_to_two(level_parser: LevelParser):
     levels_dict: list[dict[str, str]] = [
         {"Color": "PaleGreen",
          "Max Size": "100 KB"},
         {"Color": "LightCoral",
          "Max Size": None}]
-    LevelParser.add_level(levels_dict)
+    level_parser.add_level(levels_dict)
     assert levels_dict == [
         {"Color": "PaleGreen",
          "Max Size": "100 KB"},
@@ -66,11 +66,11 @@ def test_add_level_to_two():
          "Max Size": None}]
 
 
-def test_add_level_to_single():
+def test_add_level_to_single(level_parser: LevelParser):
     levels_dict: list[dict[str, str]] = [
         {"Color": "PaleGreen",
          "Max Size": None}]
-    LevelParser.add_level(levels_dict)
+    level_parser.add_level(levels_dict)
     assert levels_dict == [
         {"Color": "PaleGreen",
          "Max Size": "100 KB"},

@@ -24,16 +24,17 @@ class DetailsDialog(QDialog):
     __files_table_row: int = 3
     __button_box_row: int = 4
 
-    def __init__(self, size_calculator: SizeCalculator, file_type_helper: FileTypeHelper, config_ui: ConfigUi,
-                 config: Config, settings: Settings):
+    def __init__(self, size_calculator: SizeCalculator, size_formatter: SizeFormatter, file_type_helper: FileTypeHelper,
+                 config_ui: ConfigUi, config: Config, settings: Settings):
         super().__init__(parent=None)
         self.__size_calculator: SizeCalculator = size_calculator
+        self.__size_formatter: SizeFormatter = size_formatter
         self.__config_ui: ConfigUi = config_ui
         self.setWindowTitle('"Note Size" addon')
         self.__total_size_label: QLabel = self.__total_size_label()
         self.__texts_size_label: QLabel = QLabel()
         self.__files_size_label: QLabel = QLabel()
-        self.__files_table: FilesTable = FilesTable(file_type_helper, config, settings)
+        self.__files_table: FilesTable = FilesTable(file_type_helper, size_formatter, config, settings)
 
         self.__settings_icon: QIcon = QIcon(str(settings.module_dir / "ui" / "web" / "setting.png"))
 
@@ -87,20 +88,20 @@ class DetailsDialog(QDialog):
         self.__config_ui.show_configuration_dialog()
 
     def __refresh_total_note_size(self, note: Note) -> None:
-        size: SizeStr = SizeFormatter.bytes_to_str(
-            self.__size_calculator.calculate_note_total_size(note, use_cache=False))
-        text: str = f"Total note size: {size}"
+        size_bytes: SizeBytes = self.__size_calculator.calculate_note_total_size(note, use_cache=False)
+        size_str: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
+        text: str = f"Total note size: {size_str}"
         self.__total_size_label.setText(text)
 
     def __refresh_texts_size(self, note: Note) -> None:
-        size: SizeStr = SizeFormatter.bytes_to_str(
-            self.__size_calculator.calculate_note_texts_size(note, use_cache=False))
+        size_bytes: SizeBytes = self.__size_calculator.calculate_note_texts_size(note, use_cache=False)
+        size: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
         text: str = f"Texts size: {size}"
         self.__texts_size_label.setText(text)
 
     def __refresh_files_size(self, note: Note) -> None:
-        size: SizeStr = SizeFormatter.bytes_to_str(
-            self.__size_calculator.calculate_note_files_size(note, use_cache=False))
+        size_bytes: SizeBytes = self.__size_calculator.calculate_note_files_size(note, use_cache=False)
+        size: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
         text: str = f"Files size: {size}"
         self.__files_size_label.setText(text)
 

@@ -1,13 +1,15 @@
 import os
+import timeit
 from pathlib import Path
 
 from anki.collection import Collection
 from bs4 import BeautifulSoup
 
 from note_size.cache.item_id_cache import ItemIdCache
+from note_size.calculator.size_formatter import SizeFormatter
 from note_size.ui.deck_browser.collection_size_formatter import CollectionSizeFormatter
 from note_size.ui.deck_browser.trash import Trash
-from note_size.types import MediaFile
+from note_size.types import MediaFile, SizeBytes
 from tests.data import Data
 
 web_path: str = os.path.join("_addons", "1188705668", "ui", "web")
@@ -154,3 +156,9 @@ def test_empty_unused_and_trash(col: Collection, td: Data, collection_size_forma
     exp_soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
     act_soup: BeautifulSoup = BeautifulSoup(collection_size_formatter.format_collection_size_html(), 'html.parser')
     assert act_soup.prettify() == exp_soup.prettify()
+
+
+def test_bytes_to_str_performance(size_formatter: SizeFormatter):
+    size_bytes: SizeBytes = SizeBytes(123_456_789)
+    execution_time: float = timeit.timeit(lambda: size_formatter.bytes_to_str(size_bytes), number=500_000)
+    assert execution_time <= 1
