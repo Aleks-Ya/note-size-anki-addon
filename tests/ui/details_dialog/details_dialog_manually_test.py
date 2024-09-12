@@ -1,3 +1,5 @@
+import os
+
 import pytest
 from anki.notes import Note
 from pytestqt.qtbot import QtBot
@@ -69,6 +71,25 @@ def test_details_dialog_larger_than_screen(details_dialog: DetailsDialog, td: Da
         media_file: MediaFile = MediaFile(str(i) + "a" * length + ".png")
         td.write_file(media_file, "aa" * i)
         td.append_front_field(note, f'<img src="{media_file}">')
+    details_dialog.show_note(note)
+    qtbot.wait_for_window_shown(details_dialog)
+    qtbot.stop()
+
+
+@pytest.mark.skip(reason="For manual running")
+def test_details_dialog_thousands_rows(details_dialog: DetailsDialog, td: Data, qtbot: QtBot):
+    pid: int = os.getpid()
+    note: Note = td.create_note_with_files()
+    file_number: int = 20_000
+    length: int = 10
+    links: list[str] = []
+    for i in range(file_number):
+        media_file: MediaFile = MediaFile(f'{str(i)} PID-{pid} {"a" * length}.png')
+        td.write_file(media_file, "text " * min(i, 1000))
+        links.append(f'<img src="{media_file}">')
+    updated_field: str = " ".join(links)
+    td.append_front_field(note, updated_field)
+
     details_dialog.show_note(note)
     qtbot.wait_for_window_shown(details_dialog)
     qtbot.stop()

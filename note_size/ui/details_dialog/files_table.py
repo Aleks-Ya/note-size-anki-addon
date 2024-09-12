@@ -14,17 +14,16 @@ log: Logger = logging.getLogger(__name__)
 
 
 class _IconTableWidgetItem(QTableWidgetItem):
-    def __init__(self, icon_path: Path):
+    def __init__(self, icon: QIcon, general_mime_type: str):
         super().__init__()
-        self.icon_path: Path = icon_path
-        icon: QIcon = QIcon(str(icon_path))
+        self.__general_mime_type: str = general_mime_type
         self.setIcon(icon)
         self.setData(Qt.ItemDataRole.DisplayRole, None)
         self.setFlags(self.flags() & ~Qt.ItemFlag.ItemIsEditable & ~Qt.ItemFlag.ItemIsSelectable)
 
     def __lt__(self, other: object):
         if isinstance(other, _IconTableWidgetItem):
-            return self.icon_path < other.icon_path
+            return self.__general_mime_type < other.__general_mime_type
         return NotImplemented
 
 
@@ -45,11 +44,14 @@ class FilesTable(QTableWidget):
     __icon_column: int = 0
     __filename_column: int = 1
     __size_column: int = 2
+    __default_general_mime_type: str = "other"
 
     def __init__(self, config: Config, settings: Settings):
         super().__init__(parent=None)
         self.__config: Config = config
-        self.__icons_dir: Path = settings.module_dir / "ui" / "details_dialog" / "icon"
+        icons_dir: Path = settings.module_dir / "ui" / "details_dialog" / "icon"
+        self.__icons: dict[str, QIcon] = self.__get_icons(icons_dir)
+
         self.setColumnCount(3)
         self.setHorizontalHeaderLabels(["", "File", "Size"])
         self.setSizeAdjustPolicy(QTableWidget.SizeAdjustPolicy.AdjustToContents)
@@ -95,13 +97,12 @@ class FilesTable(QTableWidget):
         files_number: int = len(file_sizes)
         self.setRowCount(files_number)
         for i, (file, size) in enumerate(file_sizes.items()):
-            size_str: SizeStr = SizeFormatter.bytes_to_str(size)
-            icon_path: Path = self.__get_file_icon(file)
-            icon_item: _IconTableWidgetItem = _IconTableWidgetItem(icon_path)
+            icon_item: _IconTableWidgetItem = self.__create_icon_item(file)
 
             filename_item: QTableWidgetItem = QTableWidgetItem(file)
             filename_item.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
 
+            size_str: SizeStr = SizeFormatter.bytes_to_str(size)
             size_item: _SizeTableWidgetItem = _SizeTableWidgetItem(size, size_str)
 
             self.setItem(i, self.__icon_column, icon_item)
@@ -113,18 +114,34 @@ class FilesTable(QTableWidget):
         else:
             self.hide()
 
-    def recalculate_window_sizes(self):
+    def __create_icon_item(self, file):
+        general_mime_type: str = self.__get_general_mime_type(file)
+        if general_mime_type not in self.__icons:
+            general_mime_type = self.__default_general_mime_type
+        icon: QIcon = self.__icons[general_mime_type]
+        icon_item: _IconTableWidgetItem = _IconTableWidgetItem(icon, general_mime_type)
+        return icon_item
+
+    def recalculate_window_sizes(self) -> None:
         self.resizeRowsToContents()
         self.resizeColumnsToContents()
         self.adjustSize()
 
-    def __get_file_icon(self, filename: str) -> Path:
-        icon_path: Path = self.__icons_dir.joinpath("other.png")
+    def __get_general_mime_type(self, filename: str) -> str:
         full_mime_type: str = mimetypes.guess_type(filename)[0]
         if not full_mime_type:
-            return icon_path
-        general_mime_type: str = full_mime_type.split("/")[0]
-        png_icon_path: Path = self.__icons_dir.joinpath(general_mime_type + ".png")
-        if png_icon_path.exists():
-            return png_icon_path
-        return icon_path
+            return self.__default_general_mime_type
+        return full_mime_type.split("/")[0]
+
+    def __get_icons(self, icons_dir: Path) -> dict[str, QIcon]:
+        icons: dict[str, QIcon] = {}
+        for icon_path in icons_dir.iterdir():
+            if icon_path.is_file() and icon_path.suffix == ".png":
+                general_mime_type: str = icon_path.stem
+                icon: QIcon = QIcon(str(icon_path))
+                icons[general_mime_type] = icon
+        return icons
+
+    def clear_rows(self):
+        self.setRowCount(0)
+        self.clearContents()

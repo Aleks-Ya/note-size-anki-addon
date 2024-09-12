@@ -1,6 +1,5 @@
 import logging
 from logging import Logger
-from pathlib import Path
 
 from anki.notes import Note
 from aqt.qt import QDialog, QLabel, QIcon, QGridLayout, QPushButton, QFont, QSize, QMargins, QDialogButtonBox, Qt
@@ -28,15 +27,16 @@ class DetailsDialog(QDialog):
         super().__init__(parent=None)
         self.__size_calculator: SizeCalculator = size_calculator
         self.__config_ui: ConfigUi = config_ui
-        self.__settings: Settings = settings
         self.setWindowTitle('"Note Size" addon')
         self.__total_size_label: QLabel = self.__total_size_label()
         self.__texts_size_label: QLabel = QLabel()
         self.__files_size_label: QLabel = QLabel()
         self.__files_table: FilesTable = FilesTable(config, settings)
 
+        self.__settings_icon: QIcon = QIcon(str(settings.module_dir / "ui" / "web" / "setting.png"))
+
         button_box: QDialogButtonBox = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
-        button_box.rejected.connect(self.close)
+        button_box.rejected.connect(self.__close)
 
         layout: QGridLayout = QGridLayout(self)
 
@@ -57,6 +57,10 @@ class DetailsDialog(QDialog):
         self.setLayout(layout)
         self.setMinimumSize(300, 200)
 
+    def __close(self):
+        self.__files_table.clear_rows()
+        self.close()
+
     def __total_size_label(self) -> QLabel:
         font: QFont = QFont()
         font.setPointSize(16)
@@ -66,14 +70,10 @@ class DetailsDialog(QDialog):
         return label
 
     def __configuration_button(self) -> QPushButton:
-        icon_path: Path = self.__settings.module_dir / "ui" / "web" / "setting.png"
-        log.info("Icon path: " + str(icon_path))
-        log.info("Current dir: " + str(Path.cwd()))
-        icon: QIcon = QIcon(str(icon_path))
         button: QPushButton = QPushButton()
-        button.setIcon(icon)
+        button.setIcon(self.__settings_icon)
         button.setIconSize(button.sizeHint())
-        button.setFixedSize(icon.actualSize(button.iconSize()))
+        button.setFixedSize(self.__settings_icon.actualSize(button.iconSize()))
         button.setStyleSheet("border: none;")
         button.clicked.connect(self.__on_configuration_button_clicked)
         margin: int = 1
