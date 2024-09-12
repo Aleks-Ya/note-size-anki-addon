@@ -103,6 +103,7 @@ class FilesTable(QTableWidget):
 
     def show_files(self, file_sizes: dict[MediaFile, SizeBytes]):
         files_number: int = len(file_sizes)
+        log.debug(f"Showing files: {files_number}")
         self.setRowCount(files_number)
         for i, (file, size) in enumerate(file_sizes.items()):
             icon_item: _IconTableWidgetItem = self.__create_icon_item(file)
@@ -119,8 +120,10 @@ class FilesTable(QTableWidget):
         self.sortItems(self.__size_column, Qt.SortOrder.DescendingOrder)
         if files_number > 0:
             self.show()
+            log.debug("Shown files")
         else:
             self.hide()
+            log.debug("Table is hidden (no files to show)")
 
     def __create_icon_item(self, file):
         file_type: FileType = self.__file_type_helper.get_file_type(file)
