@@ -63,13 +63,13 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Colle
                                               {SizeType.TOTAL: {note1.id: "143 B", note2.id: "70 B"},
                                                SizeType.TEXTS: {},
                                                SizeType.FILES: {}},
-                                              {note1.id: ['picture.jpg', 'sound.mp3', 'picture.jpg', 'animation.gif'],
-                                               note2.id: []}]
+                                              {note1.id: {'picture.jpg', 'sound.mp3', 'animation.gif'},
+                                               note2.id: set()}]
     assert size_calculator_2.as_dict_list() == [{note1.id: 143, note2.id: 70},
                                                 {note1.id: 122, note2.id: 70},
                                                 {note1.id: 21, note2.id: 0},
-                                                {note1.id: ['picture.jpg', 'sound.mp3', 'picture.jpg', 'animation.gif'],
-                                                 note2.id: []},
+                                                {note1.id: {'picture.jpg', 'sound.mp3', 'animation.gif'},
+                                                 note2.id: set()},
                                                 {note1.id: {'animation.gif': 9, 'picture.jpg': 7, 'sound.mp3': 5},
                                                  note2.id: {}}]
     assert media_cache_2.as_dict_list() is None

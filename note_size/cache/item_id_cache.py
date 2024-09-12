@@ -19,7 +19,7 @@ class _Caches:
     id_cache: dict[CardId, NoteId] = {}
     size_bytes_caches: dict[SizeType, dict[NoteId, SizeBytes]] = {}
     size_str_caches: dict[SizeType, dict[NoteId, SizeStr]] = {}
-    note_files_cache: dict[NoteId, list[MediaFile]] = {}
+    note_files_cache: dict[NoteId, set[MediaFile]] = {}
 
 
 class ItemIdCache(Cache):
@@ -103,19 +103,19 @@ class ItemIdCache(Cache):
             self.__caches.note_files_cache = caches[3]
             log.info(f"Caches were read dict list")
 
-    def get_note_files(self, note_id: NoteId, use_cache: bool) -> list[MediaFile]:
+    def get_note_files(self, note_id: NoteId, use_cache: bool) -> set[MediaFile]:
         with self._lock:
             if use_cache and note_id in self.__caches.note_files_cache:
                 return self.__caches.note_files_cache[note_id]
             else:
                 note: Note = self.__col.get_note(note_id)
-                files: list[MediaFile] = self.__size_calculator.note_files(note, use_cache)
+                files: set[MediaFile] = self.__size_calculator.note_files(note, use_cache)
                 self.__caches.note_files_cache[note_id] = files
                 return files
 
     def get_used_files_size(self, use_cache: bool) -> (SizeBytes, FilesNumber):
         all_note_ids: Sequence[NoteId] = self.__col.find_notes("deck:*")
-        files_list: list[list[MediaFile]] = [self.get_note_files(note_id, use_cache) for note_id in all_note_ids]
+        files_list: list[set[MediaFile]] = [self.get_note_files(note_id, use_cache) for note_id in all_note_ids]
         files: set[MediaFile] = {file for sublist in files_list for file in sublist}
         files_size: SizeBytes = self.__size_calculator.calculate_size_of_files(files, use_cache)
         return files_size, FilesNumber(len(files))

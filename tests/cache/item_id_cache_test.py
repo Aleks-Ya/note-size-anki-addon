@@ -108,27 +108,27 @@ def test_get_note_id_by_card_id(td: Data, col: Collection, item_id_cache: ItemId
 def test_get_note_files(td: Data, item_id_cache: ItemIdCache):
     note: Note = td.create_note_with_files()
     note_id: NoteId = note.id
-    files: list[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=True)
-    assert files == ['picture.jpg', 'sound.mp3', 'picture.jpg', 'animation.gif']
+    files: set[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=True)
+    assert files == {'animation.gif', 'sound.mp3', 'picture.jpg'}
 
     Data.replace_in_front_field(note, '<img src="picture.jpg">', '')
-    files_cached: list[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=True)
-    assert files_cached == ['picture.jpg', 'sound.mp3', 'picture.jpg', 'animation.gif']
-    files_uncached: list[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=False)
-    assert files_uncached == ['sound.mp3', 'picture.jpg', 'animation.gif']
+    files_cached: set[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=True)
+    assert files_cached == {'animation.gif', 'sound.mp3', 'picture.jpg'}
+    files_uncached: set[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=False)
+    assert files_uncached == {'sound.mp3', 'picture.jpg', 'animation.gif'}
 
 
 def test_get_used_files_size(td: Data, item_id_cache: ItemIdCache):
     note: Note = td.create_note_with_files()
     note_id: NoteId = note.id
-    files: list[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=True)
-    assert files == ['picture.jpg', 'sound.mp3', 'picture.jpg', 'animation.gif']
+    files: set[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=True)
+    assert files == {'animation.gif', 'sound.mp3', 'picture.jpg'}
     Data.replace_in_front_field(note, '<img src="picture.jpg">', '')
-    files_cached: list[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=True)
-    assert files_cached == ['picture.jpg', 'sound.mp3', 'picture.jpg', 'animation.gif']
+    files_cached: set[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=True)
+    assert files_cached == {'animation.gif', 'picture.jpg', 'sound.mp3'}
 
-    files_uncached: list[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=False)
-    assert files_uncached == ['sound.mp3', 'picture.jpg', 'animation.gif']
+    files_uncached: set[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=False)
+    assert files_uncached == {'sound.mp3', 'picture.jpg', 'animation.gif'}
 
 
 def test_refresh_notes_having_updated_files(td: Data, item_id_cache: ItemIdCache):

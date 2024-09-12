@@ -20,7 +20,7 @@ class SizeCalculator(Cache):
         self.__note_total_size_cache: dict[NoteId, SizeBytes] = {}
         self.__note_note_texts_size: dict[NoteId, SizeBytes] = {}
         self.__note_note_files_size: dict[NoteId, SizeBytes] = {}
-        self.__note_files_cache: dict[NoteId, list[MediaFile]] = {}
+        self.__note_files_cache: dict[NoteId, set[MediaFile]] = {}
         self.__note_file_sizes_cache: dict[NoteId, dict[MediaFile, SizeBytes]] = {}
         self.__media_cache: MediaCache = media_cache
         log.debug(f"{self.__class__.__name__} was instantiated")
@@ -68,15 +68,15 @@ class SizeCalculator(Cache):
                 self.__note_file_sizes_cache[note.id] = file_sizes
                 return file_sizes
 
-    def note_files(self, note: Note, use_cache: bool) -> list[MediaFile]:
+    def note_files(self, note: Note, use_cache: bool) -> set[MediaFile]:
         with self._lock:
             if use_cache and note.id in self.__note_files_cache:
                 return self.__note_files_cache[note.id]
             else:
-                all_files: list[MediaFile] = list[MediaFile]()
+                all_files: set[MediaFile] = set[MediaFile]()
                 for field in note.fields:
                     files: list[MediaFile] = self.__col.media.files_in_str(note.mid, field)
-                    all_files += files
+                    all_files.update(files)
                 self.__note_files_cache[note.id] = all_files
                 return all_files
 
