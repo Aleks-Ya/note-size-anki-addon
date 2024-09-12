@@ -71,18 +71,18 @@ def test_calculate_note_total_size_performance(note: Note, size_calculator: Size
 
 
 def test_note_file_sizes(note: Note, size_calculator: SizeCalculator):
-    execution_time: float = timeit.timeit(lambda: size_calculator.note_file_sizes(note, use_cache=True),
-                                          number=500_000)
-    assert execution_time <= 1
-
-
-def test_note_file_sizes_performance(note: Note, size_calculator: SizeCalculator):
     act_file_sizes: dict[MediaFile, SizeBytes] = size_calculator.note_file_sizes(note, use_cache=False)
     exp_file_sizes: dict[MediaFile, SizeBytes] = {
         DefaultFields.file0: SizeBytes(len(DefaultFields.content0)),
         DefaultFields.file1: SizeBytes(len(DefaultFields.content1)),
         DefaultFields.file2: SizeBytes(len(DefaultFields.content2))}
     assert act_file_sizes == exp_file_sizes
+
+
+def test_note_file_sizes_performance(note: Note, size_calculator: SizeCalculator):
+    execution_time: float = timeit.timeit(lambda: size_calculator.note_file_sizes(note, use_cache=True),
+                                          number=500_000)
+    assert execution_time <= 1
 
 
 def test_calculate_size_of_files(col: Collection, size_calculator: SizeCalculator):
