@@ -5,6 +5,7 @@ from typing import Any
 from anki.collection import Collection
 from anki.notes import Note, NoteId
 
+from .note_helper import NoteHelper
 from ..cache.cache import Cache
 from ..cache.media_cache import MediaCache
 from ..types import SizeBytes, MediaFile
@@ -30,7 +31,7 @@ class SizeCalculator(Cache):
 
     def calculate_note_total_size(self, note: Note, use_cache: bool) -> SizeBytes:
         with self._lock:
-            if use_cache and note.id in self.__note_total_size_cache:
+            if NoteHelper.is_note_saved(note) and use_cache and note.id in self.__note_total_size_cache:
                 return self.__note_total_size_cache[note.id]
             else:
                 size: SizeBytes = SizeBytes(
@@ -40,7 +41,7 @@ class SizeCalculator(Cache):
 
     def calculate_note_texts_size(self, note: Note, use_cache: bool) -> SizeBytes:
         with self._lock:
-            if use_cache and note.id in self.__note_texts_size_cache:
+            if NoteHelper.is_note_saved(note) and use_cache and note.id in self.__note_texts_size_cache:
                 return self.__note_texts_size_cache[note.id]
             else:
                 size: SizeBytes = SizeBytes(sum([len(field.encode()) for field in note.fields]))
@@ -49,7 +50,7 @@ class SizeCalculator(Cache):
 
     def calculate_note_files_size(self, note: Note, use_cache: bool) -> SizeBytes:
         with self._lock:
-            if use_cache and note.id in self.__note_files_size_cache:
+            if NoteHelper.is_note_saved(note) and use_cache and note.id in self.__note_files_size_cache:
                 return self.__note_files_size_cache[note.id]
             else:
                 size: SizeBytes = SizeBytes(sum([size for size in self.note_file_sizes(note, use_cache).values()]))
@@ -58,7 +59,7 @@ class SizeCalculator(Cache):
 
     def note_file_sizes(self, note: Note, use_cache: bool) -> dict[MediaFile, SizeBytes]:
         with self._lock:
-            if use_cache and note.id in self.__note_file_sizes_cache:
+            if NoteHelper.is_note_saved(note) and use_cache and note.id in self.__note_file_sizes_cache:
                 return self.__note_file_sizes_cache[note.id]
             else:
                 file_sizes: dict[MediaFile, SizeBytes] = dict[MediaFile, SizeBytes]()
@@ -70,7 +71,7 @@ class SizeCalculator(Cache):
 
     def note_files(self, note: Note, use_cache: bool) -> set[MediaFile]:
         with self._lock:
-            if use_cache and note.id in self.__note_files_cache:
+            if NoteHelper.is_note_saved(note) and use_cache and note.id in self.__note_files_cache:
                 return self.__note_files_cache[note.id]
             else:
                 all_files: set[MediaFile] = set[MediaFile]()

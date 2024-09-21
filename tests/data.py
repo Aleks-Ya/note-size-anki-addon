@@ -48,18 +48,21 @@ class Data:
 
     def create_note_with_given_fields(self,
                                       front_field_content: str = "Front content",
-                                      back_field_content: str = "Back content") -> Note:
+                                      back_field_content: str = "Back content",
+                                      new_note: bool = False) -> Note:
         front_field_content: FieldContent = FieldContent(front_field_content)
         back_field_content: FieldContent = FieldContent(back_field_content)
         note: Note = self.col.new_note(self.note_type)
         note[DefaultFields.front_field_name] = front_field_content
         note[DefaultFields.back_field_name] = back_field_content
-        self.col.add_note(note, self.deck_id)
+        if not new_note:
+            self.col.add_note(note, self.deck_id)
         return note
 
-    def create_note_without_files(self) -> Note:
+    def create_note_without_files(self, new_note: bool = False) -> Note:
         return self.create_note_with_given_fields('The field on the front card ∑￡',
-                                                  'Another field on the back card ∆¥')
+                                                  'Another field on the back card ∆¥',
+                                                  new_note)
 
     def create_note_with_given_files(self, fields: dict[FieldName, dict[MediaFile, FileContent]]) -> Note:
         note: Note = self.col.new_note(self.note_type)
