@@ -31,6 +31,7 @@ from note_size.ui.details_dialog.details_dialog import DetailsDialog
 from note_size.ui.details_dialog.details_model_filler import DetailsModelFiller
 from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
 from note_size.ui.editor.button.button_formatter import ButtonFormatter
+from note_size.ui.editor.button.button_js import ButtonJs
 from note_size.ui.editor.column.item_id_sorter import ItemIdSorter
 from note_size.log.logs import Logs
 from tests.data import Data
@@ -246,3 +247,8 @@ def level_parser(size_formatter: SizeFormatter) -> LevelParser:
 @pytest.fixture
 def details_model_filler(size_calculator: SizeCalculator, size_formatter: SizeFormatter) -> DetailsModelFiller:
     return DetailsModelFiller(size_calculator, size_formatter)
+
+
+@pytest.fixture
+def button_js(button_formatter: ButtonFormatter) -> ButtonJs:
+    return ButtonJs(button_formatter)

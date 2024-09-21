@@ -8,7 +8,7 @@ from aqt.editor import Editor
 from aqt.webview import WebContent
 from aqt.qt import QWidget
 
-from .button_label import ButtonLabel
+from .button_js import ButtonJs
 from .button_formatter import ButtonFormatter
 from ....config.config import Config
 from ....config.settings import Settings
@@ -18,11 +18,13 @@ log: Logger = logging.getLogger(__name__)
 
 
 class ButtonHooks:
-    def __init__(self, button_formatter: ButtonFormatter, details_dialog: DetailsDialog, settings: Settings,
+    def __init__(self, button_formatter: ButtonFormatter, button_js: ButtonJs, details_dialog: DetailsDialog,
+                 settings: Settings,
                  config: Config) -> None:
         self.editor: Optional[Editor] = None
         self.__config: Config = config
         self.__button_formatter: ButtonFormatter = button_formatter
+        self.__button_js: ButtonJs = button_js
         self.__module_name: str = settings.module_name
         self.__hook_editor_did_init: Callable[[Editor], None] = self.__on_editor_did_init
         self.__hook_editor_did_init_buttons: Callable[[list[str], Editor], None] = self.__on_editor_did_init_buttons
@@ -105,36 +107,12 @@ class ButtonHooks:
         log.debug("Refresh size button...")
         if editor and editor.web:
             if self.__config.get_size_button_enabled():
-                label: ButtonLabel = self.__button_formatter.get_zero_size_label()
-                if editor.note:
-                    if editor.addMode:
-                        label: ButtonLabel = self.__button_formatter.get_add_mode_label(editor.note)
-                    else:
-                        label: ButtonLabel = self.__button_formatter.get_edit_mode_label(editor.note.id)
-                js: str = f"""
-                    try {{
-                        const sizeButton = document.getElementById('size_button');
-                        if (sizeButton) {{
-                            sizeButton.style.display = 'block';
-                            sizeButton.textContent = '{label.get_text()}';
-                            sizeButton.style.backgroundColor = '{label.get_background_color()}';
-                        }}
-                    }} catch (error) {{
-                      error.stack
-                    }} """
-                editor.web.evalWithCallback(js, ButtonHooks.__eval_callback)
-                log.debug(f"Size button was refreshed: {label}")
+                js: str = self.__button_js.show_size_button_js(editor.note, editor.addMode)
+                editor.web.evalWithCallback(js, self.__eval_callback)
+                log.debug(f"Size button was refreshed")
             else:
-                js: str = f"""
-                    try {{
-                        const sizeButton = document.getElementById('size_button');
-                        if (sizeButton) {{
-                            sizeButton.style.display = 'none';
-                        }}
-                    }} catch (error) {{
-                      error.stack
-                    }} """
-                editor.web.evalWithCallback(js, ButtonHooks.__eval_callback)
+                js: str = self.__button_js.hide_size_button_js()
+                editor.web.evalWithCallback(js, self.__eval_callback)
                 log.debug(f"Size button was hidden")
         else:
             log.debug("Skip size button refresh as editor.web is empty")

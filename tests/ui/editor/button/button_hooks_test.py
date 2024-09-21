@@ -6,12 +6,13 @@ from note_size.config.settings import Settings
 from note_size.ui.details_dialog.details_dialog import DetailsDialog
 from note_size.ui.editor.button.button_formatter import ButtonFormatter
 from note_size.ui.editor.button.button_hooks import ButtonHooks
+from note_size.ui.editor.button.button_js import ButtonJs
 
 
 @pytest.fixture
-def button_hooks(settings: Settings, config: Config, button_formatter: ButtonFormatter,
+def button_hooks(settings: Settings, config: Config, button_formatter: ButtonFormatter, button_js: ButtonJs,
                  details_dialog: DetailsDialog) -> ButtonHooks:
-    button_hooks = ButtonHooks(button_formatter, details_dialog, settings, config)
+    button_hooks = ButtonHooks(button_formatter, button_js, details_dialog, settings, config)
     yield button_hooks
     button_hooks.remove_hooks()
 
