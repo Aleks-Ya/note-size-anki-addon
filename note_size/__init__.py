@@ -37,6 +37,8 @@ def __initialize(col: Collection):
     from .ui.editor.button.button_creator import ButtonCreator
     from .ui.details_dialog.file_type_helper import FileTypeHelper
     from .profiler.profiler import Profiler
+    from .ui.browser.browser_hooks import BrowserHooks
+    from .ui.browser.browser_button import BrowserButton
 
     module_dir: Path = Path(__file__).parent
     module_name: str = module_dir.stem
@@ -86,6 +88,9 @@ def __initialize(col: Collection):
     cache_hooks.setup_hooks()
     config_hooks: ConfigHooks = ConfigHooks(config_ui, desktop_services)
     config_hooks.setup_hooks()
+    button: BrowserButton = BrowserButton(col, item_id_cache, details_dialog)
+    browser_hooks: BrowserHooks = BrowserHooks(button)
+    browser_hooks.setup_hooks()
 
 
 def __shutdown():

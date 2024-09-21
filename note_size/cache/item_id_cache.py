@@ -45,6 +45,9 @@ class ItemIdCache(Cache):
                 self.__caches.id_cache[card_id] = self.__col.get_card(card_id).nid
             return self.__caches.id_cache[card_id]
 
+    def get_note_ids_by_card_ids(self, card_ids: Sequence[CardId]) -> Sequence[NoteId]:
+        return list({self.get_note_id_by_card_id(card_id) for card_id in card_ids})
+
     def get_note_size_bytes(self, note_id: NoteId, size_type: SizeType, use_cache: bool) -> SizeBytes:
         with self._lock:
             cache: dict[NoteId, SizeBytes] = self.__caches.size_bytes_caches[size_type]
@@ -59,6 +62,15 @@ class ItemIdCache(Cache):
                     size: SizeBytes = self.__size_calculator.get_note_files_size(note_id, use_cache)
                 cache[note_id] = size
                 return cache[note_id]
+
+    def get_notes_size_bytes(self, note_ids: Sequence[NoteId], size_type: SizeType, use_cache: bool) -> SizeBytes:
+        size_sum: int = 0
+        for note_id in note_ids:
+            size_sum += self.get_note_size_bytes(note_id, size_type, use_cache)
+        return SizeBytes(size_sum)
+
+    def get_notes_size_str(self, note_ids: Sequence[NoteId], size_type: SizeType, use_cache: bool) -> SizeStr:
+        return self.__size_formatter.bytes_to_str(self.get_notes_size_bytes(note_ids, size_type, use_cache))
 
     def get_note_size_str(self, note_id: NoteId, size_type: SizeType, use_cache: bool) -> SizeStr:
         with self._lock:

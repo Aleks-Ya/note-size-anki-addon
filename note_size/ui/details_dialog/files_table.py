@@ -10,7 +10,7 @@ from .size_table_widget_item import SizeTableWidgetItem
 from ...calculator.size_formatter import SizeFormatter
 from ...config.config import Config
 from ...config.settings import Settings
-from ...types import MediaFile, SizeBytes, SizeStr, FileType
+from ...types import MediaFile, SizeStr, FileType, SizeBytes
 
 log: Logger = logging.getLogger(__name__)
 
@@ -27,6 +27,7 @@ class FilesTable(QTableWidget):
         self.__config: Config = config
         self.__file_type_helper: FileTypeHelper = file_type_helper
         self.__size_formatter: SizeFormatter = size_formatter
+        self.__items_dict: dict[int, dict[int, QTableWidgetItem]] = {}
         icons_dir: Path = settings.module_dir / "ui" / "details_dialog" / "icon"
         self.__icons: dict[FileType, QIcon] = {
             FileType.OTHER: QIcon(str(icons_dir / "other.png")),
@@ -76,23 +77,11 @@ class FilesTable(QTableWidget):
         horizontal_header.setSectionResizeMode(self.__filename_column, QHeaderView.ResizeMode.Stretch)
         horizontal_header.setSectionResizeMode(self.__size_column, QHeaderView.ResizeMode.ResizeToContents)
 
-    def show_files(self, file_sizes: dict[MediaFile, SizeBytes]) -> None:
-        self.__prepare_show_files(file_sizes)
-        if self.rowCount() > 0:
-            self.show()
-            log.debug("Shown files")
-        else:
-            self.hide()
-            log.debug("Table is hidden (no files to show)")
-
-    def __prepare_show_files(self, file_sizes):
+    def prepare_items(self, file_sizes: dict[MediaFile, SizeBytes]) -> None:
         files_number: int = len(file_sizes)
         log.debug(f"Prepare for showing files: {files_number}")
-        self.setUpdatesEnabled(False)
-        self.blockSignals(True)
-        self.setSortingEnabled(False)
-        self.setRowCount(files_number)
-        for i, (file, size) in enumerate(file_sizes.items()):
+        self.__items_dict: dict[int, dict[int, QTableWidgetItem]] = {}
+        for row_index, (file, size) in enumerate(file_sizes.items()):
             icon_item: IconTableWidgetItem = self.__create_icon_item(file)
 
             filename_item: QTableWidgetItem = QTableWidgetItem(file)
@@ -101,13 +90,32 @@ class FilesTable(QTableWidget):
             size_str: SizeStr = self.__size_formatter.bytes_to_str(size)
             size_item: SizeTableWidgetItem = SizeTableWidgetItem(size, size_str)
 
-            self.setItem(i, self.__icon_column, icon_item)
-            self.setItem(i, self.__filename_column, filename_item)
-            self.setItem(i, self.__size_column, size_item)
+            self.__items_dict[row_index] = {}
+            self.__items_dict[row_index][self.__icon_column] = icon_item
+            self.__items_dict[row_index][self.__filename_column] = filename_item
+            self.__items_dict[row_index][self.__size_column] = size_item
+
+    def show_files(self) -> None:
+        files_number: int = len(self.__items_dict)
+        log.debug(f"Prepare for showing files: {files_number}")
+        self.setUpdatesEnabled(False)
+        self.blockSignals(True)
+        self.setSortingEnabled(False)
+        self.setRowCount(files_number)
+        for row_index, row in enumerate(self.__items_dict.values()):
+            self.setItem(row_index, self.__icon_column, row[self.__icon_column])
+            self.setItem(row_index, self.__filename_column, row[self.__filename_column])
+            self.setItem(row_index, self.__size_column, row[self.__size_column])
         self.sortItems(self.__size_column, Qt.SortOrder.DescendingOrder)
         self.setUpdatesEnabled(True)
         self.blockSignals(False)
         self.setSortingEnabled(True)
+        if self.rowCount() > 0:
+            self.show()
+            log.debug("Shown files")
+        else:
+            self.hide()
+            log.debug("Table is hidden (no files to show)")
 
     def __create_icon_item(self, file: MediaFile) -> IconTableWidgetItem:
         file_type: FileType = self.__file_type_helper.get_file_type(file)

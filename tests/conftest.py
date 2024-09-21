@@ -23,6 +23,7 @@ from note_size.config.config import Config
 from note_size.config.config_loader import ConfigLoader
 from note_size.config.level_parser import LevelParser
 from note_size.config.settings import Settings
+from note_size.ui.browser.browser_button import BrowserButton
 from note_size.ui.config.config_ui import ConfigUi
 from note_size.ui.config.model_converter import ModelConverter
 from note_size.ui.config.ui_model import UiModel
@@ -275,3 +276,8 @@ def button_js(button_formatter: ButtonFormatter) -> ButtonJs:
 @pytest.fixture
 def button_creator(button_formatter: ButtonFormatter, details_dialog: DetailsDialog) -> ButtonCreator:
     return ButtonCreator(button_formatter, details_dialog)
+
+
+@pytest.fixture
+def browser_button(col: Collection, item_id_cache: ItemIdCache, details_dialog: DetailsDialog) -> BrowserButton:
+    return BrowserButton(col, item_id_cache, details_dialog)

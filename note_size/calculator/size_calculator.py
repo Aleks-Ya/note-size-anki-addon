@@ -1,6 +1,6 @@
 import logging
 from logging import Logger
-from typing import Any
+from typing import Any, Sequence
 
 from anki.collection import Collection
 from anki.notes import Note, NoteId
@@ -94,6 +94,14 @@ class SizeCalculator(Cache):
                 self.__note_file_sizes_cache[note.id] = file_sizes
                 return file_sizes
 
+    def get_note_file_sizes(self, note_id: NoteId, use_cache: bool) -> dict[MediaFile, SizeBytes]:
+        with self._lock:
+            if NoteHelper.is_note_id_saved(note_id) and use_cache and note_id in self.__note_file_sizes_cache:
+                return self.__note_file_sizes_cache[note_id]
+            else:
+                note: Note = self.__col.get_note(note_id)
+                return self.calculate_note_file_sizes(note, use_cache)
+
     def calculate_note_files(self, note: Note, use_cache: bool) -> set[MediaFile]:
         with self._lock:
             if NoteHelper.is_note_saved(note) and use_cache and note.id in self.__note_files_cache:
@@ -106,8 +114,38 @@ class SizeCalculator(Cache):
                 self.__note_files_cache[note.id] = all_files
                 return all_files
 
+    def get_note_files(self, note_id: NoteId, use_cache: bool) -> set[MediaFile]:
+        with self._lock:
+            if NoteHelper.is_note_id_saved(note_id) and use_cache and note_id in self.__note_files_cache:
+                return self.__note_files_cache[note_id]
+            else:
+                note: Note = self.__col.get_note(note_id)
+                return self.calculate_note_files(note, use_cache)
+
     def calculate_size_of_files(self, files: set[MediaFile], use_cache: bool) -> SizeBytes:
         return SizeBytes(sum([self.__media_cache.get_file_size(file, use_cache) for file in files]))
+
+    def get_notes_total_size(self, note_ids: Sequence[NoteId], use_cache: bool) -> SizeBytes:
+        return SizeBytes(sum([self.get_note_total_size(note_id, use_cache) for note_id in note_ids]))
+
+    def get_notes_texts_size(self, note_ids: Sequence[NoteId], use_cache: bool) -> SizeBytes:
+        return SizeBytes(sum([self.get_note_texts_size(note_id, use_cache) for note_id in note_ids]))
+
+    def get_notes_files_size(self, note_ids: Sequence[NoteId], use_cache: bool) -> SizeBytes:
+        return SizeBytes(sum([size for size in self.get_notes_file_sizes(note_ids, use_cache).values()]))
+
+    def get_notes_file_sizes(self, note_ids: Sequence[NoteId], use_cache: bool) -> dict[MediaFile, SizeBytes]:
+        file_sizes: dict[MediaFile, SizeBytes] = dict[MediaFile, SizeBytes]()
+        for note_id in note_ids:
+            note_file_sizes: dict[MediaFile, SizeBytes] = self.get_note_file_sizes(note_id, use_cache)
+            file_sizes.update(note_file_sizes)
+        return file_sizes
+
+    def get_notes_files(self, note_ids: Sequence[NoteId], use_cache: bool) -> list[MediaFile]:
+        notes_files: set[MediaFile] = set()
+        for note_id in note_ids:
+            notes_files.update(self.get_note_files(note_id, use_cache))
+        return list(notes_files)
 
     def evict_note(self, note_id: NoteId) -> None:
         with self._lock:

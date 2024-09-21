@@ -9,6 +9,7 @@ from aqt.browser import Column, Cell, SearchContext
 from aqt.browser import ItemId, CellRow
 
 from .item_id_sorter import ItemIdSorter
+from ...common.browser_helper import BrowserHelper
 from ....cache.item_id_cache import ItemIdCache
 from ....types import SizeType
 
@@ -103,7 +104,7 @@ class ColumnHooks:
 
     def __on_browser_did_search(self, context: SearchContext) -> None:
         log.debug("Browser did search")
-        is_note: bool = ColumnHooks.__is_notes_mode(context)
+        is_note: bool = BrowserHelper.is_notes_mode(context)
         self.__sort_rows_by_column(ColumnHooks.__column_total_label, SizeType.TOTAL, context, is_note)
         self.__sort_rows_by_column(ColumnHooks.__column_texts_label, SizeType.TEXTS, context, is_note)
         self.__sort_rows_by_column(ColumnHooks.__column_files_label, SizeType.FILES, context, is_note)
@@ -112,9 +113,3 @@ class ColumnHooks:
                               is_note: bool) -> None:
         if context.ids and isinstance(context.order, Column) and context.order.notes_mode_label == column_label:
             context.ids = self.__item_id_sorter.sort_item_ids(context.ids, size_type, is_note)
-
-    @staticmethod
-    def __is_notes_mode(context: SearchContext) -> bool:
-        # Method "aqt.browser.table.table.Table.is_notes_mode" doesn't show correct state after toggling the switch
-        # noinspection PyProtectedMember
-        return context.browser._switch.isChecked()
