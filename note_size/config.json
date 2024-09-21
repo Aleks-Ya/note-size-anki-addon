@@ -9,6 +9,9 @@
   "Logging": {
     "Logger Level": "DEBUG"
   },
+  "Profiler": {
+    "Enabled": false
+  },
   "Size Button": {
     "Enabled": true,
     "Color": {

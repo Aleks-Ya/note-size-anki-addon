@@ -4,6 +4,10 @@ from pathlib import Path
 from anki.collection import Collection
 from aqt import mw, gui_hooks, QDesktopServices
 
+from .profiler.profiler import Profiler
+
+profiler: Profiler
+
 
 def __initialize(col: Collection):
     from .config.config import Config
@@ -32,6 +36,7 @@ def __initialize(col: Collection):
     from .ui.editor.button.button_js import ButtonJs
     from .ui.editor.button.button_creator import ButtonCreator
     from .ui.details_dialog.file_type_helper import FileTypeHelper
+    from .profiler.profiler import Profiler
 
     module_dir: Path = Path(__file__).parent
     module_name: str = module_dir.stem
@@ -42,6 +47,11 @@ def __initialize(col: Collection):
     log.info(f"NoteSize addon version: {settings.module_dir.joinpath('version.txt').read_text()}")
     config_loader: ConfigLoader = ConfigLoader(mw.addonManager, settings)
     config: Config = config_loader.load_config()
+
+    global profiler
+    profiler = Profiler(config, settings)
+    profiler.start_profiling()
+
     log_level: str = config.get_log_level()
     log.info(f"Set log level from Config: {log_level}")
     logs.set_level(log_level)
@@ -78,4 +88,9 @@ def __initialize(col: Collection):
     config_hooks.setup_hooks()
 
 
+def __shutdown():
+    profiler.stop_profiling()
+
+
 gui_hooks.collection_did_load.append(__initialize)
+gui_hooks.profile_will_close.append(__shutdown)

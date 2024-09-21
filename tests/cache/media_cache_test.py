@@ -14,7 +14,7 @@ def test_get_file_size(td: Data, media_cache: MediaCache):
     assert act_file_size_1 == exp_file_size_1
 
 
-def test_get_file_size_cached(td: Data, media_cache: MediaCache):
+def test_get_file_size_cached_performance(td: Data, media_cache: MediaCache):
     td.create_note_with_files()
     execution_time: float = timeit.timeit(
         lambda: media_cache.get_file_size(DefaultFields.file0, use_cache=True), number=1_000_000)

@@ -12,12 +12,14 @@ class Config:
     __key_1_deck_browser: str = 'Deck Browser'
     __key_1_logging: str = 'Logging'
     __key_1_size_button: str = 'Size Button'
+    __key_1_profiler: str = 'Profiler'
     __key_2_warmup_enabled: str = 'Warmup Enabled'
     __key_2_store_cache_in_file_enabled: str = 'Store Cache In File Enabled'
     __key_2_show_collection_size: str = 'Show Collection Size'
     __key_2_logger_level: str = 'Logger Level'
     __key_2_size_button_enabled: str = 'Enabled'
     __key_2_color: str = 'Color'
+    __key_2_profiler_enabled: str = 'Enabled'
     __key_3_color_enabled: str = 'Enabled'
     __key_3_levels: str = 'Levels'
 
@@ -92,6 +94,9 @@ class Config:
 
     def set_size_button_color_levels(self, color_levels: list[dict[str, str]]) -> None:
         self.__set(color_levels, self.__key_1_size_button, self.__key_2_color, self.__key_3_levels)
+
+    def get_profiler_enabled(self) -> bool:
+        return self.__config[self.__key_1_profiler][self.__key_2_profiler_enabled]
 
     def get_as_dict(self) -> dict[str, Any]:
         return self.__config

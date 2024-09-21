@@ -10,6 +10,7 @@ def test_setters(td: Data):
             'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'DEBUG'},
+        'Profiler': {'Enabled': False},
         'Size Button': {
             "Color": {
                 "Enabled": True,
@@ -31,6 +32,7 @@ def test_setters(td: Data):
             'Warmup Enabled': False},
         'Deck Browser': {'Show Collection Size': False},
         'Logging': {'Logger Level': 'INFO'},
+        'Profiler': {'Enabled': False},
         'Size Button': {
             "Color": {
                 "Enabled": False,

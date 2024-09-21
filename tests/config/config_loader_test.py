@@ -23,6 +23,7 @@ def test_default_values(config_loader: ConfigLoader, module_dir: Path):
             'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'DEBUG'},
+        'Profiler': {'Enabled': False},
         'Size Button': {
             "Color": {
                 "Enabled": True,
@@ -39,6 +40,7 @@ def test_actual_values_all(config_loader: ConfigLoader, module_dir: Path):
             'Warmup Enabled': False},
         'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'DEBUG'},
+        'Profiler': {'Enabled': False},
         'Size Button': {
             "Color": {
                 "Enabled": True,
@@ -60,6 +62,7 @@ def test_actual_values_partial(module_dir: Path, config_loader: ConfigLoader):
             'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'DEBUG'},
+        'Profiler': {'Enabled': False},
         'Size Button': {
             "Color": {
                 "Enabled": True,
@@ -72,6 +75,7 @@ def test_actual_values_partial(module_dir: Path, config_loader: ConfigLoader):
 def test_delete_unused_properties(module_dir: Path, config_loader: ConfigLoader):
     __write_meta_json_config({
         'Logging': {'Logger Level': 'DEBUG'},
+        'Profiler': {'Enabled': False},
         'Size Button': {
             "Color": {
                 "Enabled": True,
@@ -87,6 +91,7 @@ def test_delete_unused_properties(module_dir: Path, config_loader: ConfigLoader)
             'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'DEBUG'},
+        'Profiler': {'Enabled': False},
         'Size Button': {
             "Color": {
                 "Enabled": True,
@@ -101,6 +106,7 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
     __write_meta_json_config({
         'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'DEBUG'},
+        'Profiler': {'Enabled': False},
         'Size Button': {
             "Color": {
                 "Enabled": True,
@@ -117,6 +123,7 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
             'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'DEBUG'},
+        'Profiler': {'Enabled': False},
         'Size Button': {
             "Color": {
                 "Enabled": True,
@@ -132,6 +139,7 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
             'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'DEBUG'},
+        'Profiler': {'Enabled': False},
         'Size Button': {
             "Color": {
                 "Enabled": True,
@@ -146,6 +154,7 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
             'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'DEBUG'},
+        'Profiler': {'Enabled': False},
         'Size Button': {
             "Color": {
                 "Enabled": True,
@@ -163,6 +172,7 @@ def test_write_config(config_loader: ConfigLoader, module_dir: Path) -> None:
             'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True},
         'Logging': {'Logger Level': 'DEBUG'},
+        'Profiler': {'Enabled': False},
         'Size Button': {
             "Color": {
                 "Enabled": True,
@@ -186,6 +196,7 @@ def test_write_config(config_loader: ConfigLoader, module_dir: Path) -> None:
             'Warmup Enabled': False},
         'Deck Browser': {'Show Collection Size': False},
         'Logging': {'Logger Level': 'INFO'},
+        'Profiler': {'Enabled': False},
         'Size Button': {
             "Color": {
                 "Enabled": False,
