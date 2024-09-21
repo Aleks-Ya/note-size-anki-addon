@@ -4,7 +4,6 @@ from pathlib import Path
 from anki.collection import Collection
 from aqt import mw, gui_hooks, QDesktopServices
 
-
 def __initialize(col: Collection):
     from .config.config import Config
     from .config.config_loader import ConfigLoader
@@ -23,6 +22,8 @@ def __initialize(col: Collection):
     from .ui.deck_browser.deck_browser_hooks import DeckBrowserHooks
     from .ui.deck_browser.trash import Trash
     from .ui.details_dialog.details_dialog import DetailsDialog
+    from .ui.details_dialog.details_model_filler import DetailsModelFiller
+    from .ui.details_dialog.file_type_helper import FileTypeHelper
     from .ui.editor.button.button_formatter import ButtonFormatter
     from .ui.editor.button.button_hooks import ButtonHooks
     from .ui.editor.column.column_hooks import ColumnHooks
@@ -58,8 +59,10 @@ def __initialize(col: Collection):
     desktop_services: QDesktopServices = QDesktopServices()
     config_ui: ConfigUi = ConfigUi(config, config_loader, logs, cache_initializer, desktop_services, settings)
     file_type_helper: FileTypeHelper = FileTypeHelper()
-    details_dialog: DetailsDialog = DetailsDialog(size_calculator, size_formatter, file_type_helper, config_ui, config,
-                                                  settings)
+    details_model_filler: DetailsModelFiller = DetailsModelFiller(size_calculator, size_formatter)
+    details_dialog: DetailsDialog = DetailsDialog(size_calculator, size_formatter, file_type_helper,
+                                                  details_model_filler,
+                                                  config_ui, config, settings)
     button_hooks: ButtonHooks = ButtonHooks(button_formatter, details_dialog, settings, config)
     button_hooks.setup_hooks()
     deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter, config, config_ui)

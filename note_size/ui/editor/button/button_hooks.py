@@ -68,6 +68,7 @@ class ButtonHooks:
         log.debug("On size button click...")
         note: Note = editor.note
         if note:
+            log.debug(f"Show details dialog for NoteId: {note.id}")
             self.__details_dialog.show_note(note)
 
     def __on_editor_did_init_buttons(self, buttons: list[str], editor: Editor) -> None:

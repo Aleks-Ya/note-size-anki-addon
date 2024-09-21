@@ -1,16 +1,18 @@
 import logging
+from datetime import datetime
 from logging import Logger
 
 from anki.notes import Note
 from aqt.qt import QDialog, QLabel, QIcon, QGridLayout, QPushButton, QFont, QSize, QMargins, QDialogButtonBox, Qt
 
+from .details_model import DetailsModel
+from .details_model_filler import DetailsModelFiller
 from .files_table import FilesTable
 from ...calculator.size_calculator import SizeCalculator
 from ...calculator.size_formatter import SizeFormatter
 from ...config.config import Config
 from ..config.config_ui import ConfigUi
 from ...config.settings import Settings
-from ...types import SizeStr, SizeBytes, MediaFile
 from .file_type_helper import FileTypeHelper
 
 log: Logger = logging.getLogger(__name__)
@@ -24,10 +26,11 @@ class DetailsDialog(QDialog):
     __button_box_row: int = 4
 
     def __init__(self, size_calculator: SizeCalculator, size_formatter: SizeFormatter, file_type_helper: FileTypeHelper,
-                 config_ui: ConfigUi, config: Config, settings: Settings):
+                 details_model_filler: DetailsModelFiller, config_ui: ConfigUi, config: Config, settings: Settings):
         super().__init__(parent=None)
         self.__size_calculator: SizeCalculator = size_calculator
         self.__size_formatter: SizeFormatter = size_formatter
+        self.__details_model_filler: DetailsModelFiller = details_model_filler
         self.__config_ui: ConfigUi = config_ui
         # noinspection PyUnresolvedReferences
         self.setWindowTitle('"Note Size" addon')
@@ -65,7 +68,8 @@ class DetailsDialog(QDialog):
         self.__files_table.clear_rows()
         self.close()
 
-    def __total_size_label(self) -> QLabel:
+    @staticmethod
+    def __total_size_label() -> QLabel:
         font: QFont = QFont()
         font.setPointSize(16)
         font.setWeight(QFont.Weight.Bold)
@@ -91,31 +95,20 @@ class DetailsDialog(QDialog):
     def __on_configuration_button_clicked(self) -> None:
         self.__config_ui.show_configuration_dialog()
 
-    def __refresh_total_note_size(self, note: Note) -> None:
-        size_bytes: SizeBytes = self.__size_calculator.calculate_note_total_size(note, use_cache=False)
-        size_str: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
-        text: str = f"Total note size: {size_str}"
-        self.__total_size_label.setText(text)
-
-    def __refresh_texts_size(self, note: Note) -> None:
-        size_bytes: SizeBytes = self.__size_calculator.calculate_note_texts_size(note, use_cache=False)
-        size: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
-        text: str = f"Texts size: {size}"
-        self.__texts_size_label.setText(text)
-
-    def __refresh_files_size(self, note: Note) -> None:
-        size_bytes: SizeBytes = self.__size_calculator.calculate_note_files_size(note, use_cache=False)
-        size: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
-        text: str = f"Files size: {size}"
-        self.__files_size_label.setText(text)
-
     def show_note(self, note: Note) -> None:
-        self.__refresh_total_note_size(note)
-        self.__refresh_texts_size(note)
-        self.__refresh_files_size(note)
-        file_sizes: dict[MediaFile, SizeBytes] = self.__size_calculator.note_file_sizes(note, use_cache=False)
-        self.__files_table.show_files(file_sizes)
+        model: DetailsModel = self.__details_model_filler.prepare_note_model(note)
+        self.__show_model(model)
+
+    def __show_model(self, model: DetailsModel) -> None:
+        start_time: datetime = datetime.now()
+        self.__total_size_label.setText(model.total_note_size_text)
+        self.__texts_size_label.setText(model.texts_note_size_text)
+        self.__files_size_label.setText(model.files_note_size_text)
+        self.__files_table.show_files(model.file_sizes)
         # noinspection PyUnresolvedReferences
         self.show()
         self.__files_table.recalculate_window_sizes()
         self.adjustSize()
+        end_time: datetime = datetime.now()
+        duration_sec: int = round((end_time - start_time).total_seconds())
+        log.info(f"Displaying details dialog duration sec: {duration_sec}")
