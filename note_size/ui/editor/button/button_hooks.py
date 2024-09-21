@@ -8,22 +8,19 @@ from aqt.editor import Editor
 from aqt.webview import WebContent
 from aqt.qt import QWidget
 
+from .button_creator import ButtonCreator
 from .button_js import ButtonJs
-from .button_formatter import ButtonFormatter
 from ....config.config import Config
 from ....config.settings import Settings
-from ...details_dialog.details_dialog import DetailsDialog
 
 log: Logger = logging.getLogger(__name__)
 
 
 class ButtonHooks:
-    def __init__(self, button_formatter: ButtonFormatter, button_js: ButtonJs, details_dialog: DetailsDialog,
-                 settings: Settings,
-                 config: Config) -> None:
+    def __init__(self, button_creator: ButtonCreator, button_js: ButtonJs, settings: Settings, config: Config) -> None:
         self.editor: Optional[Editor] = None
         self.__config: Config = config
-        self.__button_formatter: ButtonFormatter = button_formatter
+        self.__button_creator: ButtonCreator = button_creator
         self.__button_js: ButtonJs = button_js
         self.__module_name: str = settings.module_name
         self.__hook_editor_did_init: Callable[[Editor], None] = self.__on_editor_did_init
@@ -34,7 +31,6 @@ class ButtonHooks:
         self.__hook_webview_will_set_content: Callable[[WebContent, Optional[object]], None] \
             = self.__add_size_button_css
         self.__hook_focus_did_change: Callable[[Optional[QWidget], Optional[QWidget]], None] = self.__on_focus_changed
-        self.__details_dialog: DetailsDialog = details_dialog
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def setup_hooks(self) -> None:
@@ -66,21 +62,9 @@ class ButtonHooks:
         self.editor: Optional[Editor] = editor
         self.__refresh_size_button(editor)
 
-    def __on_size_button_click(self, editor: Editor) -> None:
-        log.debug("On size button click...")
-        note: Note = editor.note
-        if note:
-            log.debug(f"Show details dialog for NoteId: {note.id}")
-            self.__details_dialog.show_note(note)
-
     def __on_editor_did_init_buttons(self, buttons: list[str], editor: Editor) -> None:
         log.debug("On Editor did init buttons...")
-        button: str = editor.addButton(id="size_button",
-                                       label=self.__button_formatter.get_zero_size_label().get_text(),
-                                       icon=None, cmd="size_button_cmd",
-                                       func=self.__on_size_button_click,
-                                       tip="Note size. Click for details",
-                                       disables=False)
+        button: str = self.__button_creator.create_size_button(editor)
         buttons.append(button)
         log.info("Size button was added to Editor")
 

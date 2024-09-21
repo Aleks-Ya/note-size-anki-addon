@@ -30,6 +30,7 @@ def __initialize(col: Collection):
     from .ui.editor.column.column_hooks import ColumnHooks
     from .ui.editor.column.item_id_sorter import ItemIdSorter
     from .ui.editor.button.button_js import ButtonJs
+    from .ui.editor.button.button_creator import ButtonCreator
     from .ui.details_dialog.file_type_helper import FileTypeHelper
 
     module_dir: Path = Path(__file__).parent
@@ -66,7 +67,8 @@ def __initialize(col: Collection):
                                                   details_model_filler,
                                                   config_ui, config, settings)
     button_js: ButtonJs = ButtonJs(button_formatter)
-    button_hooks: ButtonHooks = ButtonHooks(button_formatter, button_js, details_dialog, settings, config)
+    button_creator: ButtonCreator = ButtonCreator(button_formatter, details_dialog)
+    button_hooks: ButtonHooks = ButtonHooks(button_creator, button_js, settings, config)
     button_hooks.setup_hooks()
     deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter, config, config_ui)
     deck_browser_hooks.setup_hooks()

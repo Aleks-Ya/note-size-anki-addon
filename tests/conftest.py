@@ -6,8 +6,9 @@ from typing import Callable, Any
 import aqt
 import pytest
 from anki.collection import Collection
-from aqt import AnkiQt, ProfileManager, QApplication, QDesktopServices
+from aqt import AnkiQt, ProfileManager, QApplication, QDesktopServices, QWidget
 from aqt.addons import AddonManager
+from aqt.editor import Editor
 from aqt.theme import ThemeManager
 from mock.mock import MagicMock
 from pytestqt.qtbot import QtBot
@@ -30,6 +31,7 @@ from note_size.ui.deck_browser.trash import Trash
 from note_size.ui.details_dialog.details_dialog import DetailsDialog
 from note_size.ui.details_dialog.details_model_filler import DetailsModelFiller
 from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
+from note_size.ui.editor.button.button_creator import ButtonCreator
 from note_size.ui.editor.button.button_formatter import ButtonFormatter
 from note_size.ui.editor.button.button_js import ButtonJs
 from note_size.ui.editor.column.item_id_sorter import ItemIdSorter
@@ -212,6 +214,22 @@ def mw(profile_manager: ProfileManager, qapp: QApplication) -> AnkiQt:
     return mw_mock
 
 
+def __editor(mw: AnkiQt, add_mode: bool) -> Editor:
+    widget: QWidget = QWidget()
+    parent_widget: QWidget = QWidget()
+    return Editor(mw, widget, parent_widget, add_mode)
+
+
+@pytest.fixture
+def editor_add_mode(mw: AnkiQt) -> Editor:
+    return __editor(mw, True)
+
+
+@pytest.fixture
+def editor_edit_mode(mw: AnkiQt) -> Editor:
+    return __editor(mw, False)
+
+
 @pytest.fixture
 def ui_model() -> UiModel:
     return UiModel()
@@ -252,3 +270,8 @@ def details_model_filler(size_calculator: SizeCalculator, size_formatter: SizeFo
 @pytest.fixture
 def button_js(button_formatter: ButtonFormatter) -> ButtonJs:
     return ButtonJs(button_formatter)
+
+
+@pytest.fixture
+def button_creator(button_formatter: ButtonFormatter, details_dialog: DetailsDialog) -> ButtonCreator:
+    return ButtonCreator(button_formatter, details_dialog)
