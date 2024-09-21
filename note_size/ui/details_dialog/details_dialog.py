@@ -10,13 +10,12 @@ from ...calculator.size_formatter import SizeFormatter
 from ...config.config import Config
 from ..config.config_ui import ConfigUi
 from ...config.settings import Settings
-from ...types import SizeStr, MediaFile, SizeBytes
+from ...types import SizeStr, SizeBytes, MediaFile
 from .file_type_helper import FileTypeHelper
 
 log: Logger = logging.getLogger(__name__)
 
 
-# noinspection PyUnresolvedReferences
 class DetailsDialog(QDialog):
     __total_size_row: int = 0
     __texts_size_row: int = 1
@@ -30,6 +29,7 @@ class DetailsDialog(QDialog):
         self.__size_calculator: SizeCalculator = size_calculator
         self.__size_formatter: SizeFormatter = size_formatter
         self.__config_ui: ConfigUi = config_ui
+        # noinspection PyUnresolvedReferences
         self.setWindowTitle('"Note Size" addon')
         self.__total_size_label: QLabel = self.__total_size_label()
         self.__texts_size_label: QLabel = QLabel()
@@ -39,6 +39,7 @@ class DetailsDialog(QDialog):
         self.__settings_icon: QIcon = QIcon(str(settings.module_dir / "ui" / "web" / "setting.png"))
 
         button_box: QDialogButtonBox = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
+        # noinspection PyUnresolvedReferences
         button_box.rejected.connect(self.__close)
 
         layout: QGridLayout = QGridLayout(self)
@@ -77,9 +78,12 @@ class DetailsDialog(QDialog):
         button.setIcon(self.__settings_icon)
         button.setIconSize(button.sizeHint())
         button.setFixedSize(self.__settings_icon.actualSize(button.iconSize()))
+        # noinspection PyUnresolvedReferences
         button.setStyleSheet("border: none;")
+        # noinspection PyUnresolvedReferences
         button.clicked.connect(self.__on_configuration_button_clicked)
         margin: int = 1
+        # noinspection PyUnresolvedReferences
         icon_size: QSize = button.size().shrunkBy(QMargins(margin, margin, margin, margin))
         button.setIconSize(icon_size)
         return button
@@ -111,6 +115,7 @@ class DetailsDialog(QDialog):
         self.__refresh_files_size(note)
         file_sizes: dict[MediaFile, SizeBytes] = self.__size_calculator.note_file_sizes(note, use_cache=False)
         self.__files_table.show_files(file_sizes)
+        # noinspection PyUnresolvedReferences
         self.show()
         self.__files_table.recalculate_window_sizes()
         self.adjustSize()
