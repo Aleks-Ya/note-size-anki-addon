@@ -18,8 +18,8 @@ class SizeCalculator(Cache):
         super().__init__()
         self.__col: Collection = col
         self.__note_total_size_cache: dict[NoteId, SizeBytes] = {}
-        self.__note_note_texts_size: dict[NoteId, SizeBytes] = {}
-        self.__note_note_files_size: dict[NoteId, SizeBytes] = {}
+        self.__note_texts_size_cache: dict[NoteId, SizeBytes] = {}
+        self.__note_files_size_cache: dict[NoteId, SizeBytes] = {}
         self.__note_files_cache: dict[NoteId, set[MediaFile]] = {}
         self.__note_file_sizes_cache: dict[NoteId, dict[MediaFile, SizeBytes]] = {}
         self.__media_cache: MediaCache = media_cache
@@ -40,20 +40,20 @@ class SizeCalculator(Cache):
 
     def calculate_note_texts_size(self, note: Note, use_cache: bool) -> SizeBytes:
         with self._lock:
-            if use_cache and note.id in self.__note_note_texts_size:
-                return self.__note_note_texts_size[note.id]
+            if use_cache and note.id in self.__note_texts_size_cache:
+                return self.__note_texts_size_cache[note.id]
             else:
                 size: SizeBytes = SizeBytes(sum([len(field.encode()) for field in note.fields]))
-                self.__note_note_texts_size[note.id] = size
+                self.__note_texts_size_cache[note.id] = size
                 return size
 
     def calculate_note_files_size(self, note: Note, use_cache: bool) -> SizeBytes:
         with self._lock:
-            if use_cache and note.id in self.__note_note_files_size:
-                return self.__note_note_files_size[note.id]
+            if use_cache and note.id in self.__note_files_size_cache:
+                return self.__note_files_size_cache[note.id]
             else:
                 size: SizeBytes = SizeBytes(sum([size for size in self.note_file_sizes(note, use_cache).values()]))
-                self.__note_note_files_size[note.id] = size
+                self.__note_files_size_cache[note.id] = size
                 return size
 
     def note_file_sizes(self, note: Note, use_cache: bool) -> dict[MediaFile, SizeBytes]:
@@ -87,10 +87,10 @@ class SizeCalculator(Cache):
         with self._lock:
             if note_id in self.__note_total_size_cache:
                 del self.__note_total_size_cache[note_id]
-            if note_id in self.__note_note_texts_size:
-                del self.__note_note_texts_size[note_id]
-            if note_id in self.__note_note_files_size:
-                del self.__note_note_files_size[note_id]
+            if note_id in self.__note_texts_size_cache:
+                del self.__note_texts_size_cache[note_id]
+            if note_id in self.__note_files_size_cache:
+                del self.__note_files_size_cache[note_id]
             if note_id in self.__note_files_cache:
                 del self.__note_files_cache[note_id]
             if note_id in self.__note_file_sizes_cache:
@@ -99,20 +99,20 @@ class SizeCalculator(Cache):
     def invalidate_cache(self) -> None:
         with self._lock:
             self.__note_total_size_cache.clear()
-            self.__note_note_texts_size.clear()
-            self.__note_note_files_size.clear()
+            self.__note_texts_size_cache.clear()
+            self.__note_files_size_cache.clear()
             self.__note_files_cache.clear()
             self.__note_file_sizes_cache.clear()
 
     def as_dict_list(self) -> list[dict[Any, Any]]:
-        return [self.__note_total_size_cache, self.__note_note_texts_size, self.__note_note_files_size,
+        return [self.__note_total_size_cache, self.__note_texts_size_cache, self.__note_files_size_cache,
                 self.__note_files_cache, self.__note_file_sizes_cache]
 
     def read_from_dict_list(self, caches: list[dict[Any, Any]]):
         with self._lock:
             self.__note_total_size_cache = caches[0]
-            self.__note_note_texts_size = caches[1]
-            self.__note_note_files_size = caches[2]
+            self.__note_texts_size_cache = caches[1]
+            self.__note_files_size_cache = caches[2]
             self.__note_files_cache = caches[3]
             self.__note_file_sizes_cache = caches[4]
             log.info(f"Caches were read dict list")
