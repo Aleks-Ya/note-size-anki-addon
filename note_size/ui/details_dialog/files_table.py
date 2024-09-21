@@ -5,6 +5,8 @@ from pathlib import Path
 from aqt.qt import QTableWidget, Qt, QTableWidgetItem, QIcon, QHeaderView
 
 from .file_type_helper import FileTypeHelper
+from .icon_table_widget_item import IconTableWidgetItem
+from .size_table_widget_item import SizeTableWidgetItem
 from ...calculator.size_formatter import SizeFormatter
 from ...config.config import Config
 from ...config.settings import Settings
@@ -13,33 +15,6 @@ from ...types import MediaFile, SizeBytes, SizeStr, FileType
 log: Logger = logging.getLogger(__name__)
 
 
-class _IconTableWidgetItem(QTableWidgetItem):
-    def __init__(self, icon: QIcon, file_type: FileType):
-        super().__init__()
-        self.__file_type: FileType = file_type
-        self.setIcon(icon)
-        self.setData(Qt.ItemDataRole.DisplayRole, None)
-        self.setFlags(self.flags() & ~Qt.ItemFlag.ItemIsEditable & ~Qt.ItemFlag.ItemIsSelectable)
-
-    def __lt__(self, other: object):
-        if isinstance(other, _IconTableWidgetItem):
-            return self.__file_type.value < other.__file_type.value
-        return NotImplemented
-
-
-class _SizeTableWidgetItem(QTableWidgetItem):
-    def __init__(self, size_bytes: SizeBytes, size_str: SizeStr):
-        super().__init__(size_str)
-        self.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
-        self.size_bytes: SizeBytes = size_bytes
-
-    def __lt__(self, other: object):
-        if isinstance(other, _SizeTableWidgetItem):
-            return self.size_bytes < other.size_bytes
-        return NotImplemented
-
-
-# noinspection PyUnresolvedReferences
 class FilesTable(QTableWidget):
     __icon_column: int = 0
     __filename_column: int = 1
@@ -101,18 +76,18 @@ class FilesTable(QTableWidget):
         horizontal_header.setSectionResizeMode(self.__filename_column, QHeaderView.ResizeMode.Stretch)
         horizontal_header.setSectionResizeMode(self.__size_column, QHeaderView.ResizeMode.ResizeToContents)
 
-    def show_files(self, file_sizes: dict[MediaFile, SizeBytes]):
+    def show_files(self, file_sizes: dict[MediaFile, SizeBytes]) -> None:
         files_number: int = len(file_sizes)
         log.debug(f"Showing files: {files_number}")
         self.setRowCount(files_number)
         for i, (file, size) in enumerate(file_sizes.items()):
-            icon_item: _IconTableWidgetItem = self.__create_icon_item(file)
+            icon_item: IconTableWidgetItem = self.__create_icon_item(file)
 
             filename_item: QTableWidgetItem = QTableWidgetItem(file)
             filename_item.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
 
             size_str: SizeStr = self.__size_formatter.bytes_to_str(size)
-            size_item: _SizeTableWidgetItem = _SizeTableWidgetItem(size, size_str)
+            size_item: SizeTableWidgetItem = SizeTableWidgetItem(size, size_str)
 
             self.setItem(i, self.__icon_column, icon_item)
             self.setItem(i, self.__filename_column, filename_item)
@@ -125,10 +100,10 @@ class FilesTable(QTableWidget):
             self.hide()
             log.debug("Table is hidden (no files to show)")
 
-    def __create_icon_item(self, file):
+    def __create_icon_item(self, file: MediaFile) -> IconTableWidgetItem:
         file_type: FileType = self.__file_type_helper.get_file_type(file)
         icon: QIcon = self.__icons[file_type]
-        icon_item: _IconTableWidgetItem = _IconTableWidgetItem(icon, file_type)
+        icon_item: IconTableWidgetItem = IconTableWidgetItem(icon, file_type)
         return icon_item
 
     def recalculate_window_sizes(self) -> None:
@@ -136,6 +111,6 @@ class FilesTable(QTableWidget):
         self.resizeColumnsToContents()
         self.adjustSize()
 
-    def clear_rows(self):
+    def clear_rows(self) -> None:
         self.setRowCount(0)
         self.clearContents()
