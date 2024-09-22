@@ -39,6 +39,14 @@ class SizeCalculator(Cache):
                 self.__note_total_size_cache[note.id] = size
                 return size
 
+    def get_note_total_size(self, note_id: NoteId, use_cache: bool) -> SizeBytes:
+        with self._lock:
+            if NoteHelper.is_note_id_saved(note_id) and use_cache and note_id in self.__note_total_size_cache:
+                return self.__note_total_size_cache[note_id]
+            else:
+                note: Note = self.__col.get_note(note_id)
+                return self.calculate_note_total_size(note, use_cache)
+
     def calculate_note_texts_size(self, note: Note, use_cache: bool) -> SizeBytes:
         with self._lock:
             if NoteHelper.is_note_saved(note) and use_cache and note.id in self.__note_texts_size_cache:
@@ -47,6 +55,14 @@ class SizeCalculator(Cache):
                 size: SizeBytes = SizeBytes(sum([len(field.encode()) for field in note.fields]))
                 self.__note_texts_size_cache[note.id] = size
                 return size
+
+    def get_note_texts_size(self, note_id: NoteId, use_cache: bool) -> SizeBytes:
+        with self._lock:
+            if NoteHelper.is_note_id_saved(note_id) and use_cache and note_id in self.__note_texts_size_cache:
+                return self.__note_texts_size_cache[note_id]
+            else:
+                note: Note = self.__col.get_note(note_id)
+                return self.calculate_note_texts_size(note, use_cache)
 
     def calculate_note_files_size(self, note: Note, use_cache: bool) -> SizeBytes:
         with self._lock:
@@ -57,6 +73,14 @@ class SizeCalculator(Cache):
                     sum([size for size in self.calculate_note_file_sizes(note, use_cache).values()]))
                 self.__note_files_size_cache[note.id] = size
                 return size
+
+    def get_note_files_size(self, note_id: NoteId, use_cache: bool) -> SizeBytes:
+        with self._lock:
+            if NoteHelper.is_note_id_saved(note_id) and use_cache and note_id in self.__note_files_size_cache:
+                return self.__note_files_size_cache[note_id]
+            else:
+                note: Note = self.__col.get_note(note_id)
+                return self.calculate_note_files_size(note, use_cache)
 
     def calculate_note_file_sizes(self, note: Note, use_cache: bool) -> dict[MediaFile, SizeBytes]:
         with self._lock:
