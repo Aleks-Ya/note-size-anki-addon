@@ -4,6 +4,7 @@ from typing import Sequence
 
 from anki.collection import Collection
 from anki.notes import NoteId
+from aqt.browser import Browser
 from aqt.operations import QueryOp
 from aqt.utils import show_critical
 
@@ -13,14 +14,15 @@ log: Logger = logging.getLogger(__name__)
 
 
 class WithProgressQueryOp:
-    def __init__(self, details_dialog: DetailsDialog, note_ids: Sequence[NoteId]):
+    def __init__(self, details_dialog: DetailsDialog, note_ids: Sequence[NoteId], browser: Browser):
         self.__details_dialog: DetailsDialog = details_dialog
         self.__note_ids: Sequence[NoteId] = note_ids
+        self.__browser: Browser = browser
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def run(self):
         log.debug("Start running WithProgressQueryOp")
-        QueryOp(parent=self.__details_dialog, op=self.__background_op, success=self.__on_success).failure(
+        QueryOp(parent=self.__browser, op=self.__background_op, success=self.__on_success).failure(
             self.__on_failure).without_collection().with_progress().run_in_background()
         log.debug("Finished running WithProgressQueryOp")
 

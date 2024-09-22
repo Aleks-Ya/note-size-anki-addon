@@ -5,6 +5,7 @@ from typing import Sequence
 from anki.cards import CardId
 from anki.collection import Collection
 from anki.notes import NoteId
+from aqt.browser import Browser
 from aqt.qt import QPushButton
 
 from ..details_dialog.details_dialog import DetailsDialog
@@ -17,11 +18,12 @@ log: Logger = logging.getLogger(__name__)
 
 class BrowserButton(QPushButton):
 
-    def __init__(self, col: Collection, item_id_cache: ItemIdCache, details_dialog: DetailsDialog) -> None:
+    def __init__(self, col: Collection, item_id_cache: ItemIdCache, details_dialog: DetailsDialog, browser: Browser) -> None:
         super().__init__()
         self.__col: Collection = col
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__details_dialog: DetailsDialog = details_dialog
+        self.__browser: Browser = browser
         self.__current_note_ids: Sequence[NoteId] = []
         # noinspection PyUnresolvedReferences
         self.setStyleSheet("""
@@ -57,6 +59,6 @@ class BrowserButton(QPushButton):
 
     def __on_click(self) -> None:
         log.debug("Browser size button clicked")
-        op: WithProgressQueryOp = WithProgressQueryOp(self.__details_dialog, self.__current_note_ids)
+        op: WithProgressQueryOp = WithProgressQueryOp(self.__details_dialog, self.__current_note_ids, self.__browser)
         op.run()
         log.debug("Browser size button click finished")

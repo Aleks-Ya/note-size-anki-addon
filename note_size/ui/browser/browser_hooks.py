@@ -37,7 +37,7 @@ class BrowserHooks:
     def __add_size_button(self, browser: Browser) -> None:
         if self.__config.get_browser_show_found_notes_size():
             log.debug("Add browser size button")
-            button: BrowserButton = self.__browser_button_manager.create_browser_button()
+            button: BrowserButton = self.__browser_button_manager.create_browser_button(browser)
             browser.form.gridLayout.addWidget(button, 0, 2)
         else:
             log.debug("Browser size button is disabled")

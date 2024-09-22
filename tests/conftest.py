@@ -8,6 +8,7 @@ import pytest
 from anki.collection import Collection
 from aqt import AnkiQt, ProfileManager, QApplication, QDesktopServices, QWidget
 from aqt.addons import AddonManager
+from aqt.browser import Browser
 from aqt.editor import Editor
 from aqt.theme import ThemeManager
 from mock.mock import MagicMock
@@ -282,3 +283,8 @@ def button_creator(button_formatter: ButtonFormatter, details_dialog: DetailsDia
 def browser_button_manager(col: Collection, item_id_cache: ItemIdCache,
                            details_dialog: DetailsDialog) -> BrowserButtonManager:
     return BrowserButtonManager(col, item_id_cache, details_dialog)
+
+
+@pytest.fixture
+def browser() -> Browser:
+    return MagicMock()

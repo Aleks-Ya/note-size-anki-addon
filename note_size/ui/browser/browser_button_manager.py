@@ -1,7 +1,9 @@
 import logging
 from logging import Logger
+from typing import Optional
 
 from anki.collection import Collection
+from aqt.browser import Browser
 
 from .browser_button import BrowserButton
 from ..details_dialog.details_dialog import DetailsDialog
@@ -17,11 +19,11 @@ class BrowserButtonManager:
         self.__col: Collection = col
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__details_dialog: DetailsDialog = details_dialog
-        self.__button: BrowserButton = BrowserButton(self.__col, self.__item_id_cache, self.__details_dialog)
+        self.__button: Optional[BrowserButton] = None
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def create_browser_button(self) -> BrowserButton:
-        self.__button = BrowserButton(self.__col, self.__item_id_cache, self.__details_dialog)
+    def create_browser_button(self, browser: Browser) -> BrowserButton:
+        self.__button = BrowserButton(self.__col, self.__item_id_cache, self.__details_dialog, browser)
         return self.__button
 
     def get_current_button(self) -> BrowserButton:
