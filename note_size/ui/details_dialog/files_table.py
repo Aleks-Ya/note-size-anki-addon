@@ -82,7 +82,9 @@ class FilesTable(QTableWidget):
         files_number: int = len(file_sizes)
         log.debug(f"Prepare for showing files: {files_number}")
         self.__items_dict: dict[int, dict[int, QTableWidgetItem]] = {}
-        for row_index, (file, size) in enumerate(file_sizes.items()):
+        sorted_file_sizes: dict[MediaFile, SizeBytes] = dict(
+            sorted(file_sizes.items(), key=lambda item: item[1], reverse=True))
+        for row_index, (file, size) in enumerate(sorted_file_sizes.items()):
             icon_item: IconTableWidgetItem = self.__create_icon_item(file)
 
             filename_item: QTableWidgetItem = QTableWidgetItem(file)
