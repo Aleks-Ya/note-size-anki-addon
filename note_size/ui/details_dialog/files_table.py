@@ -73,6 +73,7 @@ class FilesTable(QTableWidget):
         }
         """)
         vertical_header.setDefaultAlignment(Qt.AlignmentFlag.AlignCenter)
+        vertical_header.setSectionResizeMode(QHeaderView.ResizeMode.Fixed)
         horizontal_header.setSectionResizeMode(self.__icon_column, QHeaderView.ResizeMode.ResizeToContents)
         horizontal_header.setSectionResizeMode(self.__filename_column, QHeaderView.ResizeMode.Stretch)
         horizontal_header.setSectionResizeMode(self.__size_column, QHeaderView.ResizeMode.ResizeToContents)
@@ -124,7 +125,19 @@ class FilesTable(QTableWidget):
         return icon_item
 
     def recalculate_window_sizes(self) -> None:
-        self.resizeRowsToContents()
+        if self.rowCount() > 0:
+            self.setUpdatesEnabled(False)
+            self.blockSignals(True)
+            self.setSortingEnabled(False)
+
+            hint: int = self.sizeHintForRow(0)
+            for row in range(self.rowCount()):
+                self.setRowHeight(row, hint)
+
+            self.setUpdatesEnabled(True)
+            self.blockSignals(False)
+            self.setSortingEnabled(True)
+
         self.resizeColumnsToContents()
         self.adjustSize()
 
