@@ -5,7 +5,7 @@ from anki.collection import Collection
 from anki.notes import Note
 
 from note_size.calculator.size_calculator import SizeCalculator
-from note_size.types import SizeBytes, MediaFile
+from note_size.types import SizeBytes, MediaFile, SizeType
 from tests.data import Data, DefaultFields
 
 
@@ -15,7 +15,7 @@ def note(td: Data) -> Note:
 
 
 def test_calculate_note_texts_size(note: Note, size_calculator: SizeCalculator):
-    act_size: SizeBytes = size_calculator.calculate_note_texts_size(note, use_cache=False)
+    act_size: SizeBytes = size_calculator.calculate_note_size(note, SizeType.TEXTS, use_cache=False)
     exp_size: SizeBytes = SizeBytes(len(DefaultFields.front_field_content.encode()) +
                                     len(DefaultFields.back_field_content.encode()))
     assert act_size == exp_size
@@ -25,18 +25,18 @@ def test_calculate_note_texts_size_unicode(td: Data, size_calculator: SizeCalcul
     note: Note = td.create_note_without_files()
     note[DefaultFields.front_field_name] = '∑￡'
     note[DefaultFields.back_field_name] = '∆∏∦'
-    size: SizeBytes = size_calculator.calculate_note_texts_size(note, use_cache=False)
+    size: SizeBytes = size_calculator.calculate_note_size(note, SizeType.TEXTS, use_cache=False)
     assert size == SizeBytes(15)
 
 
 def test_calculate_note_texts_size_performance(note: Note, size_calculator: SizeCalculator):
-    execution_time: float = timeit.timeit(lambda: size_calculator.calculate_note_texts_size(note, use_cache=True),
-                                          number=500_000)
+    execution_time: float = timeit.timeit(
+        lambda: size_calculator.calculate_note_size(note, SizeType.TEXTS, use_cache=True), number=500_000)
     assert execution_time <= 1
 
 
 def test_calculate_note_files_size(note: Note, size_calculator: SizeCalculator):
-    act_size: SizeBytes = size_calculator.calculate_note_files_size(note, use_cache=False)
+    act_size: SizeBytes = size_calculator.calculate_note_size(note, SizeType.FILES, use_cache=False)
     exp_size: SizeBytes = SizeBytes(len(DefaultFields.content0) +
                                     len(DefaultFields.content1) +
                                     len(DefaultFields.content2))
@@ -44,7 +44,7 @@ def test_calculate_note_files_size(note: Note, size_calculator: SizeCalculator):
 
 
 def test_calculate_note_total_size(note: Note, size_calculator: SizeCalculator):
-    act_size: SizeBytes = size_calculator.calculate_note_total_size(note, use_cache=False)
+    act_size: SizeBytes = size_calculator.calculate_note_size(note, SizeType.TOTAL, use_cache=False)
     exp_size: SizeBytes = SizeBytes(len(DefaultFields.front_field_content.encode()) +
                                     len(DefaultFields.back_field_content.encode()) +
                                     len(DefaultFields.content0) +
@@ -56,7 +56,7 @@ def test_calculate_note_total_size(note: Note, size_calculator: SizeCalculator):
 def test_calculate_note_total_size_missing_file(note: Note, size_calculator: SizeCalculator):
     content: str = 'Missing file: <img src="absents.png"> ￡'
     note[DefaultFields.front_field_name] = content
-    act_size: SizeBytes = size_calculator.calculate_note_total_size(note, use_cache=False)
+    act_size: SizeBytes = size_calculator.calculate_note_size(note, SizeType.TOTAL, use_cache=False)
     exp_size: SizeBytes = SizeBytes(len(content.encode()) +
                                     len(DefaultFields.back_field_content.encode()) +
                                     len(DefaultFields.content0) +
@@ -65,8 +65,8 @@ def test_calculate_note_total_size_missing_file(note: Note, size_calculator: Siz
 
 
 def test_calculate_note_total_size_performance(note: Note, size_calculator: SizeCalculator):
-    execution_time: float = timeit.timeit(lambda: size_calculator.calculate_note_total_size(note, use_cache=True),
-                                          number=500_000)
+    execution_time: float = timeit.timeit(
+        lambda: size_calculator.calculate_note_size(note, SizeType.TOTAL, use_cache=True), number=500_000)
     assert execution_time <= 1
 
 

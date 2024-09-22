@@ -54,13 +54,7 @@ class ItemIdCache(Cache):
             if use_cache and note_id in cache:
                 return cache[note_id]
             else:
-                if size_type == SizeType.TOTAL:
-                    size: SizeBytes = self.__size_calculator.get_note_total_size(note_id, use_cache)
-                if size_type == SizeType.TEXTS:
-                    size: SizeBytes = self.__size_calculator.get_note_texts_size(note_id, use_cache)
-                if size_type == SizeType.FILES:
-                    size: SizeBytes = self.__size_calculator.get_note_files_size(note_id, use_cache)
-                cache[note_id] = size
+                cache[note_id] = self.__size_calculator.get_note_size(note_id, size_type, use_cache)
                 return cache[note_id]
 
     def get_notes_size_bytes(self, note_ids: Sequence[NoteId], size_type: SizeType, use_cache: bool) -> SizeBytes:

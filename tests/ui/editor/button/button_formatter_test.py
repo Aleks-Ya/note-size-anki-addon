@@ -9,7 +9,7 @@ from note_size.calculator.size_calculator import SizeCalculator
 from note_size.config.settings import Settings
 from note_size.ui.editor.button.button_formatter import ButtonFormatter
 from note_size.ui.editor.button.button_label import ButtonLabel
-from note_size.types import SizeBytes
+from note_size.types import SizeBytes, SizeType
 from tests.data import Data
 
 
@@ -27,7 +27,7 @@ def test_get_add_mode_label(td: Data, button_formatter: ButtonFormatter):
 def test_get_edit_mode_label(td: Data, button_formatter: ButtonFormatter, size_calculator: SizeCalculator):
     note: Note = td.create_note_with_files()
     label: ButtonLabel = button_formatter.get_edit_mode_label(note.id)
-    assert size_calculator.calculate_note_total_size(note, use_cache=False) == SizeBytes(143)
+    assert size_calculator.calculate_note_size(note, SizeType.TOTAL, use_cache=False) == SizeBytes(143)
     assert label == ButtonLabel("143 B", "PaleGreen")
 
 
@@ -35,10 +35,10 @@ def test_get_edit_mode_label_no_cache(col: Collection, td: Data, button_formatte
                                       size_calculator: SizeCalculator):
     note: Note = td.create_note_with_files()
     label: ButtonLabel = button_formatter.get_edit_mode_label(note.id)
-    assert size_calculator.calculate_note_total_size(note, use_cache=False) == SizeBytes(143)
+    assert size_calculator.calculate_note_size(note, SizeType.TOTAL, use_cache=False) == SizeBytes(143)
     assert label == ButtonLabel("143 B", "PaleGreen")
     Data.update_front_field(note, 'updated')
-    assert size_calculator.calculate_note_total_size(col.get_note(note.id), use_cache=False) == SizeBytes(86)
+    assert size_calculator.calculate_note_size(col.get_note(note.id), SizeType.TOTAL, use_cache=False) == SizeBytes(86)
     assert button_formatter.get_edit_mode_label(note.id) == ButtonLabel("86 B", "PaleGreen")
 
 

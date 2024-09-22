@@ -32,7 +32,7 @@ class ButtonFormatter:
         return label
 
     def get_add_mode_label(self, note: Note) -> ButtonLabel:
-        size_bytes: SizeBytes = self.__size_calculator.calculate_note_total_size(note, use_cache=False)
+        size_bytes: SizeBytes = self.__size_calculator.calculate_note_size(note, SizeType.TOTAL, use_cache=False)
         size_str: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
         color: str = self.__get_color(size_bytes)
         label: ButtonLabel = ButtonLabel(f"{size_str}", color)
