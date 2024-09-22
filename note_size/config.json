@@ -1,4 +1,7 @@
 {
+  "Browser": {
+    "Show Found Notes Size": true
+  },
   "Cache": {
     "Warmup Enabled": true,
     "Store Cache In File Enabled": true

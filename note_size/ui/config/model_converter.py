@@ -12,6 +12,7 @@ class ModelConverter:
     @staticmethod
     def apply_model_to_config(model: UiModel, config: Config):
         config.set_deck_browser_show_collection_size(model.deck_browser_show_collection_size)
+        config.set_browser_show_found_notes_size(model.browser_show_found_notes_size)
         config.set_size_button_enabled(model.size_button_enabled)
         config.set_size_button_color_enabled(model.size_button_color_enabled)
         config.set_size_button_color_levels(model.size_button_color_levels)
@@ -22,6 +23,7 @@ class ModelConverter:
     @staticmethod
     def apply_config_to_model(model: UiModel, config: Config):
         model.deck_browser_show_collection_size = config.get_deck_browser_show_collection_size()
+        model.browser_show_found_notes_size = config.get_browser_show_found_notes_size()
         model.size_button_enabled = config.get_size_button_enabled()
         model.size_button_color_enabled = config.get_size_button_color_enabled()
         model.size_button_color_levels = config.get_size_button_color_levels()

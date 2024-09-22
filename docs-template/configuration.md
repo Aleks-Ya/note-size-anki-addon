@@ -50,6 +50,12 @@ Display or hide the Collection size in the Deck Browser:
 
 ---
 
+### Browser
+
+#### Show Found Notes size
+
+Display size of all notes found in the Browser.
+
 ### Size Button
 
 #### Enabled

@@ -10,6 +10,7 @@ log: Logger = logging.getLogger(__name__)
 class Config:
     __key_1_cache: str = 'Cache'
     __key_1_deck_browser: str = 'Deck Browser'
+    __key_1_browser: str = 'Browser'
     __key_1_logging: str = 'Logging'
     __key_1_size_button: str = 'Size Button'
     __key_1_profiler: str = 'Profiler'
@@ -19,6 +20,7 @@ class Config:
     __key_2_logger_level: str = 'Logger Level'
     __key_2_size_button_enabled: str = 'Enabled'
     __key_2_color: str = 'Color'
+    __key_2_browser_show_found_notes_size: str = 'Show Found Notes Size'
     __key_2_profiler_enabled: str = 'Enabled'
     __key_3_color_enabled: str = 'Enabled'
     __key_3_levels: str = 'Levels'
@@ -70,6 +72,12 @@ class Config:
 
     def set_deck_browser_show_collection_size(self, show_collection_size: bool) -> None:
         self.__set(show_collection_size, self.__key_1_deck_browser, self.__key_2_show_collection_size)
+
+    def get_browser_show_found_notes_size(self) -> bool:
+        return self.__config[self.__key_1_browser][self.__key_2_browser_show_found_notes_size]
+
+    def set_browser_show_found_notes_size(self, show_found_notes_size_size: bool) -> None:
+        self.__set(show_found_notes_size_size, self.__key_1_browser, self.__key_2_browser_show_found_notes_size)
 
     def get_log_level(self) -> str:
         return self.__config[self.__key_1_logging][self.__key_2_logger_level]

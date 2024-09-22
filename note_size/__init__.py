@@ -89,7 +89,7 @@ def __initialize(col: Collection):
     config_hooks: ConfigHooks = ConfigHooks(config_ui, desktop_services)
     config_hooks.setup_hooks()
     button: BrowserButton = BrowserButton(col, item_id_cache, details_dialog)
-    browser_hooks: BrowserHooks = BrowserHooks(button)
+    browser_hooks: BrowserHooks = BrowserHooks(button, config)
     browser_hooks.setup_hooks()
 
 

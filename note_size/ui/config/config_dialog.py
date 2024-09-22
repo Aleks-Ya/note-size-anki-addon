@@ -5,6 +5,7 @@ from typing import Optional, Any
 import aqt
 from aqt.qt import QDialog, QVBoxLayout, QDialogButtonBox, QTabWidget, QPushButton, QDesktopServices
 
+from .browser_tab import BrowserTab
 from .model_converter import ModelConverter
 from ...cache.cache_initializer import CacheInitializer
 from ...config.config import Config
@@ -20,7 +21,6 @@ from .cache_tab import CacheTab
 log: Logger = logging.getLogger(__name__)
 
 
-# noinspection PyUnresolvedReferences
 class ConfigDialog(QDialog):
     def __init__(self, config: Config, config_loader: ConfigLoader, model: UiModel, logs: Logs,
                  cache_initializer: CacheInitializer, desktop_services: QDesktopServices, settings: Settings):
@@ -33,12 +33,14 @@ class ConfigDialog(QDialog):
         self.setWindowTitle('"Note Size" addon configuration')
 
         self.deck_browser_tab: DeckBrowserTab = DeckBrowserTab(self.__model, desktop_services, settings)
+        self.browser_tab: BrowserTab = BrowserTab(self.__model, desktop_services, settings)
         self.editor_tab: EditorTab = EditorTab(self.__model, desktop_services, settings)
         self.logging_tab: LoggingTab = LoggingTab(self.__model, logs, desktop_services, settings)
         self.cache_tab: CacheTab = CacheTab(self.__model, cache_initializer, desktop_services, settings)
 
         tab_widget: QTabWidget = QTabWidget(self)
         tab_widget.addTab(self.deck_browser_tab, DeckBrowserTab.name)
+        tab_widget.addTab(self.browser_tab, BrowserTab.name)
         tab_widget.addTab(self.editor_tab, EditorTab.name)
         tab_widget.addTab(self.logging_tab, LoggingTab.name)
         tab_widget.addTab(self.cache_tab, CacheTab.name)
@@ -47,11 +49,14 @@ class ConfigDialog(QDialog):
         button_box: QDialogButtonBox = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok |
                                                         QDialogButtonBox.StandardButton.Cancel |
                                                         QDialogButtonBox.StandardButton.RestoreDefaults)
+        # noinspection PyUnresolvedReferences
         button_box.accepted.connect(self.__accept)
+        # noinspection PyUnresolvedReferences
         button_box.rejected.connect(self.__reject)
         restore_defaults_button: QPushButton = button_box.button(QDialogButtonBox.StandardButton.RestoreDefaults)
         restore_defaults_button.setToolTip(
             'Reset settings in this dialog to defaults. You will need to click the "OK" button to apply it.')
+        # noinspection PyUnresolvedReferences
         restore_defaults_button.clicked.connect(self.__restore_defaults)
 
         layout: QVBoxLayout = QVBoxLayout(self)
@@ -64,6 +69,7 @@ class ConfigDialog(QDialog):
 
     def refresh_from_model(self):
         self.deck_browser_tab.refresh_from_model()
+        self.browser_tab.refresh_from_model()
         self.editor_tab.refresh_from_model()
         self.logging_tab.refresh_from_model()
         self.cache_tab.refresh_from_model()

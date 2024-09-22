@@ -9,14 +9,16 @@ from aqt.browser import Browser, SearchContext, ItemId
 
 from .browser_button import BrowserButton
 from ..common.browser_helper import BrowserHelper
+from ...config.config import Config
 
 log: Logger = logging.getLogger(__name__)
 
 
 class BrowserHooks:
 
-    def __init__(self, button: BrowserButton) -> None:
+    def __init__(self, button: BrowserButton, config: Config) -> None:
         self.__button: BrowserButton = button
+        self.__config: Config = config
         self.__hook_browser_will_show: Callable[[Browser], None] = self.__add_size_button
         self.__hook_browser_did_search: Callable[[SearchContext], None] = self.__update_button
         log.debug(f"{self.__class__.__name__} was instantiated")
@@ -32,13 +34,21 @@ class BrowserHooks:
         log.info(f"{self.__class__.__name__} are removed")
 
     def __add_size_button(self, browser: Browser) -> None:
-        browser.form.gridLayout.addWidget(self.__button, 0, 2)
+        if self.__config.get_browser_show_found_notes_size():
+            log.debug("Add browser size button")
+            browser.form.gridLayout.addWidget(self.__button, 0, 2)
+        else:
+            log.debug("Browser size button is disabled")
 
     def __update_button(self, context: SearchContext) -> None:
-        item_ids: Sequence[ItemId] = context.ids
-        if BrowserHelper.is_notes_mode(context):
-            note_ids: Sequence[NoteId] = item_ids
-            self.__button.show_notes_size(note_ids)
+        if self.__config.get_browser_show_found_notes_size():
+            item_ids: Sequence[ItemId] = context.ids
+            log.debug(f"Update browser size button for {len(item_ids)} items")
+            if BrowserHelper.is_notes_mode(context):
+                note_ids: Sequence[NoteId] = item_ids
+                self.__button.show_notes_size(note_ids)
+            else:
+                card_ids: Sequence[CardId] = item_ids
+                self.__button.show_cards_size(card_ids)
         else:
-            card_ids: Sequence[CardId] = item_ids
-            self.__button.show_cards_size(card_ids)
+            log.debug("Browser size button is disabled")

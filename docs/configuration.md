@@ -11,6 +11,8 @@
     - [Logging Level](#logging-level)
   - [Deck Browser](#deck-browser)
     - [Show Collection Size](#show-collection-size)
+  - [Browser](#browser)
+    - [Show Found Notes size](#show-found-notes-size)
   - [Size Button](#size-button)
     - [Enabled](#enabled)
     - [Color - Enabled](#color---enabled)
@@ -66,6 +68,12 @@ Display or hide the Collection size in the Deck Browser:
 - Possible values: `true` or `false`
 
 ---
+
+### Browser
+
+#### Show Found Notes size
+
+Display size of all notes found in the Browser.
 
 ### Size Button
 
