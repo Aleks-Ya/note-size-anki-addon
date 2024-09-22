@@ -41,4 +41,4 @@ class DetailsModelFiller:
         return f"Files size: {size}"
 
     def __file_sizes(self, note: Note) -> dict[MediaFile, SizeBytes]:
-        return self.__size_calculator.note_file_sizes(note, use_cache=False)
+        return self.__size_calculator.calculate_note_file_sizes(note, use_cache=False)

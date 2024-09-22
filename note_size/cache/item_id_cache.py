@@ -109,7 +109,7 @@ class ItemIdCache(Cache):
                 return self.__caches.note_files_cache[note_id]
             else:
                 note: Note = self.__col.get_note(note_id)
-                files: set[MediaFile] = self.__size_calculator.note_files(note, use_cache)
+                files: set[MediaFile] = self.__size_calculator.calculate_note_files(note, use_cache)
                 self.__caches.note_files_cache[note_id] = files
                 return files
 

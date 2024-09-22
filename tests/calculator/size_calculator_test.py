@@ -70,8 +70,8 @@ def test_calculate_note_total_size_performance(note: Note, size_calculator: Size
     assert execution_time <= 1
 
 
-def test_note_file_sizes(note: Note, size_calculator: SizeCalculator):
-    act_file_sizes: dict[MediaFile, SizeBytes] = size_calculator.note_file_sizes(note, use_cache=False)
+def test_calculate_note_file_sizes(note: Note, size_calculator: SizeCalculator):
+    act_file_sizes: dict[MediaFile, SizeBytes] = size_calculator.calculate_note_file_sizes(note, use_cache=False)
     exp_file_sizes: dict[MediaFile, SizeBytes] = {
         DefaultFields.file0: SizeBytes(len(DefaultFields.content0)),
         DefaultFields.file1: SizeBytes(len(DefaultFields.content1)),
@@ -79,8 +79,8 @@ def test_note_file_sizes(note: Note, size_calculator: SizeCalculator):
     assert act_file_sizes == exp_file_sizes
 
 
-def test_note_file_sizes_performance(note: Note, size_calculator: SizeCalculator):
-    execution_time: float = timeit.timeit(lambda: size_calculator.note_file_sizes(note, use_cache=True),
+def test_calculate_note_file_sizes_performance(note: Note, size_calculator: SizeCalculator):
+    execution_time: float = timeit.timeit(lambda: size_calculator.calculate_note_file_sizes(note, use_cache=True),
                                           number=500_000)
     assert execution_time <= 1
 
@@ -105,7 +105,7 @@ def test_calculate_size_of_files(col: Collection, size_calculator: SizeCalculato
     assert size_uncached == SizeBytes(len(content1))
 
 
-def test_note_files_performance(size_calculator: SizeCalculator, td: Data):
+def test_calculate_note_files_performance(size_calculator: SizeCalculator, td: Data):
     note: Note = td.create_note_with_files()
-    execution_time: float = timeit.timeit(lambda: size_calculator.note_files(note, True), number=100_000)
+    execution_time: float = timeit.timeit(lambda: size_calculator.calculate_note_files(note, True), number=100_000)
     assert execution_time <= 0.5
