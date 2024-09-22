@@ -1,13 +1,14 @@
 import pytest
 from aqt import gui_hooks
 
-from note_size.ui.browser.browser_button import BrowserButton
+from note_size.config.config import Config
+from note_size.ui.browser.browser_button_manager import BrowserButtonManager
 from note_size.ui.browser.browser_hooks import BrowserHooks
 
 
 @pytest.fixture
-def browser_hooks(browser_button: BrowserButton) -> BrowserHooks:
-    browser_hooks: BrowserHooks = BrowserHooks(browser_button)
+def browser_hooks(browser_button_manager: BrowserButtonManager, config: Config) -> BrowserHooks:
+    browser_hooks: BrowserHooks = BrowserHooks(browser_button_manager, config)
     yield browser_hooks
     browser_hooks.remove_hooks()
 

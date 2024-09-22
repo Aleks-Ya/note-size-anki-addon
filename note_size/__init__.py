@@ -5,6 +5,7 @@ from anki.collection import Collection
 from aqt import mw, gui_hooks, QDesktopServices
 
 from .profiler.profiler import Profiler
+from .ui.browser.browser_button_manager import BrowserButtonManager
 
 profiler: Profiler
 
@@ -88,8 +89,8 @@ def __initialize(col: Collection):
     cache_hooks.setup_hooks()
     config_hooks: ConfigHooks = ConfigHooks(config_ui, desktop_services)
     config_hooks.setup_hooks()
-    button: BrowserButton = BrowserButton(col, item_id_cache, details_dialog)
-    browser_hooks: BrowserHooks = BrowserHooks(button, config)
+    browser_button_manager: BrowserButtonManager = BrowserButtonManager(col, item_id_cache, details_dialog)
+    browser_hooks: BrowserHooks = BrowserHooks(browser_button_manager, config)
     browser_hooks.setup_hooks()
 
 
