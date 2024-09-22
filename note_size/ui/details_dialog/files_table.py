@@ -77,8 +77,17 @@ class FilesTable(QTableWidget):
         horizontal_header.setSectionResizeMode(self.__size_column, QHeaderView.ResizeMode.ResizeToContents)
 
     def show_files(self, file_sizes: dict[MediaFile, SizeBytes]) -> None:
+        self.__prepare_show_files(file_sizes)
+        if self.rowCount() > 0:
+            self.show()
+            log.debug("Shown files")
+        else:
+            self.hide()
+            log.debug("Table is hidden (no files to show)")
+
+    def __prepare_show_files(self, file_sizes):
         files_number: int = len(file_sizes)
-        log.debug(f"Showing files: {files_number}")
+        log.debug(f"Prepare for showing files: {files_number}")
         self.setRowCount(files_number)
         for i, (file, size) in enumerate(file_sizes.items()):
             icon_item: IconTableWidgetItem = self.__create_icon_item(file)
@@ -93,12 +102,6 @@ class FilesTable(QTableWidget):
             self.setItem(i, self.__filename_column, filename_item)
             self.setItem(i, self.__size_column, size_item)
         self.sortItems(self.__size_column, Qt.SortOrder.DescendingOrder)
-        if files_number > 0:
-            self.show()
-            log.debug("Shown files")
-        else:
-            self.hide()
-            log.debug("Table is hidden (no files to show)")
 
     def __create_icon_item(self, file: MediaFile) -> IconTableWidgetItem:
         file_type: FileType = self.__file_type_helper.get_file_type(file)
