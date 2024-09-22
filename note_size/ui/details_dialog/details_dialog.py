@@ -30,6 +30,7 @@ class DetailsDialog(QDialog):
         super().__init__(parent=None)
         self.__size_calculator: SizeCalculator = size_calculator
         self.__size_formatter: SizeFormatter = size_formatter
+        self.__model: DetailsModel = DetailsModel()
         self.__details_model_filler: DetailsModelFiller = details_model_filler
         self.__config_ui: ConfigUi = config_ui
         # noinspection PyUnresolvedReferences
@@ -96,15 +97,15 @@ class DetailsDialog(QDialog):
         self.__config_ui.show_configuration_dialog()
 
     def show_note(self, note: Note) -> None:
-        model: DetailsModel = self.__details_model_filler.prepare_note_model(note)
-        self.__show_model(model)
+        self.__model = self.__details_model_filler.prepare_note_model(note)
+        self.__show_model()
 
-    def __show_model(self, model: DetailsModel) -> None:
+    def __show_model(self) -> None:
         start_time: datetime = datetime.now()
-        self.__total_size_label.setText(model.total_note_size_text)
-        self.__texts_size_label.setText(model.texts_note_size_text)
-        self.__files_size_label.setText(model.files_note_size_text)
-        self.__files_table.show_files(model.file_sizes)
+        self.__total_size_label.setText(self.__model.total_note_size_text)
+        self.__texts_size_label.setText(self.__model.texts_note_size_text)
+        self.__files_size_label.setText(self.__model.files_note_size_text)
+        self.__files_table.show_files(self.__model.file_sizes)
         # noinspection PyUnresolvedReferences
         self.show()
         self.__files_table.recalculate_window_sizes()
