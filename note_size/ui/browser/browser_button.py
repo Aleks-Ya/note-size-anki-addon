@@ -8,6 +8,7 @@ from anki.notes import NoteId
 from aqt.qt import QPushButton
 
 from ..details_dialog.details_dialog import DetailsDialog
+from ..details_dialog.progress import WithProgressQueryOp
 from ...cache.item_id_cache import ItemIdCache
 from ...types import SizeType, SizeStr
 
@@ -55,5 +56,7 @@ class BrowserButton(QPushButton):
         self.setToolTip(tooltip)
 
     def __on_click(self) -> None:
-        self.__details_dialog.prepare_show_notes(self.__current_note_ids)
-        self.__details_dialog.show_notes()
+        log.debug("Browser size button clicked")
+        op: WithProgressQueryOp = WithProgressQueryOp(self.__details_dialog, self.__current_note_ids)
+        op.run()
+        log.debug("Browser size button click finished")
