@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup, Tag
 
 from .js_actions import JsActions
 from .trash import Trash
+from ..common.number_formatter import NumberFormatter
 from ...cache.item_id_cache import ItemIdCache
 from ...cache.media_cache import MediaCache
 from ...config.settings import Settings
@@ -43,10 +44,10 @@ class CollectionSizeFormatter:
             trash_dir_size: SizeBytes = self.__trash.get_trash_dir_size()
             trash_files_number: FilesNumber = self.__trash.get_trash_files_number()
             note_count: int = self.__col.note_count()
-            note_number_str: str = self.__format_number(note_count)
-            used_files_number_str: str = self.__format_number(used_files_number)
-            unused_files_size_str: str = self.__format_number(unused_files_number)
-            trash_files_number_str: str = self.__format_number(trash_files_number)
+            note_number_str: str = NumberFormatter.with_thousands_separator(note_count)
+            used_files_number_str: str = NumberFormatter.with_thousands_separator(used_files_number)
+            unused_files_size_str: str = NumberFormatter.with_thousands_separator(unused_files_number)
+            trash_files_number_str: str = NumberFormatter.with_thousands_separator(trash_files_number)
             total_size: SizeBytes = SizeBytes(collection_size + used_files_size + unused_files_size + trash_dir_size)
         else:
             collection_size: Optional[SizeBytes] = None
@@ -122,7 +123,3 @@ class CollectionSizeFormatter:
             outer_span.append(number_span)
             number_span.string = self.__sand_clock
         return outer_span
-
-    @staticmethod
-    def __format_number(num: int) -> str:
-        return f"{num:,}".replace(',', ' ')

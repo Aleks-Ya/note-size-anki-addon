@@ -6,6 +6,7 @@ from typing import Sequence
 from anki.notes import Note, NoteId
 
 from .details_model import DetailsModel
+from ..common.number_formatter import NumberFormatter
 from ...calculator.size_calculator import SizeCalculator
 from ...calculator.size_formatter import SizeFormatter
 from ...types import SizeStr, SizeBytes, MediaFile
@@ -57,7 +58,8 @@ class DetailsModelFiller:
     def __texts_notes_size(self, note_ids: Sequence[NoteId]) -> str:
         size_bytes: SizeBytes = self.__size_calculator.get_notes_texts_size(note_ids, use_cache=True)
         size_str: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
-        return f"Texts size of {len(note_ids)} notes: {size_str}"
+        note_number_str: str = NumberFormatter.with_thousands_separator(len(note_ids))
+        return f"Texts size of {note_number_str} notes: {size_str}"
 
     def __files_note_size(self, note: Note) -> str:
         size_bytes: SizeBytes = self.__size_calculator.calculate_note_files_size(note, use_cache=False)
@@ -66,9 +68,11 @@ class DetailsModelFiller:
 
     def __files_notes_size(self, note_ids: Sequence[NoteId]) -> str:
         files_number: int = len(self.__size_calculator.get_notes_files(note_ids, use_cache=True))
+        files_number_str: str = NumberFormatter.with_thousands_separator(files_number)
         size_bytes: SizeBytes = self.__size_calculator.get_notes_files_size(note_ids, use_cache=True)
         size_str: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
-        return f"Size of {files_number} files in {len(note_ids)} notes: {size_str}"
+        note_number_str: str = NumberFormatter.with_thousands_separator(len(note_ids))
+        return f"Size of {files_number_str} files in {note_number_str} notes: {size_str}"
 
     def __file_sizes(self, note: Note) -> dict[MediaFile, SizeBytes]:
         return self.__size_calculator.calculate_note_file_sizes(note, use_cache=False)
