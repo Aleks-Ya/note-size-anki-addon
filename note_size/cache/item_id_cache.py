@@ -122,7 +122,7 @@ class ItemIdCache(Cache):
             updated_files: set[MediaFile] = self.__media_cache.get_updated_files()
             counter: int = 0
             for updated_file in updated_files:
-                updated_note_ids: list[NoteId] = self.__note_ids_by_file(updated_file)
+                updated_note_ids: set[NoteId] = self.__note_ids_by_file(updated_file)
                 for note_id in updated_note_ids:
                     self.refresh_note(note_id)
                     counter += 1
@@ -131,9 +131,9 @@ class ItemIdCache(Cache):
         else:
             log.debug("Skip refreshing notes having updated files because ItemIdCache is not initialized")
 
-    def __note_ids_by_file(self, file: MediaFile) -> list[NoteId]:
-        note_ids: list[NoteId] = []
+    def __note_ids_by_file(self, file: MediaFile) -> set[NoteId]:
+        note_ids: set[NoteId] = set()
         for note_id, media_files in self.__caches.note_files_cache.items():
             if file in media_files:
-                note_ids.append(note_id)
+                note_ids.add(note_id)
         return note_ids
