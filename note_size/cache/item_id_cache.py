@@ -145,7 +145,7 @@ class ItemIdCache(Cache):
     def refresh_notes_having_updated_files(self) -> None:
         if self.is_initialized():
             log.debug("Refreshing notes having updated files started")
-            updated_files: list[MediaFile] = self.__media_cache.get_updated_files()
+            updated_files: set[MediaFile] = self.__media_cache.get_updated_files()
             counter: int = 0
             for updated_file in updated_files:
                 updated_note_ids: list[NoteId] = self.__note_ids_by_file(updated_file)
