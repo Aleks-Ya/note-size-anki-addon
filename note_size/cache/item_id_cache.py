@@ -81,10 +81,8 @@ class ItemIdCache(Cache):
             log.info(f"Caches were read dict list")
 
     def get_used_files_size(self, use_cache: bool) -> (SizeBytes, FilesNumber):
-        all_note_ids: Sequence[NoteId] = self.__col.find_notes("deck:*")
-        files_list: list[set[MediaFile]] = [self.__size_calculator.get_note_files(note_id, use_cache) for note_id in
-                                            all_note_ids]
-        files: set[MediaFile] = {file for sublist in files_list for file in sublist}
+        note_ids: Sequence[NoteId] = self.__col.find_notes("deck:*")
+        files: set[MediaFile] = self.__size_calculator.get_notes_files(note_ids, use_cache)
         files_size: SizeBytes = self.__size_calculator.calculate_size_of_files(files, use_cache)
         return files_size, FilesNumber(len(files))
 
