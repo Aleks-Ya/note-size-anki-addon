@@ -40,7 +40,7 @@ class ButtonFormatter:
         return label
 
     def get_edit_mode_label(self, note_id: NoteId) -> ButtonLabel:
-        size_bytes: SizeBytes = self.__item_id_cache.get_note_size_bytes(note_id, SizeType.TOTAL, use_cache=False)
+        size_bytes: SizeBytes = self.__size_calculator.get_note_size(note_id, SizeType.TOTAL, use_cache=False)
         size_str: SizeStr = self.__item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False)
         color: str = self.__get_color(size_bytes)
         label: ButtonLabel = ButtonLabel(f"{size_str}", color)

@@ -25,7 +25,6 @@ from tests.data import Data
 def empty_cache_dict() -> list[dict[str, Any]]:
     return [{},
             {SizeType.TOTAL: {}, SizeType.TEXTS: {}, SizeType.FILES: {}},
-            {SizeType.TOTAL: {}, SizeType.TEXTS: {}, SizeType.FILES: {}},
             {}]
 
 
@@ -57,9 +56,6 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Colle
     assert read_success
     assert item_id_cache_2.as_dict_list() == [{card_id1: note1.id,
                                                card_id2: note2.id},
-                                              {SizeType.TOTAL: {note1.id: 143, note2.id: 70},
-                                               SizeType.TEXTS: {},
-                                               SizeType.FILES: {}},
                                               {SizeType.TOTAL: {note1.id: "143 B", note2.id: "70 B"},
                                                SizeType.TEXTS: {},
                                                SizeType.FILES: {}},

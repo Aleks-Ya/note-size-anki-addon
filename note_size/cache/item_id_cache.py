@@ -17,7 +17,6 @@ log: Logger = logging.getLogger(__name__)
 
 class _Caches:
     id_cache: dict[CardId, NoteId] = {}
-    size_bytes_caches: dict[SizeType, dict[NoteId, SizeBytes]] = {}
     size_str_caches: dict[SizeType, dict[NoteId, SizeStr]] = {}
     note_files_cache: dict[NoteId, set[MediaFile]] = {}
 
@@ -48,19 +47,10 @@ class ItemIdCache(Cache):
     def get_note_ids_by_card_ids(self, card_ids: Sequence[CardId]) -> Sequence[NoteId]:
         return list({self.get_note_id_by_card_id(card_id) for card_id in card_ids})
 
-    def get_note_size_bytes(self, note_id: NoteId, size_type: SizeType, use_cache: bool) -> SizeBytes:
-        with self._lock:
-            cache: dict[NoteId, SizeBytes] = self.__caches.size_bytes_caches[size_type]
-            if use_cache and note_id in cache:
-                return cache[note_id]
-            else:
-                cache[note_id] = self.__size_calculator.get_note_size(note_id, size_type, use_cache)
-                return cache[note_id]
-
     def get_notes_size_bytes(self, note_ids: Sequence[NoteId], size_type: SizeType, use_cache: bool) -> SizeBytes:
         size_sum: int = 0
         for note_id in note_ids:
-            size_sum += self.get_note_size_bytes(note_id, size_type, use_cache)
+            size_sum += self.__size_calculator.get_note_size(note_id, size_type, use_cache)
         return SizeBytes(size_sum)
 
     def get_notes_size_str(self, note_ids: Sequence[NoteId], size_type: SizeType, use_cache: bool) -> SizeStr:
@@ -72,7 +62,7 @@ class ItemIdCache(Cache):
             if use_cache and note_id in cache:
                 return cache[note_id]
             else:
-                size: SizeBytes = self.get_note_size_bytes(note_id, size_type, use_cache)
+                size: SizeBytes = self.__size_calculator.get_note_size(note_id, size_type, use_cache)
                 cache[note_id] = self.__size_formatter.bytes_to_str(size)
                 return cache[note_id]
 
@@ -83,9 +73,6 @@ class ItemIdCache(Cache):
 
     def evict_note(self, note_id: NoteId) -> None:
         with self._lock:
-            for cache in self.__caches.size_bytes_caches.values():
-                if note_id in cache:
-                    del cache[note_id]
             for cache in self.__caches.size_str_caches.values():
                 if note_id in cache:
                     del cache[note_id]
@@ -95,15 +82,13 @@ class ItemIdCache(Cache):
             self.__size_calculator.evict_note(note_id)
 
     def as_dict_list(self) -> list[dict[Any, Any]]:
-        return [self.__caches.id_cache, self.__caches.size_bytes_caches, self.__caches.size_str_caches,
-                self.__caches.note_files_cache]
+        return [self.__caches.id_cache, self.__caches.size_str_caches, self.__caches.note_files_cache]
 
     def read_from_dict_list(self, caches: list[dict[Any, Any]]) -> None:
         with self._lock:
             self.__caches.id_cache = caches[0]
-            self.__caches.size_bytes_caches = caches[1]
-            self.__caches.size_str_caches = caches[2]
-            self.__caches.note_files_cache = caches[3]
+            self.__caches.size_str_caches = caches[1]
+            self.__caches.note_files_cache = caches[2]
             log.info(f"Caches were read dict list")
 
     def get_note_files(self, note_id: NoteId, use_cache: bool) -> set[MediaFile]:
@@ -123,22 +108,17 @@ class ItemIdCache(Cache):
         files_size: SizeBytes = self.__size_calculator.calculate_size_of_files(files, use_cache)
         return files_size, FilesNumber(len(files))
 
-    def __size_bytes_cache_lengths(self) -> str:
-        return str([f"{cache[0]}={len(cache[1].keys())}" for cache in self.__caches.size_bytes_caches.items()])
-
     def __size_str_cache_lengths(self) -> str:
         return str([f"{cache[0]}={len(cache[1].keys())}" for cache in self.__caches.size_str_caches.items()])
 
     def get_size(self) -> str:
-        return (f"size_bytes_cache_lengths={self.__size_bytes_cache_lengths()}, "
-                f"size_str_cache_lengths={self.__size_str_cache_lengths()}, "
+        return (f"size_str_cache_lengths={self.__size_str_cache_lengths()}, "
                 f"id_cache_length={len(self.__caches.id_cache.keys())}, "
                 f"note_files_cache={len(self.__caches.note_files_cache.keys())}")
 
     def invalidate_cache(self) -> None:
         with self._lock:
             self.__caches.id_cache.clear()
-            self.__caches.size_bytes_caches = {SizeType.TOTAL: {}, SizeType.TEXTS: {}, SizeType.FILES: {}}
             self.__caches.size_str_caches = {SizeType.TOTAL: {}, SizeType.TEXTS: {}, SizeType.FILES: {}}
             self.__caches.note_files_cache.clear()
 

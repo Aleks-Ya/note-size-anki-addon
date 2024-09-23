@@ -62,7 +62,7 @@ def __initialize(col: Collection):
     size_calculator: SizeCalculator = SizeCalculator(col, media_cache)
     size_formatter: SizeFormatter = SizeFormatter()
     item_id_cache: ItemIdCache = ItemIdCache(col, size_calculator, size_formatter, media_cache)
-    item_id_sorter: ItemIdSorter = ItemIdSorter(item_id_cache)
+    item_id_sorter: ItemIdSorter = ItemIdSorter(item_id_cache, size_calculator)
     column_hooks: ColumnHooks = ColumnHooks(item_id_cache, item_id_sorter)
     column_hooks.setup_hooks()
     button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, size_calculator, size_formatter, config)

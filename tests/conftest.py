@@ -152,8 +152,8 @@ def cache_initializer(mw: AnkiQt, media_cache: MediaCache, item_id_cache: ItemId
 
 
 @pytest.fixture
-def item_id_sorter(item_id_cache: ItemIdCache) -> ItemIdSorter:
-    return ItemIdSorter(item_id_cache)
+def item_id_sorter(item_id_cache: ItemIdCache, size_calculator: SizeCalculator) -> ItemIdSorter:
+    return ItemIdSorter(item_id_cache, size_calculator)
 
 
 @pytest.fixture

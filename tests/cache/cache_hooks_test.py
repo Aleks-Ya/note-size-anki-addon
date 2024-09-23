@@ -47,19 +47,21 @@ def test_setup_hooks(cache_hooks: CacheHooks):
     assert gui_hooks.profile_will_close.count() == 1
 
 
-def test_add_cards_did_add_note(td: Data, cache_hooks: CacheHooks, item_id_cache: ItemIdCache):
+def test_add_cards_did_add_note(td: Data, cache_hooks: CacheHooks, item_id_cache: ItemIdCache,
+                                size_calculator: SizeCalculator):
     cache_hooks.setup_hooks()
     note: Note = td.create_note_with_files()
-    assert item_id_cache.get_note_size_bytes(note.id, SizeType.TOTAL, use_cache=True) == 143
+    assert size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True) == 143
 
 
-def test_notes_will_be_deleted(col: Collection, td: Data, cache_hooks: CacheHooks, item_id_cache: ItemIdCache):
+def test_notes_will_be_deleted(col: Collection, td: Data, cache_hooks: CacheHooks, item_id_cache: ItemIdCache,
+                               size_calculator: SizeCalculator):
     cache_hooks.setup_hooks()
     note: Note = td.create_note_with_files()
-    assert item_id_cache.get_note_size_bytes(note.id, SizeType.TOTAL, use_cache=True) == 143
+    assert size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True) == 143
     col.remove_notes([note.id])
     with pytest.raises(NotFoundError):
-        assert item_id_cache.get_note_size_bytes(note.id, SizeType.TOTAL, use_cache=True) == 0
+        assert size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True) == 0
 
 
 def test_media_sync_did_start_or_stop(col: Collection, td: Data, cache_hooks: CacheHooks, media_cache: MediaCache,

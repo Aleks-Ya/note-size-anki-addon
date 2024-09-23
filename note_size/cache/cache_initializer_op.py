@@ -71,7 +71,6 @@ class CacheInitializerOp:
                     return i
                 self.__update_progress(f"Caching note sizes: {i} of {note_number}", i, note_number)
                 for size_type in size_types:
-                    self.__item_id_cache.get_note_size_bytes(note_id, size_type, use_cache=True)
                     self.__item_id_cache.get_note_size_str(note_id, size_type, use_cache=True)
                     self.__item_id_cache.get_note_files(note_id, use_cache=True)
 
