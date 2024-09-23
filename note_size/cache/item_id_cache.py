@@ -47,14 +47,8 @@ class ItemIdCache(Cache):
     def get_note_ids_by_card_ids(self, card_ids: Sequence[CardId]) -> Sequence[NoteId]:
         return list({self.get_note_id_by_card_id(card_id) for card_id in card_ids})
 
-    def get_notes_size_bytes(self, note_ids: Sequence[NoteId], size_type: SizeType, use_cache: bool) -> SizeBytes:
-        size_sum: int = 0
-        for note_id in note_ids:
-            size_sum += self.__size_calculator.get_note_size(note_id, size_type, use_cache)
-        return SizeBytes(size_sum)
-
     def get_notes_size_str(self, note_ids: Sequence[NoteId], size_type: SizeType, use_cache: bool) -> SizeStr:
-        return self.__size_formatter.bytes_to_str(self.get_notes_size_bytes(note_ids, size_type, use_cache))
+        return self.__size_formatter.bytes_to_str(self.__size_calculator.get_notes_size(note_ids, size_type, use_cache))
 
     def get_note_size_str(self, note_id: NoteId, size_type: SizeType, use_cache: bool) -> SizeStr:
         with self._lock:
