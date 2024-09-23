@@ -10,6 +10,7 @@ from anki.notes import NoteId, Note
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.types import SizeBytes, SizeStr, SizeType, MediaFile
+from tests.conftest import size_calculator
 from tests.data import Data, DefaultFields
 
 
@@ -106,29 +107,29 @@ def test_get_note_id_by_card_id(td: Data, col: Collection, item_id_cache: ItemId
         item_id_cache.get_note_id_by_card_id(card_id)
 
 
-def test_get_note_files(td: Data, item_id_cache: ItemIdCache):
+def test_get_note_files(td: Data, item_id_cache: ItemIdCache, size_calculator: SizeCalculator):
     note: Note = td.create_note_with_files()
     note_id: NoteId = note.id
-    files: set[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=True)
+    files: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
     assert files == {'animation.gif', 'sound.mp3', 'picture.jpg'}
 
     Data.replace_in_front_field(note, '<img src="picture.jpg">', '')
-    files_cached: set[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=True)
+    files_cached: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
     assert files_cached == {'animation.gif', 'sound.mp3', 'picture.jpg'}
-    files_uncached: set[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=False)
+    files_uncached: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=False)
     assert files_uncached == {'sound.mp3', 'picture.jpg', 'animation.gif'}
 
 
-def test_get_used_files_size(td: Data, item_id_cache: ItemIdCache):
+def test_get_used_files_size(td: Data, item_id_cache: ItemIdCache, size_calculator: SizeCalculator):
     note: Note = td.create_note_with_files()
     note_id: NoteId = note.id
-    files: set[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=True)
+    files: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
     assert files == {'animation.gif', 'sound.mp3', 'picture.jpg'}
     Data.replace_in_front_field(note, '<img src="picture.jpg">', '')
-    files_cached: set[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=True)
+    files_cached: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
     assert files_cached == {'animation.gif', 'picture.jpg', 'sound.mp3'}
 
-    files_uncached: set[MediaFile] = item_id_cache.get_note_files(note_id, use_cache=False)
+    files_uncached: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=False)
     assert files_uncached == {'sound.mp3', 'picture.jpg', 'animation.gif'}
 
 

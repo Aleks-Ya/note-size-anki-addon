@@ -3,7 +3,7 @@ from logging import Logger
 from typing import Sequence, Any
 
 from anki.collection import Collection
-from anki.notes import NoteId, Note
+from anki.notes import NoteId
 from anki.cards import CardId
 
 from .cache import Cache
@@ -18,7 +18,6 @@ log: Logger = logging.getLogger(__name__)
 class _Caches:
     id_cache: dict[CardId, NoteId] = {}
     size_str_caches: dict[SizeType, dict[NoteId, SizeStr]] = {}
-    note_files_cache: dict[NoteId, set[MediaFile]] = {}
     file_note_ids_cache: dict[MediaFile, set[NoteId]] = {}
 
 
@@ -64,7 +63,7 @@ class ItemIdCache(Cache):
     def refresh_note(self, note_id: NoteId) -> None:
         for size_type in SizeType:
             self.get_note_size_str(note_id, size_type, use_cache=False)
-            self.get_note_files(note_id, use_cache=False)
+            self.__size_calculator.get_note_files(note_id, use_cache=False)
 
     def evict_note(self, note_id: NoteId) -> None:
         with self._lock:
@@ -77,30 +76,19 @@ class ItemIdCache(Cache):
             self.__size_calculator.evict_note(note_id)
 
     def as_dict_list(self) -> list[dict[Any, Any]]:
-        return [self.__caches.id_cache, self.__caches.size_str_caches, self.__caches.note_files_cache,
-                self.__caches.file_note_ids_cache]
+        return [self.__caches.id_cache, self.__caches.size_str_caches, self.__caches.file_note_ids_cache]
 
     def read_from_dict_list(self, caches: list[dict[Any, Any]]) -> None:
         with self._lock:
             self.__caches.id_cache = caches[0]
             self.__caches.size_str_caches = caches[1]
-            self.__caches.note_files_cache = caches[2]
-            self.__caches.file_note_ids_cache = caches[3]
+            self.__caches.file_note_ids_cache = caches[2]
             log.info(f"Caches were read dict list")
-
-    def get_note_files(self, note_id: NoteId, use_cache: bool) -> set[MediaFile]:
-        with self._lock:
-            if use_cache and note_id in self.__caches.note_files_cache:
-                return self.__caches.note_files_cache[note_id]
-            else:
-                note: Note = self.__col.get_note(note_id)
-                files: set[MediaFile] = self.__size_calculator.calculate_note_files(note, use_cache)
-                self.__caches.note_files_cache[note_id] = files
-                return files
 
     def get_used_files_size(self, use_cache: bool) -> (SizeBytes, FilesNumber):
         all_note_ids: Sequence[NoteId] = self.__col.find_notes("deck:*")
-        files_list: list[set[MediaFile]] = [self.get_note_files(note_id, use_cache) for note_id in all_note_ids]
+        files_list: list[set[MediaFile]] = [self.__size_calculator.get_note_files(note_id, use_cache) for note_id in
+                                            all_note_ids]
         files: set[MediaFile] = {file for sublist in files_list for file in sublist}
         files_size: SizeBytes = self.__size_calculator.calculate_size_of_files(files, use_cache)
         return files_size, FilesNumber(len(files))
@@ -111,14 +99,12 @@ class ItemIdCache(Cache):
     def get_size(self) -> str:
         return (f"size_str_cache_lengths={self.__size_str_cache_lengths()}, "
                 f"id_cache_length={len(self.__caches.id_cache.keys())}, "
-                f"note_files_cache={len(self.__caches.note_files_cache.keys())},"
                 f"file_note_ids_cache={len(self.__caches.file_note_ids_cache.keys())}")
 
     def invalidate_cache(self) -> None:
         with self._lock:
             self.__caches.id_cache.clear()
             self.__caches.size_str_caches = {SizeType.TOTAL: {}, SizeType.TEXTS: {}, SizeType.FILES: {}}
-            self.__caches.note_files_cache.clear()
             self.__caches.file_note_ids_cache.clear()
 
     def refresh_notes_having_updated_files(self) -> None:

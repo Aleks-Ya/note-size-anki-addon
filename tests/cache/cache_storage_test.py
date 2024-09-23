@@ -25,7 +25,6 @@ from tests.data import Data
 def empty_cache_dict() -> list[dict[str, Any]]:
     return [{},
             {SizeType.TOTAL: {}, SizeType.TEXTS: {}, SizeType.FILES: {}},
-            {},
             {}]
 
 
@@ -44,8 +43,8 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Colle
     note_size1: SizeStr = item_id_cache.get_note_size_str(note1.id, SizeType.TOTAL, use_cache=True)
     note_size2: SizeStr = item_id_cache.get_note_size_str(note2.id, SizeType.TOTAL, use_cache=True)
 
-    item_id_cache.get_note_files(note1.id, use_cache=True)
-    item_id_cache.get_note_files(note2.id, use_cache=True)
+    size_calculator.get_note_files(note1.id, use_cache=True)
+    size_calculator.get_note_files(note2.id, use_cache=True)
 
     cache_storage.save_caches_to_file([item_id_cache, size_calculator, media_cache])
 
@@ -60,8 +59,6 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Colle
                                               {SizeType.TOTAL: {note1.id: "143 B", note2.id: "70 B"},
                                                SizeType.TEXTS: {},
                                                SizeType.FILES: {}},
-                                              {note1.id: {'picture.jpg', 'sound.mp3', 'animation.gif'},
-                                               note2.id: set()},
                                               {}]
     assert size_calculator_2.as_dict_list() == [{SizeType.TOTAL: {note1.id: 143, note2.id: 70},
                                                  SizeType.TEXTS: {note1.id: 122, note2.id: 70},
@@ -119,7 +116,7 @@ def test_read_partially_invalid_cache_file(cache_storage: CacheStorage, td: Data
     card_id1: CardId = col.card_ids_of_note(note1.id)[0]
     item_id_cache.get_note_id_by_card_id(card_id1)
     item_id_cache.get_note_size_str(note1.id, SizeType.TOTAL, use_cache=True)
-    item_id_cache.get_note_files(note1.id, use_cache=True)
+    size_calculator.get_note_files(note1.id, use_cache=True)
 
     partially_invalid_cache: list[dict[str, Any]] = item_id_cache.as_dict_list()
     del partially_invalid_cache[0]

@@ -72,7 +72,7 @@ class CacheInitializerOp:
                 self.__update_progress(f"Caching note sizes: {i} of {note_number}", i, note_number)
                 for size_type in SizeType:
                     self.__item_id_cache.get_note_size_str(note_id, size_type, use_cache=True)
-                    self.__item_id_cache.get_note_files(note_id, use_cache=True)
+                    self.__size_calculator.get_note_files(note_id, use_cache=True)
 
             all_card_ids: Sequence[int] = col.find_cards("deck:*")
             card_number: int = len(all_card_ids)
