@@ -84,7 +84,7 @@ def test_refresh_note(td: Data, item_id_cache: ItemIdCache):
     Data.update_front_field(note, 'updated')
     assert item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=True) == "143 B"
 
-    item_id_cache.refresh_note(note_id)
+    item_id_cache.evict_note(note_id)
     assert item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=True) == "86 B"
 
 
@@ -135,7 +135,7 @@ def test_get_used_files_size(td: Data, item_id_cache: ItemIdCache, size_calculat
 
 def test_refresh_notes_having_updated_files(td: Data, item_id_cache: ItemIdCache, size_calculator: SizeCalculator):
     note: Note = td.create_note_with_files()
-    item_id_cache.refresh_note(note.id)
+    item_id_cache.evict_note(note.id)
     size1: SizeBytes = size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True)
     td.write_file(DefaultFields.file0, "new file content")
     size2: SizeBytes = size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True)

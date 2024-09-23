@@ -60,11 +60,6 @@ class ItemIdCache(Cache):
                 cache[note_id] = self.__size_formatter.bytes_to_str(size)
                 return cache[note_id]
 
-    def refresh_note(self, note_id: NoteId) -> None:
-        for size_type in SizeType:
-            self.get_note_size_str(note_id, size_type, use_cache=False)
-            self.__size_calculator.get_note_files(note_id, use_cache=False)
-
     def evict_note(self, note_id: NoteId) -> None:
         with self._lock:
             for cache in self.__caches.size_str_caches.values():
@@ -115,7 +110,7 @@ class ItemIdCache(Cache):
             for updated_file in updated_files:
                 updated_note_ids: set[NoteId] = self.__note_ids_by_file(updated_file)
                 for note_id in updated_note_ids:
-                    self.refresh_note(note_id)
+                    self.evict_note(note_id)
                     counter += 1
             log.debug(f"Refreshing notes having updated files finished: "
                       f"refreshed {counter} notes with {len(updated_files)} files")

@@ -63,7 +63,7 @@ class CacheHooks:
 
     def __add_cards_did_add_note(self, note: Note) -> None:
         log.info(f"Note was added: note={note.id}")
-        self.__item_id_cache.refresh_note(note.id)
+        self.__item_id_cache.evict_note(note.id)
 
     def __notes_will_be_deleted(self, _: Collection, note_ids: Sequence[NoteId]) -> None:
         log.info(f"Notes will be deleted: note_ids={note_ids}")
