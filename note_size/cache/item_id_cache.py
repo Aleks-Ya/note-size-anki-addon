@@ -8,7 +8,7 @@ from anki.notes import NoteId, Note
 
 from .cache import Cache
 from .media_cache import MediaCache
-from ..types import SizeStr, SizeBytes, SizeType, size_types, MediaFile, FilesNumber
+from ..types import SizeStr, SizeBytes, SizeType, MediaFile, FilesNumber
 from ..calculator.size_calculator import SizeCalculator
 from ..calculator.size_formatter import SizeFormatter
 
@@ -61,7 +61,7 @@ class ItemIdCache(Cache):
                 return cache[note_id]
 
     def refresh_note(self, note_id: NoteId) -> None:
-        for size_type in size_types:
+        for size_type in SizeType:
             self.get_note_size_str(note_id, size_type, use_cache=False)
             self.get_note_files(note_id, use_cache=False)
 

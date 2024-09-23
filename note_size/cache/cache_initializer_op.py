@@ -16,7 +16,7 @@ from .media_cache import MediaCache
 from ..calculator.size_calculator import SizeCalculator
 from ..calculator.size_formatter import SizeFormatter
 from ..config.config import Config
-from ..types import size_types
+from ..types import SizeType
 
 log: Logger = logging.getLogger(__name__)
 
@@ -70,7 +70,7 @@ class CacheInitializerOp:
                     log.info(f"User cancelled notes cache initialization at {i}")
                     return i
                 self.__update_progress(f"Caching note sizes: {i} of {note_number}", i, note_number)
-                for size_type in size_types:
+                for size_type in SizeType:
                     self.__item_id_cache.get_note_size_str(note_id, size_type, use_cache=True)
                     self.__item_id_cache.get_note_files(note_id, use_cache=True)
 
