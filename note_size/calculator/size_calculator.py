@@ -116,11 +116,11 @@ class SizeCalculator(Cache):
             file_sizes.update(note_file_sizes)
         return file_sizes
 
-    def get_notes_files(self, note_ids: Sequence[NoteId], use_cache: bool) -> list[MediaFile]:
+    def get_notes_files(self, note_ids: Sequence[NoteId], use_cache: bool) -> set[MediaFile]:
         notes_files: set[MediaFile] = set()
         for note_id in note_ids:
             notes_files.update(self.get_note_files(note_id, use_cache))
-        return list(notes_files)
+        return notes_files
 
     def evict_note(self, note_id: NoteId) -> None:
         with self._lock:
