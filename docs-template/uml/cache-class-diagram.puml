@@ -17,35 +17,34 @@ package Anki {
 package NoteSizeAddon {
 
     package calculator {
-        class SizeCalculator {
-            note_total_size_cache: dict[NoteId, SizeBytes]
-            note_texts_size_cache: dict[NoteId, SizeBytes]
-            note_files_size_cache: dict[NoteId, SizeBytes]
+        class SizeCalculator #orange {
+            size_caches: dict[SizeType, dict[NoteId, SizeBytes]]
             note_files_cache: dict[NoteId, set[MediaFile]]
             note_file_sizes_cache: dict[NoteId, dict[MediaFile, SizeBytes]]
         }
-        class SizeFormatter {
+        class SizeFormatter #brown {
             bytes_to_str_cache: dict[SizeBytes, SizeStr]
         }
     }
 
     package cache {
         class CacheHooks
-        class ItemIdCache {
+        class ItemIdCache #red {
             id_cache: dict[CardId, NoteId]
-            size_bytes_caches: dict[SizeType, dict[NoteId, SizeBytes]]
             size_str_caches: dict[SizeType, dict[NoteId, SizeStr]]
-            note_files_cache: dict[NoteId, set[MediaFile]]
+            file_note_ids_cache: dict[MediaFile, set[NoteId]]
         }
-        class MediaCache {
+        class MediaCache #green {
             file_sizes_cache: dict[MediaFile, SizeBytes]
         }
+        class CacheInitializer
+        class CacheStorage
     }
 
     package ui {
         together {
-            class ButtonHooks
-            class ButtonFormatter
+                class EditorButtonHooks
+            class EditorButtonFormatter
         }
         class BrowserButton
         class CollectionSizeFormatter
@@ -56,32 +55,44 @@ package NoteSizeAddon {
     }
 }
 
-BrowserButton --> ItemIdCache
+BrowserButton --> ItemIdCache #red
 
-ButtonHooks --> ButtonFormatter
+EditorButtonHooks --> EditorButtonFormatter
 
-ColumnHooks --> ItemIdCache
+ColumnHooks --> ItemIdCache #red
 ColumnHooks --> ItemIdSorter
 
-ItemIdSorter --> ItemIdCache
+ItemIdSorter --> ItemIdCache #red
+ItemIdSorter --> SizeCalculator #orange
 
-CacheHooks --> ItemIdCache
+CacheInitializer --> MediaCache #green
+CacheInitializer --> ItemIdCache #red
+CacheInitializer --> SizeCalculator #orange
+CacheInitializer --> SizeFormatter #brown
+CacheInitializer --> CacheStorage
+
+CacheHooks --> ItemIdCache #red
+CacheHooks --> SizeCalculator #orange
 
 Collection --> SQLite
 
-ButtonFormatter --> ItemIdCache
-ButtonFormatter --> SizeCalculator
-ButtonFormatter --> SizeFormatter
+EditorButtonFormatter --> ItemIdCache #red
+EditorButtonFormatter --> SizeCalculator #orange
+EditorButtonFormatter --> SizeFormatter #brown
 
-CollectionSizeFormatter --> ItemIdCache
+CollectionSizeFormatter --> ItemIdCache #red
+CollectionSizeFormatter --> MediaCache #green
+CollectionSizeFormatter --> SizeFormatter #brown
 
 SizeCalculator --> Collection
-SizeCalculator --> MediaCache
+SizeCalculator --> MediaCache #green
+
+CacheStorage --> FileSystem
 
 ItemIdCache --> Collection
-ItemIdCache --> SizeCalculator
-ItemIdCache --> SizeFormatter
-ItemIdCache --> MediaCache
+ItemIdCache --> SizeCalculator #orange
+ItemIdCache --> SizeFormatter #brown
+ItemIdCache --> MediaCache #green
 
 MediaCache --> Collection
 MediaCache --> FileSystem
