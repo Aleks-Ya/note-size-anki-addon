@@ -37,12 +37,14 @@ class FilesTable(QTableWidget):
         }
 
         self.setColumnCount(3)
+        # noinspection PyUnresolvedReferences
         self.setHorizontalHeaderLabels(["", "File", "Size"])
         self.setSizeAdjustPolicy(QTableWidget.SizeAdjustPolicy.AdjustToContents)
         horizontal_header: QHeaderView = self.horizontalHeader()
         horizontal_header.setMinimumSectionSize(0)
         self.setWordWrap(False)
         self.setSortingEnabled(True)
+        # noinspection PyUnresolvedReferences
         self.setStyleSheet("""
         QTableCornerButton::section {
             border-top: 1px solid #e4e4e4;
@@ -52,6 +54,7 @@ class FilesTable(QTableWidget):
             border-top-left-radius: 5px;
         }
         """)
+        # noinspection PyUnresolvedReferences
         horizontal_header.setStyleSheet("""
         QHeaderView::section:first {
             padding-right: -4px;
@@ -59,6 +62,7 @@ class FilesTable(QTableWidget):
         }
         """)
         vertical_header: QHeaderView = self.verticalHeader()
+        # noinspection PyUnresolvedReferences
         vertical_header.setStyleSheet("""
         QHeaderView::section {
             padding-right: 0px;
@@ -101,19 +105,27 @@ class FilesTable(QTableWidget):
     def show_files(self) -> None:
         files_number: int = len(self.__items_dict)
         log.debug(f"Prepare for showing files: {files_number}")
+        # noinspection PyUnresolvedReferences
         self.setUpdatesEnabled(False)
         self.blockSignals(True)
         self.setSortingEnabled(False)
+        # noinspection PyUnresolvedReferences
         self.setRowCount(files_number)
         for row_index, row in enumerate(self.__items_dict.values()):
+            # noinspection PyUnresolvedReferences
             self.setItem(row_index, self.__icon_column, row[self.__icon_column])
+            # noinspection PyUnresolvedReferences
             self.setItem(row_index, self.__filename_column, row[self.__filename_column])
+            # noinspection PyUnresolvedReferences
             self.setItem(row_index, self.__size_column, row[self.__size_column])
+        # noinspection PyUnresolvedReferences
         self.sortItems(self.__size_column, Qt.SortOrder.DescendingOrder)
+        # noinspection PyUnresolvedReferences
         self.setUpdatesEnabled(True)
         self.blockSignals(False)
         self.setSortingEnabled(True)
         if self.rowCount() > 0:
+            # noinspection PyUnresolvedReferences
             self.show()
             log.debug("Shown files")
         else:
@@ -128,6 +140,7 @@ class FilesTable(QTableWidget):
 
     def recalculate_window_sizes(self) -> None:
         if self.rowCount() > 0:
+            # noinspection PyUnresolvedReferences
             self.setUpdatesEnabled(False)
             self.blockSignals(True)
 
@@ -135,6 +148,7 @@ class FilesTable(QTableWidget):
             for row in range(self.rowCount()):
                 self.setRowHeight(row, hint)
 
+            # noinspection PyUnresolvedReferences
             self.setUpdatesEnabled(True)
             self.blockSignals(False)
 
@@ -142,5 +156,6 @@ class FilesTable(QTableWidget):
         self.adjustSize()
 
     def clear_rows(self) -> None:
+        # noinspection PyUnresolvedReferences
         self.setRowCount(0)
         self.clearContents()

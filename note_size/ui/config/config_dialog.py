@@ -30,6 +30,7 @@ class ConfigDialog(QDialog):
         self.__logs: Logs = logs
         self.__config_loader: ConfigLoader = config_loader
         ModelConverter.apply_config_to_model(model, config)
+        # noinspection PyUnresolvedReferences
         self.setWindowTitle('"Note Size" addon configuration')
 
         self.deck_browser_tab: DeckBrowserTab = DeckBrowserTab(self.__model, desktop_services, settings)
@@ -54,6 +55,7 @@ class ConfigDialog(QDialog):
         # noinspection PyUnresolvedReferences
         button_box.rejected.connect(self.__reject)
         restore_defaults_button: QPushButton = button_box.button(QDialogButtonBox.StandardButton.RestoreDefaults)
+        # noinspection PyUnresolvedReferences
         restore_defaults_button.setToolTip(
             'Reset settings in this dialog to defaults. You will need to click the "OK" button to apply it.')
         # noinspection PyUnresolvedReferences
