@@ -130,7 +130,6 @@ class FilesTable(QTableWidget):
         if self.rowCount() > 0:
             self.setUpdatesEnabled(False)
             self.blockSignals(True)
-            self.setSortingEnabled(False)
 
             hint: int = self.sizeHintForRow(0)
             for row in range(self.rowCount()):
@@ -138,7 +137,6 @@ class FilesTable(QTableWidget):
 
             self.setUpdatesEnabled(True)
             self.blockSignals(False)
-            self.setSortingEnabled(True)
 
         self.resizeColumnsToContents()
         self.adjustSize()
