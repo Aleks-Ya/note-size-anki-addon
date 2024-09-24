@@ -16,13 +16,6 @@ class EditorButtonCreator:
         self.__details_dialog: DetailsDialog = details_dialog
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def __on_size_button_click(self, editor: Editor) -> None:
-        log.debug("On size button click...")
-        note: Note = editor.note
-        if note:
-            log.debug(f"Show details dialog for NoteId: {note.id}")
-            self.__details_dialog.show_note(note)
-
     def create_size_button(self, editor: Editor) -> str:
         button: str = editor.addButton(id="size_button",
                                        label=self.__editor_button_formatter.get_zero_size_label().get_text(),
@@ -32,3 +25,10 @@ class EditorButtonCreator:
                                        tip="Note size. Click for details",
                                        disables=False)
         return button
+
+    def __on_size_button_click(self, editor: Editor) -> None:
+        log.debug("On size button click...")
+        note: Note = editor.note
+        if note:
+            log.debug(f"Show details dialog for NoteId: {note.id}")
+            self.__details_dialog.show_note(note)

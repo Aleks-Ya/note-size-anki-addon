@@ -66,6 +66,28 @@ class DetailsDialog(QDialog):
         self.setLayout(layout)
         self.setMinimumSize(300, 200)
 
+    def show_note(self, note: Note) -> None:
+        self.__model = self.__details_model_filler.prepare_note_model(note)
+        self.__files_table.prepare_items(self.__model.file_sizes)
+        self.__show_model()
+
+    def prepare_show_notes(self, note_ids: Sequence[NoteId]) -> None:
+        log.debug(f"Start showing notes: {len(note_ids)}")
+        start_time: datetime = datetime.now()
+        self.__model: DetailsModel = self.__details_model_filler.prepare_notes_model(note_ids)
+        self.__files_table.prepare_items(self.__model.file_sizes)
+        end_time: datetime = datetime.now()
+        duration_sec: int = round((end_time - start_time).total_seconds())
+        log.info(f"Data preparation for showing notes finished: duration_sec={duration_sec}")
+
+    def show_notes(self) -> None:
+        log.debug(f"Start showing notes")
+        start_time: datetime = datetime.now()
+        self.__show_model()
+        end_time: datetime = datetime.now()
+        duration_sec: int = round((end_time - start_time).total_seconds())
+        log.info(f"Showing notes finished: duration_sec={duration_sec}")
+
     def __close(self):
         self.__files_table.clear_rows()
         self.close()
@@ -97,11 +119,6 @@ class DetailsDialog(QDialog):
     def __on_configuration_button_clicked(self) -> None:
         self.__config_ui.show_configuration_dialog()
 
-    def show_note(self, note: Note) -> None:
-        self.__model = self.__details_model_filler.prepare_note_model(note)
-        self.__files_table.prepare_items(self.__model.file_sizes)
-        self.__show_model()
-
     def __show_model(self) -> None:
         start_time: datetime = datetime.now()
         self.__total_size_label.setText(self.__model.total_note_size_text)
@@ -115,20 +132,3 @@ class DetailsDialog(QDialog):
         end_time: datetime = datetime.now()
         duration_sec: int = round((end_time - start_time).total_seconds())
         log.info(f"Displaying details dialog duration sec: {duration_sec}")
-
-    def prepare_show_notes(self, note_ids: Sequence[NoteId]) -> None:
-        log.debug(f"Start showing notes: {len(note_ids)}")
-        start_time: datetime = datetime.now()
-        self.__model: DetailsModel = self.__details_model_filler.prepare_notes_model(note_ids)
-        self.__files_table.prepare_items(self.__model.file_sizes)
-        end_time: datetime = datetime.now()
-        duration_sec: int = round((end_time - start_time).total_seconds())
-        log.info(f"Data preparation for showing notes finished: duration_sec={duration_sec}")
-
-    def show_notes(self) -> None:
-        log.debug(f"Start showing notes")
-        start_time: datetime = datetime.now()
-        self.__show_model()
-        end_time: datetime = datetime.now()
-        duration_sec: int = round((end_time - start_time).total_seconds())
-        log.info(f"Showing notes finished: duration_sec={duration_sec}")

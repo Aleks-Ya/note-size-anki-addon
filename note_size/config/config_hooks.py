@@ -20,10 +20,6 @@ class ConfigHooks:
         self.__hook_browser_will_show: Callable[[Browser], None] = self.__add_browser_menu_item
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def __add_browser_menu_item(self, browser: Browser) -> None:
-        menu_item: QMenu = self.__menu_item()
-        browser.form.menuEdit.addMenu(menu_item)
-
     def setup_hooks(self) -> None:
         gui_hooks.main_window_did_init.append(self.__hook_main_window_did_init)
         gui_hooks.browser_will_show.append(self.__hook_browser_will_show)
@@ -33,6 +29,10 @@ class ConfigHooks:
         gui_hooks.main_window_did_init.remove(self.__hook_main_window_did_init)
         gui_hooks.browser_will_show.remove(self.__hook_browser_will_show)
         log.info(f"{self.__class__.__name__} are removed")
+
+    def __add_browser_menu_item(self, browser: Browser) -> None:
+        menu_item: QMenu = self.__menu_item()
+        browser.form.menuEdit.addMenu(menu_item)
 
     def __show_config(self) -> None:
         self.__config_ui.show_configuration_dialog()
