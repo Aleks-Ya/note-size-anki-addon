@@ -6,6 +6,7 @@ from aqt.qt import QVBoxLayout, QWidget, Qt, QDesktopServices
 
 from .color_layout import ColorLayout
 from .widgets import CheckboxWithInfo
+from ...config.level_parser import LevelParser
 from ...config.settings import Settings
 from ...ui.config.ui_model import UiModel
 
@@ -15,14 +16,15 @@ log: Logger = logging.getLogger(__name__)
 class EditorTab(QWidget):
     name: str = "Editor"
 
-    def __init__(self, model: UiModel, desktop_services: QDesktopServices, settings: Settings):
+    def __init__(self, model: UiModel, desktop_services: QDesktopServices, level_parser: LevelParser,
+                 settings: Settings):
         super().__init__()
         self.__model: UiModel = model
         url: str = urljoin(settings.docs_base_url, "docs/configuration.md#enabled")
         self.__size_button_enabled: CheckboxWithInfo = CheckboxWithInfo("Show note size in Editor", url,
                                                                         desktop_services, settings)
         self.__size_button_enabled.add_checkbox_listener(self.__on_size_button_enabled)
-        self.__color_layout: ColorLayout = ColorLayout(self.__model, desktop_services, settings)
+        self.__color_layout: ColorLayout = ColorLayout(self.__model, desktop_services, level_parser, settings)
         layout: QVBoxLayout = QVBoxLayout()
         layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         layout.addLayout(self.__size_button_enabled)

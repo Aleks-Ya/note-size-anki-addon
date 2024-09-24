@@ -23,9 +23,11 @@ class ColorLayout(QVBoxLayout):
     __min_size_key: str = 'Min Size'
     __max_size_key: str = 'Max Size'
 
-    def __init__(self, model: UiModel, desktop_services: QDesktopServices, settings: Settings):
+    def __init__(self, model: UiModel, desktop_services: QDesktopServices, level_parser: LevelParser,
+                 settings: Settings):
         super().__init__()
         self.__model: UiModel = model
+        self.__level_parser: LevelParser = level_parser
         url: str = urljoin(settings.docs_base_url, "docs/configuration.md#color---enabled")
         self.__color_enabled_checkbox: CheckboxWithInfo = CheckboxWithInfo("Enable colors", url, desktop_services,
                                                                            settings)
@@ -83,12 +85,12 @@ class ColorLayout(QVBoxLayout):
         self.refresh_from_model()
 
     def __add_row(self) -> None:
-        LevelParser.add_level(self.__model.size_button_color_levels)
+        self.__level_parser.add_level(self.__model.size_button_color_levels)
         self.refresh_from_model()
 
     def __remove_row(self) -> None:
         current_row: int = self.__table.currentRow()
-        LevelParser.remove_level(self.__model.size_button_color_levels, current_row)
+        self.__level_parser.remove_level(self.__model.size_button_color_levels, current_row)
         self.refresh_from_model()
 
     def __open_color_dialog(self, row, column) -> None:
@@ -122,7 +124,7 @@ class ColorLayout(QVBoxLayout):
 
     def __set_color_levels(self, levels: list[dict[str, str]]) -> None:
         self.__table.setRowCount(len(levels))
-        levels_parsed: list[Level] = LevelParser.parse_levels(levels)
+        levels_parsed: list[Level] = self.__level_parser.parse_levels(levels)
         for row, level in enumerate(levels_parsed):
             color: QColor = QColor(level.color)
             color_item: QTableWidgetItem = QTableWidgetItem("")

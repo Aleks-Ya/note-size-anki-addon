@@ -9,6 +9,7 @@ from .browser_tab import BrowserTab
 from .model_converter import ModelConverter
 from ...cache.cache_initializer import CacheInitializer
 from ...config.config import Config
+from ...config.level_parser import LevelParser
 from ...log.logs import Logs
 from ...config.config_loader import ConfigLoader
 from .ui_model import UiModel
@@ -23,7 +24,8 @@ log: Logger = logging.getLogger(__name__)
 
 class ConfigDialog(QDialog):
     def __init__(self, config: Config, config_loader: ConfigLoader, model: UiModel, logs: Logs,
-                 cache_initializer: CacheInitializer, desktop_services: QDesktopServices, settings: Settings):
+                 cache_initializer: CacheInitializer, desktop_services: QDesktopServices, level_parser: LevelParser,
+                 settings: Settings):
         super().__init__(parent=None)
         self.__config: Config = config
         self.__model: UiModel = model
@@ -35,7 +37,7 @@ class ConfigDialog(QDialog):
 
         self.deck_browser_tab: DeckBrowserTab = DeckBrowserTab(self.__model, desktop_services, settings)
         self.browser_tab: BrowserTab = BrowserTab(self.__model, desktop_services, settings)
-        self.editor_tab: EditorTab = EditorTab(self.__model, desktop_services, settings)
+        self.editor_tab: EditorTab = EditorTab(self.__model, desktop_services, level_parser, settings)
         self.logging_tab: LoggingTab = LoggingTab(self.__model, logs, desktop_services, settings)
         self.cache_tab: CacheTab = CacheTab(self.__model, cache_initializer, desktop_services, settings)
 

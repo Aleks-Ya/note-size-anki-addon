@@ -203,8 +203,8 @@ def desktop_services() -> QDesktopServices:
 
 @pytest.fixture
 def config_ui(config: Config, config_loader: ConfigLoader, logs: Logs, cache_initializer: CacheInitializer,
-              desktop_services: QDesktopServices, settings: Settings) -> ConfigUi:
-    return ConfigUi(config, config_loader, logs, cache_initializer, desktop_services, settings)
+              desktop_services: QDesktopServices, level_parser: LevelParser, settings: Settings) -> ConfigUi:
+    return ConfigUi(config, config_loader, logs, cache_initializer, desktop_services, level_parser, settings)
 
 
 @pytest.fixture

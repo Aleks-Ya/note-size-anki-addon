@@ -4,6 +4,7 @@ from pathlib import Path
 from anki.collection import Collection
 from aqt import mw, gui_hooks, QDesktopServices
 
+from .config.level_parser import LevelParser
 from .profiler.profiler import Profiler
 from .ui.browser.browser_button_manager import BrowserButtonManager
 
@@ -74,7 +75,9 @@ def __initialize(col: Collection):
     collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(
         col, item_id_cache, media_cache, trash, size_formatter, settings)
     desktop_services: QDesktopServices = QDesktopServices()
-    config_ui: ConfigUi = ConfigUi(config, config_loader, logs, cache_initializer, desktop_services, settings)
+    level_parser: LevelParser = LevelParser(size_formatter)
+    config_ui: ConfigUi = ConfigUi(config, config_loader, logs, cache_initializer, desktop_services, level_parser,
+                                   settings)
     file_type_helper: FileTypeHelper = FileTypeHelper()
     details_model_filler: DetailsModelFiller = DetailsModelFiller(size_calculator, size_formatter)
     details_dialog: DetailsDialog = DetailsDialog(size_calculator, size_formatter, file_type_helper,
@@ -82,7 +85,8 @@ def __initialize(col: Collection):
                                                   config_ui, config, settings)
     editor_button_js: EditorButtonJs = EditorButtonJs(editor_button_formatter)
     editor_button_creator: EditorButtonCreator = EditorButtonCreator(editor_button_formatter, details_dialog)
-    editor_button_hooks: EditorButtonHooks = EditorButtonHooks(editor_button_creator, editor_button_js, settings, config)
+    editor_button_hooks: EditorButtonHooks = EditorButtonHooks(editor_button_creator, editor_button_js, settings,
+                                                               config)
     editor_button_hooks.setup_hooks()
     deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter, config, config_ui)
     deck_browser_hooks.setup_hooks()
