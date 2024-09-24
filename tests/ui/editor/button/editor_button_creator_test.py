@@ -1,9 +1,9 @@
 from aqt.editor import Editor
 
-from note_size.ui.editor.button.button_creator import ButtonCreator
+from note_size.ui.editor.button.editor_button_creator import EditorButtonCreator
 
 
-def test_create_size_button(button_creator: ButtonCreator, editor_edit_mode: Editor, editor_add_mode: Editor):
+def test_create_size_button(editor_button_creator: EditorButtonCreator, editor_edit_mode: Editor, editor_add_mode: Editor):
     exp: str = """<button tabindex=-1
                         id=size_button
                         class="linkb perm"
@@ -15,5 +15,5 @@ def test_create_size_button(button_creator: ButtonCreator, editor_edit_mode: Edi
                     
                     0 B
                 </button>"""
-    assert button_creator.create_size_button(editor_edit_mode) == exp
-    assert button_creator.create_size_button(editor_add_mode) == exp
+    assert editor_button_creator.create_size_button(editor_edit_mode) == exp
+    assert editor_button_creator.create_size_button(editor_add_mode) == exp

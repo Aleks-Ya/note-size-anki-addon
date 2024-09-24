@@ -3,7 +3,7 @@ from logging import Logger
 
 from anki.notes import NoteId, Note
 
-from .button_label import ButtonLabel
+from .editor_button_label import EditorButtonLabel
 from ....cache.item_id_cache import ItemIdCache
 from ....config.config import Config
 from ....config.level_parser import Level, LevelParser
@@ -14,7 +14,7 @@ from ....calculator.size_formatter import SizeFormatter
 log: Logger = logging.getLogger(__name__)
 
 
-class ButtonFormatter:
+class EditorButtonFormatter:
     def __init__(self, item_id_cache: ItemIdCache, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
                  config: Config) -> None:
         self.__config: Config = config
@@ -23,27 +23,27 @@ class ButtonFormatter:
         self.__size_formatter: SizeFormatter = size_formatter
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def get_zero_size_label(self) -> ButtonLabel:
+    def get_zero_size_label(self) -> EditorButtonLabel:
         size_bytes: SizeBytes = SizeBytes(0)
         size: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
         color: str = self.__get_color(size_bytes)
-        label: ButtonLabel = ButtonLabel(f"{size}", color)
+        label: EditorButtonLabel = EditorButtonLabel(f"{size}", color)
         log.debug(f"Zero size label was created: {label}")
         return label
 
-    def get_add_mode_label(self, note: Note) -> ButtonLabel:
+    def get_add_mode_label(self, note: Note) -> EditorButtonLabel:
         size_bytes: SizeBytes = self.__size_calculator.calculate_note_size(note, SizeType.TOTAL, use_cache=False)
         size_str: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
         color: str = self.__get_color(size_bytes)
-        label: ButtonLabel = ButtonLabel(f"{size_str}", color)
+        label: EditorButtonLabel = EditorButtonLabel(f"{size_str}", color)
         log.debug(f"Add mode label created for NoteId {note.id}: {label}")
         return label
 
-    def get_edit_mode_label(self, note_id: NoteId) -> ButtonLabel:
+    def get_edit_mode_label(self, note_id: NoteId) -> EditorButtonLabel:
         size_bytes: SizeBytes = self.__size_calculator.get_note_size(note_id, SizeType.TOTAL, use_cache=False)
         size_str: SizeStr = self.__item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False)
         color: str = self.__get_color(size_bytes)
-        label: ButtonLabel = ButtonLabel(f"{size_str}", color)
+        label: EditorButtonLabel = EditorButtonLabel(f"{size_str}", color)
         log.debug(f"Edit mode label created for NoteId {note_id}: {label}")
         return label
 

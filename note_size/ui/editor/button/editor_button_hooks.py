@@ -8,20 +8,21 @@ from aqt.editor import Editor
 from aqt.webview import WebContent
 from aqt.qt import QWidget
 
-from .button_creator import ButtonCreator
-from .button_js import ButtonJs
+from .editor_button_creator import EditorButtonCreator
+from .editor_button_js import EditorButtonJs
 from ....config.config import Config
 from ....config.settings import Settings
 
 log: Logger = logging.getLogger(__name__)
 
 
-class ButtonHooks:
-    def __init__(self, button_creator: ButtonCreator, button_js: ButtonJs, settings: Settings, config: Config) -> None:
+class EditorButtonHooks:
+    def __init__(self, editor_button_creator: EditorButtonCreator, editor_button_js: EditorButtonJs, settings: Settings,
+                 config: Config) -> None:
         self.editor: Optional[Editor] = None
         self.__config: Config = config
-        self.__button_creator: ButtonCreator = button_creator
-        self.__button_js: ButtonJs = button_js
+        self.__editor_button_creator: EditorButtonCreator = editor_button_creator
+        self.__editor_button_js: EditorButtonJs = editor_button_js
         self.__module_name: str = settings.module_name
         self.__hook_editor_did_init: Callable[[Editor], None] = self.__on_editor_did_init
         self.__hook_editor_did_init_buttons: Callable[[list[str], Editor], None] = self.__on_editor_did_init_buttons
@@ -64,7 +65,7 @@ class ButtonHooks:
 
     def __on_editor_did_init_buttons(self, buttons: list[str], editor: Editor) -> None:
         log.debug("On Editor did init buttons...")
-        button: str = self.__button_creator.create_size_button(editor)
+        button: str = self.__editor_button_creator.create_size_button(editor)
         buttons.append(button)
         log.info("Size button was added to Editor")
 
@@ -91,11 +92,11 @@ class ButtonHooks:
         log.debug("Refresh size button...")
         if editor and editor.web:
             if self.__config.get_size_button_enabled():
-                js: str = self.__button_js.show_size_button_js(editor.note, editor.addMode)
+                js: str = self.__editor_button_js.show_size_button_js(editor.note, editor.addMode)
                 editor.web.evalWithCallback(js, self.__eval_callback)
                 log.debug(f"Size button was refreshed")
             else:
-                js: str = self.__button_js.hide_size_button_js()
+                js: str = self.__editor_button_js.hide_size_button_js()
                 editor.web.evalWithCallback(js, self.__eval_callback)
                 log.debug(f"Size button was hidden")
         else:

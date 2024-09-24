@@ -33,9 +33,9 @@ from note_size.ui.deck_browser.trash import Trash
 from note_size.ui.details_dialog.details_dialog import DetailsDialog
 from note_size.ui.details_dialog.details_model_filler import DetailsModelFiller
 from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
-from note_size.ui.editor.button.button_creator import ButtonCreator
-from note_size.ui.editor.button.button_formatter import ButtonFormatter
-from note_size.ui.editor.button.button_js import ButtonJs
+from note_size.ui.editor.button.editor_button_creator import EditorButtonCreator
+from note_size.ui.editor.button.editor_button_formatter import EditorButtonFormatter
+from note_size.ui.editor.button.editor_button_js import EditorButtonJs
 from note_size.ui.editor.column.item_id_sorter import ItemIdSorter
 from note_size.log.logs import Logs
 from tests.data import Data
@@ -157,9 +157,9 @@ def item_id_sorter(item_id_cache: ItemIdCache, size_calculator: SizeCalculator) 
 
 
 @pytest.fixture
-def button_formatter(config: Config, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
-                     item_id_cache: ItemIdCache) -> ButtonFormatter:
-    return ButtonFormatter(item_id_cache, size_calculator, size_formatter, config)
+def editor_button_formatter(config: Config, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
+                            item_id_cache: ItemIdCache) -> EditorButtonFormatter:
+    return EditorButtonFormatter(item_id_cache, size_calculator, size_formatter, config)
 
 
 @pytest.fixture
@@ -270,13 +270,14 @@ def details_model_filler(size_calculator: SizeCalculator, size_formatter: SizeFo
 
 
 @pytest.fixture
-def button_js(button_formatter: ButtonFormatter) -> ButtonJs:
-    return ButtonJs(button_formatter)
+def editor_button_js(editor_button_formatter: EditorButtonFormatter) -> EditorButtonJs:
+    return EditorButtonJs(editor_button_formatter)
 
 
 @pytest.fixture
-def button_creator(button_formatter: ButtonFormatter, details_dialog: DetailsDialog) -> ButtonCreator:
-    return ButtonCreator(button_formatter, details_dialog)
+def editor_button_creator(editor_button_formatter: EditorButtonFormatter,
+                          details_dialog: DetailsDialog) -> EditorButtonCreator:
+    return EditorButtonCreator(editor_button_formatter, details_dialog)
 
 
 @pytest.fixture

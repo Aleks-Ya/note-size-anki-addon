@@ -3,21 +3,24 @@ from aqt import gui_hooks
 
 from note_size.config.config import Config
 from note_size.config.settings import Settings
-from note_size.ui.editor.button.button_creator import ButtonCreator
-from note_size.ui.editor.button.button_hooks import ButtonHooks
-from note_size.ui.editor.button.button_js import ButtonJs
+from note_size.ui.editor.button.editor_button_creator import EditorButtonCreator
+from note_size.ui.editor.button.editor_button_hooks import EditorButtonHooks
+from note_size.ui.editor.button.editor_button_js import EditorButtonJs
 
 
 @pytest.fixture
-def button_hooks(button_creator: ButtonCreator, button_js: ButtonJs, settings: Settings, config: Config) -> ButtonHooks:
-    button_hooks = ButtonHooks(button_creator, button_js, settings, config)
-    yield button_hooks
-    button_hooks.remove_hooks()
+def editor_button_hooks(editor_button_creator: EditorButtonCreator, editor_button_js: EditorButtonJs,
+                        settings: Settings,
+                        config: Config) -> EditorButtonHooks:
+    editor_button_hooks: EditorButtonHooks = EditorButtonHooks(editor_button_creator, editor_button_js, settings,
+                                                               config)
+    yield editor_button_hooks
+    editor_button_hooks.remove_hooks()
 
 
-def test_setup_hooks_enabled(button_hooks: ButtonHooks):
+def test_setup_hooks_enabled(editor_button_hooks: EditorButtonHooks):
     __assert_no_hooks()
-    button_hooks.setup_hooks()
+    editor_button_hooks.setup_hooks()
     assert gui_hooks.editor_did_init.count() == 1
     assert gui_hooks.editor_did_init_buttons.count() == 1
     assert gui_hooks.editor_did_load_note.count() == 3
@@ -25,7 +28,7 @@ def test_setup_hooks_enabled(button_hooks: ButtonHooks):
     assert gui_hooks.editor_did_fire_typing_timer.count() == 1
     assert gui_hooks.webview_will_set_content.count() == 1
     assert gui_hooks.focus_did_change.count() == 1
-    button_hooks.remove_hooks()
+    editor_button_hooks.remove_hooks()
     __assert_no_hooks()
 
 

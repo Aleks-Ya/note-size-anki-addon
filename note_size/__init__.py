@@ -30,12 +30,12 @@ def __initialize(col: Collection):
     from .ui.details_dialog.details_dialog import DetailsDialog
     from .ui.details_dialog.details_model_filler import DetailsModelFiller
     from .ui.details_dialog.file_type_helper import FileTypeHelper
-    from .ui.editor.button.button_formatter import ButtonFormatter
-    from .ui.editor.button.button_hooks import ButtonHooks
+    from .ui.editor.button.editor_button_formatter import EditorButtonFormatter
+    from .ui.editor.button.editor_button_hooks import EditorButtonHooks
     from .ui.editor.column.column_hooks import ColumnHooks
     from .ui.editor.column.item_id_sorter import ItemIdSorter
-    from .ui.editor.button.button_js import ButtonJs
-    from .ui.editor.button.button_creator import ButtonCreator
+    from .ui.editor.button.editor_button_js import EditorButtonJs
+    from .ui.editor.button.editor_button_creator import EditorButtonCreator
     from .ui.details_dialog.file_type_helper import FileTypeHelper
     from .profiler.profiler import Profiler
     from .ui.browser.browser_hooks import BrowserHooks
@@ -65,7 +65,8 @@ def __initialize(col: Collection):
     item_id_sorter: ItemIdSorter = ItemIdSorter(item_id_cache, size_calculator)
     column_hooks: ColumnHooks = ColumnHooks(item_id_cache, item_id_sorter)
     column_hooks.setup_hooks()
-    button_formatter: ButtonFormatter = ButtonFormatter(item_id_cache, size_calculator, size_formatter, config)
+    editor_button_formatter: EditorButtonFormatter = EditorButtonFormatter(item_id_cache, size_calculator,
+                                                                           size_formatter, config)
     trash: Trash = Trash(col)
     cache_storage: CacheStorage = CacheStorage(settings)
     cache_initializer: CacheInitializer = CacheInitializer(mw, media_cache, item_id_cache, size_calculator,
@@ -79,10 +80,10 @@ def __initialize(col: Collection):
     details_dialog: DetailsDialog = DetailsDialog(size_calculator, size_formatter, file_type_helper,
                                                   details_model_filler,
                                                   config_ui, config, settings)
-    button_js: ButtonJs = ButtonJs(button_formatter)
-    button_creator: ButtonCreator = ButtonCreator(button_formatter, details_dialog)
-    button_hooks: ButtonHooks = ButtonHooks(button_creator, button_js, settings, config)
-    button_hooks.setup_hooks()
+    editor_button_js: EditorButtonJs = EditorButtonJs(editor_button_formatter)
+    editor_button_creator: EditorButtonCreator = EditorButtonCreator(editor_button_formatter, details_dialog)
+    editor_button_hooks: EditorButtonHooks = EditorButtonHooks(editor_button_creator, editor_button_js, settings, config)
+    editor_button_hooks.setup_hooks()
     deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter, config, config_ui)
     deck_browser_hooks.setup_hooks()
     cache_hooks: CacheHooks = CacheHooks(media_cache, item_id_cache, size_calculator, cache_initializer)

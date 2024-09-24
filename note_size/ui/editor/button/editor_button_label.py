@@ -4,7 +4,7 @@ from logging import Logger
 log: Logger = logging.getLogger(__name__)
 
 
-class ButtonLabel:
+class EditorButtonLabel:
 
     def __init__(self, text: str, background_color: str) -> None:
         self.__text: str = text
@@ -18,7 +18,7 @@ class ButtonLabel:
         return self.__background_color
 
     def __eq__(self, other) -> bool:
-        if isinstance(other, ButtonLabel):
+        if isinstance(other, EditorButtonLabel):
             return self.get_text() == other.get_text() and self.get_background_color() == other.get_background_color()
         return False
 
