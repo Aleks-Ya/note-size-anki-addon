@@ -70,15 +70,15 @@ def __initialize(col: Collection):
                                                                            size_formatter, config)
     trash: Trash = Trash(col)
     cache_storage: CacheStorage = CacheStorage(settings)
+    file_type_helper: FileTypeHelper = FileTypeHelper()
     cache_initializer: CacheInitializer = CacheInitializer(mw, media_cache, item_id_cache, size_calculator,
-                                                           size_formatter, cache_storage, config)
+                                                           size_formatter, file_type_helper, cache_storage, config)
     collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(
         col, item_id_cache, media_cache, trash, size_formatter, settings)
     desktop_services: QDesktopServices = QDesktopServices()
     level_parser: LevelParser = LevelParser(size_formatter)
     config_ui: ConfigUi = ConfigUi(config, config_loader, logs, cache_initializer, desktop_services, level_parser,
                                    settings)
-    file_type_helper: FileTypeHelper = FileTypeHelper()
     details_model_filler: DetailsModelFiller = DetailsModelFiller(size_calculator, size_formatter)
     details_dialog: DetailsDialog = DetailsDialog(size_calculator, size_formatter, file_type_helper,
                                                   details_model_filler,

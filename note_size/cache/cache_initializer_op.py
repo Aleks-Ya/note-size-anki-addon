@@ -11,6 +11,7 @@ from aqt.qt import QWidget
 from aqt.taskman import TaskManager
 from aqt.utils import showInfo, show_critical
 
+from .cache import Cache
 from .cache_storage import CacheStorage
 from .item_id_cache import ItemIdCache
 from .media_cache import MediaCache
@@ -18,6 +19,7 @@ from ..calculator.size_calculator import SizeCalculator
 from ..calculator.size_formatter import SizeFormatter
 from ..config.config import Config
 from ..types import SizeType
+from ..ui.details_dialog.file_type_helper import FileTypeHelper
 
 log: Logger = logging.getLogger(__name__)
 
@@ -27,7 +29,7 @@ class CacheInitializerOp:
 
     def __init__(self, task_manager: TaskManager, progress_manager: ProgressManager, media_cache: MediaCache,
                  item_id_cache: ItemIdCache, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
-                 config: Config, parent: QWidget, cache_storage: CacheStorage,
+                 file_type_helper: FileTypeHelper, config: Config, parent: QWidget, cache_storage: CacheStorage,
                  show_success_info: bool):
         self.__task_manager: TaskManager = task_manager
         self.__progress_manager: ProgressManager = progress_manager
@@ -35,6 +37,9 @@ class CacheInitializerOp:
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__size_calculator: SizeCalculator = size_calculator
         self.__size_formatter: SizeFormatter = size_formatter
+        self.__file_type_helper: FileTypeHelper = file_type_helper
+        self.__caches: list[Cache] = [self.__media_cache, self.__item_id_cache, self.__size_formatter,
+                                      self.__size_calculator, self.__file_type_helper]
         self.__config: Config = config
         self.__parent: QWidget = parent
         self.__cache_storage: CacheStorage = cache_storage
@@ -48,10 +53,8 @@ class CacheInitializerOp:
                 self.__on_failure).with_progress("Note Size cache initializing").run_in_background()
         else:
             log.info("Cache initialization is disabled")
-            self.__item_id_cache.set_initialized(True)
-            self.__size_calculator.set_initialized(True)
-            self.__media_cache.set_initialized(True)
-            self.__size_formatter.set_initialized(True)
+            for cache in self.__caches:
+                cache.set_initialized(True)
 
     def __background_op(self, col: Collection) -> int:
         read_from_file_success: bool = False
@@ -104,10 +107,8 @@ class CacheInitializerOp:
         self.__progress_manager.update(label=label, value=value, max=max_value)
 
     def __on_success(self, count: int) -> None:
-        self.__item_id_cache.set_initialized(True)
-        self.__size_calculator.set_initialized(True)
-        self.__media_cache.set_initialized(True)
-        self.__size_formatter.set_initialized(True)
+        for cache in self.__caches:
+            cache.set_initialized(True)
         log.info(f"Cache initialization finished: {count}")
         if self.__show_success_info:
             showInfo(title=self.__progress_dialog_title, text=f"Cache was initialized ({count} notes and cards)")

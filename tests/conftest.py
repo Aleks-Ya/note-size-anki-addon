@@ -147,8 +147,10 @@ def cache_storage(settings: Settings) -> CacheStorage:
 
 @pytest.fixture
 def cache_initializer(mw: AnkiQt, media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
-                      size_formatter: SizeFormatter, cache_storage: CacheStorage, config: Config) -> CacheInitializer:
-    return CacheInitializer(mw, media_cache, item_id_cache, size_calculator, size_formatter, cache_storage, config)
+                      size_formatter: SizeFormatter, file_type_helper: FileTypeHelper, cache_storage: CacheStorage,
+                      config: Config) -> CacheInitializer:
+    return CacheInitializer(mw, media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper,
+                            cache_storage, config)
 
 
 @pytest.fixture
