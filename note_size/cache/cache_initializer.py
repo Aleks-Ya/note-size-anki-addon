@@ -29,17 +29,17 @@ class CacheInitializer:
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def initialize_caches(self) -> None:
-        CacheInitializerOp(self.__mw, self.__media_cache, self.__item_id_cache, self.__size_calculator,
-                           self.__size_formatter, self.__config, self.__mw, self.__cache_storage,
-                           show_success_info=False).initialize_cache_in_background()
+        CacheInitializerOp(self.__mw.taskman, self.__mw.progress, self.__media_cache, self.__item_id_cache,
+                           self.__size_calculator, self.__size_formatter, self.__config, self.__mw,
+                           self.__cache_storage, show_success_info=False).initialize_cache_in_background()
 
     def refresh_caches(self, parent: QWidget) -> None:
         log.info("Refresh caches")
         self.__cache_storage.delete_cache_file()
         self.__media_cache.invalidate_cache()
         self.__item_id_cache.invalidate_cache()
-        CacheInitializerOp(self.__mw, self.__media_cache, self.__item_id_cache, self.__size_calculator,
-                           self.__size_formatter, self.__config, parent, self.__cache_storage,
+        CacheInitializerOp(self.__mw.taskman, self.__mw.progress, self.__media_cache, self.__item_id_cache,
+                           self.__size_calculator, self.__size_formatter, self.__config, parent, self.__cache_storage,
                            show_success_info=True).initialize_cache_in_background()
 
     def save_cache_to_file(self) -> None:

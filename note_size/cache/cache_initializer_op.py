@@ -5,9 +5,10 @@ from typing import Sequence, Optional
 
 from anki.collection import Collection
 from anki.notes import NoteId
-from aqt import AnkiQt
 from aqt.operations import QueryOp
+from aqt.progress import ProgressManager
 from aqt.qt import QWidget
+from aqt.taskman import TaskManager
 from aqt.utils import showInfo, show_critical
 
 from .cache_storage import CacheStorage
@@ -24,10 +25,12 @@ log: Logger = logging.getLogger(__name__)
 class CacheInitializerOp:
     __progress_dialog_title: str = '"Note Size" addon'
 
-    def __init__(self, mw: AnkiQt, media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
-                 size_formatter: SizeFormatter, config: Config, parent: QWidget, cache_storage: CacheStorage,
+    def __init__(self, task_manager: TaskManager, progress_manager: ProgressManager, media_cache: MediaCache,
+                 item_id_cache: ItemIdCache, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
+                 config: Config, parent: QWidget, cache_storage: CacheStorage,
                  show_success_info: bool):
-        self.__mw: AnkiQt = mw
+        self.__task_manager: TaskManager = task_manager
+        self.__progress_manager: ProgressManager = progress_manager
         self.__media_cache: MediaCache = media_cache
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__size_calculator: SizeCalculator = size_calculator
@@ -66,7 +69,7 @@ class CacheInitializerOp:
             all_note_ids: Sequence[NoteId] = col.find_notes("deck:*")
             note_number: int = len(all_note_ids)
             for i, note_id in enumerate(all_note_ids):
-                if self.__mw.progress.want_cancel():
+                if self.__progress_manager.want_cancel():
                     log.info(f"User cancelled notes cache initialization at {i}")
                     return i
                 self.__update_progress(f"Caching note sizes: {i} of {note_number}", i, note_number)
@@ -77,7 +80,7 @@ class CacheInitializerOp:
             all_card_ids: Sequence[int] = col.find_cards("deck:*")
             card_number: int = len(all_card_ids)
             for i, card_id in enumerate(all_card_ids):
-                if self.__mw.progress.want_cancel():
+                if self.__progress_manager.want_cancel():
                     log.info(f"User cancelled cards cache initialization at {i}")
                     return note_number + i
                 self.__update_progress(f"Caching card sizes: {i} of {card_number}", i, card_number)
@@ -94,11 +97,11 @@ class CacheInitializerOp:
 
     def __update_progress(self, label: str, value: Optional[int], max_value: Optional[int]) -> None:
         if value and value % 1000 == 0:
-            self.__mw.taskman.run_on_main(lambda: self.__update_progress_in_main(label, value, max_value))
+            self.__task_manager.run_on_main(lambda: self.__update_progress_in_main(label, value, max_value))
 
     def __update_progress_in_main(self, label: str, value: Optional[int], max_value: Optional[int]) -> None:
-        self.__mw.progress.set_title(self.__progress_dialog_title)
-        self.__mw.progress.update(label=label, value=value, max=max_value)
+        self.__progress_manager.set_title(self.__progress_dialog_title)
+        self.__progress_manager.update(label=label, value=value, max=max_value)
 
     def __on_success(self, count: int) -> None:
         self.__item_id_cache.set_initialized(True)
