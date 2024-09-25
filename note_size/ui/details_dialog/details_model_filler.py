@@ -48,7 +48,8 @@ class DetailsModelFiller:
     def __total_notes_size(self, note_ids: Sequence[NoteId]) -> str:
         size_bytes: SizeBytes = self.__size_calculator.get_notes_size(note_ids, SizeType.TOTAL, use_cache=True)
         size: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
-        return f"Total size of {len(note_ids)} notes: {size}"
+        note_number_str: str = NumberFormatter.with_thousands_separator(len(note_ids))
+        return f"Total size of {note_number_str} notes: {size}"
 
     def __texts_note_size(self, note: Note) -> str:
         size_bytes: SizeBytes = self.__size_calculator.calculate_note_size(note, SizeType.TEXTS, use_cache=False)
