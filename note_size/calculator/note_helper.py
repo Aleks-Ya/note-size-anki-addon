@@ -8,9 +8,6 @@ log: Logger = logging.getLogger(__name__)
 
 class NoteHelper:
 
-    def __init__(self):
-        log.debug(f"{self.__class__.__name__} was instantiated")
-
     @staticmethod
     def is_note_saved(note: Note) -> bool:
         return note and note.id and note.id != 0
