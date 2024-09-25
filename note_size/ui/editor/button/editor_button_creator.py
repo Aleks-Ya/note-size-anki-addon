@@ -3,6 +3,7 @@ from logging import Logger
 
 from anki.notes import Note
 from aqt.editor import Editor
+from aqt.qt import QWidget
 
 from .editor_button_formatter import EditorButtonFormatter
 from ...details_dialog.details_dialog import DetailsDialog
@@ -28,7 +29,10 @@ class EditorButtonCreator:
 
     def __on_size_button_click(self, editor: Editor) -> None:
         log.debug("On size button click...")
+        log.debug(f"Editor mode: {editor.editorMode}")
+        log.debug(f"Is add mode: {editor.addMode}")
         note: Note = editor.note
         if note:
             log.debug(f"Show details dialog for NoteId: {note.id}")
-            self.__details_dialog.show_note(note)
+            parent: QWidget = editor.parentWindow.parent()
+            self.__details_dialog.show_note(note, parent)

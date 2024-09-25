@@ -1,8 +1,9 @@
 import logging
 from datetime import datetime
 from logging import Logger
-from typing import Sequence
+from typing import Sequence, Optional
 
+from PyQt6.QtWidgets import QWidget
 from anki.notes import Note, NoteId
 from aqt.qt import QDialog, QLabel, QIcon, QGridLayout, QPushButton, QFont, QSize, QMargins, QDialogButtonBox, Qt
 
@@ -66,10 +67,10 @@ class DetailsDialog(QDialog):
         self.setLayout(layout)
         self.setMinimumSize(300, 200)
 
-    def show_note(self, note: Note) -> None:
+    def show_note(self, note: Note, parent: Optional[QWidget] = None) -> None:
         self.__model = self.__details_model_filler.prepare_note_model(note)
         self.__files_table.prepare_items(self.__model.file_sizes)
-        self.__show_model()
+        self.__show_model(parent)
 
     def prepare_show_notes(self, note_ids: Sequence[NoteId]) -> None:
         log.debug(f"Start showing notes: {len(note_ids)}")
@@ -80,10 +81,10 @@ class DetailsDialog(QDialog):
         duration_sec: int = round((end_time - start_time).total_seconds())
         log.info(f"Data preparation for showing notes finished: duration_sec={duration_sec}")
 
-    def show_notes(self) -> None:
+    def show_notes(self, parent: Optional[QWidget] = None) -> None:
         log.debug(f"Start showing notes")
         start_time: datetime = datetime.now()
-        self.__show_model()
+        self.__show_model(parent)
         end_time: datetime = datetime.now()
         duration_sec: int = round((end_time - start_time).total_seconds())
         log.info(f"Showing notes finished: duration_sec={duration_sec}")
@@ -119,7 +120,9 @@ class DetailsDialog(QDialog):
     def __on_configuration_button_clicked(self) -> None:
         self.__config_ui.show_configuration_dialog()
 
-    def __show_model(self) -> None:
+    def __show_model(self, parent: Optional[QWidget]) -> None:
+        log.debug(f"Set details dialog parent: {parent}")
+        self.setParent(parent)
         start_time: datetime = datetime.now()
         self.__total_size_label.setText(self.__model.total_note_size_text)
         self.__texts_size_label.setText(self.__model.texts_note_size_text)
