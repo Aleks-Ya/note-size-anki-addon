@@ -18,7 +18,7 @@ from .media_cache import MediaCache
 from ..calculator.size_calculator import SizeCalculator
 from ..calculator.size_formatter import SizeFormatter
 from ..config.config import Config
-from ..types import SizeType
+from ..types import SizeType, MediaFile
 from ..ui.details_dialog.file_type_helper import FileTypeHelper
 
 log: Logger = logging.getLogger(__name__)
@@ -78,7 +78,10 @@ class CacheInitializerOp:
                 self.__update_progress(f"Caching note sizes: {i} of {note_number}", i, note_number)
                 for size_type in SizeType:
                     self.__item_id_cache.get_note_size_str(note_id, size_type, use_cache=True)
-                    self.__size_calculator.get_note_files(note_id, use_cache=True)
+                    self.__size_calculator.get_note_file_sizes(note_id, use_cache=True)
+                    note_files: set[MediaFile] = self.__size_calculator.get_note_files(note_id, use_cache=True)
+                    for note_file in note_files:
+                        self.__file_type_helper.get_file_type(note_file, use_cache=True)
 
             all_card_ids: Sequence[int] = col.find_cards("deck:*")
             card_number: int = len(all_card_ids)
