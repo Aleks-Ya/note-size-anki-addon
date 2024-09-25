@@ -42,6 +42,8 @@ Run automated tests:
    2. Activate virtual environment: `pyenv activate note-size-anki-addon` 
    3. Run unit-tests: `tox`
 
+Run all tests except performance tests: `pytest -m "not performance"`
+
 [Manual test cases](manual-test-cases.md)
 
 ## Local deploy

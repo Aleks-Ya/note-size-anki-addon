@@ -1,5 +1,7 @@
 import timeit
 
+import pytest
+
 from note_size.calculator.size_formatter import SizeFormatter
 from note_size.types import SizeBytes, SizeStr
 
@@ -23,6 +25,7 @@ def test_str_to_bytes(size_formatter: SizeFormatter):
     assert size_formatter.str_to_bytes(SizeStr("1626.8 GB")) == SizeBytes(1_746_763_199_283)
 
 
+@pytest.mark.performance
 def test_bytes_to_str_performance(size_formatter: SizeFormatter):
     execution_time: float = timeit.timeit(lambda: __run_bytes_to_str(size_formatter), number=1)
     assert execution_time <= 0.5
@@ -32,6 +35,8 @@ def __run_bytes_to_str(size_formatter: SizeFormatter):
     for i in range(0, 100_000):
         size_formatter.bytes_to_str(SizeBytes(i))
 
+
+@pytest.mark.performance
 def test_str_to_bytes_performance(size_formatter: SizeFormatter):
     execution_time: float = timeit.timeit(lambda: __run_str_to_bytes(size_formatter), number=1)
     assert execution_time <= 0.5

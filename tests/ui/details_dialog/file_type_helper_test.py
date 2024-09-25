@@ -1,5 +1,7 @@
 import timeit
 
+import pytest
+
 from note_size.types import FileType
 from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
 
@@ -36,6 +38,7 @@ def test_get_file_type(file_type_helper: FileTypeHelper):
     assert file_type_helper.get_file_type("other.js") == FileType.OTHER
 
 
+@pytest.mark.performance
 def test_get_file_type_performance(file_type_helper: FileTypeHelper):
     execution_time: float = timeit.timeit(lambda: file_type_helper.get_file_type("image.png"), number=500_000)
     assert execution_time <= 1

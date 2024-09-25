@@ -1,5 +1,6 @@
 import timeit
 
+import pytest
 from anki.notes import Note
 
 from note_size.cache.media_cache import MediaCache
@@ -14,6 +15,7 @@ def test_get_file_size(td: Data, media_cache: MediaCache):
     assert act_file_size_1 == exp_file_size_1
 
 
+@pytest.mark.performance
 def test_get_file_size_cached_performance(td: Data, media_cache: MediaCache):
     td.create_note_with_files()
     execution_time: float = timeit.timeit(

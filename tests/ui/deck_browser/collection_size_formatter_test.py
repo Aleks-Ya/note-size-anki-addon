@@ -2,6 +2,7 @@ import os
 import timeit
 from pathlib import Path
 
+import pytest
 from anki.collection import Collection
 from bs4 import BeautifulSoup
 
@@ -158,6 +159,7 @@ def test_empty_unused_and_trash(col: Collection, td: Data, collection_size_forma
     assert act_soup.prettify() == exp_soup.prettify()
 
 
+@pytest.mark.performance
 def test_bytes_to_str_performance(size_formatter: SizeFormatter):
     size_bytes: SizeBytes = SizeBytes(123_456_789)
     execution_time: float = timeit.timeit(lambda: size_formatter.bytes_to_str(size_bytes), number=500_000)

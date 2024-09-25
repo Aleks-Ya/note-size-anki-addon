@@ -37,6 +37,7 @@ def test_get_note_size_bytes(td: Data, item_id_cache: ItemIdCache, size_calculat
                                           len(DefaultFields.content2))
 
 
+@pytest.mark.performance
 def test_get_note_size_bytes_performance(td: Data, item_id_cache: ItemIdCache, size_calculator: SizeCalculator):
     note: Note = td.create_note_with_files()
     execution_time: float = timeit.timeit(

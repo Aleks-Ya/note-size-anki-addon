@@ -29,6 +29,7 @@ def test_calculate_note_texts_size_unicode(td: Data, size_calculator: SizeCalcul
     assert size == SizeBytes(15)
 
 
+@pytest.mark.performance
 def test_calculate_note_texts_size_performance(note: Note, size_calculator: SizeCalculator):
     execution_time: float = timeit.timeit(
         lambda: size_calculator.calculate_note_size(note, SizeType.TEXTS, use_cache=True), number=500_000)
@@ -64,6 +65,7 @@ def test_calculate_note_total_size_missing_file(note: Note, size_calculator: Siz
     assert act_size == exp_size
 
 
+@pytest.mark.performance
 def test_calculate_note_total_size_performance(note: Note, size_calculator: SizeCalculator):
     execution_time: float = timeit.timeit(
         lambda: size_calculator.calculate_note_size(note, SizeType.TOTAL, use_cache=True), number=500_000)
@@ -79,6 +81,7 @@ def test_calculate_note_file_sizes(note: Note, size_calculator: SizeCalculator):
     assert act_file_sizes == exp_file_sizes
 
 
+@pytest.mark.performance
 def test_calculate_note_file_sizes_performance(note: Note, size_calculator: SizeCalculator):
     execution_time: float = timeit.timeit(lambda: size_calculator.calculate_note_file_sizes(note, use_cache=True),
                                           number=500_000)
@@ -105,6 +108,7 @@ def test_calculate_size_of_files(col: Collection, size_calculator: SizeCalculato
     assert size_uncached == SizeBytes(len(content1))
 
 
+@pytest.mark.performance
 def test_calculate_note_files_performance(size_calculator: SizeCalculator, td: Data):
     note: Note = td.create_note_with_files()
     execution_time: float = timeit.timeit(lambda: size_calculator.calculate_note_files(note, True), number=100_000)
