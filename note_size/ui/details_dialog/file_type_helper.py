@@ -36,6 +36,18 @@ class FileTypeHelper(Cache):
                 self.__cache[filename] = file_type
                 return file_type
 
+    def invalidate_cache(self) -> None:
+        with self._lock:
+            self.__cache.clear()
+
+    def as_dict_list(self) -> list[dict[Any, Any]]:
+        with self._lock:
+            return [self.__cache]
+
+    def read_from_dict_list(self, dict_list: list[dict[Any, Any]]):
+        with self._lock:
+            self.__cache = dict_list[0]
+
     @staticmethod
     def __determine_file_type(filename: str) -> FileType:
         full_mime_type: str = mimetypes.guess_type(filename)[0]
@@ -52,15 +64,3 @@ class FileTypeHelper(Cache):
         if general_mime_type == "video":
             return FileType.VIDEO
         return FileType.OTHER
-
-    def invalidate_cache(self) -> None:
-        with self._lock:
-            self.__cache.clear()
-
-    def as_dict_list(self) -> list[dict[Any, Any]]:
-        with self._lock:
-            return [self.__cache]
-
-    def read_from_dict_list(self, dict_list: list[dict[Any, Any]]):
-        with self._lock:
-            self.__cache = dict_list[0]
