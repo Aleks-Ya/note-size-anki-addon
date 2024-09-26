@@ -59,8 +59,7 @@ class CacheInitializerOp:
     def __background_op(self, col: Collection) -> int:
         read_from_file_success: bool = False
         if self.__config.get_store_cache_in_file_enabled():
-            read_from_file_success = self.__cache_storage.read_caches_from_file(
-                [self.__item_id_cache, self.__size_calculator])
+            read_from_file_success = self.__cache_storage.read_caches_from_file(self.__caches)
         else:
             log.info("Reading cache file is disabled")
         self.__cache_storage.delete_cache_file()
