@@ -18,8 +18,8 @@
     1. `pyenv install 3.9.18`
     2. `pyenv virtualenv 3.9.18 note-size-anki-addon`
 4. Install Anki packages
-   1. Activate virtual environment: `pyenv activate note-size-anki-addon`
-   2. Install packages: `pip install -r requirements.txt`
+    1. Activate virtual environment: `pyenv activate note-size-anki-addon`
+    2. Install packages: `pip install -r requirements.txt`
 
 ## Logs
 
@@ -28,13 +28,18 @@ See [Logging Level](configuration.md#logging-level)
 ## Tests
 
 Run automated tests:
-   1. Prerequisites: [Setup Python virtual environment](#setup-python-virtual-environment)
-   2. Activate virtual environment: `pyenv activate note-size-anki-addon` 
-   3. Run unit-tests: `tox`
+
+1. Prerequisites: [Setup Python virtual environment](#setup-python-virtual-environment)
+2. Activate virtual environment: `pyenv activate note-size-anki-addon`
+3. Run unit-tests: `tox`
 
 Run all tests except performance tests: `pytest -m "not performance"`
 
 [Manual test cases](manual-test-cases.md)
+
+## SonarQube
+
+Report at [SonarCloud](https://sonarcloud.io/project/overview?id=Aleks-Ya_note-size-anki-addon)
 
 ## Local deploy
 
