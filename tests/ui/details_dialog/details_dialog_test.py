@@ -31,7 +31,7 @@ def test_show_note_without_files(details_dialog: DetailsDialog, td: Data):
     assert path(details_dialog).label(2).get().text() == 'Files size: 21 B'
     files_table: FilesTable = path(details_dialog).table().get()
     assert files_table.rowCount() == 3
-    assert not files_table.isHidden()
+    assert files_table.isHidden()
 
     details_dialog.show_note(note_without_file)
     assert path(details_dialog).label(0).get().text() == 'Total note size: 70 B'
