@@ -19,6 +19,7 @@ from ..calculator.size_calculator import SizeCalculator
 from ..calculator.size_formatter import SizeFormatter
 from ..config.config import Config
 from ..types import SizeType, MediaFile
+from ..ui.common.number_formatter import NumberFormatter
 from ..ui.details_dialog.file_type_helper import FileTypeHelper
 
 log: Logger = logging.getLogger(__name__)
@@ -70,11 +71,13 @@ class CacheInitializerOp:
 
             all_note_ids: Sequence[NoteId] = col.find_notes("deck:*")
             note_number: int = len(all_note_ids)
+            note_number_str: str = NumberFormatter.with_thousands_separator(note_number)
             for i, note_id in enumerate(all_note_ids):
                 if self.__progress_manager.want_cancel():
                     log.info(f"User cancelled notes cache initialization at {i}")
                     return i
-                self.__update_progress(f"Caching note sizes: {i} of {note_number}", i, note_number)
+                i_str: str = NumberFormatter.with_thousands_separator(i)
+                self.__update_progress(f"Caching note sizes: {i_str} of {note_number_str}", i, note_number)
                 for size_type in SizeType:
                     self.__item_id_cache.get_note_size_str(note_id, size_type, use_cache=True)
                     self.__size_calculator.get_note_file_sizes(note_id, use_cache=True)
@@ -84,11 +87,13 @@ class CacheInitializerOp:
 
             all_card_ids: Sequence[int] = col.find_cards("deck:*")
             card_number: int = len(all_card_ids)
+            card_number_str: str = NumberFormatter.with_thousands_separator(card_number)
             for i, card_id in enumerate(all_card_ids):
                 if self.__progress_manager.want_cancel():
                     log.info(f"User cancelled cards cache initialization at {i}")
                     return note_number + i
-                self.__update_progress(f"Caching card sizes: {i} of {card_number}", i, card_number)
+                i_str: str = NumberFormatter.with_thousands_separator(i)
+                self.__update_progress(f"Caching card sizes: {i_str} of {card_number_str}", i, card_number)
                 self.__item_id_cache.get_note_id_by_card_id(card_id)
 
             end_time: datetime = datetime.now()
