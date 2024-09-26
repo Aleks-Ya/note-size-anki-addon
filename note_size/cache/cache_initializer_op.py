@@ -10,12 +10,12 @@ from aqt.utils import showInfo, show_critical
 
 from .cache import Cache
 from .cache_initializer_background import CacheInitializerBackground
-from .cache_storage import CacheStorage
 from .item_id_cache import ItemIdCache
 from .media_cache import MediaCache
 from ..calculator.size_calculator import SizeCalculator
 from ..calculator.size_formatter import SizeFormatter
 from ..config.config import Config
+from ..ui.common.number_formatter import NumberFormatter
 from ..ui.details_dialog.file_type_helper import FileTypeHelper
 
 log: Logger = logging.getLogger(__name__)
@@ -26,8 +26,7 @@ class CacheInitializerOp:
 
     def __init__(self, task_manager: TaskManager, progress_manager: ProgressManager, media_cache: MediaCache,
                  item_id_cache: ItemIdCache, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
-                 file_type_helper: FileTypeHelper, config: Config, parent: QWidget, cache_storage: CacheStorage,
-                 show_success_info: bool):
+                 file_type_helper: FileTypeHelper, config: Config, parent: QWidget, show_success_info: bool):
         self.__task_manager: TaskManager = task_manager
         self.__progress_manager: ProgressManager = progress_manager
         self.__caches: list[Cache] = [media_cache, item_id_cache, size_formatter, size_calculator, file_type_helper]
@@ -61,7 +60,8 @@ class CacheInitializerOp:
     def __on_success(self, count: int) -> None:
         log.info(f"Cache initialization finished: {count}")
         if self.__show_success_info:
-            showInfo(title=self.__progress_dialog_title, text=f"Cache was initialized ({count} notes and cards)")
+            count_str: str = NumberFormatter.with_thousands_separator(count)
+            showInfo(title=self.__progress_dialog_title, text=f"Cache was initialized ({count_str} notes and cards)")
 
     def __on_failure(self, e: Exception) -> None:
         log.error("Error during cache initialization", exc_info=e)

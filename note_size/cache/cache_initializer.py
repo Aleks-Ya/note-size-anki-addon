@@ -60,6 +60,6 @@ class CacheInitializer:
         if not read_from_file_success:
             CacheInitializerOp(self.__mw.taskman, self.__mw.progress, self.__media_cache, self.__item_id_cache,
                                self.__size_calculator, self.__size_formatter, self.__file_type_helper, self.__config,
-                               parent, self.__cache_storage, show_success_info).initialize_cache_in_background()
+                               parent, show_success_info).initialize_cache_in_background()
         else:
             log.info("Skip cache initialization because the cache was read from file")
