@@ -1,7 +1,7 @@
 import logging
 import sys
 from logging import Logger
-from typing import Optional
+from typing import Optional, NewType
 
 from ..calculator.size_formatter import SizeFormatter
 from ..types import SizeStr, SizeBytes
@@ -31,6 +31,9 @@ class Level:
             self.max_size_str == other.max_size_str
 
 
+LevelDict = NewType("LevelDict", dict[str, Optional[str]])
+
+
 class LevelParser:
     __color_key: str = 'Color'
     __min_size_key: str = 'Min Size'
@@ -40,49 +43,46 @@ class LevelParser:
         self.__size_formatter: SizeFormatter = size_formatter
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def add_level(self, levels: list[dict[str, str]]) -> None:
+    def add_level(self, levels: list[LevelDict]) -> None:
         if len(levels) > 0:
-            previous_level: dict[str, str] = levels[len(levels) - 1]
+            previous_level: LevelDict = levels[len(levels) - 1]
             if len(levels) > 1:
-                penultimate_level: dict[str, str] = levels[len(levels) - 2]
-                penultimate_max_size_str: SizeStr = SizeStr(penultimate_level[LevelParser.__max_size_key])
+                penultimate_level: LevelDict = levels[len(levels) - 2]
+                penultimate_max_size_str: SizeStr = SizeStr(penultimate_level[self.__max_size_key])
                 penultimate_max_size_bytes: SizeBytes = SizeFormatter.str_to_bytes(penultimate_max_size_str)
                 new_previous_level_size_bytes: SizeBytes = SizeBytes(penultimate_max_size_bytes * 2)
                 new_previous_level_size_str: SizeStr = self.__size_formatter.bytes_to_str(new_previous_level_size_bytes,
                                                                                           precision=0)
-                previous_level[LevelParser.__max_size_key] = new_previous_level_size_str
+                previous_level[self.__max_size_key] = new_previous_level_size_str
             else:
-                previous_level[LevelParser.__max_size_key] = "100 KB"
-        new_level: dict[str, str] = {
-            LevelParser.__color_key: "Yellow",
-            LevelParser.__max_size_key: None
-        }
+                previous_level[self.__max_size_key] = "100 KB"
+        new_level: LevelDict = LevelDict({
+            self.__color_key: "Yellow",
+            self.__max_size_key: None
+        })
         levels.append(new_level)
 
-    @staticmethod
-    def remove_level(levels: list[dict[str, str]], level_to_remove: int) -> None:
+    def remove_level(self, levels: list[LevelDict], level_to_remove: int) -> None:
         if len(levels) < 2:
             return
         del levels[level_to_remove]
-        last_level: dict[str, str] = levels[len(levels) - 1]
-        last_level[LevelParser.__max_size_key] = None
+        last_level: LevelDict = levels[len(levels) - 1]
+        last_level[self.__max_size_key] = None
 
-    @staticmethod
-    def parse_levels(levels: list[dict[str, str]]) -> list[Level]:
+    def parse_levels(self, levels: list[LevelDict]) -> list[Level]:
         level_list: list[Level] = []
         for i, level in enumerate(levels):
-            previous_level_max_size: str = levels[i - 1][LevelParser.__max_size_key] if i > 0 else None
-            level[LevelParser.__min_size_key] = previous_level_max_size
+            previous_level_max_size: str = levels[i - 1][self.__max_size_key] if i > 0 else None
+            level[self.__min_size_key] = previous_level_max_size
             is_last: bool = i == len(levels) - 1
-            level[LevelParser.__max_size_key] = None if is_last else level[LevelParser.__max_size_key]
-            level_list.append(LevelParser.__parse_level(level))
+            level[self.__max_size_key] = None if is_last else level[self.__max_size_key]
+            level_list.append(self.__parse_level(level))
         return level_list
 
-    @staticmethod
-    def __parse_level(level: dict[str, str]) -> Level:
+    def __parse_level(self, level: LevelDict) -> Level:
         color: str = level.get("Color")
-        min_size_opt: Optional[SizeStr] = SizeStr(level.get(LevelParser.__min_size_key))
-        max_size_opt: Optional[SizeStr] = SizeStr(level.get(LevelParser.__max_size_key))
+        min_size_opt: Optional[SizeStr] = SizeStr(level.get(self.__min_size_key))
+        max_size_opt: Optional[SizeStr] = SizeStr(level.get(self.__max_size_key))
         min_size_bytes: SizeBytes = SizeFormatter.str_to_bytes(min_size_opt) if min_size_opt else 0
         max_size_bytes: SizeBytes = SizeFormatter.str_to_bytes(max_size_opt) if max_size_opt \
             else sys.maxsize

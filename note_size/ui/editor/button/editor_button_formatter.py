@@ -16,11 +16,12 @@ log: Logger = logging.getLogger(__name__)
 
 class EditorButtonFormatter:
     def __init__(self, item_id_cache: ItemIdCache, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
-                 config: Config) -> None:
+                 level_parser: LevelParser, config: Config) -> None:
         self.__config: Config = config
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__size_calculator: SizeCalculator = size_calculator
         self.__size_formatter: SizeFormatter = size_formatter
+        self.__level_parser: LevelParser = level_parser
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def get_zero_size_label(self) -> EditorButtonLabel:
@@ -49,7 +50,7 @@ class EditorButtonFormatter:
 
     def __get_color(self, size: SizeBytes) -> str:
         if self.__config.get_size_button_color_enabled():
-            color_levels: list[Level] = LevelParser.parse_levels(self.__config.get_size_button_color_levels())
+            color_levels: list[Level] = self.__level_parser.parse_levels(self.__config.get_size_button_color_levels())
             for level in color_levels:
                 if level.min_size_bytes <= size < level.max_size_bytes:
                     return level.color

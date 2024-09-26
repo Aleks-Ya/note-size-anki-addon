@@ -1,3 +1,6 @@
+from ...config.level_parser import LevelDict
+
+
 class UiModel:
     cache_warmup_enabled: bool
     store_cache_in_file_enabled: bool
@@ -6,4 +9,4 @@ class UiModel:
     log_level: str
     size_button_enabled: bool
     size_button_color_enabled: bool
-    size_button_color_levels: list[dict[str, str]]
+    size_button_color_levels: list[LevelDict]

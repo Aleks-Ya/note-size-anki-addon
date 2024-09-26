@@ -6,7 +6,7 @@ from urllib.parse import urljoin
 from aqt.qt import QVBoxLayout, QTableWidget, QPushButton, QColorDialog, Qt, \
     QHBoxLayout, QColor, QTableWidgetItem, QDesktopServices
 
-from ...config.level_parser import Level, LevelParser
+from ...config.level_parser import Level, LevelParser, LevelDict
 from ...config.settings import Settings
 from ...ui.config.ui_model import UiModel
 from ...ui.config.widgets import GroupVBox, CheckboxWithInfo, InfoButton
@@ -122,7 +122,7 @@ class ColorLayout(QVBoxLayout):
             color_levels.append(level)
         return color_levels
 
-    def __set_color_levels(self, levels: list[dict[str, str]]) -> None:
+    def __set_color_levels(self, levels: list[LevelDict]) -> None:
         self.__table.setRowCount(len(levels))
         levels_parsed: list[Level] = self.__level_parser.parse_levels(levels)
         for row, level in enumerate(levels_parsed):

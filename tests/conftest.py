@@ -160,8 +160,8 @@ def item_id_sorter(item_id_cache: ItemIdCache, size_calculator: SizeCalculator) 
 
 @pytest.fixture
 def editor_button_formatter(config: Config, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
-                            item_id_cache: ItemIdCache) -> EditorButtonFormatter:
-    return EditorButtonFormatter(item_id_cache, size_calculator, size_formatter, config)
+                            item_id_cache: ItemIdCache, level_parser: LevelParser) -> EditorButtonFormatter:
+    return EditorButtonFormatter(item_id_cache, size_calculator, size_formatter, level_parser, config)
 
 
 @pytest.fixture

@@ -4,6 +4,8 @@ from logging import Logger
 from pathlib import Path
 from typing import Any, Optional
 
+from ..config.level_parser import LevelDict
+
 log: Logger = logging.getLogger(__name__)
 
 
@@ -97,7 +99,7 @@ class Config:
     def set_size_button_color_enabled(self, color_enabled: bool) -> None:
         self.__set(color_enabled, self.__key_1_size_button, self.__key_2_color, self.__key_3_color_enabled)
 
-    def get_size_button_color_levels(self) -> list[dict[str, str]]:
+    def get_size_button_color_levels(self) -> list[LevelDict]:
         return self.__config[self.__key_1_size_button][self.__key_2_color][self.__key_3_levels]
 
     def set_size_button_color_levels(self, color_levels: list[dict[str, str]]) -> None:
