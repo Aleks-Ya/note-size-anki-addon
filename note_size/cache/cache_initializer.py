@@ -34,18 +34,14 @@ class CacheInitializer:
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def initialize_caches(self) -> None:
-        CacheInitializerOp(self.__mw.taskman, self.__mw.progress, self.__media_cache, self.__item_id_cache,
-                           self.__size_calculator, self.__size_formatter, self.__file_type_helper, self.__config,
-                           self.__mw, self.__cache_storage, show_success_info=False).initialize_cache_in_background()
+        self.__initialize_caches(self.__mw)
 
     def refresh_caches(self, parent: QWidget) -> None:
         log.info("Refresh caches")
         for cache in self.__caches:
             cache.invalidate_cache()
         self.__cache_storage.delete_cache_file()
-        CacheInitializerOp(self.__mw.taskman, self.__mw.progress, self.__media_cache, self.__item_id_cache,
-                           self.__size_calculator, self.__size_formatter, self.__file_type_helper, self.__config,
-                           parent, self.__cache_storage, show_success_info=True).initialize_cache_in_background()
+        self.__initialize_caches(parent)
 
     def save_cache_to_file(self) -> None:
         if self.__config.get_store_cache_in_file_enabled():
@@ -53,3 +49,8 @@ class CacheInitializer:
         else:
             log.info("Saving cache file is disabled")
             self.__cache_storage.delete_cache_file()
+
+    def __initialize_caches(self, parent: QWidget) -> None:
+        CacheInitializerOp(self.__mw.taskman, self.__mw.progress, self.__media_cache, self.__item_id_cache,
+                           self.__size_calculator, self.__size_formatter, self.__file_type_helper, self.__config,
+                           parent, self.__cache_storage, show_success_info=False).initialize_cache_in_background()
