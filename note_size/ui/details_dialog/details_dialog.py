@@ -3,9 +3,9 @@ from datetime import datetime
 from logging import Logger
 from typing import Sequence, Optional
 
-from PyQt6.QtWidgets import QWidget
 from anki.notes import Note, NoteId
-from aqt.qt import QDialog, QLabel, QIcon, QGridLayout, QPushButton, QFont, QSize, QMargins, QDialogButtonBox, Qt
+from aqt.qt import QDialog, QLabel, QIcon, QGridLayout, QPushButton, QFont, QSize, QMargins, QDialogButtonBox, Qt, \
+    QWidget
 
 from .details_model import DetailsModel
 from .details_model_filler import DetailsModelFiller

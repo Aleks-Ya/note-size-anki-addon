@@ -69,7 +69,7 @@ class MediaCache(Cache):
         return updated_files
 
     def as_dict_list(self) -> list[dict[Any, Any]]:
-        pass
+        return [self.__file_sizes_cache]
 
     def read_from_dict_list(self, dict_list: list[dict[Any, Any]]):
         pass
