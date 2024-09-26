@@ -14,7 +14,6 @@ from ...ui.config.widgets import GroupVBox, CheckboxWithInfo, InfoButton
 log: Logger = logging.getLogger(__name__)
 
 
-# noinspection PyUnresolvedReferences
 class ColorLayout(QVBoxLayout):
     __min_size_column: int = 0
     __max_size_column: int = 1
@@ -37,7 +36,9 @@ class ColorLayout(QVBoxLayout):
         self.__table: QTableWidget = QTableWidget(0, len(headers))
         self.__table.setHorizontalHeaderLabels(headers)
         self.__table.verticalHeader().setVisible(False)
+        # noinspection PyUnresolvedReferences
         self.__table.cellClicked.connect(self.__open_color_dialog)
+        # noinspection PyUnresolvedReferences
         self.__table.cellChanged.connect(self.__on_cell_changed)
 
         add_remove_level_layout: QHBoxLayout = QHBoxLayout()
@@ -45,10 +46,12 @@ class ColorLayout(QVBoxLayout):
         self.__add_button: QPushButton = QPushButton("+")
         self.__add_button.setToolTip("Add a color level")
         self.__add_button.setFixedWidth(self.__add_button.sizeHint().width())
+        # noinspection PyUnresolvedReferences
         self.__add_button.clicked.connect(self.__add_row)
         self.__remove_button: QPushButton = QPushButton("-")
         self.__remove_button.setToolTip("Remove selected color level")
         self.__remove_button.setFixedWidth(self.__remove_button.sizeHint().width())
+        # noinspection PyUnresolvedReferences
         self.__remove_button.clicked.connect(self.__remove_row)
         button_url: str = urljoin(settings.docs_base_url, "docs/configuration.md#color---levels")
         info_button: InfoButton = InfoButton(button_url, desktop_services, settings)
@@ -68,10 +71,12 @@ class ColorLayout(QVBoxLayout):
     def refresh_from_model(self) -> None:
         self.__color_enabled_checkbox.set_checked(self.__model.size_button_color_enabled)
         self.__color_enabled_checkbox.setEnabled(self.__model.size_button_enabled)
+        # noinspection PyUnresolvedReferences
         self.__table.cellChanged.disconnect()
         self.__set_color_levels(self.__model.size_button_color_levels)
         self.__disable_column(self.__min_size_column)
         self.__disable_column_in_last_row(self.__max_size_column)
+        # noinspection PyUnresolvedReferences
         self.__table.cellChanged.connect(self.__on_cell_changed)
         table_enabled: bool = self.__model.size_button_enabled and self.__model.size_button_color_enabled
         self.__table.setEnabled(table_enabled)
