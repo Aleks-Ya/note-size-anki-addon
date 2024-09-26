@@ -8,6 +8,7 @@ from anki.notes import NoteId
 from aqt.browser import Browser
 from aqt.qt import QPushButton
 
+from ..common.number_formatter import NumberFormatter
 from ..details_dialog.details_dialog import DetailsDialog
 from ..details_dialog.progress import WithProgressQueryOp
 from ...cache.item_id_cache import ItemIdCache
@@ -18,7 +19,8 @@ log: Logger = logging.getLogger(__name__)
 
 class BrowserButton(QPushButton):
 
-    def __init__(self, col: Collection, item_id_cache: ItemIdCache, details_dialog: DetailsDialog, browser: Browser) -> None:
+    def __init__(self, col: Collection, item_id_cache: ItemIdCache, details_dialog: DetailsDialog,
+                 browser: Browser) -> None:
         super().__init__()
         self.__col: Collection = col
         self.__item_id_cache: ItemIdCache = item_id_cache
@@ -40,7 +42,8 @@ class BrowserButton(QPushButton):
         self.__current_note_ids = note_ids
         size: SizeStr = self.__item_id_cache.get_notes_size_str(note_ids, SizeType.TOTAL, use_cache=True)
         self.setText(size)
-        tooltip: str = (f"Size of {len(note_ids)} notes\n"
+        note_ids_number: str = NumberFormatter.with_thousands_separator(len(note_ids))
+        tooltip: str = (f"Size of {note_ids_number} notes\n"
                         "Size includes texts and files\n"
                         "Click for details")
         # noinspection PyUnresolvedReferences
@@ -51,7 +54,9 @@ class BrowserButton(QPushButton):
         self.__current_note_ids = note_ids
         size: SizeStr = self.__item_id_cache.get_notes_size_str(note_ids, SizeType.TOTAL, use_cache=True)
         self.setText(size)
-        tooltip: str = (f"Size of {len(card_ids)} cards ({len(note_ids)} notes)\n"
+        note_ids_number: str = NumberFormatter.with_thousands_separator(len(note_ids))
+        card_ids_number: str = NumberFormatter.with_thousands_separator(len(card_ids))
+        tooltip: str = (f"Size of {card_ids_number} cards ({note_ids_number} notes)\n"
                         "Size includes texts and files\n"
                         "Click for details")
         # noinspection PyUnresolvedReferences
