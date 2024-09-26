@@ -71,18 +71,18 @@ class LevelParser:
     def parse_levels(levels: list[dict[str, str]]) -> list[Level]:
         level_list: list[Level] = []
         for i, level in enumerate(levels):
-            previous_level_max_size: str = levels[i - 1]["Max Size"] if i > 0 else None
-            level["Min Size"] = previous_level_max_size
+            previous_level_max_size: str = levels[i - 1][LevelParser.__max_size_key] if i > 0 else None
+            level[LevelParser.__min_size_key] = previous_level_max_size
             is_last: bool = i == len(levels) - 1
-            level["Max Size"] = None if is_last else level["Max Size"]
+            level[LevelParser.__max_size_key] = None if is_last else level[LevelParser.__max_size_key]
             level_list.append(LevelParser.__parse_level(level))
         return level_list
 
     @staticmethod
     def __parse_level(level: dict[str, str]) -> Level:
         color: str = level.get("Color")
-        min_size_opt: Optional[SizeStr] = SizeStr(level.get("Min Size"))
-        max_size_opt: Optional[SizeStr] = SizeStr(level.get("Max Size"))
+        min_size_opt: Optional[SizeStr] = SizeStr(level.get(LevelParser.__min_size_key))
+        max_size_opt: Optional[SizeStr] = SizeStr(level.get(LevelParser.__max_size_key))
         min_size_bytes: SizeBytes = SizeFormatter.str_to_bytes(min_size_opt) if min_size_opt else 0
         max_size_bytes: SizeBytes = SizeFormatter.str_to_bytes(max_size_opt) if max_size_opt \
             else sys.maxsize

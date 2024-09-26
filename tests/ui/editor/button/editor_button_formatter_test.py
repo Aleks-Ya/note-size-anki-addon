@@ -6,7 +6,6 @@ from note_size.config.config import Config
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.size_calculator import SizeCalculator
-from note_size.config.settings import Settings
 from note_size.ui.editor.button.editor_button_formatter import EditorButtonFormatter
 from note_size.ui.editor.button.editor_button_label import EditorButtonLabel
 from note_size.types import SizeBytes, SizeType
@@ -42,8 +41,7 @@ def test_get_edit_mode_label_no_cache(col: Collection, td: Data, editor_button_f
     assert editor_button_formatter.get_edit_mode_label(note.id) == EditorButtonLabel("86 B", "PaleGreen")
 
 
-def test_disabled_color(col: Collection, td: Data, settings: Settings, media_cache: MediaCache,
-                        size_formatter: SizeFormatter):
+def test_disabled_color(col: Collection, td: Data, size_formatter: SizeFormatter):
     config: Config = td.read_config_updated({'Size Button': {'Color': {'Enabled': False}}})
     media_cache: MediaCache = MediaCache(col, config)
     size_calculator: SizeCalculator = SizeCalculator(col, media_cache)

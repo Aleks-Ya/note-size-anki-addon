@@ -61,24 +61,25 @@ def test_notes_will_be_deleted(col: Collection, td: Data, cache_hooks: CacheHook
     assert size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True) == 143
     col.remove_notes([note.id])
     with pytest.raises(NotFoundError):
-        assert size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True) == 0
+        size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True)
 
 
 def test_media_sync_did_start_or_stop(col: Collection, td: Data, cache_hooks: CacheHooks, media_cache: MediaCache,
                                       item_id_cache: ItemIdCache):
     cache_hooks.setup_hooks()
     td.create_note_with_files()
-    assert media_cache.get_file_size(MediaFile("image.png"), use_cache=True) == 0
+    filename: str = "image.png"
+    assert media_cache.get_file_size(MediaFile(filename), use_cache=True) == 0
     content: str = "abc"
     Path(col.media.dir(), "image.png").write_text(content)
-    assert media_cache.get_file_size(MediaFile("image.png"), use_cache=True) == 0
+    assert media_cache.get_file_size(MediaFile(filename), use_cache=True) == 0
     gui_hooks.media_sync_did_start_or_stop(True)
-    assert media_cache.get_file_size(MediaFile("image.png"), use_cache=True) == 0
+    assert media_cache.get_file_size(MediaFile(filename), use_cache=True) == 0
 
     assert not item_id_cache.is_initialized()
     gui_hooks.media_sync_did_start_or_stop(False)
-    assert media_cache.get_file_size(MediaFile("image.png"), use_cache=True) == 0
+    assert media_cache.get_file_size(MediaFile(filename), use_cache=True) == 0
 
     item_id_cache.set_initialized(True)
     gui_hooks.media_sync_did_start_or_stop(False)
-    assert media_cache.get_file_size(MediaFile("image.png"), use_cache=True) == len(content)
+    assert media_cache.get_file_size(MediaFile(filename), use_cache=True) == len(content)

@@ -19,7 +19,6 @@ class FilesTable(QTableWidget):
     __icon_column: int = 0
     __filename_column: int = 1
     __size_column: int = 2
-    __default_general_mime_type: str = "other"
 
     def __init__(self, file_type_helper: FileTypeHelper, size_formatter: SizeFormatter, config: Config,
                  settings: Settings):

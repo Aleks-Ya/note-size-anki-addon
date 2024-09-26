@@ -67,7 +67,7 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Colle
                                                  note2.id: set()},
                                                 {note1.id: {'animation.gif': 9, 'picture.jpg': 7, 'sound.mp3': 5},
                                                  note2.id: {}}]
-    assert media_cache_2.as_dict_list() == [{}]
+    assert media_cache_2.as_dict_list() == [{'animation.gif': 9, 'picture.jpg': 7, 'sound.mp3': 5}]
 
     col.remove_notes([note1.id, note2.id])
     assert item_id_cache.get_note_size_str(note1.id, SizeType.TOTAL, use_cache=True) == note_size1
