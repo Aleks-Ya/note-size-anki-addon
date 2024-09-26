@@ -90,3 +90,11 @@ def test_remove_level_last(level_parser: LevelParser):
     assert levels_dict == [
         {"Color": "PaleGreen", "Max Size": "100 KB"},
         {"Color": "Orange", "Max Size": None}]
+
+
+def test_remove_level_last_level(level_parser: LevelParser):
+    levels_dict: list[LevelDict] = [
+        LevelDict({"Color": "LightCoral", "Max Size": None})]
+    level_parser.remove_level(levels_dict, 0)
+    assert levels_dict == [
+        {"Color": "LightCoral", "Max Size": None}]
