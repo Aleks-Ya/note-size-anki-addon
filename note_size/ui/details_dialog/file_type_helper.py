@@ -48,6 +48,9 @@ class FileTypeHelper(Cache):
         with self._lock:
             self.__cache = dict_list[0]
 
+    def get_cache_size(self) -> int:
+        return len(self.__cache)
+
     @staticmethod
     def __determine_file_type(filename: str) -> FileType:
         full_mime_type: str = mimetypes.guess_type(filename)[0]

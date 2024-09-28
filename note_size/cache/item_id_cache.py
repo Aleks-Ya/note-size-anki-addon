@@ -89,7 +89,7 @@ class ItemIdCache(Cache):
     def __size_str_cache_lengths(self) -> str:
         return str([f"{cache[0]}={len(cache[1].keys())}" for cache in self.__caches.size_str_caches.items()])
 
-    def get_size(self) -> str:
+    def get_size_str(self) -> str:
         return (f"size_str_cache_lengths={self.__size_str_cache_lengths()}, "
                 f"id_cache_length={len(self.__caches.id_cache.keys())}, "
                 f"file_note_ids_cache={len(self.__caches.file_note_ids_cache.keys())}")
@@ -114,6 +114,14 @@ class ItemIdCache(Cache):
                       f"refreshed {counter} notes with {len(updated_files)} files")
         else:
             log.debug("Skip refreshing notes having updated files because ItemIdCache is not initialized")
+
+    def get_cache_size(self) -> int:
+        size: int = 0
+        for cache in self.__caches.size_str_caches.values():
+            size += len(cache.keys())
+        size += len(self.__caches.id_cache.keys())
+        size += len(self.__caches.file_note_ids_cache.keys())
+        return size
 
     def __note_ids_by_file(self, file: MediaFile, use_cache: bool = True) -> set[NoteId]:
         with self._lock:

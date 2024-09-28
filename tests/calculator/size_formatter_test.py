@@ -42,6 +42,18 @@ def test_str_to_bytes_performance(size_formatter: SizeFormatter):
     assert execution_time <= 0.5
 
 
+def test_get_cache_size(size_formatter: SizeFormatter):
+    assert size_formatter.get_cache_size() == 0
+    size_formatter.bytes_to_str(SizeBytes(0))
+    assert size_formatter.get_cache_size() == 1
+    size_formatter.bytes_to_str(SizeBytes(0))
+    assert size_formatter.get_cache_size() == 1
+    size_formatter.bytes_to_str(SizeBytes(1))
+    assert size_formatter.get_cache_size() == 2
+    size_formatter.invalidate_cache()
+    assert size_formatter.get_cache_size() == 0
+
+
 def __run_str_to_bytes(size_formatter: SizeFormatter):
     for i in range(0, 100_000):
         size_formatter.str_to_bytes(SizeStr(f"{i} B"))

@@ -37,7 +37,7 @@ class CacheInitializerBackground:
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def initialize_caches(self, col: Collection) -> int:
-        log.info(f"Cache initialization started: {self.__item_id_cache.get_size()}")
+        log.info(f"Cache initialization started: {self.__item_id_cache.get_size_str()}")
         start_time: datetime = datetime.now()
         self.__update_progress("Note Size cache initializing", None, None)
 
@@ -75,7 +75,7 @@ class CacheInitializerBackground:
         end_time: datetime = datetime.now()
         duration_sec: int = round((end_time - start_time).total_seconds())
         log.info(f"Cache initialization finished: notes={note_number}, cards={card_number}, "
-                 f"duration_sec={duration_sec}, {self.__item_id_cache.get_size()}")
+                 f"duration_sec={duration_sec}, {self.__item_id_cache.get_size_str()}")
         return note_number + card_number
 
     def cancel(self):

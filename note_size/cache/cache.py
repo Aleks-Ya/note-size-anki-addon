@@ -41,3 +41,7 @@ class Cache(ABC):
     @abstractmethod
     def read_from_dict_list(self, dict_list: list[dict[Any, Any]]):
         pass
+
+    @abstractmethod
+    def get_cache_size(self) -> int:
+        pass

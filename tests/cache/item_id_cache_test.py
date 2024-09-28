@@ -159,3 +159,17 @@ def test_initialized(item_id_cache: ItemIdCache):
     assert item_id_cache.is_initialized()
     item_id_cache.set_initialized(False)
     assert not item_id_cache.is_initialized()
+
+
+def test_get_cache_size(td: Data, item_id_cache: ItemIdCache):
+    assert item_id_cache.get_cache_size() == 0
+    note1: Note = td.create_note_with_files()
+    item_id_cache.get_note_size_str(note1.id, SizeType.TOTAL, use_cache=True)
+    assert item_id_cache.get_cache_size() == 1
+    note2: Note = td.create_note_without_files()
+    item_id_cache.get_note_size_str(note2.id, SizeType.TEXTS, use_cache=True)
+    assert item_id_cache.get_cache_size() == 2
+    item_id_cache.evict_note(note1.id)
+    assert item_id_cache.get_cache_size() == 1
+    item_id_cache.invalidate_cache()
+    assert item_id_cache.get_cache_size() == 0

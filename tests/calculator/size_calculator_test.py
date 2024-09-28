@@ -113,3 +113,19 @@ def test_calculate_note_files_performance(size_calculator: SizeCalculator, td: D
     note: Note = td.create_note_with_files()
     execution_time: float = timeit.timeit(lambda: size_calculator.calculate_note_files(note, True), number=100_000)
     assert execution_time <= 0.5
+
+
+def test_get_cache_size(size_calculator: SizeCalculator, td: Data):
+    assert size_calculator.get_cache_size() == 0
+    note1: Note = td.create_note_with_files()
+    size_calculator.get_note_size(note1.id, SizeType.TOTAL, use_cache=True)
+    assert size_calculator.get_cache_size() == 5
+    size_calculator.get_note_size(note1.id, SizeType.TOTAL, use_cache=True)
+    assert size_calculator.get_cache_size() == 5
+    note2: Note = td.create_note_without_files()
+    size_calculator.get_note_size(note2.id, SizeType.TEXTS, use_cache=True)
+    assert size_calculator.get_cache_size() == 6
+    size_calculator.evict_note(note1.id)
+    assert size_calculator.get_cache_size() == 1
+    size_calculator.invalidate_cache()
+    assert size_calculator.get_cache_size() == 0

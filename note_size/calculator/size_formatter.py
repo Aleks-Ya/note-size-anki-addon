@@ -69,3 +69,6 @@ class SizeFormatter(Cache):
                     return SizeStr(f'{num:0.{precision}f}{unit_separator}{unit}')
             num /= divisor
         return SizeStr(f'{num:0.{precision}f}{unit_separator}{final_unit}')
+
+    def get_cache_size(self) -> int:
+        return len(self.__bytes_to_str_cache)

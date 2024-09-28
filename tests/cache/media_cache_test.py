@@ -31,3 +31,12 @@ def test_get_unused_files_size(td: Data, media_cache: MediaCache):
     Data.replace_in_front_field(note, '<img src="animation.gif">', '')
     assert media_cache.get_unused_files_size(use_cache=True) == (SizeBytes(0), FilesNumber(0))
     assert media_cache.get_unused_files_size(use_cache=False) == (SizeBytes(0), FilesNumber(0))  # TODO fix it
+
+
+def test_get_cache_size(td: Data, media_cache: MediaCache):
+    assert media_cache.get_cache_size() == 0
+    td.create_note_with_files()
+    media_cache.get_file_size(DefaultFields.file0, use_cache=True)
+    assert media_cache.get_cache_size() == 1
+    media_cache.invalidate_cache()
+    assert media_cache.get_cache_size() == 0

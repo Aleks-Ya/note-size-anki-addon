@@ -148,3 +148,11 @@ class SizeCalculator(Cache):
             self.__caches.note_files_cache = caches[1]
             self.__caches.note_file_sizes_cache = caches[2]
             log.info(f"Caches were read dict list")
+
+    def get_cache_size(self) -> int:
+        size: int = 0
+        for cache in self.__caches.size_caches.values():
+            size += len(cache.keys())
+        size += len(self.__caches.note_files_cache.keys())
+        size += len(self.__caches.note_file_sizes_cache.keys())
+        return size
