@@ -4,7 +4,7 @@ from logging import Logger
 from anki.notes import NoteId, Note
 
 from .editor_button_label import EditorButtonLabel
-from ....cache.item_id_cache import ItemIdCache
+from ....cache.size_str_cache import SizeStrCache
 from ....config.config import Config
 from ....config.level_parser import Level, LevelParser
 from ....types import SizeStr, SizeBytes, SizeType
@@ -15,10 +15,10 @@ log: Logger = logging.getLogger(__name__)
 
 
 class EditorButtonFormatter:
-    def __init__(self, item_id_cache: ItemIdCache, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
+    def __init__(self, size_str_cache: SizeStrCache, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
                  level_parser: LevelParser, config: Config) -> None:
         self.__config: Config = config
-        self.__item_id_cache: ItemIdCache = item_id_cache
+        self.__size_str_cache: SizeStrCache = size_str_cache
         self.__size_calculator: SizeCalculator = size_calculator
         self.__size_formatter: SizeFormatter = size_formatter
         self.__level_parser: LevelParser = level_parser
@@ -42,7 +42,7 @@ class EditorButtonFormatter:
 
     def get_edit_mode_label(self, note_id: NoteId) -> EditorButtonLabel:
         size_bytes: SizeBytes = self.__size_calculator.get_note_size(note_id, SizeType.TOTAL, use_cache=False)
-        size_str: SizeStr = self.__item_id_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False)
+        size_str: SizeStr = self.__size_str_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False)
         color: str = self.__get_color(size_bytes)
         label: EditorButtonLabel = EditorButtonLabel(f"{size_str}", color)
         log.debug(f"Edit mode label created for NoteId {note_id}: {label}")

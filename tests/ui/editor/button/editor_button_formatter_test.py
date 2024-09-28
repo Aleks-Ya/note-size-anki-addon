@@ -1,9 +1,9 @@
 from anki.collection import Collection
 from anki.notes import Note
 
+from note_size.cache.size_str_cache import SizeStrCache
 from note_size.calculator.size_formatter import SizeFormatter
 from note_size.config.config import Config
-from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.config.level_parser import LevelParser
@@ -46,9 +46,9 @@ def test_disabled_color(col: Collection, td: Data, size_formatter: SizeFormatter
     config: Config = td.read_config_updated({'Size Button': {'Color': {'Enabled': False}}})
     media_cache: MediaCache = MediaCache(col, config)
     size_calculator: SizeCalculator = SizeCalculator(col, media_cache)
-    item_id_cache: ItemIdCache = ItemIdCache(col, size_calculator, size_formatter, media_cache)
+    size_str_cache: SizeStrCache = SizeStrCache(col, size_calculator, size_formatter)
     editor_button_formatter: EditorButtonFormatter = EditorButtonFormatter(
-        item_id_cache, size_calculator, size_formatter, level_parser, config)
+        size_str_cache, size_calculator, size_formatter, level_parser, config)
     assert editor_button_formatter.get_zero_size_label() == EditorButtonLabel("0 B", "")
     note: Note = td.create_note_with_files()
     assert editor_button_formatter.get_add_mode_label(note) == EditorButtonLabel("143 B", "")

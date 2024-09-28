@@ -28,6 +28,7 @@ package NoteSizeAddon {
     }
 
     package cache {
+        class CacheManager
         class CacheHooks
         class ItemIdCache #red {
             id_cache: dict[CardId, NoteId]
@@ -39,6 +40,7 @@ package NoteSizeAddon {
         }
         class CacheInitializer
         class CacheStorage
+        class SizeStrCache
     }
 
     package ui {
@@ -61,22 +63,30 @@ EditorButtonHooks --> EditorButtonFormatter
 
 ColumnHooks --> ItemIdCache #red
 ColumnHooks --> ItemIdSorter
+ColumnHooks --> SizeStrCache
 
 ItemIdSorter --> ItemIdCache #red
 ItemIdSorter --> SizeCalculator #orange
 
-CacheInitializer --> MediaCache #green
-CacheInitializer --> ItemIdCache #red
-CacheInitializer --> SizeCalculator #orange
-CacheInitializer --> SizeFormatter #brown
+CacheInitializer --> CacheManager
 CacheInitializer --> CacheStorage
+
+CacheManager --> MediaCache #green
+CacheManager --> ItemIdCache #red
+CacheManager --> SizeCalculator #orange
+CacheManager --> SizeFormatter #brown
+CacheManager --> SizeStrCache
 
 CacheHooks --> ItemIdCache #red
 CacheHooks --> SizeCalculator #orange
 
+SizeStrCache --> Collection
+SizeStrCache --> SizeCalculator
+SizeStrCache --> SizeFormatter
+
 Collection --> SQLite
 
-EditorButtonFormatter --> ItemIdCache #red
+EditorButtonFormatter --> SizeStrCache
 EditorButtonFormatter --> SizeCalculator #orange
 EditorButtonFormatter --> SizeFormatter #brown
 
@@ -91,7 +101,6 @@ CacheStorage --> FileSystem
 
 ItemIdCache --> Collection
 ItemIdCache --> SizeCalculator #orange
-ItemIdCache --> SizeFormatter #brown
 ItemIdCache --> MediaCache #green
 
 MediaCache --> Collection

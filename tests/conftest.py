@@ -19,6 +19,7 @@ from note_size.cache.cache_manager import CacheManager
 from note_size.cache.cache_storage import CacheStorage
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
+from note_size.cache.size_str_cache import SizeStrCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.calculator.size_formatter import SizeFormatter
 from note_size.config.config import Config
@@ -136,9 +137,8 @@ def size_calculator(col: Collection, media_cache: MediaCache) -> SizeCalculator:
 
 
 @pytest.fixture
-def item_id_cache(col: Collection, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
-                  media_cache: MediaCache) -> ItemIdCache:
-    return ItemIdCache(col, size_calculator, size_formatter, media_cache)
+def item_id_cache(col: Collection, size_calculator: SizeCalculator, media_cache: MediaCache) -> ItemIdCache:
+    return ItemIdCache(col, size_calculator, media_cache)
 
 
 @pytest.fixture
@@ -159,8 +159,8 @@ def item_id_sorter(item_id_cache: ItemIdCache, size_calculator: SizeCalculator) 
 
 @pytest.fixture
 def editor_button_formatter(config: Config, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
-                            item_id_cache: ItemIdCache, level_parser: LevelParser) -> EditorButtonFormatter:
-    return EditorButtonFormatter(item_id_cache, size_calculator, size_formatter, level_parser, config)
+                            size_str_cache: SizeStrCache, level_parser: LevelParser) -> EditorButtonFormatter:
+    return EditorButtonFormatter(size_str_cache, size_calculator, size_formatter, level_parser, config)
 
 
 @pytest.fixture
@@ -282,9 +282,9 @@ def editor_button_creator(editor_button_formatter: EditorButtonFormatter,
 
 
 @pytest.fixture
-def browser_button_manager(col: Collection, item_id_cache: ItemIdCache,
+def browser_button_manager(col: Collection, item_id_cache: ItemIdCache, size_str_cache: SizeStrCache,
                            details_dialog: DetailsDialog) -> BrowserButtonManager:
-    return BrowserButtonManager(col, item_id_cache, details_dialog)
+    return BrowserButtonManager(col, item_id_cache, size_str_cache, details_dialog)
 
 
 @pytest.fixture
@@ -294,5 +294,11 @@ def browser() -> Browser:
 
 @pytest.fixture
 def cache_manager(media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
-                  size_formatter: SizeFormatter, file_type_helper: FileTypeHelper) -> CacheManager:
-    return CacheManager(media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper)
+                  size_formatter: SizeFormatter, file_type_helper: FileTypeHelper,
+                  size_str_cache: SizeStrCache) -> CacheManager:
+    return CacheManager(media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, size_str_cache)
+
+
+@pytest.fixture
+def size_str_cache(col: Collection, size_calculator: SizeCalculator, size_formatter: SizeFormatter) -> SizeStrCache:
+    return SizeStrCache(col, size_calculator, size_formatter)

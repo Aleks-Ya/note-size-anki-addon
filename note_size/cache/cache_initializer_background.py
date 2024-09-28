@@ -8,6 +8,7 @@ from anki.notes import NoteId
 
 from .cache_manager import CacheManager
 from .item_id_cache import ItemIdCache
+from .size_str_cache import SizeStrCache
 from ..calculator.size_calculator import SizeCalculator
 from ..types import SizeType, MediaFile
 from ..ui.common.number_formatter import NumberFormatter
@@ -31,6 +32,7 @@ class CacheInitializerBackground:
         item_id_cache: ItemIdCache = self.__cache_manager.get_item_id_cache()
         size_calculator: SizeCalculator = self.__cache_manager.get_size_calculator()
         file_type_helper: FileTypeHelper = self.__cache_manager.get_file_type_helper()
+        size_str_cache: SizeStrCache = self.__cache_manager.get_size_str_cache()
         log.info(f"Cache initialization started: {item_id_cache.get_size_str()}")
         start_time: datetime = datetime.now()
         self.__update_progress("Note Size cache initializing", None, None)
@@ -46,7 +48,7 @@ class CacheInitializerBackground:
             i_str: str = NumberFormatter.with_thousands_separator(i)
             self.__update_progress(f"Caching note sizes: {i_str} of {note_number_str}", i, note_number)
             for size_type in SizeType:
-                item_id_cache.get_note_size_str(note_id, size_type, use_cache=True)
+                size_str_cache.get_note_size_str(note_id, size_type, use_cache=True)
                 size_calculator.get_note_file_sizes(note_id, use_cache=True)
                 note_files: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
                 for note_file in note_files:

@@ -4,6 +4,7 @@ from logging import Logger
 from .cache import Cache
 from .item_id_cache import ItemIdCache
 from .media_cache import MediaCache
+from .size_str_cache import SizeStrCache
 from ..calculator.size_calculator import SizeCalculator
 from ..calculator.size_formatter import SizeFormatter
 from ..ui.details_dialog.file_type_helper import FileTypeHelper
@@ -13,14 +14,15 @@ log: Logger = logging.getLogger(__name__)
 
 class CacheManager:
     def __init__(self, media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
-                 size_formatter: SizeFormatter, file_type_helper: FileTypeHelper) -> None:
+                 size_formatter: SizeFormatter, file_type_helper: FileTypeHelper, size_str_cache: SizeStrCache) -> None:
         self.__media_cache: MediaCache = media_cache
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__size_calculator: SizeCalculator = size_calculator
         self.__size_formatter: SizeFormatter = size_formatter
         self.__file_type_helper: FileTypeHelper = file_type_helper
+        self.__size_str_cache: SizeStrCache = size_str_cache
         self.__caches: list[Cache] = [self.__media_cache, self.__item_id_cache, self.__size_formatter,
-                                      self.__size_calculator, self.__file_type_helper]
+                                      self.__size_calculator, self.__file_type_helper, self.__size_str_cache]
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def get_caches(self) -> list[Cache]:
@@ -42,3 +44,6 @@ class CacheManager:
 
     def get_file_type_helper(self) -> FileTypeHelper:
         return self.__file_type_helper
+
+    def get_size_str_cache(self) -> SizeStrCache:
+        return self.__size_str_cache

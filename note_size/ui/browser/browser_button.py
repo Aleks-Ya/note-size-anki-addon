@@ -12,6 +12,7 @@ from ..common.number_formatter import NumberFormatter
 from ..details_dialog.details_dialog import DetailsDialog
 from ..details_dialog.progress import WithProgressQueryOp
 from ...cache.item_id_cache import ItemIdCache
+from ...cache.size_str_cache import SizeStrCache
 from ...types import SizeType, SizeStr
 
 log: Logger = logging.getLogger(__name__)
@@ -19,11 +20,12 @@ log: Logger = logging.getLogger(__name__)
 
 class BrowserButton(QPushButton):
 
-    def __init__(self, col: Collection, item_id_cache: ItemIdCache, details_dialog: DetailsDialog,
-                 browser: Browser) -> None:
+    def __init__(self, col: Collection, item_id_cache: ItemIdCache, size_str_cache: SizeStrCache,
+                 details_dialog: DetailsDialog, browser: Browser) -> None:
         super().__init__()
         self.__col: Collection = col
         self.__item_id_cache: ItemIdCache = item_id_cache
+        self.__size_str_cache: SizeStrCache = size_str_cache
         self.__details_dialog: DetailsDialog = details_dialog
         self.__browser: Browser = browser
         self.__current_note_ids: Sequence[NoteId] = []
@@ -40,7 +42,7 @@ class BrowserButton(QPushButton):
 
     def show_notes_size(self, note_ids: Sequence[NoteId]) -> None:
         self.__current_note_ids = note_ids
-        size: SizeStr = self.__item_id_cache.get_notes_size_str(note_ids, SizeType.TOTAL, use_cache=True)
+        size: SizeStr = self.__size_str_cache.get_notes_size_str(note_ids, SizeType.TOTAL, use_cache=True)
         self.setText(size)
         note_ids_number: str = NumberFormatter.with_thousands_separator(len(note_ids))
         tooltip: str = (f"Size of {note_ids_number} notes\n"
@@ -52,7 +54,7 @@ class BrowserButton(QPushButton):
     def show_cards_size(self, card_ids: Sequence[CardId]) -> None:
         note_ids: Sequence[NoteId] = self.__item_id_cache.get_note_ids_by_card_ids(card_ids)
         self.__current_note_ids = note_ids
-        size: SizeStr = self.__item_id_cache.get_notes_size_str(note_ids, SizeType.TOTAL, use_cache=True)
+        size: SizeStr = self.__size_str_cache.get_notes_size_str(note_ids, SizeType.TOTAL, use_cache=True)
         self.setText(size)
         note_ids_number: str = NumberFormatter.with_thousands_separator(len(note_ids))
         card_ids_number: str = NumberFormatter.with_thousands_separator(len(card_ids))

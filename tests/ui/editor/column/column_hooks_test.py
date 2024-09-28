@@ -8,14 +8,15 @@ from aqt.browser import Column, ItemId, CellRow, Cell, SearchContext
 from mock.mock import MagicMock
 
 from note_size.cache.item_id_cache import ItemIdCache
+from note_size.cache.size_str_cache import SizeStrCache
 from note_size.ui.editor.column.column_hooks import ColumnHooks
 from note_size.ui.editor.column.item_id_sorter import ItemIdSorter
 from tests.data import Data
 
 
 @pytest.fixture
-def column_hooks(item_id_cache: ItemIdCache, item_id_sorter: ItemIdSorter) -> ColumnHooks:
-    column_hooks = ColumnHooks(item_id_cache, item_id_sorter)
+def column_hooks(item_id_cache: ItemIdCache, size_str_cache: SizeStrCache, item_id_sorter: ItemIdSorter) -> ColumnHooks:
+    column_hooks = ColumnHooks(item_id_cache, size_str_cache, item_id_sorter)
     yield column_hooks
     column_hooks.remove_hooks()
 

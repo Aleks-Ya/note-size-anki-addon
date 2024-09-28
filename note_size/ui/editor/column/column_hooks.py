@@ -11,6 +11,7 @@ from aqt.browser import ItemId, CellRow
 from .item_id_sorter import ItemIdSorter
 from ...common.browser_helper import BrowserHelper
 from ....cache.item_id_cache import ItemIdCache
+from ....cache.size_str_cache import SizeStrCache
 from ....types import SizeType
 
 log: Logger = logging.getLogger(__name__)
@@ -27,8 +28,9 @@ class ColumnHooks:
     __column_files_label: str = "Size (files)"
     __column_files_tooltip: str = "Note size (files only, texts are not included)"
 
-    def __init__(self, item_id_cache: ItemIdCache, item_id_sorter: ItemIdSorter) -> None:
+    def __init__(self, item_id_cache: ItemIdCache, size_str_cache: SizeStrCache, item_id_sorter: ItemIdSorter) -> None:
         self.__item_id_cache: ItemIdCache = item_id_cache
+        self.__size_str_cache: SizeStrCache = size_str_cache
         self.__item_id_sorter: ItemIdSorter = item_id_sorter
         self.__hook_browser_did_fetch_columns: Callable[[dict[str, Column]], None] = ColumnHooks.__add_custom_column
         self.__hook_browser_did_fetch_row: Callable[[Union[int, NoteId], bool, CellRow, Sequence[str]], None] = \
@@ -86,7 +88,7 @@ class ColumnHooks:
         if column_key in columns:
             column_index: int = columns.index(column_key)
             cell: Cell = row.cells[column_index]
-            cell.text = self.__item_id_cache.get_note_size_str(note_id, size_type, use_cache=True)
+            cell.text = self.__size_str_cache.get_note_size_str(note_id, size_type, use_cache=True)
 
     @staticmethod
     def __on_browser_will_search(context: SearchContext) -> None:
