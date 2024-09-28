@@ -1,0 +1,44 @@
+import logging
+from logging import Logger
+
+from .cache import Cache
+from .item_id_cache import ItemIdCache
+from .media_cache import MediaCache
+from ..calculator.size_calculator import SizeCalculator
+from ..calculator.size_formatter import SizeFormatter
+from ..ui.details_dialog.file_type_helper import FileTypeHelper
+
+log: Logger = logging.getLogger(__name__)
+
+
+class CacheManager:
+    def __init__(self, media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
+                 size_formatter: SizeFormatter, file_type_helper: FileTypeHelper) -> None:
+        self.__media_cache: MediaCache = media_cache
+        self.__item_id_cache: ItemIdCache = item_id_cache
+        self.__size_calculator: SizeCalculator = size_calculator
+        self.__size_formatter: SizeFormatter = size_formatter
+        self.__file_type_helper: FileTypeHelper = file_type_helper
+        self.__caches: list[Cache] = [self.__media_cache, self.__item_id_cache, self.__size_formatter,
+                                      self.__size_calculator, self.__file_type_helper]
+        log.debug(f"{self.__class__.__name__} was instantiated")
+
+    def get_caches(self) -> list[Cache]:
+        return self.__caches
+
+    def set_caches_initialized(self, initialized: bool) -> None:
+        for cache in self.__caches:
+            cache.set_initialized(initialized)
+
+    def invalidate_caches(self) -> None:
+        for cache in self.__caches:
+            cache.invalidate_cache()
+
+    def get_item_id_cache(self) -> ItemIdCache:
+        return self.__item_id_cache
+
+    def get_size_calculator(self) -> SizeCalculator:
+        return self.__size_calculator
+
+    def get_file_type_helper(self) -> FileTypeHelper:
+        return self.__file_type_helper

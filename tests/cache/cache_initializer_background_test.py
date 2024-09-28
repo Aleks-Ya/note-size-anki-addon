@@ -5,6 +5,7 @@ from anki.collection import Collection
 from anki.notes import Note
 
 from note_size.cache.cache_initializer_background import CacheInitializerBackground
+from note_size.cache.cache_manager import CacheManager
 from note_size.cache.cache_storage import CacheStorage
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
@@ -13,6 +14,7 @@ from note_size.calculator.size_formatter import SizeFormatter
 from note_size.config.config import Config
 from note_size.types import SizeType, FileType
 from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
+from tests.conftest import cache_manager
 from tests.data import Data
 
 update_progress_history: list[str] = []
@@ -22,8 +24,8 @@ def update_progress_callback(label: str, value: Optional[int], max_value: Option
     update_progress_history.append(f"{label} - {value} - {max_value}")
 
 
-def test_initialize_caches(td: Data, col: Collection, media_cache: MediaCache, item_id_cache: ItemIdCache,
-                           size_calculator: SizeCalculator, size_formatter: SizeFormatter,
+def test_initialize_caches(td: Data, col: Collection, cache_manager: CacheManager, media_cache: MediaCache,
+                           item_id_cache: ItemIdCache, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
                            file_type_helper: FileTypeHelper, config: Config, cache_storage: CacheStorage):
     note1: Note = td.create_note_with_files()
     note2: Note = td.create_note_without_files()
@@ -37,7 +39,7 @@ def test_initialize_caches(td: Data, col: Collection, media_cache: MediaCache, i
     assert not file_type_helper.is_initialized()
 
     cache_initializer_background: CacheInitializerBackground = CacheInitializerBackground(
-        media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, update_progress_callback)
+        cache_manager, update_progress_callback)
     count: int = cache_initializer_background.initialize_caches(col)
     assert count == 4
     assert update_progress_history == []
@@ -68,16 +70,15 @@ def test_initialize_caches(td: Data, col: Collection, media_cache: MediaCache, i
                                                 'sound.mp3': FileType.AUDIO}]
 
 
-def test_update_progress(td: Data, col: Collection, media_cache: MediaCache, item_id_cache: ItemIdCache,
-                         size_calculator: SizeCalculator, size_formatter: SizeFormatter,
+def test_update_progress(td: Data, col: Collection, cache_manager: CacheManager, media_cache: MediaCache,
+                         item_id_cache: ItemIdCache, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
                          file_type_helper: FileTypeHelper, config: Config, cache_storage: CacheStorage):
     update_progress_step: int = 10
     note_count: int = update_progress_step * 2 + 1
     for i in range(note_count):
         td.create_note_without_files()
     cache_initializer_background: CacheInitializerBackground = CacheInitializerBackground(
-        media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, update_progress_callback,
-        update_progress_step)
+        cache_manager, update_progress_callback, update_progress_step)
     count: int = cache_initializer_background.initialize_caches(col)
     assert count == 42
     assert update_progress_history == ['Caching note sizes: 10 of 21 - 10 - 21',

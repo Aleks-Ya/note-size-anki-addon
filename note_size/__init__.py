@@ -4,6 +4,7 @@ from pathlib import Path
 from anki.collection import Collection
 from aqt import mw, gui_hooks, QDesktopServices
 
+from .cache.cache_manager import CacheManager
 from .config.level_parser import LevelParser
 from .profiler.profiler import Profiler
 from .ui.browser.browser_button_manager import BrowserButtonManager
@@ -72,8 +73,9 @@ def __initialize(col: Collection):
     trash: Trash = Trash(col)
     cache_storage: CacheStorage = CacheStorage(settings)
     file_type_helper: FileTypeHelper = FileTypeHelper()
-    cache_initializer: CacheInitializer = CacheInitializer(
-        mw, media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, cache_storage, config)
+    cache_manager: CacheManager = CacheManager(
+        media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper)
+    cache_initializer: CacheInitializer = CacheInitializer(mw, cache_manager, cache_storage, config)
     collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(
         col, item_id_cache, media_cache, trash, size_formatter, settings)
     desktop_services: QDesktopServices = QDesktopServices()

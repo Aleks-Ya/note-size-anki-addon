@@ -15,6 +15,7 @@ from mock.mock import MagicMock
 from pytestqt.qtbot import QtBot
 
 from note_size.cache.cache_initializer import CacheInitializer
+from note_size.cache.cache_manager import CacheManager
 from note_size.cache.cache_storage import CacheStorage
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
@@ -146,11 +147,9 @@ def cache_storage(settings: Settings) -> CacheStorage:
 
 
 @pytest.fixture
-def cache_initializer(mw: AnkiQt, media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
-                      size_formatter: SizeFormatter, file_type_helper: FileTypeHelper, cache_storage: CacheStorage,
+def cache_initializer(mw: AnkiQt, cache_manager: CacheManager, cache_storage: CacheStorage,
                       config: Config) -> CacheInitializer:
-    return CacheInitializer(mw, media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper,
-                            cache_storage, config)
+    return CacheInitializer(mw, cache_manager, cache_storage, config)
 
 
 @pytest.fixture
@@ -291,3 +290,9 @@ def browser_button_manager(col: Collection, item_id_cache: ItemIdCache,
 @pytest.fixture
 def browser() -> Browser:
     return MagicMock()
+
+
+@pytest.fixture
+def cache_manager(media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
+                  size_formatter: SizeFormatter, file_type_helper: FileTypeHelper) -> CacheManager:
+    return CacheManager(media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper)

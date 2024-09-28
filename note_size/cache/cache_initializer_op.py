@@ -8,15 +8,10 @@ from aqt.qt import QWidget
 from aqt.taskman import TaskManager
 from aqt.utils import showInfo, show_critical
 
-from .cache import Cache
 from .cache_initializer_background import CacheInitializerBackground
-from .item_id_cache import ItemIdCache
-from .media_cache import MediaCache
-from ..calculator.size_calculator import SizeCalculator
-from ..calculator.size_formatter import SizeFormatter
+from .cache_manager import CacheManager
 from ..config.config import Config
 from ..ui.common.number_formatter import NumberFormatter
-from ..ui.details_dialog.file_type_helper import FileTypeHelper
 
 log: Logger = logging.getLogger(__name__)
 
@@ -24,17 +19,16 @@ log: Logger = logging.getLogger(__name__)
 class CacheInitializerOp:
     __progress_dialog_title: str = '"Note Size" addon'
 
-    def __init__(self, task_manager: TaskManager, progress_manager: ProgressManager, media_cache: MediaCache,
-                 item_id_cache: ItemIdCache, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
-                 file_type_helper: FileTypeHelper, config: Config, parent: QWidget, show_success_info: bool):
+    def __init__(self, task_manager: TaskManager, progress_manager: ProgressManager, cache_manager: CacheManager,
+                 config: Config, parent: QWidget, show_success_info: bool):
         self.__task_manager: TaskManager = task_manager
         self.__progress_manager: ProgressManager = progress_manager
-        self.__caches: list[Cache] = [media_cache, item_id_cache, size_formatter, size_calculator, file_type_helper]
+        self.__cache_manager: CacheManager = cache_manager
         self.__config: Config = config
         self.__parent: QWidget = parent
         self.__show_success_info: bool = show_success_info
         self.__cache_initializer_background: CacheInitializerBackground = CacheInitializerBackground(
-            media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, self.__update_progress)
+            cache_manager, self.__update_progress)
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def initialize_cache_in_background(self) -> None:
@@ -47,8 +41,7 @@ class CacheInitializerOp:
             query_op.run_in_background()
         else:
             log.info("Cache initialization is disabled")
-            for cache in self.__caches:
-                cache.set_initialized(True)
+            self.__cache_manager.set_caches_initialized(True)
 
     def __update_progress(self, label: str, value: int, max_value: int) -> None:
         self.__task_manager.run_on_main(lambda: self.__update_progress_in_main(label, value, max_value))
