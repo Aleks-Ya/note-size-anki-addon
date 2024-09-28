@@ -19,21 +19,24 @@ class DeckBrowserHooks:
         self.__config: Config = config
         self.__collection_size_formatter: CollectionSizeFormatter = collection_size_formatter
         self.__config_ui: ConfigUi = config_ui
-        self.__hook_deck_browser_will_render_content: Callable[[Any, Any], None] = self.__on_action
+        self.__hook_deck_browser_will_render_content: Callable[[Any, Any], None] = self.__on_browser_will_render_content
+        self.__hook_webview_did_receive_js_message: Callable[
+            [tuple[bool, Any], str, Any], tuple[bool, Any]] = self.__on_js_message
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def setup_hooks(self) -> None:
         gui_hooks.deck_browser_will_render_content.append(self.__hook_deck_browser_will_render_content)
-        gui_hooks.webview_did_receive_js_message.append(self.__on_js_message)
+        gui_hooks.webview_did_receive_js_message.append(self.__hook_webview_did_receive_js_message)
         log.info(f"{self.__class__.__name__} are set")
 
     def remove_hooks(self) -> None:
         gui_hooks.deck_browser_will_render_content.remove(self.__hook_deck_browser_will_render_content)
+        gui_hooks.webview_did_receive_js_message.remove(self.__hook_webview_did_receive_js_message)
         log.info(f"{self.__class__.__name__} are removed")
 
     # noinspection PyUnresolvedReferences
-    def __on_action(self, _: 'aqt.deckbrowser.DeckBrowser',
-                    content: 'aqt.deckbrowser.DeckBrowserContent') -> None:
+    def __on_browser_will_render_content(self, _: 'aqt.deckbrowser.DeckBrowser',
+                                         content: 'aqt.deckbrowser.DeckBrowserContent') -> None:
         if self.__config.get_deck_browser_show_collection_size():
             html: str = self.__collection_size_formatter.format_collection_size_html()
             content.stats += html
