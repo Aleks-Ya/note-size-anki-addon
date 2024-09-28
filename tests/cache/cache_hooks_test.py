@@ -9,7 +9,8 @@ from aqt import gui_hooks
 
 from note_size.cache.cache_hooks import CacheHooks
 from note_size.cache.cache_initializer import CacheInitializer
-from note_size.cache.file_note_id_cache import FileNoteIdCache
+from note_size.cache.cache_manager import CacheManager
+from note_size.cache.updated_files_calculator import UpdatedFilesCalculator
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.size_calculator import SizeCalculator
@@ -18,9 +19,9 @@ from tests.data import Data
 
 
 @pytest.fixture
-def cache_hooks(media_cache: MediaCache, size_calculator: SizeCalculator, item_id_cache: ItemIdCache,
-                cache_initializer: CacheInitializer, file_note_id_cache: FileNoteIdCache) -> CacheHooks:
-    cache_hooks = CacheHooks(media_cache, item_id_cache, size_calculator, cache_initializer, file_note_id_cache)
+def cache_hooks(cache_manager: CacheManager, cache_initializer: CacheInitializer,
+                file_note_id_cache: UpdatedFilesCalculator) -> CacheHooks:
+    cache_hooks = CacheHooks(cache_manager, cache_initializer, file_note_id_cache)
     yield cache_hooks
     cache_hooks.remove_hooks()
 

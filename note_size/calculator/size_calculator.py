@@ -29,9 +29,6 @@ class SizeCalculator(Cache):
         self.invalidate_cache()
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def cache_id(self) -> str:
-        return "size_calculator"
-
     def calculate_note_size(self, note: Note, size_type: SizeType, use_cache: bool) -> SizeBytes:
         with self._lock:
             cache: dict[NoteId, SizeBytes] = self.__caches.size_caches[size_type]

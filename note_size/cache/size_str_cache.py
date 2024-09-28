@@ -24,9 +24,6 @@ class SizeStrCache(Cache):
         self.invalidate_cache()
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def cache_id(self) -> str:
-        return "size_str_cache"
-
     def get_notes_size_str(self, note_ids: Sequence[NoteId], size_type: SizeType, use_cache: bool) -> SizeStr:
         return self.__size_formatter.bytes_to_str(self.__size_calculator.get_notes_size(note_ids, size_type, use_cache))
 
@@ -45,7 +42,6 @@ class SizeStrCache(Cache):
             for cache in self.__size_str_caches.values():
                 if note_id in cache:
                     del cache[note_id]
-            self.__size_calculator.evict_note(note_id)
 
     def as_dict_list(self) -> list[dict[Any, Any]]:
         return [self.__size_str_caches]

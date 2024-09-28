@@ -10,9 +10,9 @@ from bs4 import BeautifulSoup, Tag
 from .js_actions import JsActions
 from .trash import Trash
 from ..common.number_formatter import NumberFormatter
-from ...cache.file_note_id_cache import FileNoteIdCache
 from ...cache.item_id_cache import ItemIdCache
 from ...cache.media_cache import MediaCache
+from ...cache.used_files_calculator import UsedFilesCalculator
 from ...config.settings import Settings
 from ...types import SizeBytes, FilesNumber
 from ...calculator.size_formatter import SizeFormatter
@@ -25,13 +25,13 @@ class CollectionSizeFormatter:
     __sand_clock: str = "⏳"
 
     def __init__(self, col: Collection, item_id_cache: ItemIdCache, media_cache: MediaCache, trash: Trash,
-                 size_formatter: SizeFormatter, file_note_id_cache: FileNoteIdCache, settings: Settings):
+                 size_formatter: SizeFormatter, used_files_calculator: UsedFilesCalculator, settings: Settings):
         self.__col: Collection = col
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__media_cache: MediaCache = media_cache
         self.__trash: Trash = trash
         self.__size_formatter: SizeFormatter = size_formatter
-        self.__file_note_id_cache: FileNoteIdCache = file_note_id_cache
+        self.__used_files_calculator: UsedFilesCalculator = used_files_calculator
         self.__collection_file_path: Path = Path(col.path)
         self.__media_folder_path: Path = Path(col.media.dir())
         self.__web_dir: str = os.path.join("_addons", settings.module_name, "ui", "web")
@@ -41,7 +41,7 @@ class CollectionSizeFormatter:
         log.debug("Formatting collection size started")
         if self.__item_id_cache.is_initialized():
             collection_size: SizeBytes = SizeBytes(self.__collection_file_path.stat().st_size)
-            used_files_size, used_files_number = self.__file_note_id_cache.get_used_files_size(use_cache=True)
+            used_files_size, used_files_number = self.__used_files_calculator.get_used_files_size(use_cache=True)
             unused_files_size, unused_files_number = self.__media_cache.get_unused_files_size(use_cache=True)
             trash_dir_size: SizeBytes = self.__trash.get_trash_dir_size()
             trash_files_number: FilesNumber = self.__trash.get_trash_files_number()

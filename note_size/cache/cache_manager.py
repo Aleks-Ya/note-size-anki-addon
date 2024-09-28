@@ -1,6 +1,8 @@
 import logging
 from logging import Logger
 
+from anki.notes import NoteId
+
 from .cache import Cache
 from .item_id_cache import ItemIdCache
 from .media_cache import MediaCache
@@ -35,6 +37,11 @@ class CacheManager:
     def invalidate_caches(self) -> None:
         for cache in self.__caches:
             cache.invalidate_cache()
+
+    def evict_note(self, note_id: NoteId) -> None:
+        self.__item_id_cache.evict_note(note_id)
+        self.__size_calculator.evict_note(note_id)
+        self.__size_str_cache.evict_note(note_id)
 
     def get_item_id_cache(self) -> ItemIdCache:
         return self.__item_id_cache

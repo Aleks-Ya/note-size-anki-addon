@@ -4,7 +4,8 @@ from pathlib import Path
 from anki.collection import Collection
 from aqt import mw, gui_hooks, QDesktopServices
 
-from .cache.file_note_id_cache import FileNoteIdCache
+from .cache.updated_files_calculator import UpdatedFilesCalculator
+from .cache.used_files_calculator import UsedFilesCalculator
 from .profiler.profiler import Profiler
 
 profiler: Profiler
@@ -78,9 +79,10 @@ def __initialize(col: Collection):
     cache_manager: CacheManager = CacheManager(
         media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, size_str_cache)
     cache_initializer: CacheInitializer = CacheInitializer(mw, cache_manager, cache_storage, config)
-    file_note_id_cache: FileNoteIdCache = FileNoteIdCache(col, size_calculator, media_cache)
+    file_note_id_cache: UpdatedFilesCalculator = UpdatedFilesCalculator(col, size_calculator, media_cache)
+    used_files_calculator: UsedFilesCalculator = UsedFilesCalculator(col, size_calculator)
     collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(
-        col, item_id_cache, media_cache, trash, size_formatter, file_note_id_cache, settings)
+        col, item_id_cache, media_cache, trash, size_formatter, used_files_calculator, settings)
     desktop_services: QDesktopServices = QDesktopServices()
     config_ui: ConfigUi = ConfigUi(
         config, config_loader, logs, cache_initializer, desktop_services, level_parser, settings)
@@ -94,8 +96,7 @@ def __initialize(col: Collection):
     editor_button_hooks.setup_hooks()
     deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter, config, config_ui)
     deck_browser_hooks.setup_hooks()
-    cache_hooks: CacheHooks = CacheHooks(media_cache, item_id_cache, size_calculator, cache_initializer,
-                                         file_note_id_cache)
+    cache_hooks: CacheHooks = CacheHooks(cache_manager, cache_initializer, file_note_id_cache)
     cache_hooks.setup_hooks()
     config_hooks: ConfigHooks = ConfigHooks(config_ui, desktop_services)
     config_hooks.setup_hooks()

@@ -9,23 +9,19 @@ from anki.notes import NoteId, Note
 from aqt import gui_hooks
 
 from .cache_initializer import CacheInitializer
-from .file_note_id_cache import FileNoteIdCache
-from ..cache.item_id_cache import ItemIdCache
-from ..cache.media_cache import MediaCache
-from ..calculator.size_calculator import SizeCalculator
+from .cache_manager import CacheManager
+from .updated_files_calculator import UpdatedFilesCalculator
 
 log: Logger = logging.getLogger(__name__)
 
 
 class CacheHooks:
 
-    def __init__(self, media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
-                 cache_initializer: CacheInitializer, file_note_id_cache: FileNoteIdCache) -> None:
-        self.__media_cache: MediaCache = media_cache
-        self.__item_id_cache: ItemIdCache = item_id_cache
-        self.__size_calculator: SizeCalculator = size_calculator
+    def __init__(self, cache_manager: CacheManager, cache_initializer: CacheInitializer,
+                 file_note_id_cache: UpdatedFilesCalculator) -> None:
+        self.__cache_manager: CacheManager = cache_manager
         self.__cache_initializer: CacheInitializer = cache_initializer
-        self.__file_note_id_cache: FileNoteIdCache = file_note_id_cache
+        self.__file_note_id_cache: UpdatedFilesCalculator = file_note_id_cache
         self.__last_update_media_sync_did_progress: datetime = datetime.now()
         self.__hook_add_cards_did_add_note: Callable[[Note], None] = self.__add_cards_did_add_note
         self.__hook_notes_will_be_deleted: Callable[[Collection, Sequence[NoteId]], None] = self.__notes_will_be_deleted
@@ -61,16 +57,16 @@ class CacheHooks:
 
     def __on_note_will_flush(self, note: Note) -> None:
         if note and note.id:
-            self.__item_id_cache.evict_note(note.id)
+            self.__cache_manager.evict_note(note.id)
 
     def __add_cards_did_add_note(self, note: Note) -> None:
         log.info(f"Note was added: note={note.id}")
-        self.__item_id_cache.evict_note(note.id)
+        self.__cache_manager.evict_note(note.id)
 
     def __notes_will_be_deleted(self, _: Collection, note_ids: Sequence[NoteId]) -> None:
         log.info(f"Notes will be deleted: note_ids={note_ids}")
         for note_id in note_ids:
-            self.__item_id_cache.evict_note(note_id)
+            self.__cache_manager.evict_note(note_id)
 
     def __media_sync_did_start_or_stop(self, running: bool) -> None:
         log.info(f"MediaSyncDidStartOrStop: running={running}")

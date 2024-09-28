@@ -43,7 +43,6 @@ class Data:
                 DefaultFields.file2: DefaultFields.content2
             }
         })
-        gui_hooks.add_cards_did_add_note(note)
         return note
 
     def create_note_with_given_fields(self,
@@ -57,6 +56,7 @@ class Data:
         note[DefaultFields.back_field_name] = back_field_content
         if not new_note:
             self.col.add_note(note, self.deck_id)
+        gui_hooks.add_cards_did_add_note(note)
         return note
 
     def create_note_without_files(self, new_note: bool = False) -> Note:
@@ -71,14 +71,8 @@ class Data:
         for field_name, field_content in field_contents.items():
             note[field_name] = field_content
         self.col.add_note(note, self.deck_id)
+        gui_hooks.add_cards_did_add_note(note)
         return note
-
-    def __add_files_to_field(self, files: dict[MediaFile, FileContent]) -> FieldContent:
-        field_content: FieldContent = FieldContent("Files ∑￡:")
-        for media_file, file_content in files.items():
-            media_file: MediaFile = self.col.media.write_data(media_file, file_content.encode())
-            field_content += f' <img src="{media_file}">'
-        return field_content
 
     def write_file(self, media_file: MediaFile, file_content: str) -> None:
         full_path: Path = Path(self.col.media.dir()).joinpath(media_file)
@@ -107,6 +101,13 @@ class Data:
 
     def read_config_updated(self, overwrites: dict[str, Any]) -> Config:
         return Config.from_path_updated(self.config_json, overwrites)
+
+    def __add_files_to_field(self, files: dict[MediaFile, FileContent]) -> FieldContent:
+        field_content: FieldContent = FieldContent("Files ∑￡:")
+        for media_file, file_content in files.items():
+            media_file: MediaFile = self.col.media.write_data(media_file, file_content.encode())
+            field_content += f' <img src="{media_file}">'
+        return field_content
 
     def __new_note(self) -> Note:
         note_type: NotetypeDict = self.col.models.by_name('Basic')

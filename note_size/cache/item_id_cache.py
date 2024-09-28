@@ -20,9 +20,6 @@ class ItemIdCache(Cache):
         self.invalidate_cache()
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def cache_id(self) -> str:
-        return "item_id_cache"
-
     def get_note_id_by_card_id(self, card_id: CardId) -> NoteId:
         with self._lock:
             if card_id not in self.__id_cache:

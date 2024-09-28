@@ -24,9 +24,6 @@ class MediaCache(Cache):
         self.__file_sizes_cache: dict[MediaFile, SizeBytes] = {}
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def cache_id(self) -> str:
-        return "media_cache"
-
     def get_file_size(self, file: MediaFile, use_cache: bool) -> SizeBytes:
         with self._lock:
             if not use_cache or file not in self.__file_sizes_cache:

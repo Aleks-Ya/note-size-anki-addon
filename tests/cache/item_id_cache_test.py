@@ -46,21 +46,23 @@ def test_get_note_size_bytes_performance(td: Data, item_id_cache: ItemIdCache, s
     assert execution_time <= 1
 
 
-@pytest.mark.skip("TODO fix it")
-def test_evict_note(td: Data, item_id_cache: ItemIdCache, size_calculator: SizeCalculator):
-    note: Note = td.create_note_with_files()
+def test_evict_note(col: Collection, td: Data, item_id_cache: ItemIdCache):
+    assert item_id_cache.get_cache_size() == 0
+    assert item_id_cache.as_dict_list() == [{}]
 
-    size1: SizeBytes = size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True)
-    assert size1 == 143
+    note_1: Note = td.create_note_with_files()
+    card_id_1: CardId = col.card_ids_of_note(note_1.id)[0]
+    item_id_cache.get_note_id_by_card_id(card_id_1)
 
-    content: str = 'updated'
-    Data.update_front_field(note, content)
-    size2: SizeBytes = size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True)
-    assert size2 == size1
+    note_2: Note = td.create_note_with_files()
+    card_id_2: CardId = col.card_ids_of_note(note_2.id)[0]
+    item_id_cache.get_note_id_by_card_id(card_id_2)
+    assert item_id_cache.get_cache_size() == 2
+    assert item_id_cache.as_dict_list() == [{note_1.id: card_id_1, note_2.id: card_id_2}]
 
-    item_id_cache.evict_note(note.id)
-    size3: SizeBytes = size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True)
-    assert size3 == 86
+    item_id_cache.evict_note(note_1.id)
+    assert item_id_cache.get_cache_size() == 1
+    assert item_id_cache.as_dict_list() == [{note_2.id: card_id_2}]
 
 
 def test_get_note_id_by_card_id(td: Data, col: Collection, item_id_cache: ItemIdCache):
@@ -101,7 +103,6 @@ def test_get_used_files_size(td: Data, item_id_cache: ItemIdCache, size_calculat
 
     files_uncached: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=False)
     assert files_uncached == {'sound.mp3', 'picture.jpg', 'animation.gif'}
-
 
 
 def test_initialized(item_id_cache: ItemIdCache):

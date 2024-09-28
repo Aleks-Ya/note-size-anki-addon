@@ -24,9 +24,6 @@ class FileTypeHelper(Cache):
         self.__cache: dict[str, FileType] = {}
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def cache_id(self) -> str:
-        return "file_type_helper"
-
     def get_file_type(self, filename: str, use_cache: bool = True) -> FileType:
         with self._lock:
             if use_cache and filename in self.__cache:

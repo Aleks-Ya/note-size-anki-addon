@@ -15,9 +15,6 @@ class SizeFormatter(Cache):
         self.__bytes_to_str_cache: dict[SizeBytes, SizeStr] = {}
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def cache_id(self) -> str:
-        return "size_formatter"
-
     def bytes_to_str(self, size: SizeBytes, use_cache: bool = True, precision: int = 1,
                      unit_separator: str = " ") -> SizeStr:
         with self._lock:

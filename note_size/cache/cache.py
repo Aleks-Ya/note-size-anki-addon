@@ -12,9 +12,8 @@ class Cache(ABC):
         self._lock: RLock = RLock()
         self.__initialized: bool = False
 
-    @abstractmethod
     def cache_id(self) -> str:
-        pass
+        return self.__class__.__name__
 
     def is_initialized(self) -> bool:
         initialized: bool = False

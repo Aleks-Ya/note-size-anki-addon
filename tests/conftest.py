@@ -17,10 +17,11 @@ from pytestqt.qtbot import QtBot
 from note_size.cache.cache_initializer import CacheInitializer
 from note_size.cache.cache_manager import CacheManager
 from note_size.cache.cache_storage import CacheStorage
-from note_size.cache.file_note_id_cache import FileNoteIdCache
+from note_size.cache.updated_files_calculator import UpdatedFilesCalculator
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.cache.size_str_cache import SizeStrCache
+from note_size.cache.used_files_calculator import UsedFilesCalculator
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.calculator.size_formatter import SizeFormatter
 from note_size.config.config import Config
@@ -176,9 +177,10 @@ def trash(col: Collection) -> Trash:
 
 @pytest.fixture
 def collection_size_formatter(col: Collection, item_id_cache: ItemIdCache, media_cache: MediaCache,
-                              size_formatter: SizeFormatter, file_note_id_cache: FileNoteIdCache, trash: Trash,
+                              size_formatter: SizeFormatter, used_files_calculator: UsedFilesCalculator, trash: Trash,
                               settings: Settings) -> CollectionSizeFormatter:
-    return CollectionSizeFormatter(col, item_id_cache, media_cache, trash, size_formatter, file_note_id_cache, settings)
+    return CollectionSizeFormatter(
+        col, item_id_cache, media_cache, trash, size_formatter, used_files_calculator, settings)
 
 
 @pytest.fixture
@@ -306,5 +308,11 @@ def size_str_cache(col: Collection, size_calculator: SizeCalculator, size_format
 
 
 @pytest.fixture
-def file_note_id_cache(col: Collection, size_calculator: SizeCalculator, media_cache: MediaCache) -> FileNoteIdCache:
-    return FileNoteIdCache(col, size_calculator, media_cache)
+def file_note_id_cache(col: Collection, size_calculator: SizeCalculator,
+                       media_cache: MediaCache) -> UpdatedFilesCalculator:
+    return UpdatedFilesCalculator(col, size_calculator, media_cache)
+
+
+@pytest.fixture
+def used_files_calculator(col: Collection, size_calculator: SizeCalculator) -> UsedFilesCalculator:
+    return UsedFilesCalculator(col, size_calculator)
