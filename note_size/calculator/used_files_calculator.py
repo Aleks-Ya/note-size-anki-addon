@@ -14,7 +14,6 @@ log: Logger = logging.getLogger(__name__)
 class UsedFilesCalculator:
 
     def __init__(self, col: Collection, size_calculator: SizeCalculator) -> None:
-        super().__init__()
         self.__col: Collection = col
         self.__size_calculator: SizeCalculator = size_calculator
         log.debug(f"{self.__class__.__name__} was instantiated")

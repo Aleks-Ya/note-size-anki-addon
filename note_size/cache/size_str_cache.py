@@ -51,12 +51,6 @@ class SizeStrCache(Cache):
             self.__size_str_caches = caches[0]
             log.info(f"Caches were read dict list")
 
-    def __size_str_cache_lengths(self) -> str:
-        return str([f"{cache[0]}={len(cache[1].keys())}" for cache in self.__size_str_caches.items()])
-
-    def get_size_str(self) -> str:
-        return (f"size_str_cache_lengths={self.__size_str_cache_lengths()}")
-
     def invalidate_cache(self) -> None:
         with self._lock:
             self.__size_str_caches = {SizeType.TOTAL: {}, SizeType.TEXTS: {}, SizeType.FILES: {}}
