@@ -1,6 +1,10 @@
+import logging
 from abc import ABC, abstractmethod
+from logging import Logger
 from threading import RLock
 from typing import Any
+
+log: Logger = logging.getLogger(__name__)
 
 
 class Cache(ABC):
@@ -22,6 +26,7 @@ class Cache(ABC):
         return initialized
 
     def set_initialized(self, initialized: bool) -> None:
+        log.debug(f"Set cache initialized: cache={self.cache_id()}, initialized={initialized}")
         with self._lock:
             self.__initialized = initialized
 
