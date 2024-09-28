@@ -10,9 +10,9 @@ from aqt import gui_hooks
 from note_size.cache.cache_hooks import CacheHooks
 from note_size.cache.cache_initializer import CacheInitializer
 from note_size.cache.cache_manager import CacheManager
-from note_size.cache.updated_files_calculator import UpdatedFilesCalculator
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
+from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.types import SizeType, MediaFile
 from tests.data import Data

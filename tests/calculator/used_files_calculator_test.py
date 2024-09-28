@@ -1,4 +1,4 @@
-from note_size.cache.used_files_calculator import UsedFilesCalculator
+from note_size.calculator.used_files_calculator import UsedFilesCalculator
 from note_size.types import MediaFile, FileContent
 from tests.data import Data, DefaultFields
 

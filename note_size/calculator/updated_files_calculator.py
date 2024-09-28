@@ -5,8 +5,8 @@ from typing import Sequence, Any
 from anki.collection import Collection
 from anki.notes import NoteId
 
-from .cache import Cache
-from .media_cache import MediaCache
+from ..cache.cache import Cache
+from ..cache.media_cache import MediaCache
 from ..types import MediaFile
 from ..calculator.size_calculator import SizeCalculator
 

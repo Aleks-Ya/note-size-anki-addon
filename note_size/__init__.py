@@ -4,8 +4,8 @@ from pathlib import Path
 from anki.collection import Collection
 from aqt import mw, gui_hooks, QDesktopServices
 
-from .cache.updated_files_calculator import UpdatedFilesCalculator
-from .cache.used_files_calculator import UsedFilesCalculator
+from .calculator.updated_files_calculator import UpdatedFilesCalculator
+from .calculator.used_files_calculator import UsedFilesCalculator
 from .profiler.profiler import Profiler
 
 profiler: Profiler

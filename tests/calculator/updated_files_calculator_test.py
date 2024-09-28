@@ -4,7 +4,7 @@ import pytest
 from anki.collection import Collection
 from anki.notes import NoteId, Note
 
-from note_size.cache.updated_files_calculator import UpdatedFilesCalculator
+from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.types import SizeBytes, SizeType, MediaFile
 from tests.conftest import size_calculator

@@ -17,11 +17,11 @@ from pytestqt.qtbot import QtBot
 from note_size.cache.cache_initializer import CacheInitializer
 from note_size.cache.cache_manager import CacheManager
 from note_size.cache.cache_storage import CacheStorage
-from note_size.cache.updated_files_calculator import UpdatedFilesCalculator
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.cache.size_str_cache import SizeStrCache
-from note_size.cache.used_files_calculator import UsedFilesCalculator
+from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
+from note_size.calculator.used_files_calculator import UsedFilesCalculator
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.calculator.size_formatter import SizeFormatter
 from note_size.config.config import Config

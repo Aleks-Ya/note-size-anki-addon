@@ -12,7 +12,7 @@ from .trash import Trash
 from ..common.number_formatter import NumberFormatter
 from ...cache.item_id_cache import ItemIdCache
 from ...cache.media_cache import MediaCache
-from ...cache.used_files_calculator import UsedFilesCalculator
+from ...calculator.used_files_calculator import UsedFilesCalculator
 from ...config.settings import Settings
 from ...types import SizeBytes, FilesNumber
 from ...calculator.size_formatter import SizeFormatter
