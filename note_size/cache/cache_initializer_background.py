@@ -33,7 +33,7 @@ class CacheInitializerBackground:
         size_calculator: SizeCalculator = self.__cache_manager.get_size_calculator()
         file_type_helper: FileTypeHelper = self.__cache_manager.get_file_type_helper()
         size_str_cache: SizeStrCache = self.__cache_manager.get_size_str_cache()
-        log.info(f"Cache initialization started: {item_id_cache.get_size_str()}")
+        log.info(f"Cache initialization started: {item_id_cache.get_cache_size()}")
         start_time: datetime = datetime.now()
         self.__update_progress("Note Size cache initializing", None, None)
 
@@ -70,7 +70,7 @@ class CacheInitializerBackground:
         end_time: datetime = datetime.now()
         duration_sec: int = round((end_time - start_time).total_seconds())
         log.info(f"Cache initialization finished: notes={note_number}, cards={card_number}, "
-                 f"duration_sec={duration_sec}, {item_id_cache.get_size_str()}")
+                 f"duration_sec={duration_sec}, {item_id_cache.get_cache_size()}")
         return note_number + card_number
 
     def cancel(self):

@@ -22,7 +22,7 @@ from tests.data import Data
 
 @pytest.fixture
 def empty_cache_dict() -> list[dict[str, Any]]:
-    return [{}, {}]
+    return [{}]
 
 
 def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Collection, item_id_cache: ItemIdCache,
@@ -43,15 +43,14 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Colle
 
     cache_storage.save_caches_to_file([item_id_cache, size_calculator, media_cache])
 
-    item_id_cache_2: ItemIdCache = ItemIdCache(col, size_calculator, media_cache)
+    item_id_cache_2: ItemIdCache = ItemIdCache(col)
     media_cache_2: MediaCache = MediaCache(col, config)
     size_calculator_2: SizeCalculator = SizeCalculator(col, media_cache_2)
     assert item_id_cache_2.as_dict_list() == empty_cache_dict
     read_success: bool = cache_storage.read_caches_from_file([item_id_cache_2, size_calculator_2, media_cache_2])
     assert read_success
     assert item_id_cache_2.as_dict_list() == [{card_id1: note1.id,
-                                               card_id2: note2.id},
-                                              {}]
+                                               card_id2: note2.id}]
     assert size_calculator_2.as_dict_list() == [{SizeType.TOTAL: {note1.id: 143, note2.id: 70},
                                                  SizeType.TEXTS: {note1.id: 122, note2.id: 70},
                                                  SizeType.FILES: {note1.id: 21, note2.id: 0}},
@@ -114,7 +113,7 @@ def test_read_partially_invalid_cache_file(cache_storage: CacheStorage, td: Data
     pickle.dump(partially_invalid_cache, cache_file.open("wb"))
     assert os.path.exists(cache_file)
 
-    item_id_cache_2: ItemIdCache = ItemIdCache(col, size_calculator, media_cache)
+    item_id_cache_2: ItemIdCache = ItemIdCache(col)
     assert item_id_cache_2.as_dict_list() == empty_cache_dict
     with caplog.at_level(logging.WARNING):
         read_success: bool = cache_storage.read_caches_from_file([item_id_cache_2])

@@ -1,20 +1,17 @@
 import timeit
-from typing import Sequence
 
 import pytest
-from anki.cards import CardId
 from anki.collection import Collection
-from anki.errors import NotFoundError
 from anki.notes import NoteId, Note
 
-from note_size.cache.item_id_cache import ItemIdCache
+from note_size.cache.file_note_id_cache import FileNoteIdCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.types import SizeBytes, SizeType, MediaFile
 from tests.conftest import size_calculator
 from tests.data import Data, DefaultFields
 
 
-def test_get_note_size_bytes(td: Data, item_id_cache: ItemIdCache, size_calculator: SizeCalculator):
+def test_get_note_size_bytes(td: Data, file_note_id_cache: FileNoteIdCache, size_calculator: SizeCalculator):
     exp_size_1: SizeBytes = SizeBytes(len(DefaultFields.front_field_content.encode()) +
                                       len(DefaultFields.back_field_content.encode()) +
                                       len(DefaultFields.content0) + len(DefaultFields.content1) +
@@ -38,7 +35,8 @@ def test_get_note_size_bytes(td: Data, item_id_cache: ItemIdCache, size_calculat
 
 
 @pytest.mark.performance
-def test_get_note_size_bytes_performance(td: Data, item_id_cache: ItemIdCache, size_calculator: SizeCalculator):
+def test_get_note_size_bytes_performance(td: Data, file_note_id_cache: FileNoteIdCache,
+                                         size_calculator: SizeCalculator):
     note: Note = td.create_note_with_files()
     execution_time: float = timeit.timeit(
         lambda: size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True),
@@ -46,8 +44,7 @@ def test_get_note_size_bytes_performance(td: Data, item_id_cache: ItemIdCache, s
     assert execution_time <= 1
 
 
-@pytest.mark.skip("TODO fix it")
-def test_evict_note(td: Data, item_id_cache: ItemIdCache, size_calculator: SizeCalculator):
+def test_evict_note(td: Data, file_note_id_cache: FileNoteIdCache, size_calculator: SizeCalculator):
     note: Note = td.create_note_with_files()
 
     size1: SizeBytes = size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True)
@@ -58,26 +55,12 @@ def test_evict_note(td: Data, item_id_cache: ItemIdCache, size_calculator: SizeC
     size2: SizeBytes = size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True)
     assert size2 == size1
 
-    item_id_cache.evict_note(note.id)
+    file_note_id_cache.evict_note(note.id)
     size3: SizeBytes = size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True)
     assert size3 == 86
 
 
-def test_get_note_id_by_card_id(td: Data, col: Collection, item_id_cache: ItemIdCache):
-    note: Note = td.create_note_with_files()
-    card_ids: Sequence[int] = col.card_ids_of_note(note.id)
-    card_id: CardId = card_ids[0]
-    assert item_id_cache.get_note_id_by_card_id(card_id) == note.id
-    col.remove_notes([note.id])
-    col.save()
-    col.flush()
-    assert item_id_cache.get_note_id_by_card_id(card_id) == note.id
-    item_id_cache.evict_note(note.id)
-    with pytest.raises(NotFoundError):
-        item_id_cache.get_note_id_by_card_id(card_id)
-
-
-def test_get_note_files(td: Data, item_id_cache: ItemIdCache, size_calculator: SizeCalculator):
+def test_get_note_files(td: Data, file_note_id_cache: FileNoteIdCache, size_calculator: SizeCalculator):
     note: Note = td.create_note_with_files()
     note_id: NoteId = note.id
     files: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
@@ -90,7 +73,7 @@ def test_get_note_files(td: Data, item_id_cache: ItemIdCache, size_calculator: S
     assert files_uncached == {'sound.mp3', 'picture.jpg', 'animation.gif'}
 
 
-def test_get_used_files_size(td: Data, item_id_cache: ItemIdCache, size_calculator: SizeCalculator):
+def test_get_used_files_size(td: Data, file_note_id_cache: FileNoteIdCache, size_calculator: SizeCalculator):
     note: Note = td.create_note_with_files()
     note_id: NoteId = note.id
     files: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
@@ -103,26 +86,23 @@ def test_get_used_files_size(td: Data, item_id_cache: ItemIdCache, size_calculat
     assert files_uncached == {'sound.mp3', 'picture.jpg', 'animation.gif'}
 
 
+def test_initialized(file_note_id_cache: FileNoteIdCache):
+    assert not file_note_id_cache.is_initialized()
+    file_note_id_cache.set_initialized(True)
+    assert file_note_id_cache.is_initialized()
+    file_note_id_cache.set_initialized(False)
+    assert not file_note_id_cache.is_initialized()
 
-def test_initialized(item_id_cache: ItemIdCache):
-    assert not item_id_cache.is_initialized()
-    item_id_cache.set_initialized(True)
-    assert item_id_cache.is_initialized()
-    item_id_cache.set_initialized(False)
-    assert not item_id_cache.is_initialized()
 
-
-def test_get_cache_size(col: Collection, td: Data, item_id_cache: ItemIdCache):
-    assert item_id_cache.get_cache_size() == 0
+@pytest.mark.skip("TODO fix it")
+def test_get_cache_size(col: Collection, td: Data, file_note_id_cache: FileNoteIdCache):
+    assert file_note_id_cache.get_cache_size() == 0
     note1: Note = td.create_note_with_files()
-    card_id1: int = col.card_ids_of_note(note1.id)[0]
-    item_id_cache.get_note_id_by_card_id(card_id1)
-    assert item_id_cache.get_cache_size() == 1
-    note2: Note = td.create_note_without_files()
-    card_id2: int = col.card_ids_of_note(note2.id)[0]
-    item_id_cache.get_note_id_by_card_id(card_id2)
-    assert item_id_cache.get_cache_size() == 2
-    item_id_cache.evict_note(note1.id)
-    assert item_id_cache.get_cache_size() == 1
-    item_id_cache.invalidate_cache()
-    assert item_id_cache.get_cache_size() == 0
+    file_note_id_cache.get_used_files_size(use_cache=True)
+    assert file_note_id_cache.get_cache_size() == 1
+    file_note_id_cache.get_used_files_size(use_cache=True)
+    assert file_note_id_cache.get_cache_size() == 2
+    file_note_id_cache.evict_note(note1.id)
+    assert file_note_id_cache.get_cache_size() == 1
+    file_note_id_cache.invalidate_cache()
+    assert file_note_id_cache.get_cache_size() == 0

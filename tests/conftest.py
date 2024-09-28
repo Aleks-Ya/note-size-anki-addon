@@ -17,6 +17,7 @@ from pytestqt.qtbot import QtBot
 from note_size.cache.cache_initializer import CacheInitializer
 from note_size.cache.cache_manager import CacheManager
 from note_size.cache.cache_storage import CacheStorage
+from note_size.cache.file_note_id_cache import FileNoteIdCache
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.cache.size_str_cache import SizeStrCache
@@ -137,8 +138,8 @@ def size_calculator(col: Collection, media_cache: MediaCache) -> SizeCalculator:
 
 
 @pytest.fixture
-def item_id_cache(col: Collection, size_calculator: SizeCalculator, media_cache: MediaCache) -> ItemIdCache:
-    return ItemIdCache(col, size_calculator, media_cache)
+def item_id_cache(col: Collection) -> ItemIdCache:
+    return ItemIdCache(col)
 
 
 @pytest.fixture
@@ -175,9 +176,9 @@ def trash(col: Collection) -> Trash:
 
 @pytest.fixture
 def collection_size_formatter(col: Collection, item_id_cache: ItemIdCache, media_cache: MediaCache,
-                              size_formatter: SizeFormatter, trash: Trash,
+                              size_formatter: SizeFormatter, file_note_id_cache: FileNoteIdCache, trash: Trash,
                               settings: Settings) -> CollectionSizeFormatter:
-    return CollectionSizeFormatter(col, item_id_cache, media_cache, trash, size_formatter, settings)
+    return CollectionSizeFormatter(col, item_id_cache, media_cache, trash, size_formatter, file_note_id_cache, settings)
 
 
 @pytest.fixture
@@ -302,3 +303,8 @@ def cache_manager(media_cache: MediaCache, item_id_cache: ItemIdCache, size_calc
 @pytest.fixture
 def size_str_cache(col: Collection, size_calculator: SizeCalculator, size_formatter: SizeFormatter) -> SizeStrCache:
     return SizeStrCache(col, size_calculator, size_formatter)
+
+
+@pytest.fixture
+def file_note_id_cache(col: Collection, size_calculator: SizeCalculator, media_cache: MediaCache) -> FileNoteIdCache:
+    return FileNoteIdCache(col, size_calculator, media_cache)

@@ -52,8 +52,7 @@ def test_initialize_caches(td: Data, col: Collection, cache_manager: CacheManage
 
     assert media_cache.as_dict_list() == [{'animation.gif': 9, 'picture.jpg': 7, 'sound.mp3': 5}]
     assert item_id_cache.as_dict_list() == [{card_id1: note1.id,
-                                             card_id2: note2.id},
-                                            {}]
+                                             card_id2: note2.id}]
     assert size_calculator.as_dict_list() == [{SizeType.TOTAL: {note1.id: 143, note2.id: 70},
                                                SizeType.TEXTS: {note1.id: 122, note2.id: 70},
                                                SizeType.FILES: {note1.id: 21, note2.id: 0}},
