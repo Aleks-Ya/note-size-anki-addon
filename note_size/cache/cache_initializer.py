@@ -40,6 +40,7 @@ class CacheInitializer:
         read_from_file_success: bool = False
         if self.__config.get_store_cache_in_file_enabled():
             read_from_file_success = self.__cache_storage.read_caches_from_file(self.__cache_manager.get_caches())
+            self.__cache_manager.set_caches_initialized(True)
         else:
             log.info("Reading cache file is disabled")
         self.__cache_storage.delete_cache_file()
