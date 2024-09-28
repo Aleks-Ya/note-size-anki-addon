@@ -40,9 +40,11 @@ class CacheInitializerOp:
     def initialize_cache_in_background(self) -> None:
         if self.__config.get_cache_warmup_enabled():
             log.info("Initialize cache")
-            QueryOp(parent=self.__parent, op=self.__cache_initializer_background.initialize_caches,
-                    success=self.__on_success).failure(self.__on_failure).with_progress(
-                "Note Size cache initializing").run_in_background()
+            query_op: QueryOp[int] = QueryOp(parent=self.__parent,
+                                             op=self.__cache_initializer_background.initialize_caches,
+                                             success=self.__on_success).failure(self.__on_failure).with_progress(
+                "Note Size cache initializing")
+            query_op.run_in_background()
         else:
             log.info("Cache initialization is disabled")
             for cache in self.__caches:
