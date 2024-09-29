@@ -42,20 +42,17 @@ class UpdatedFilesCalculator(Cache):
         with self._lock:
             self.__file_note_ids_cache.clear()
 
-    def refresh_notes_having_updated_files(self) -> None:
+    def get_notes_having_updated_files(self) -> set[NoteId]:
+        updated_note_ids: set[NoteId] = set[NoteId]()
         if self.is_initialized():
             log.debug("Refreshing notes having updated files started")
             updated_files: set[MediaFile] = self.__media_cache.get_updated_files()
-            counter: int = 0
             for updated_file in updated_files:
-                updated_note_ids: set[NoteId] = self.__note_ids_by_file(updated_file)
-                for note_id in updated_note_ids:
-                    self.evict_note(note_id)
-                    counter += 1
-            log.debug(f"Refreshing notes having updated files finished: "
-                      f"refreshed {counter} notes with {len(updated_files)} files")
+                note_ids: set[NoteId] = self.__note_ids_by_file(updated_file)
+                updated_note_ids.update(note_ids)
         else:
             log.debug("Skip refreshing notes having updated files because ItemIdCache is not initialized")
+        return updated_note_ids
 
     def get_cache_size(self) -> int:
         return len(self.__file_note_ids_cache)

@@ -71,4 +71,7 @@ class CacheHooks:
     def __media_sync_did_start_or_stop(self, running: bool) -> None:
         log.info(f"MediaSyncDidStartOrStop: running={running}")
         if not running:
-            self.__file_note_id_cache.refresh_notes_having_updated_files()
+            note_ids: set[NoteId] = self.__file_note_id_cache.get_notes_having_updated_files()
+            for note_id in note_ids:
+                self.__cache_manager.evict_note(note_id)
+            log.debug(f"Refreshing notes having updated files finished: refreshed {len(note_ids)} notes")
