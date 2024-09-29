@@ -30,6 +30,9 @@ class CacheManager:
     def get_caches(self) -> list[Cache]:
         return self.__caches
 
+    def get_cache_size(self) -> int:
+        return sum([cache.get_cache_size() for cache in self.__caches])
+
     def set_caches_initialized(self, initialized: bool) -> None:
         for cache in self.__caches:
             cache.set_initialized(initialized)

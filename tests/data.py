@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Any
 
+from anki.cards import Card
 from anki.collection import Collection
 from anki.decks import DeckId
 from anki.models import NotetypeDict
@@ -101,6 +102,10 @@ class Data:
 
     def read_config_updated(self, overwrites: dict[str, Any]) -> Config:
         return Config.from_path_updated(self.config_json, overwrites)
+
+    def create_card_with_files(self) -> Card:
+        note: Note = self.create_note_with_files()
+        return note.cards()[0]
 
     def __add_files_to_field(self, files: dict[MediaFile, FileContent]) -> FieldContent:
         field_content: FieldContent = FieldContent("Files ∑￡:")

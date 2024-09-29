@@ -1,3 +1,4 @@
+from anki.cards import Card
 from anki.collection import Collection
 from anki.notes import Note
 
@@ -8,7 +9,7 @@ from note_size.cache.media_cache import MediaCache
 from note_size.cache.size_str_cache import SizeStrCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.calculator.size_formatter import SizeFormatter
-from note_size.types import SizeType
+from note_size.types import SizeType, SizeBytes
 from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
 from tests.conftest import item_id_cache
 from tests.data import Data, DefaultFields
@@ -85,3 +86,16 @@ def test_get_file_type_helper(cache_manager: CacheManager, file_type_helper: Fil
 
 def test_size_str_cache(cache_manager: CacheManager, size_str_cache: SizeStrCache):
     assert cache_manager.get_size_str_cache() == size_str_cache
+
+
+def test_get_cache_size(cache_manager: CacheManager, media_cache: MediaCache,
+                        item_id_cache: ItemIdCache, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
+                        file_type_helper: FileTypeHelper, size_str_cache: SizeStrCache, td: Data):
+    assert cache_manager.get_cache_size() == 0
+    card: Card = td.create_card_with_files()
+    item_id_cache.get_note_id_by_card_id(card.id)
+    size_str_cache.get_note_size_str(card.nid, SizeType.TOTAL, use_cache=True)
+    file_type_helper.get_file_type(DefaultFields.file0, use_cache=True)
+    size_calculator.get_note_file_sizes(card.nid, use_cache=True)
+    size_formatter.bytes_to_str(SizeBytes(123), use_cache=True)
+    assert cache_manager.get_cache_size() == 13
