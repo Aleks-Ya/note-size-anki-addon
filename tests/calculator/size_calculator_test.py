@@ -2,7 +2,7 @@ import timeit
 
 import pytest
 from anki.collection import Collection
-from anki.notes import Note
+from anki.notes import Note, NoteId
 
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.types import SizeBytes, MediaFile, SizeType
@@ -129,3 +129,32 @@ def test_get_cache_size(size_calculator: SizeCalculator, td: Data):
     assert size_calculator.get_cache_size() == 1
     size_calculator.invalidate_cache()
     assert size_calculator.get_cache_size() == 0
+
+
+def test_evict_note(size_calculator: SizeCalculator, td: Data):
+    assert size_calculator.get_cache_size() == 0
+    assert size_calculator.as_dict_list() == [{SizeType.TOTAL: {},
+                                               SizeType.TEXTS: {},
+                                               SizeType.FILES: {}},
+                                              {},
+                                              {}]
+    note1: Note = td.create_note_with_files()
+    note2: Note = td.create_note_without_files()
+    nid1: NoteId = note1.id
+    nid2: NoteId = note2.id
+    size_calculator.get_note_size(nid1, SizeType.TOTAL, use_cache=True)
+    size_calculator.get_note_size(nid1, SizeType.TOTAL, use_cache=True)
+    size_calculator.get_note_size(nid2, SizeType.TEXTS, use_cache=True)
+    assert size_calculator.get_cache_size() == 6
+    assert size_calculator.as_dict_list() == [{SizeType.TOTAL: {nid1: 143},
+                                               SizeType.TEXTS: {nid1: 122, nid2: 70},
+                                               SizeType.FILES: {nid1: 21}},
+                                              {nid1: {'animation.gif', 'sound.mp3', 'picture.jpg'}},
+                                              {nid1: {'animation.gif': 9, 'picture.jpg': 7, 'sound.mp3': 5}}]
+    size_calculator.evict_note(nid1)
+    assert size_calculator.get_cache_size() == 1
+    assert size_calculator.as_dict_list() == [{SizeType.TOTAL: {},
+                                               SizeType.TEXTS: {nid2: 70},
+                                               SizeType.FILES: {}},
+                                              {},
+                                              {}]
