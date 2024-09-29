@@ -1,8 +1,7 @@
 import timeit
-from typing import Sequence
 
 import pytest
-from anki.cards import CardId
+from anki.cards import Card
 from anki.collection import Collection
 from anki.errors import NotFoundError
 from anki.notes import NoteId, Note
@@ -50,33 +49,29 @@ def test_evict_note(col: Collection, td: Data, item_id_cache: ItemIdCache):
     assert item_id_cache.get_cache_size() == 0
     assert item_id_cache.as_dict_list() == [{}]
 
-    note_1: Note = td.create_note_with_files()
-    card_id_1: CardId = col.card_ids_of_note(note_1.id)[0]
-    item_id_cache.get_note_id_by_card_id(card_id_1)
+    card1: Card = td.create_card_with_files()
+    item_id_cache.get_note_id_by_card_id(card1.id)
 
-    note_2: Note = td.create_note_with_files()
-    card_id_2: CardId = col.card_ids_of_note(note_2.id)[0]
-    item_id_cache.get_note_id_by_card_id(card_id_2)
+    card2: Card = td.create_card_with_files()
+    item_id_cache.get_note_id_by_card_id(card2.id)
     assert item_id_cache.get_cache_size() == 2
-    assert item_id_cache.as_dict_list() == [{note_1.id: card_id_1, note_2.id: card_id_2}]
+    assert item_id_cache.as_dict_list() == [{card1.nid: card1.id, card2.nid: card2.id}]
 
-    item_id_cache.evict_note(note_1.id)
+    item_id_cache.evict_note(card1.nid)
     assert item_id_cache.get_cache_size() == 1
-    assert item_id_cache.as_dict_list() == [{note_2.id: card_id_2}]
+    assert item_id_cache.as_dict_list() == [{card2.nid: card2.id}]
 
 
 def test_get_note_id_by_card_id(td: Data, col: Collection, item_id_cache: ItemIdCache):
-    note: Note = td.create_note_with_files()
-    card_ids: Sequence[int] = col.card_ids_of_note(note.id)
-    card_id: CardId = card_ids[0]
-    assert item_id_cache.get_note_id_by_card_id(card_id) == note.id
-    col.remove_notes([note.id])
+    card: Card = td.create_card_with_files()
+    assert item_id_cache.get_note_id_by_card_id(card.id) == card.nid
+    col.remove_notes([card.nid])
     col.save()
     col.flush()
-    assert item_id_cache.get_note_id_by_card_id(card_id) == note.id
-    item_id_cache.evict_note(note.id)
+    assert item_id_cache.get_note_id_by_card_id(card.id) == card.nid
+    item_id_cache.evict_note(card.nid)
     with pytest.raises(NotFoundError):
-        item_id_cache.get_note_id_by_card_id(card_id)
+        item_id_cache.get_note_id_by_card_id(card.id)
 
 
 def test_get_note_files(td: Data, item_id_cache: ItemIdCache, size_calculator: SizeCalculator):
@@ -115,15 +110,13 @@ def test_initialized(item_id_cache: ItemIdCache):
 
 def test_get_cache_size(col: Collection, td: Data, item_id_cache: ItemIdCache):
     assert item_id_cache.get_cache_size() == 0
-    note1: Note = td.create_note_with_files()
-    card_id1: int = col.card_ids_of_note(note1.id)[0]
-    item_id_cache.get_note_id_by_card_id(card_id1)
+    card1: Card = td.create_card_with_files()
+    item_id_cache.get_note_id_by_card_id(card1.id)
     assert item_id_cache.get_cache_size() == 1
-    note2: Note = td.create_note_without_files()
-    card_id2: int = col.card_ids_of_note(note2.id)[0]
-    item_id_cache.get_note_id_by_card_id(card_id2)
+    card2: Card = td.create_card_with_files()
+    item_id_cache.get_note_id_by_card_id(card2.id)
     assert item_id_cache.get_cache_size() == 2
-    item_id_cache.evict_note(note1.id)
+    item_id_cache.evict_note(card1.nid)
     assert item_id_cache.get_cache_size() == 1
     item_id_cache.invalidate_cache()
     assert item_id_cache.get_cache_size() == 0

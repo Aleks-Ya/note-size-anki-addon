@@ -107,6 +107,10 @@ class Data:
         note: Note = self.create_note_with_files()
         return note.cards()[0]
 
+    def create_card_without_files(self, new_note: bool = False) -> Card:
+        note: Note = self.create_note_without_files(new_note)
+        return note.cards()[0]
+
     def __add_files_to_field(self, files: dict[MediaFile, FileContent]) -> FieldContent:
         field_content: FieldContent = FieldContent("Files ∑￡:")
         for media_file, file_content in files.items():

@@ -1,4 +1,4 @@
-from anki.cards import CardId
+from anki.cards import CardId, Card
 from anki.collection import Collection
 from anki.notes import Note
 from aqt.browser import Browser
@@ -18,9 +18,8 @@ def test_show_notes_size(browser_button_manager: BrowserButtonManager, td: Data,
 
 def test_show_cards_size(col: Collection, browser_button_manager: BrowserButtonManager, td: Data, browser: Browser):
     button: BrowserButton = browser_button_manager.create_browser_button(browser)
-    note1: Note = td.create_note_with_files()
-    note2: Note = td.create_note_without_files()
-    card_ids: list[CardId] = list(col.card_ids_of_note(note1.id))
-    card_ids.extend(col.card_ids_of_note(note2.id))
+    card1: Card = td.create_card_with_files()
+    card2: Card = td.create_card_without_files()
+    card_ids: list[CardId] = [card1.id, card2.id]
     button.show_cards_size(card_ids)
     assert button.text() == "213 B"
