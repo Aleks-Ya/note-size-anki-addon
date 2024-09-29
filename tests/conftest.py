@@ -298,8 +298,9 @@ def browser() -> Browser:
 @pytest.fixture
 def cache_manager(media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
                   size_formatter: SizeFormatter, file_type_helper: FileTypeHelper,
-                  size_str_cache: SizeStrCache) -> CacheManager:
-    return CacheManager(media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, size_str_cache)
+                  size_str_cache: SizeStrCache, updated_files_calculator: UpdatedFilesCalculator) -> CacheManager:
+    return CacheManager(media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, size_str_cache,
+                        updated_files_calculator)
 
 
 @pytest.fixture
@@ -316,3 +317,9 @@ def file_note_id_cache(col: Collection, size_calculator: SizeCalculator,
 @pytest.fixture
 def used_files_calculator(col: Collection, size_calculator: SizeCalculator) -> UsedFilesCalculator:
     return UsedFilesCalculator(col, size_calculator)
+
+
+@pytest.fixture
+def updated_files_calculator(col: Collection, size_calculator: SizeCalculator,
+                             media_cache: MediaCache) -> UpdatedFilesCalculator:
+    return UpdatedFilesCalculator(col, size_calculator, media_cache)

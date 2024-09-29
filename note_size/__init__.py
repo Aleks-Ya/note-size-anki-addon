@@ -4,8 +4,6 @@ from pathlib import Path
 from anki.collection import Collection
 from aqt import mw, gui_hooks, QDesktopServices
 
-from .calculator.updated_files_calculator import UpdatedFilesCalculator
-from .calculator.used_files_calculator import UsedFilesCalculator
 from .profiler.profiler import Profiler
 
 profiler: Profiler
@@ -19,6 +17,8 @@ def __initialize(col: Collection):
     from .config.level_parser import LevelParser
     from .calculator.size_calculator import SizeCalculator
     from .calculator.size_formatter import SizeFormatter
+    from .calculator.updated_files_calculator import UpdatedFilesCalculator
+    from .calculator.used_files_calculator import UsedFilesCalculator
     from .cache.cache_hooks import CacheHooks
     from .cache.cache_initializer import CacheInitializer
     from .cache.item_id_cache import ItemIdCache
@@ -76,8 +76,10 @@ def __initialize(col: Collection):
     trash: Trash = Trash(col)
     cache_storage: CacheStorage = CacheStorage(settings)
     file_type_helper: FileTypeHelper = FileTypeHelper()
+    updated_files_calculator: UpdatedFilesCalculator = UpdatedFilesCalculator(col, size_calculator, media_cache)
     cache_manager: CacheManager = CacheManager(
-        media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, size_str_cache)
+        media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, size_str_cache,
+        updated_files_calculator)
     cache_initializer: CacheInitializer = CacheInitializer(mw, cache_manager, cache_storage, config)
     file_note_id_cache: UpdatedFilesCalculator = UpdatedFilesCalculator(col, size_calculator, media_cache)
     used_files_calculator: UsedFilesCalculator = UsedFilesCalculator(col, size_calculator)
