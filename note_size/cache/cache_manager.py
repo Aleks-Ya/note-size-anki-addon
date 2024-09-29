@@ -57,3 +57,6 @@ class CacheManager:
 
     def get_size_str_cache(self) -> SizeStrCache:
         return self.__size_str_cache
+
+    def get_size_formatter(self) -> SizeFormatter:
+        return self.__size_formatter

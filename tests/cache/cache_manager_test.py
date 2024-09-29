@@ -1,6 +1,5 @@
 from anki.cards import Card
 from anki.collection import Collection
-from anki.notes import Note
 
 from note_size.cache.cache import Cache
 from note_size.cache.cache_manager import CacheManager
@@ -50,11 +49,7 @@ def test_invalidate_caches(col: Collection, cache_manager: CacheManager, media_c
     assert file_type_helper.get_cache_size() == 0
     assert size_str_cache.get_cache_size() == 0
 
-    note: Note = td.create_note_with_files()
-    card_id1: int = col.card_ids_of_note(note.id)[0]
-    size_str_cache.get_note_size_str(note.id, SizeType.TOTAL, use_cache=False)
-    file_type_helper.get_file_type(DefaultFields.file0, use_cache=True)
-    item_id_cache.get_note_id_by_card_id(card_id1)
+    __use_all_caches(cache_manager, td)
     assert media_cache.get_cache_size() > 0
     assert item_id_cache.get_cache_size() > 0
     assert size_calculator.get_cache_size() > 0
@@ -63,7 +58,6 @@ def test_invalidate_caches(col: Collection, cache_manager: CacheManager, media_c
     assert size_str_cache.get_cache_size() > 0
 
     cache_manager.invalidate_caches()
-
     assert media_cache.get_cache_size() == 0
     assert item_id_cache.get_cache_size() == 0
     assert size_calculator.get_cache_size() == 0
@@ -92,10 +86,25 @@ def test_get_cache_size(cache_manager: CacheManager, media_cache: MediaCache,
                         item_id_cache: ItemIdCache, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
                         file_type_helper: FileTypeHelper, size_str_cache: SizeStrCache, td: Data):
     assert cache_manager.get_cache_size() == 0
-    card: Card = td.create_card_with_files()
-    item_id_cache.get_note_id_by_card_id(card.id)
-    size_str_cache.get_note_size_str(card.nid, SizeType.TOTAL, use_cache=True)
-    file_type_helper.get_file_type(DefaultFields.file0, use_cache=True)
-    size_calculator.get_note_file_sizes(card.nid, use_cache=True)
-    size_formatter.bytes_to_str(SizeBytes(123), use_cache=True)
+    __use_all_caches(cache_manager, td)
     assert cache_manager.get_cache_size() == 13
+
+
+def test_evict_note(col: Collection, cache_manager: CacheManager, media_cache: MediaCache,
+                    item_id_cache: ItemIdCache, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
+                    file_type_helper: FileTypeHelper, size_str_cache: SizeStrCache, td: Data):
+    assert cache_manager.get_cache_size() == 0
+    card: Card = __use_all_caches(cache_manager, td)
+    assert cache_manager.get_cache_size() == 13
+    cache_manager.evict_note(card.nid)
+    assert cache_manager.get_cache_size() == 6
+
+
+def __use_all_caches(cache_manager: CacheManager, td: Data) -> Card:
+    card: Card = td.create_card_with_files()
+    cache_manager.get_item_id_cache().get_note_id_by_card_id(card.id)
+    cache_manager.get_size_str_cache().get_note_size_str(card.nid, SizeType.TOTAL, use_cache=True)
+    cache_manager.get_file_type_helper().get_file_type(DefaultFields.file0, use_cache=True)
+    cache_manager.get_size_calculator().get_note_file_sizes(card.nid, use_cache=True)
+    cache_manager.get_size_formatter().bytes_to_str(SizeBytes(123), use_cache=True)
+    return card
