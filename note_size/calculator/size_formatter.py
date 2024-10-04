@@ -1,6 +1,6 @@
-from typing import Any
 import logging
 from logging import Logger
+from typing import Any
 
 from ..cache.cache import Cache
 from ..types import SizeStr, SizeBytes
@@ -52,6 +52,9 @@ class SizeFormatter(Cache):
         with self._lock:
             self.__bytes_to_str_cache = dict_list[0]
 
+    def get_cache_size(self) -> int:
+        return len(self.__bytes_to_str_cache)
+
     @staticmethod
     def __bytes_to_str(size: SizeBytes, precision: int = 1, unit_separator: str = " ") -> SizeStr:
         divisor: int = 1024
@@ -66,6 +69,3 @@ class SizeFormatter(Cache):
                     return SizeStr(f'{num:0.{precision}f}{unit_separator}{unit}')
             num /= divisor
         return SizeStr(f'{num:0.{precision}f}{unit_separator}{final_unit}')
-
-    def get_cache_size(self) -> int:
-        return len(self.__bytes_to_str_cache)
