@@ -4,7 +4,7 @@ import pytest
 from anki.notes import Note
 
 from note_size.cache.media_cache import MediaCache
-from note_size.types import SizeBytes, FilesNumber
+from note_size.types import SizeBytes, FilesNumber, MediaFile
 from tests.data import Data, DefaultFields
 
 
@@ -40,3 +40,20 @@ def test_get_cache_size(td: Data, media_cache: MediaCache):
     assert media_cache.get_cache_size() == 1
     media_cache.invalidate_cache()
     assert media_cache.get_cache_size() == 0
+
+
+def test_get_updated_files(td: Data, media_cache: MediaCache):
+    td.create_note_with_files()
+    exp_size_0: SizeBytes = SizeBytes(7)
+    exp_size_1: SizeBytes = SizeBytes(5)
+    exp_size_2: SizeBytes = SizeBytes(9)
+    assert media_cache.get_file_size(DefaultFields.file0, use_cache=True) == exp_size_0
+    assert media_cache.get_file_size(DefaultFields.file1, use_cache=True) == exp_size_1
+    assert media_cache.get_file_size(DefaultFields.file2, use_cache=True) == exp_size_2
+    td.write_file(DefaultFields.file1, "new content 1")
+    td.write_file(DefaultFields.file2, "new content 2")
+    assert media_cache.get_file_size(DefaultFields.file0, use_cache=True) == exp_size_0
+    assert media_cache.get_file_size(DefaultFields.file1, use_cache=True) == exp_size_1
+    assert media_cache.get_file_size(DefaultFields.file2, use_cache=True) == exp_size_2
+    updated_files: set[MediaFile] = media_cache.get_updated_files()
+    assert updated_files == {DefaultFields.file1, DefaultFields.file2}
