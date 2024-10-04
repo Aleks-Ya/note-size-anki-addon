@@ -20,7 +20,9 @@ def test_setters(td: Data):
                            {"Color": "LightCoral", "Max Size": None}]},
             'Enabled': True}}
     config.set_cache_warmup_enabled(False)
+    config.set_store_cache_in_file_enabled(False)
     config.set_deck_browser_show_collection_size(False)
+    config.set_browser_show_found_notes_size(False)
     config.set_log_level('INFO')
     config.set_size_button_enabled(False)
     config.set_size_button_color_enabled(False)
@@ -28,9 +30,9 @@ def test_setters(td: Data):
                                          {"Color": "Yellow", "Max Size": "2 MB"},
                                          {"Color": "Red", "Max Size": "100 GB"}])
     assert config.get_as_dict() == {
-        'Browser': {'Show Found Notes Size': True},
+        'Browser': {'Show Found Notes Size': False},
         'Cache': {
-            'Store Cache In File Enabled': True,
+            'Store Cache In File Enabled': False,
             'Warmup Enabled': False},
         'Deck Browser': {'Show Collection Size': False},
         'Logging': {'Logger Level': 'INFO'},
