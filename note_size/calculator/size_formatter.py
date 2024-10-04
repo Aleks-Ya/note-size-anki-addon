@@ -53,7 +53,8 @@ class SizeFormatter(Cache):
             self.__bytes_to_str_cache = dict_list[0]
 
     def get_cache_size(self) -> int:
-        return len(self.__bytes_to_str_cache)
+        with self._lock:
+            return len(self.__bytes_to_str_cache)
 
     @staticmethod
     def __bytes_to_str(size: SizeBytes, precision: int = 1, unit_separator: str = " ") -> SizeStr:

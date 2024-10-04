@@ -55,21 +55,21 @@ def test_evict_note(col: Collection, td: Data, item_id_cache: ItemIdCache):
     card2: Card = td.create_card_with_files()
     item_id_cache.get_note_id_by_card_id(card2.id)
     assert item_id_cache.get_cache_size() == 2
-    assert item_id_cache.as_dict_list() == [{card1.nid: card1.id, card2.nid: card2.id}]
+    assert item_id_cache.as_dict_list() == [{card1.id: card1.nid, card2.id: card2.nid}]
 
     item_id_cache.evict_note(card1.nid)
     assert item_id_cache.get_cache_size() == 1
-    assert item_id_cache.as_dict_list() == [{card2.nid: card2.id}]
+    assert item_id_cache.as_dict_list() == [{card2.id: card2.nid}]
 
 
 def test_get_note_id_by_card_id(td: Data, col: Collection, item_id_cache: ItemIdCache):
     card: Card = td.create_card_with_files()
     assert item_id_cache.get_note_id_by_card_id(card.id) == card.nid
     col.remove_notes([card.nid])
-    col.save()
     col.flush()
     assert item_id_cache.get_note_id_by_card_id(card.id) == card.nid
     item_id_cache.evict_note(card.nid)
+    col.flush()
     with pytest.raises(NotFoundError):
         item_id_cache.get_note_id_by_card_id(card.id)
 

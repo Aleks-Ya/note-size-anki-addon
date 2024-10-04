@@ -2,9 +2,9 @@ import logging
 from logging import Logger
 from typing import Sequence, Any
 
+from anki.cards import CardId, Card
 from anki.collection import Collection
 from anki.notes import NoteId
-from anki.cards import CardId
 
 from .cache import Cache
 
@@ -23,11 +23,13 @@ class ItemIdCache(Cache):
     def get_note_id_by_card_id(self, card_id: CardId) -> NoteId:
         with self._lock:
             if card_id not in self.__id_cache:
-                self.__id_cache[card_id] = self.__col.get_card(card_id).nid
+                card: Card = self.__col.get_card(card_id)
+                self.__id_cache[card_id] = card.nid
             return self.__id_cache[card_id]
 
     def get_note_ids_by_card_ids(self, card_ids: Sequence[CardId]) -> Sequence[NoteId]:
-        return list({self.get_note_id_by_card_id(card_id) for card_id in card_ids})
+        with self._lock:
+            return list({self.get_note_id_by_card_id(card_id) for card_id in card_ids})
 
     def evict_note(self, note_id: NoteId) -> None:
         with self._lock:
@@ -36,7 +38,8 @@ class ItemIdCache(Cache):
                     del self.__id_cache[cid]
 
     def as_dict_list(self) -> list[dict[Any, Any]]:
-        return [self.__id_cache]
+        with self._lock:
+            return [self.__id_cache]
 
     def read_from_dict_list(self, caches: list[dict[Any, Any]]) -> None:
         with self._lock:
@@ -48,4 +51,5 @@ class ItemIdCache(Cache):
             self.__id_cache.clear()
 
     def get_cache_size(self) -> int:
-        return len(self.__id_cache.keys())
+        with self._lock:
+            return len(self.__id_cache.keys())

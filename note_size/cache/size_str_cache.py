@@ -6,9 +6,9 @@ from anki.collection import Collection
 from anki.notes import NoteId
 
 from .cache import Cache
-from ..types import SizeStr, SizeBytes, SizeType
 from ..calculator.size_calculator import SizeCalculator
 from ..calculator.size_formatter import SizeFormatter
+from ..types import SizeStr, SizeBytes, SizeType
 
 log: Logger = logging.getLogger(__name__)
 
@@ -25,7 +25,8 @@ class SizeStrCache(Cache):
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def get_notes_size_str(self, note_ids: Sequence[NoteId], size_type: SizeType, use_cache: bool) -> SizeStr:
-        return self.__size_formatter.bytes_to_str(self.__size_calculator.get_notes_size(note_ids, size_type, use_cache))
+        with self._lock:
+            return self.__size_formatter.bytes_to_str(self.__size_calculator.get_notes_size(note_ids, size_type, use_cache))
 
     def get_note_size_str(self, note_id: NoteId, size_type: SizeType, use_cache: bool) -> SizeStr:
         with self._lock:
@@ -44,7 +45,8 @@ class SizeStrCache(Cache):
                     del cache[note_id]
 
     def as_dict_list(self) -> list[dict[Any, Any]]:
-        return [self.__size_str_caches]
+        with self._lock:
+            return [self.__size_str_caches]
 
     def read_from_dict_list(self, caches: list[dict[Any, Any]]) -> None:
         with self._lock:
@@ -56,7 +58,8 @@ class SizeStrCache(Cache):
             self.__size_str_caches = {SizeType.TOTAL: {}, SizeType.TEXTS: {}, SizeType.FILES: {}}
 
     def get_cache_size(self) -> int:
-        size: int = 0
-        for cache in self.__size_str_caches.values():
-            size += len(cache.keys())
-        return size
+        with self._lock:
+            size: int = 0
+            for cache in self.__size_str_caches.values():
+                size += len(cache.keys())
+            return size

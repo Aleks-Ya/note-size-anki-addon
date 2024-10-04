@@ -101,23 +101,27 @@ class SizeCalculator(Cache):
                 return self.calculate_note_files(note, use_cache)
 
     def calculate_size_of_files(self, files: set[MediaFile], use_cache: bool) -> SizeBytes:
-        return SizeBytes(sum([self.__media_cache.get_file_size(file, use_cache) for file in files]))
+        with self._lock:
+            return SizeBytes(sum([self.__media_cache.get_file_size(file, use_cache) for file in files]))
 
     def get_notes_size(self, note_ids: Sequence[NoteId], size_type: SizeType, use_cache: bool) -> SizeBytes:
-        return SizeBytes(sum([self.get_note_size(note_id, size_type, use_cache) for note_id in note_ids]))
+        with self._lock:
+            return SizeBytes(sum([self.get_note_size(note_id, size_type, use_cache) for note_id in note_ids]))
 
     def get_notes_file_sizes(self, note_ids: Sequence[NoteId], use_cache: bool) -> dict[MediaFile, SizeBytes]:
-        file_sizes: dict[MediaFile, SizeBytes] = dict[MediaFile, SizeBytes]()
-        for note_id in note_ids:
-            note_file_sizes: dict[MediaFile, SizeBytes] = self.get_note_file_sizes(note_id, use_cache)
-            file_sizes.update(note_file_sizes)
-        return file_sizes
+        with self._lock:
+            file_sizes: dict[MediaFile, SizeBytes] = dict[MediaFile, SizeBytes]()
+            for note_id in note_ids:
+                note_file_sizes: dict[MediaFile, SizeBytes] = self.get_note_file_sizes(note_id, use_cache)
+                file_sizes.update(note_file_sizes)
+            return file_sizes
 
     def get_notes_files(self, note_ids: Sequence[NoteId], use_cache: bool) -> set[MediaFile]:
-        notes_files: set[MediaFile] = set()
-        for note_id in note_ids:
-            notes_files.update(self.get_note_files(note_id, use_cache))
-        return notes_files
+        with self._lock:
+            notes_files: set[MediaFile] = set()
+            for note_id in note_ids:
+                notes_files.update(self.get_note_files(note_id, use_cache))
+            return notes_files
 
     def evict_note(self, note_id: NoteId) -> None:
         with self._lock:
@@ -137,7 +141,8 @@ class SizeCalculator(Cache):
             self.__caches.note_file_sizes_cache.clear()
 
     def as_dict_list(self) -> list[dict[Any, Any]]:
-        return [self.__caches.size_caches, self.__caches.note_files_cache, self.__caches.note_file_sizes_cache]
+        with self._lock:
+            return [self.__caches.size_caches, self.__caches.note_files_cache, self.__caches.note_file_sizes_cache]
 
     def read_from_dict_list(self, caches: list[dict[Any, Any]]):
         with self._lock:
@@ -147,9 +152,10 @@ class SizeCalculator(Cache):
             log.info(f"Caches were read dict list")
 
     def get_cache_size(self) -> int:
-        size: int = 0
-        for cache in self.__caches.size_caches.values():
-            size += len(cache.keys())
-        size += len(self.__caches.note_files_cache.keys())
-        size += len(self.__caches.note_file_sizes_cache.keys())
-        return size
+        with self._lock:
+            size: int = 0
+            for cache in self.__caches.size_caches.values():
+                size += len(cache.keys())
+            size += len(self.__caches.note_files_cache.keys())
+            size += len(self.__caches.note_file_sizes_cache.keys())
+            return size

@@ -31,7 +31,8 @@ class UpdatedFilesCalculator(Cache):
                     self.__file_note_ids_cache[media_file].remove(note_id)
 
     def as_dict_list(self) -> list[dict[Any, Any]]:
-        return [self.__file_note_ids_cache]
+        with self._lock:
+            return [self.__file_note_ids_cache]
 
     def read_from_dict_list(self, caches: list[dict[Any, Any]]) -> None:
         with self._lock:
@@ -43,19 +44,21 @@ class UpdatedFilesCalculator(Cache):
             self.__file_note_ids_cache.clear()
 
     def get_notes_having_updated_files(self) -> set[NoteId]:
-        updated_note_ids: set[NoteId] = set[NoteId]()
-        if self.is_initialized():
-            log.debug("Refreshing notes having updated files started")
-            updated_files: set[MediaFile] = self.__media_cache.get_updated_files()
-            for updated_file in updated_files:
-                note_ids: set[NoteId] = self.__note_ids_by_file(updated_file)
-                updated_note_ids.update(note_ids)
-        else:
-            log.debug("Skip refreshing notes having updated files because ItemIdCache is not initialized")
-        return updated_note_ids
+        with self._lock:
+            updated_note_ids: set[NoteId] = set[NoteId]()
+            if self.is_initialized():
+                log.debug("Refreshing notes having updated files started")
+                updated_files: set[MediaFile] = self.__media_cache.get_updated_files()
+                for updated_file in updated_files:
+                    note_ids: set[NoteId] = self.__note_ids_by_file(updated_file)
+                    updated_note_ids.update(note_ids)
+            else:
+                log.debug("Skip refreshing notes having updated files because ItemIdCache is not initialized")
+            return updated_note_ids
 
     def get_cache_size(self) -> int:
-        return len(self.__file_note_ids_cache)
+        with self._lock:
+            return len(self.__file_note_ids_cache)
 
     def __note_ids_by_file(self, file: MediaFile, use_cache: bool = True) -> set[NoteId]:
         with self._lock:
