@@ -65,9 +65,9 @@ class UpdatedFilesCalculator(Cache):
                 note_ids: Sequence[NoteId] = self.__col.find_notes("deck:*")
                 for note_id in note_ids:
                     files: set[MediaFile] = self.__size_calculator.get_note_files(note_id, use_cache)
-                    for file in files:
-                        if file in self.__file_note_ids_cache:
-                            self.__file_note_ids_cache[file].add(note_id)
+                    for note_file in files:
+                        if note_file in self.__file_note_ids_cache:
+                            self.__file_note_ids_cache[note_file].add(note_id)
                         else:
-                            self.__file_note_ids_cache[file] = {note_id}
+                            self.__file_note_ids_cache[note_file] = {note_id}
             return self.__file_note_ids_cache[file]
