@@ -23,7 +23,7 @@
 
 ## Logs
 
-See [Logging Level](configuration.md#logging-level)
+See [Logging Level](configuration.md#logging)
 
 ## Tests
 

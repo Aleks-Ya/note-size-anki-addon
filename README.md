@@ -9,6 +9,7 @@ Screenshots:
 
 ![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/collection-size.png)
 ![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/edit-note.png)
+![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/notes-size.png)
 ![](https://raw.githubusercontent.com/Aleks-Ya/note-size-anki-addon/main/docs/images/open-config.png)
 
 ## Links
