@@ -3,7 +3,9 @@ from typing import Sequence
 
 import pytest
 from anki.collection import Collection
+from anki.errors import NotFoundError
 from anki.notes import Note, NoteId
+from pytest import raises
 
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.types import SizeBytes, MediaFile, SizeType
@@ -204,6 +206,12 @@ def test_get_note_files(size_calculator: SizeCalculator, td: Data):
     assert files_cached == {'animation.gif', 'sound.mp3', 'picture.jpg'}
     files_uncached: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=False)
     assert files_uncached == {'sound.mp3', 'picture.jpg', 'animation.gif'}
+
+
+def test_get_note_files_absent(size_calculator: SizeCalculator, td: Data):
+    with raises(NotFoundError):
+        note_id: NoteId = NoteId(-1)
+        size_calculator.get_note_files(note_id, use_cache=True)
 
 
 def test_get_notes_file_sizes(size_calculator: SizeCalculator, td: Data):

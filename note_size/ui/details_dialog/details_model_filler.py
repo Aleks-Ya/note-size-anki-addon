@@ -65,7 +65,9 @@ class DetailsModelFiller:
     def __files_note_size(self, note: Note) -> str:
         size_bytes: SizeBytes = self.__size_calculator.calculate_note_size(note, SizeType.FILES, use_cache=False)
         size: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
-        return f"Files size: {size}"
+        files_number: int = len(self.__size_calculator.calculate_note_files(note, use_cache=False))
+        files_number_str: str = NumberFormatter.with_thousands_separator(files_number)
+        return f"Size of {files_number_str} files: {size}"
 
     def __files_notes_size(self, note_ids: Sequence[NoteId]) -> str:
         files_number: int = len(self.__size_calculator.get_notes_files(note_ids, use_cache=True))
