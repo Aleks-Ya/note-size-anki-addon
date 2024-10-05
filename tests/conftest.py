@@ -20,14 +20,16 @@ from note_size.cache.cache_storage import CacheStorage
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.cache.size_str_cache import SizeStrCache
-from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
-from note_size.calculator.used_files_calculator import UsedFilesCalculator
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.calculator.size_formatter import SizeFormatter
+from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
+from note_size.calculator.used_files_calculator import UsedFilesCalculator
 from note_size.config.config import Config
 from note_size.config.config_loader import ConfigLoader
 from note_size.config.level_parser import LevelParser
 from note_size.config.settings import Settings
+from note_size.log.logs import Logs
+from note_size.profiler.profiler import Profiler
 from note_size.ui.browser.browser_button_manager import BrowserButtonManager
 from note_size.ui.config.config_ui import ConfigUi
 from note_size.ui.config.model_converter import ModelConverter
@@ -41,7 +43,6 @@ from note_size.ui.editor.button.editor_button_creator import EditorButtonCreator
 from note_size.ui.editor.button.editor_button_formatter import EditorButtonFormatter
 from note_size.ui.editor.button.editor_button_js import EditorButtonJs
 from note_size.ui.editor.column.item_id_sorter import ItemIdSorter
-from note_size.log.logs import Logs
 from tests.data import Data
 
 
@@ -323,3 +324,8 @@ def used_files_calculator(col: Collection, size_calculator: SizeCalculator) -> U
 def updated_files_calculator(col: Collection, size_calculator: SizeCalculator,
                              media_cache: MediaCache) -> UpdatedFilesCalculator:
     return UpdatedFilesCalculator(col, size_calculator, media_cache)
+
+
+@pytest.fixture
+def profiler(config: Config, settings: Settings) -> Profiler:
+    return Profiler(config, settings)

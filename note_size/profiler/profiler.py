@@ -42,7 +42,18 @@ class Profiler:
         else:
             log.debug("Profiler is disabled")
 
+    def get_report_by_cumulative_time(self) -> Path:
+        return self.__file_by_cumulative_time
+
+    def get_report_by_call_number(self) -> Path:
+        return self.__file_by_call_number
+
+    def get_report_by_internal_time(self) -> Path:
+        return self.__file_by_internal_time
+
     @staticmethod
     def __write_report(profile: Profile, file: Path, sort_key: SortKey) -> None:
+        if not file.parent.exists():
+            file.parent.mkdir(parents=True)
         with open(file, 'w') as f:
             Stats(profile, stream=f).sort_stats(sort_key).print_stats()
