@@ -108,6 +108,9 @@ class Config:
     def get_profiler_enabled(self) -> bool:
         return self.__config[self.__key_1_profiler][self.__key_2_profiler_enabled]
 
+    def set_profiler_enabled(self, profiler_enabled: bool) -> None:
+        self.__set(profiler_enabled, self.__key_1_profiler, self.__key_2_profiler_enabled)
+
     def get_as_dict(self) -> dict[str, Any]:
         return self.__config
 

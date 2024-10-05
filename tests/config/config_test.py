@@ -26,6 +26,7 @@ def test_setters(td: Data):
     config.set_log_level('INFO')
     config.set_size_button_enabled(False)
     config.set_size_button_color_enabled(False)
+    config.set_profiler_enabled(True)
     config.set_size_button_color_levels([{"Color": "Green", "Max Size": "50 KB"},
                                          {"Color": "Yellow", "Max Size": "2 MB"},
                                          {"Color": "Red", "Max Size": "100 GB"}])
@@ -36,7 +37,7 @@ def test_setters(td: Data):
             'Warmup Enabled': False},
         'Deck Browser': {'Show Collection Size': False},
         'Logging': {'Logger Level': 'INFO'},
-        'Profiler': {'Enabled': False},
+        'Profiler': {'Enabled': True},
         'Size Button': {
             "Color": {
                 "Enabled": False,
