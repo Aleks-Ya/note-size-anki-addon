@@ -4,6 +4,7 @@ from logging import Logger
 from pathlib import Path
 from typing import Any, Optional
 
+from .config_listener import ConfigListener
 from ..config.level_parser import LevelDict
 
 log: Logger = logging.getLogger(__name__)
@@ -29,6 +30,7 @@ class Config:
 
     def __init__(self, config: dict[str, Any]):
         self.__config: dict[str, Any] = config
+        self.__listeners: set[ConfigListener] = set()
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def __str__(self):
@@ -113,6 +115,15 @@ class Config:
 
     def get_as_dict(self) -> dict[str, Any]:
         return self.__config
+
+    def add_listener(self, listener: ConfigListener) -> None:
+        log.debug(f"Add config listener: {listener}")
+        self.__listeners.add(listener)
+
+    def fire_config_changed(self) -> None:
+        log.debug("Fire config changed")
+        for listener in self.__listeners:
+            listener.on_config_changed()
 
     def __set(self, value: Any, *keys: str) -> None:
         d: dict[str, Any] = self.__config

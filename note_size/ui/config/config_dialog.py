@@ -71,14 +71,14 @@ class ConfigDialog(QDialog):
         self.setMinimumWidth(500)
         self.adjustSize()
 
-    def refresh_from_model(self):
+    def refresh_from_model(self) -> None:
         self.deck_browser_tab.refresh_from_model()
         self.browser_tab.refresh_from_model()
         self.editor_tab.refresh_from_model()
         self.logging_tab.refresh_from_model()
         self.cache_tab.refresh_from_model()
 
-    def __accept(self):
+    def __accept(self) -> None:
         ModelConverter.apply_model_to_config(self.__model, self.__config)
         self.__config_loader.write_config(self.__config)
         if aqt.mw.deckBrowser:
@@ -86,14 +86,16 @@ class ConfigDialog(QDialog):
         self.__logs.set_level(self.__config.get_log_level())
         self.accept()
         log.info("Config accepted")
+        self.__config.fire_config_changed()
 
-    def __reject(self):
+    def __reject(self) -> None:
         log.info("Config rejected")
         self.reject()
 
-    def __restore_defaults(self):
+    def __restore_defaults(self) -> None:
         log.info("Restore defaults")
         defaults: Optional[dict[str, Any]] = self.__config_loader.get_defaults()
         config: Config = Config(defaults)
         ModelConverter.apply_config_to_model(self.__model, config)
         self.refresh_from_model()
+        self.__config.fire_config_changed()

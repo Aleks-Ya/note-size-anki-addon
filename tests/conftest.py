@@ -287,8 +287,8 @@ def editor_button_creator(editor_button_formatter: EditorButtonFormatter,
 
 @pytest.fixture
 def browser_button_manager(col: Collection, item_id_cache: ItemIdCache, size_str_cache: SizeStrCache,
-                           details_dialog: DetailsDialog) -> BrowserButtonManager:
-    return BrowserButtonManager(col, item_id_cache, size_str_cache, details_dialog)
+                           details_dialog: DetailsDialog, config: Config) -> BrowserButtonManager:
+    return BrowserButtonManager(col, item_id_cache, size_str_cache, details_dialog, config)
 
 
 @pytest.fixture
