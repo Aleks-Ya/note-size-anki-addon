@@ -1,5 +1,11 @@
 # Changelog for "Note Size" Anki addon
 
+## [v2.4.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.4.0) - 2024-10-06
+
+1. __[FEATURE]__ Show size of notes found in Browser
+2. __[MISC]__ Setup SonarQube
+3. __[MISC]__ Add profiler
+
 ## [v2.3.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.3.0) - 2024-09-06
 
 1. __[FEATURE]__ New note size details dialog
