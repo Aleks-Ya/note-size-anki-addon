@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import pytest
 from anki.collection import Collection
 from anki import hooks
@@ -14,14 +12,14 @@ from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
 from note_size.calculator.size_calculator import SizeCalculator
-from note_size.types import SizeType, MediaFile
-from tests.data import Data
+from note_size.types import SizeType
+from tests.data import Data, DefaultFields
 
 
 @pytest.fixture
 def cache_hooks(cache_manager: CacheManager, cache_initializer: CacheInitializer,
-                file_note_id_cache: UpdatedFilesCalculator) -> CacheHooks:
-    cache_hooks = CacheHooks(cache_manager, cache_initializer, file_note_id_cache)
+                updated_files_calculator: UpdatedFilesCalculator) -> CacheHooks:
+    cache_hooks = CacheHooks(cache_manager, cache_initializer, updated_files_calculator)
     yield cache_hooks
     cache_hooks.remove_hooks()
 
@@ -49,15 +47,14 @@ def test_setup_hooks(cache_hooks: CacheHooks):
     assert gui_hooks.profile_will_close.count() == 1
 
 
-def test_add_cards_did_add_note(td: Data, cache_hooks: CacheHooks, item_id_cache: ItemIdCache,
+def test_add_cards_did_add_note(cache_hooks: CacheHooks, td: Data, item_id_cache: ItemIdCache,
                                 size_calculator: SizeCalculator):
     cache_hooks.setup_hooks()
     note: Note = td.create_note_with_files()
     assert size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True) == 143
 
 
-@pytest.mark.skip("TODO fix it")
-def test_notes_will_be_deleted(col: Collection, td: Data, cache_hooks: CacheHooks, item_id_cache: ItemIdCache,
+def test_notes_will_be_deleted(cache_hooks: CacheHooks, col: Collection, td: Data, item_id_cache: ItemIdCache,
                                size_calculator: SizeCalculator):
     cache_hooks.setup_hooks()
     note: Note = td.create_note_with_files()
@@ -67,23 +64,23 @@ def test_notes_will_be_deleted(col: Collection, td: Data, cache_hooks: CacheHook
         size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True)
 
 
-@pytest.mark.skip("TODO fix it")
-def test_media_sync_did_start_or_stop(col: Collection, td: Data, cache_hooks: CacheHooks, media_cache: MediaCache,
-                                      item_id_cache: ItemIdCache):
+def test_media_sync_did_start_or_stop(cache_hooks: CacheHooks, col: Collection, td: Data, media_cache: MediaCache,
+                                      updated_files_calculator: UpdatedFilesCalculator):
     cache_hooks.setup_hooks()
     td.create_note_with_files()
-    filename: str = "image.png"
-    assert media_cache.get_file_size(MediaFile(filename), use_cache=True) == 0
-    content: str = "abc"
-    Path(col.media.dir(), "image.png").write_text(content)
-    assert media_cache.get_file_size(MediaFile(filename), use_cache=True) == 0
+    original_file_size: int = 7
+
+    assert media_cache.get_file_size(DefaultFields.file0, use_cache=True) == original_file_size
+    new_content: str = "abc"
+    td.write_file(DefaultFields.file0, new_content)
+    assert media_cache.get_file_size(DefaultFields.file0, use_cache=True) == original_file_size
     gui_hooks.media_sync_did_start_or_stop(True)
-    assert media_cache.get_file_size(MediaFile(filename), use_cache=True) == 0
+    assert media_cache.get_file_size(DefaultFields.file0, use_cache=True) == original_file_size
 
-    assert not item_id_cache.is_initialized()
+    assert not updated_files_calculator.is_initialized()
     gui_hooks.media_sync_did_start_or_stop(False)
-    assert media_cache.get_file_size(MediaFile(filename), use_cache=True) == 0
+    assert media_cache.get_file_size(DefaultFields.file0, use_cache=True) == original_file_size
 
-    item_id_cache.set_initialized(True)
+    updated_files_calculator.set_initialized(True)
     gui_hooks.media_sync_did_start_or_stop(False)
-    assert media_cache.get_file_size(MediaFile(filename), use_cache=True) == len(content)
+    assert media_cache.get_file_size(DefaultFields.file0, use_cache=True) == len(new_content)
