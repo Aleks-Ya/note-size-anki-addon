@@ -21,6 +21,7 @@ def test_get_all_urls(url_manager: UrlManager):
         UrlType.CONFIGURATION_EDITOR_SIZE_BUTTON_COLOR_ENABLED: 'https://github.com/Aleks-Ya/note-size-anki-addon/blob/main/docs/configuration.md#color---enabled'
     }
 
+
 @pytest.mark.integration
 def test_ping_all_urls(url_manager: UrlManager):
     urls: dict[UrlType, URL] = url_manager.get_all_urls()

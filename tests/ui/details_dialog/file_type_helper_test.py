@@ -4,10 +4,11 @@ import pytest
 
 from note_size.types import FileType
 from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
+from tests.data import FileNames
 
 
 def test_get_file_type(file_type_helper: FileTypeHelper):
-    assert file_type_helper.get_file_type("image.png") == FileType.IMAGE
+    assert file_type_helper.get_file_type(FileNames.image) == FileType.IMAGE
     assert file_type_helper.get_file_type("image.jpg") == FileType.IMAGE
     assert file_type_helper.get_file_type("image.jpglarge") == FileType.IMAGE
     assert file_type_helper.get_file_type("image.jpeg") == FileType.IMAGE
@@ -27,7 +28,7 @@ def test_get_file_type(file_type_helper: FileTypeHelper):
 
     assert file_type_helper.get_file_type("video.mp4") == FileType.VIDEO
     assert file_type_helper.get_file_type("video.avi") == FileType.VIDEO
-    assert file_type_helper.get_file_type("video.mov") == FileType.VIDEO
+    assert file_type_helper.get_file_type(FileNames.video) == FileType.VIDEO
 
     assert file_type_helper.get_file_type("other") == FileType.OTHER
     assert file_type_helper.get_file_type("other.json") == FileType.OTHER
@@ -40,13 +41,13 @@ def test_get_file_type(file_type_helper: FileTypeHelper):
 
 @pytest.mark.performance
 def test_get_file_type_performance(file_type_helper: FileTypeHelper):
-    execution_time: float = timeit.timeit(lambda: file_type_helper.get_file_type("image.png"), number=500_000)
+    execution_time: float = timeit.timeit(lambda: file_type_helper.get_file_type(FileNames.image), number=500_000)
     assert execution_time <= 1
 
 
 def test_get_cache_size(file_type_helper: FileTypeHelper):
     assert file_type_helper.get_cache_size() == 0
-    file_type_helper.get_file_type("image.png")
+    file_type_helper.get_file_type(FileNames.image)
     file_type_helper.get_file_type("image.jpg")
     assert file_type_helper.get_cache_size() == 2
     file_type_helper.get_file_type("image.jpg")

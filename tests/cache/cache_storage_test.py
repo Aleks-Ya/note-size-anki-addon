@@ -19,7 +19,7 @@ from note_size.config.config import Config
 from note_size.config.settings import Settings
 from note_size.types import SizeType, FileType
 from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
-from tests.data import Data
+from tests.data import Data, FileNames
 
 
 def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Collection, item_id_cache: ItemIdCache,
@@ -37,7 +37,7 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Colle
     size_calculator.get_note_files(card1.nid, use_cache=True)
     size_calculator.get_note_files(card2.nid, use_cache=True)
 
-    file_type_helper.get_file_type("image.png", use_cache=True)
+    file_type_helper.get_file_type(FileNames.image, use_cache=True)
 
     size_str_cache.get_note_size_str(card1.nid, SizeType.TOTAL, use_cache=True)
     size_str_cache.get_note_size_str(card2.nid, SizeType.TEXTS, use_cache=True)
@@ -59,18 +59,19 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Colle
         [media_cache_2, item_id_cache_2, size_calculator_2, size_formatter_2, file_type_helper_2, size_str_cache_2,
          updated_files_calculator_2])
     assert read_success
-    assert media_cache_2.as_dict_list() == [{'animation.gif': 9, 'picture.jpg': 7, 'sound.mp3': 5}]
+    assert media_cache_2.as_dict_list() == [{FileNames.animation: 9, FileNames.picture: 7, FileNames.sound: 5}]
     assert item_id_cache_2.as_dict_list() == [{card1.id: card1.nid,
                                                card2.id: card2.nid}]
     assert size_calculator_2.as_dict_list() == [{SizeType.TOTAL: {card1.nid: 143, card2.nid: 70},
                                                  SizeType.TEXTS: {card1.nid: 122, card2.nid: 70},
                                                  SizeType.FILES: {card1.nid: 21, card2.nid: 0}},
-                                                {card1.nid: {'picture.jpg', 'sound.mp3', 'animation.gif'},
+                                                {card1.nid: {FileNames.picture, FileNames.sound, FileNames.animation},
                                                  card2.nid: set()},
-                                                {card1.nid: {'animation.gif': 9, 'picture.jpg': 7, 'sound.mp3': 5},
+                                                {card1.nid: {FileNames.animation: 9, FileNames.picture: 7,
+                                                             FileNames.sound: 5},
                                                  card2.nid: {}}]
     assert size_formatter_2.as_dict_list() == [{0: '0 B', 70: '70 B', 143: '143 B'}]
-    assert file_type_helper_2.as_dict_list() == [{'image.png': FileType.IMAGE}]
+    assert file_type_helper_2.as_dict_list() == [{FileNames.image: FileType.IMAGE}]
     assert size_str_cache_2.as_dict_list() == [{SizeType.TOTAL: {card1.nid: '143 B'},
                                                 SizeType.TEXTS: {card2.nid: '70 B'},
                                                 SizeType.FILES: {card2.nid: '0 B'}}]

@@ -14,7 +14,7 @@ from note_size.config.config import Config
 from note_size.types import FileType, SizeType
 from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
 from tests.conftest import cache_manager
-from tests.data import Data
+from tests.data import Data, FileNames
 
 update_progress_history: list[str] = []
 
@@ -47,20 +47,21 @@ def test_initialize_caches(td: Data, col: Collection, cache_manager: CacheManage
     assert size_formatter.is_initialized()
     assert file_type_helper.is_initialized()
 
-    assert media_cache.as_dict_list() == [{'animation.gif': 9, 'picture.jpg': 7, 'sound.mp3': 5}]
+    assert media_cache.as_dict_list() == [{FileNames.animation: 9, FileNames.picture: 7, FileNames.sound: 5}]
     assert item_id_cache.as_dict_list() == [{card1.id: card1.nid,
                                              card2.id: card2.nid}]
     assert size_calculator.as_dict_list() == [{SizeType.TOTAL: {card1.nid: 143, card2.nid: 70},
                                                SizeType.TEXTS: {card1.nid: 122, card2.nid: 70},
                                                SizeType.FILES: {card1.nid: 21, card2.nid: 0}},
-                                              {card1.nid: {'picture.jpg', 'sound.mp3', 'animation.gif'},
+                                              {card1.nid: {FileNames.picture, FileNames.sound, FileNames.animation},
                                                card2.nid: set()},
-                                              {card1.nid: {'animation.gif': 9, 'picture.jpg': 7, 'sound.mp3': 5},
+                                              {card1.nid: {FileNames.animation: 9, FileNames.picture: 7,
+                                                           FileNames.sound: 5},
                                                card2.nid: {}}]
     assert size_formatter.as_dict_list() == [{0: '0 B', 21: '21 B', 70: '70 B', 122: '122 B', 143: '143 B'}]
-    assert file_type_helper.as_dict_list() == [{'animation.gif': FileType.IMAGE,
-                                                'picture.jpg': FileType.IMAGE,
-                                                'sound.mp3': FileType.AUDIO}]
+    assert file_type_helper.as_dict_list() == [{FileNames.animation: FileType.IMAGE,
+                                                FileNames.picture: FileType.IMAGE,
+                                                FileNames.sound: FileType.AUDIO}]
 
 
 def test_update_progress(td: Data, col: Collection, cache_manager: CacheManager, media_cache: MediaCache,

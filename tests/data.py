@@ -12,13 +12,23 @@ from note_size.config.config import Config
 from note_size.types import MediaFile, FieldName, FieldContent, FileContent
 
 
+class FileNames:
+    picture: str = 'picture.jpg'
+    sound: str = 'sound.mp3'
+    animation: str = 'animation.gif'
+    image: str = 'image.png'
+    movie: str = 'movie.mp4'
+    photo: str = 'photo.tiff'
+    video: str = 'video.mov'
+
+
 class DefaultFields:
     content0: FileContent = FileContent('picture')
     content1: FileContent = FileContent('sound')
     content2: FileContent = FileContent('animation')
-    file0: MediaFile = MediaFile('picture.jpg')
-    file1: MediaFile = MediaFile('sound.mp3')
-    file2: MediaFile = MediaFile('animation.gif')
+    file0: MediaFile = MediaFile(FileNames.picture)
+    file1: MediaFile = MediaFile(FileNames.sound)
+    file2: MediaFile = MediaFile(FileNames.animation)
     front_field_name: FieldName = FieldName('Front')
     back_field_name: FieldName = FieldName('Back')
     front_field_content: FieldContent = FieldContent(f'Files ∑￡: <img src="{file0}"> <img src="{file1}">')

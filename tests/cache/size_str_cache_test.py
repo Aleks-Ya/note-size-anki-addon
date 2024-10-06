@@ -8,7 +8,7 @@ from note_size.cache.size_str_cache import SizeStrCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.types import SizeBytes, SizeStr, SizeType, MediaFile
 from tests.conftest import size_calculator
-from tests.data import Data, DefaultFields
+from tests.data import Data, DefaultFields, FileNames
 
 
 def test_get_note_size_bytes(td: Data, size_str_cache: SizeStrCache, size_calculator: SizeCalculator):
@@ -88,26 +88,26 @@ def test_get_note_files(td: Data, size_str_cache: SizeStrCache, size_calculator:
     note: Note = td.create_note_with_files()
     note_id: NoteId = note.id
     files: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
-    assert files == {'animation.gif', 'sound.mp3', 'picture.jpg'}
+    assert files == {FileNames.animation, FileNames.sound, FileNames.picture}
 
     Data.replace_in_front_field(note, '<img src="picture.jpg">', '')
     files_cached: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
-    assert files_cached == {'animation.gif', 'sound.mp3', 'picture.jpg'}
+    assert files_cached == {FileNames.animation, FileNames.sound, FileNames.picture}
     files_uncached: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=False)
-    assert files_uncached == {'sound.mp3', 'picture.jpg', 'animation.gif'}
+    assert files_uncached == {FileNames.sound, FileNames.picture, FileNames.animation}
 
 
 def test_get_used_files_size(td: Data, size_str_cache: SizeStrCache, size_calculator: SizeCalculator):
     note: Note = td.create_note_with_files()
     note_id: NoteId = note.id
     files: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
-    assert files == {'animation.gif', 'sound.mp3', 'picture.jpg'}
+    assert files == {FileNames.animation, FileNames.sound, FileNames.picture}
     Data.replace_in_front_field(note, '<img src="picture.jpg">', '')
     files_cached: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
-    assert files_cached == {'animation.gif', 'picture.jpg', 'sound.mp3'}
+    assert files_cached == {FileNames.animation, FileNames.picture, FileNames.sound}
 
     files_uncached: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=False)
-    assert files_uncached == {'sound.mp3', 'picture.jpg', 'animation.gif'}
+    assert files_uncached == {FileNames.sound, FileNames.picture, FileNames.animation}
 
 
 def test_initialized(size_str_cache: SizeStrCache):

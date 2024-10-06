@@ -9,7 +9,7 @@ from pytest import raises
 
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.types import SizeBytes, MediaFile, SizeType
-from tests.data import Data, DefaultFields
+from tests.data import Data, DefaultFields, FileNames
 
 
 @pytest.fixture
@@ -152,8 +152,9 @@ def test_evict_note(size_calculator: SizeCalculator, td: Data):
     assert size_calculator.as_dict_list() == [{SizeType.TOTAL: {nid1: 143},
                                                SizeType.TEXTS: {nid1: 122, nid2: 70},
                                                SizeType.FILES: {nid1: 21}},
-                                              {nid1: {'animation.gif', 'sound.mp3', 'picture.jpg'}},
-                                              {nid1: {'animation.gif': 9, 'picture.jpg': 7, 'sound.mp3': 5}}]
+                                              {nid1: {FileNames.animation, FileNames.sound, FileNames.picture}},
+                                              {nid1: {FileNames.animation: 9, FileNames.picture: 7,
+                                                      FileNames.sound: 5}}]
     size_calculator.evict_note(nid1)
     assert size_calculator.get_cache_size() == 1
     assert size_calculator.as_dict_list() == [{SizeType.TOTAL: {},
@@ -199,13 +200,13 @@ def test_get_note_files(size_calculator: SizeCalculator, td: Data):
     note: Note = td.create_note_with_files()
     note_id: NoteId = note.id
     files: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
-    assert files == {'animation.gif', 'sound.mp3', 'picture.jpg'}
+    assert files == {FileNames.animation, FileNames.sound, FileNames.picture}
 
     Data.replace_in_front_field(note, '<img src="picture.jpg">', '')
     files_cached: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
-    assert files_cached == {'animation.gif', 'sound.mp3', 'picture.jpg'}
+    assert files_cached == {FileNames.animation, FileNames.sound, FileNames.picture}
     files_uncached: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=False)
-    assert files_uncached == {'sound.mp3', 'picture.jpg', 'animation.gif'}
+    assert files_uncached == {FileNames.sound, FileNames.picture, FileNames.animation}
 
 
 def test_get_note_files_absent(size_calculator: SizeCalculator, td: Data):
@@ -219,4 +220,4 @@ def test_get_notes_file_sizes(size_calculator: SizeCalculator, td: Data):
     note2: Note = td.create_note_without_files()
     note_ids: Sequence[NoteId] = [note1.id, note2.id]
     file_sizes: dict[MediaFile, SizeBytes] = size_calculator.get_notes_file_sizes(note_ids, use_cache=True)
-    assert file_sizes == {'animation.gif': 9, 'picture.jpg': 7, 'sound.mp3': 5}
+    assert file_sizes == {FileNames.animation: 9, FileNames.picture: 7, FileNames.sound: 5}

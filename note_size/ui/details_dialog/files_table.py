@@ -124,6 +124,7 @@ class FilesTable(QTableWidget):
         self.blockSignals(False)
         self.setSortingEnabled(True)
         if self.rowCount() > 0:
+            # noinspection PyUnresolvedReferences
             self.show()
             log.debug("Shown files")
         else:

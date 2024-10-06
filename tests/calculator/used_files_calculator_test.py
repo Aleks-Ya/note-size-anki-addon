@@ -1,13 +1,13 @@
 from note_size.calculator.used_files_calculator import UsedFilesCalculator
 from note_size.types import MediaFile, FileContent
-from tests.data import Data, DefaultFields
+from tests.data import Data, DefaultFields, FileNames
 
 
 def test_get_used_files_size(td: Data, used_files_calculator: UsedFilesCalculator):
     assert used_files_calculator.get_used_files_size(use_cache=True) == (0, 0)
-    media_file_1: MediaFile = MediaFile('picture.jpg')
-    media_file_2: MediaFile = MediaFile('sound.mp3')
-    media_file_3: MediaFile = MediaFile('animation.gif')
+    media_file_1: MediaFile = MediaFile(FileNames.picture)
+    media_file_2: MediaFile = MediaFile(FileNames.sound)
+    media_file_3: MediaFile = MediaFile(FileNames.animation)
     content_1: FileContent = FileContent('picture')
     content_2: FileContent = FileContent('sound')
     content_3: FileContent = FileContent('animation')

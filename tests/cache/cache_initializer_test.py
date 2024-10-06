@@ -9,7 +9,7 @@ from note_size.config.config import Config
 from note_size.config.settings import Settings
 from note_size.types import SizeType
 from tests.conftest import cache_manager
-from tests.data import Data
+from tests.data import Data, FileNames
 
 update_progress_history: list[str] = []
 
@@ -93,5 +93,5 @@ def __fill_cache(cache_manager, td) -> None:
     card: Card = td.create_card_with_files()
     cache_manager.get_item_id_cache().get_note_id_by_card_id(card.id)
     cache_manager.get_size_calculator().get_note_size(card.nid, SizeType.TOTAL, use_cache=True)
-    cache_manager.get_file_type_helper().get_file_type("image.png", use_cache=True)
+    cache_manager.get_file_type_helper().get_file_type(FileNames.image, use_cache=True)
     cache_manager.get_size_str_cache().get_note_size_str(card.nid, SizeType.TOTAL, use_cache=True)
