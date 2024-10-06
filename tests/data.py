@@ -28,10 +28,13 @@ class MediaFiles:
     animation: MediaFile = MediaFile(FileNames.animation)
 
 
+class FileContents:
+    picture: FileContent = FileContent('picture')
+    sound: FileContent = FileContent('sound')
+    animation: FileContent = FileContent('animation')
+
+
 class DefaultFields:
-    content0: FileContent = FileContent('picture')
-    content1: FileContent = FileContent('sound')
-    content2: FileContent = FileContent('animation')
     front_field_name: FieldName = FieldName('Front')
     back_field_name: FieldName = FieldName('Back')
     front_field_content: FieldContent = FieldContent(
@@ -51,12 +54,12 @@ class Data:
     def create_note_with_files(self) -> Note:
         note: Note = self.create_note_with_given_files({
             DefaultFields.front_field_name: {
-                MediaFiles.picture: DefaultFields.content0,
-                MediaFiles.sound: DefaultFields.content1
+                MediaFiles.picture: FileContents.picture,
+                MediaFiles.sound: FileContents.sound
             },
             DefaultFields.back_field_name: {
-                MediaFiles.picture: DefaultFields.content0,
-                MediaFiles.animation: DefaultFields.content2
+                MediaFiles.picture: FileContents.picture,
+                MediaFiles.animation: FileContents.animation
             }
         })
         return note

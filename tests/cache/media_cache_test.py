@@ -5,13 +5,13 @@ from anki.notes import Note
 
 from note_size.cache.media_cache import MediaCache
 from note_size.types import SizeBytes, FilesNumber, MediaFile
-from tests.data import Data, DefaultFields, FileNames, MediaFiles
+from tests.data import Data, FileNames, MediaFiles, FileContents
 
 
 def test_get_file_size(td: Data, media_cache: MediaCache):
     td.create_note_with_files()
     act_file_size_1: SizeBytes = media_cache.get_file_size(MediaFiles.picture, use_cache=False)
-    exp_file_size_1: SizeBytes = SizeBytes(len(DefaultFields.content0))
+    exp_file_size_1: SizeBytes = SizeBytes(len(FileContents.picture))
     assert act_file_size_1 == exp_file_size_1
 
 

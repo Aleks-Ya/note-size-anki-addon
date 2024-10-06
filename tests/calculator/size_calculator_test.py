@@ -9,7 +9,7 @@ from pytest import raises
 
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.types import SizeBytes, MediaFile, SizeType
-from tests.data import Data, DefaultFields, FileNames, MediaFiles
+from tests.data import Data, DefaultFields, FileNames, MediaFiles, FileContents
 
 
 @pytest.fixture
@@ -41,9 +41,9 @@ def test_calculate_note_size_text_performance(size_calculator: SizeCalculator, n
 
 def test_calculate_note_size_files(size_calculator: SizeCalculator, note: Note):
     act_size: SizeBytes = size_calculator.calculate_note_size(note, SizeType.FILES, use_cache=False)
-    exp_size: SizeBytes = SizeBytes(len(DefaultFields.content0) +
-                                    len(DefaultFields.content1) +
-                                    len(DefaultFields.content2))
+    exp_size: SizeBytes = SizeBytes(len(FileContents.picture) +
+                                    len(FileContents.sound) +
+                                    len(FileContents.animation))
     assert act_size == exp_size
 
 
@@ -51,9 +51,9 @@ def test_calculate_note_size_total(size_calculator: SizeCalculator, note: Note):
     act_size: SizeBytes = size_calculator.calculate_note_size(note, SizeType.TOTAL, use_cache=False)
     exp_size: SizeBytes = SizeBytes(len(DefaultFields.front_field_content.encode()) +
                                     len(DefaultFields.back_field_content.encode()) +
-                                    len(DefaultFields.content0) +
-                                    len(DefaultFields.content1) +
-                                    len(DefaultFields.content2))
+                                    len(FileContents.picture) +
+                                    len(FileContents.sound) +
+                                    len(FileContents.animation))
     assert act_size == exp_size
 
 
@@ -63,8 +63,8 @@ def test_calculate_note_size_total_missing_file(size_calculator: SizeCalculator,
     act_size: SizeBytes = size_calculator.calculate_note_size(note, SizeType.TOTAL, use_cache=False)
     exp_size: SizeBytes = SizeBytes(len(content.encode()) +
                                     len(DefaultFields.back_field_content.encode()) +
-                                    len(DefaultFields.content0) +
-                                    len(DefaultFields.content2))
+                                    len(FileContents.picture) +
+                                    len(FileContents.animation))
     assert act_size == exp_size
 
 
@@ -78,9 +78,9 @@ def test_calculate_note_size_total_performance(size_calculator: SizeCalculator, 
 def test_calculate_note_file_sizes(size_calculator: SizeCalculator, note: Note):
     act_file_sizes: dict[MediaFile, SizeBytes] = size_calculator.calculate_note_file_sizes(note, use_cache=False)
     exp_file_sizes: dict[MediaFile, SizeBytes] = {
-        MediaFiles.picture: SizeBytes(len(DefaultFields.content0)),
-        MediaFiles.sound: SizeBytes(len(DefaultFields.content1)),
-        MediaFiles.animation: SizeBytes(len(DefaultFields.content2))}
+        MediaFiles.picture: SizeBytes(len(FileContents.picture)),
+        MediaFiles.sound: SizeBytes(len(FileContents.sound)),
+        MediaFiles.animation: SizeBytes(len(FileContents.animation))}
     assert act_file_sizes == exp_file_sizes
 
 
@@ -167,8 +167,8 @@ def test_evict_note(size_calculator: SizeCalculator, td: Data):
 def test_get_note_size(size_calculator: SizeCalculator, td: Data):
     exp_size_1: SizeBytes = SizeBytes(len(DefaultFields.front_field_content.encode()) +
                                       len(DefaultFields.back_field_content.encode()) +
-                                      len(DefaultFields.content0) + len(DefaultFields.content1) +
-                                      len(DefaultFields.content2))
+                                      len(FileContents.picture) + len(FileContents.sound) +
+                                      len(FileContents.animation))
     note: Note = td.create_note_with_files()
     note_id: NoteId = note.id
     act_size_1: SizeBytes = size_calculator.get_note_size(note_id, SizeType.TOTAL, use_cache=False)
@@ -183,8 +183,8 @@ def test_get_note_size(size_calculator: SizeCalculator, td: Data):
     act_size_uncached: SizeBytes = size_calculator.get_note_size(note_id, SizeType.TOTAL, use_cache=False)
     assert act_size_uncached == SizeBytes(len(content.encode()) +
                                           len(DefaultFields.back_field_content.encode()) +
-                                          len(DefaultFields.content0) +
-                                          len(DefaultFields.content2))
+                                          len(FileContents.picture) +
+                                          len(FileContents.animation))
 
 
 @pytest.mark.performance

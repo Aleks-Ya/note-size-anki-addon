@@ -3,7 +3,7 @@ from anki.notes import Note, NoteId
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
 from note_size.types import MediaFile, FileContent
-from tests.data import Data, DefaultFields, FileNames, MediaFiles
+from tests.data import Data, DefaultFields, FileNames, MediaFiles, FileContents
 
 
 def test_get_notes_having_updated_files(updated_files_calculator: UpdatedFilesCalculator, td: Data):
@@ -11,11 +11,11 @@ def test_get_notes_having_updated_files(updated_files_calculator: UpdatedFilesCa
     note1: Note = td.create_note_with_files()
     note2: Note = td.create_note_with_given_files({
         DefaultFields.front_field_name: {
-            MediaFiles.picture: DefaultFields.content0,
+            MediaFiles.picture: FileContents.picture,
             MediaFile(FileNames.video): FileContent('video')
         },
         DefaultFields.back_field_name: {
-            MediaFiles.sound: DefaultFields.content1,
+            MediaFiles.sound: FileContents.sound,
             MediaFile(FileNames.image): FileContent('image')
         }
     })
@@ -39,11 +39,11 @@ def test_evict_note(updated_files_calculator: UpdatedFilesCalculator, td: Data):
     note1: Note = td.create_note_with_files()
     note2: Note = td.create_note_with_given_files({
         DefaultFields.front_field_name: {
-            MediaFiles.picture: DefaultFields.content0,
+            MediaFiles.picture: FileContents.picture,
             MediaFile(FileNames.video): FileContent('video')
         },
         DefaultFields.back_field_name: {
-            MediaFiles.sound: DefaultFields.content1,
+            MediaFiles.sound: FileContents.sound,
             MediaFile(FileNames.image): FileContent('image')
         }
     })

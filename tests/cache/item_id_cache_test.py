@@ -10,14 +10,14 @@ from note_size.cache.item_id_cache import ItemIdCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.types import SizeBytes, SizeType, MediaFile
 from tests.conftest import size_calculator
-from tests.data import Data, DefaultFields, FileNames
+from tests.data import Data, DefaultFields, FileNames, FileContents
 
 
 def test_get_note_size_bytes(td: Data, item_id_cache: ItemIdCache, size_calculator: SizeCalculator):
     exp_size_1: SizeBytes = SizeBytes(len(DefaultFields.front_field_content.encode()) +
                                       len(DefaultFields.back_field_content.encode()) +
-                                      len(DefaultFields.content0) + len(DefaultFields.content1) +
-                                      len(DefaultFields.content2))
+                                      len(FileContents.picture) + len(FileContents.sound) +
+                                      len(FileContents.animation))
     note: Note = td.create_note_with_files()
     note_id: NoteId = note.id
     act_size_1: SizeBytes = size_calculator.get_note_size(note_id, SizeType.TOTAL, use_cache=False)
@@ -32,8 +32,8 @@ def test_get_note_size_bytes(td: Data, item_id_cache: ItemIdCache, size_calculat
     act_size_uncached: SizeBytes = size_calculator.get_note_size(note_id, SizeType.TOTAL, use_cache=False)
     assert act_size_uncached == SizeBytes(len(content.encode()) +
                                           len(DefaultFields.back_field_content.encode()) +
-                                          len(DefaultFields.content0) +
-                                          len(DefaultFields.content2))
+                                          len(FileContents.picture) +
+                                          len(FileContents.animation))
 
 
 @pytest.mark.performance
