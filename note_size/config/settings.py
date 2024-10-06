@@ -11,7 +11,6 @@ class Settings:
         self.module_dir: Path = module_dir
         self.module_name: str = module_name
         self.logs_folder: Path = logs_folder
-        self.docs_base_url: str = "https://github.com/Aleks-Ya/note-size-anki-addon/blob/main/"
         self.cache_file: Path = self.module_dir.joinpath("cache.tmp")
         log.debug(f"{self.__class__.__name__} was instantiated")
 

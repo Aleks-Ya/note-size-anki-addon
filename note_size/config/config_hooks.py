@@ -6,6 +6,7 @@ from aqt import gui_hooks, mw
 from aqt.browser import Browser
 from aqt.qt import qconnect, QAction, QMenu, QDesktopServices, QUrl
 
+from .url_manager import UrlManager, UrlType, URL
 from ..ui.config.config_ui import ConfigUi
 
 log: Logger = logging.getLogger(__name__)
@@ -13,9 +14,10 @@ log: Logger = logging.getLogger(__name__)
 
 class ConfigHooks:
 
-    def __init__(self, config_ui: ConfigUi, desktop_services: QDesktopServices) -> None:
+    def __init__(self, config_ui: ConfigUi, desktop_services: QDesktopServices, url_manager: UrlManager) -> None:
         self.__config_ui: ConfigUi = config_ui
         self.__desktop_services: QDesktopServices = desktop_services
+        self.__url_manager: UrlManager = url_manager
         self.__hook_main_window_did_init: Callable[[], None] = self.__add_deck_browser_menu_item
         self.__hook_browser_will_show: Callable[[Browser], None] = self.__add_browser_menu_item
         log.debug(f"{self.__class__.__name__} was instantiated")
@@ -37,7 +39,8 @@ class ConfigHooks:
     def __show_config(self) -> None:
         self.__config_ui.show_configuration_dialog()
 
-    def __open_web_page(self, url: str) -> None:
+    def __open_web_page(self, url_type: UrlType) -> None:
+        url: URL = self.__url_manager.get_url(url_type)
         self.__desktop_services.openUrl(QUrl(url))
 
     def __add_deck_browser_menu_item(self) -> None:
@@ -46,42 +49,36 @@ class ConfigHooks:
         mw.form.menuTools.addMenu(menu_item)
 
     def __menu_item(self) -> QMenu:
-        open_configuration_action: QAction = QAction("Configuration...", mw)
-        qconnect(open_configuration_action.triggered, self.__show_config)
+        configuration_action: QAction = QAction("Configuration...", mw)
+        qconnect(configuration_action.triggered, self.__show_config)
 
-        open_user_manual_action: QAction = QAction("User manual...", mw)
-        qconnect(open_user_manual_action.triggered, lambda: self.__open_web_page(
-            "https://github.com/Aleks-Ya/note-size-anki-addon/blob/main/docs/user-manual.md"))
+        user_manual_action: QAction = QAction("User manual...", mw)
+        qconnect(user_manual_action.triggered, lambda: self.__open_web_page(UrlType.INFO_USER_MANUAL))
 
-        open_addon_page_action: QAction = QAction("Addon page...", mw)
-        qconnect(open_addon_page_action.triggered,
-                 lambda: self.__open_web_page("https://ankiweb.net/shared/info/1188705668"))
+        addon_page_action: QAction = QAction("Addon page...", mw)
+        qconnect(addon_page_action.triggered, lambda: self.__open_web_page(UrlType.INFO_ADDON_PAGE))
 
-        open_support_page_action: QAction = QAction("Forum support topic...", mw)
-        qconnect(open_support_page_action.triggered,
-                 lambda: self.__open_web_page("https://forums.ankiweb.net/t/note-size-addon-support/46001"))
+        support_page_action: QAction = QAction("Forum support topic...", mw)
+        qconnect(support_page_action.triggered, lambda: self.__open_web_page(UrlType.INFO_FORUM))
 
-        open_change_log_page_action: QAction = QAction("Change log...", mw)
-        qconnect(open_change_log_page_action.triggered, lambda: self.__open_web_page(
-            "https://github.com/Aleks-Ya/note-size-anki-addon/blob/main/CHANGELOG.md"))
+        change_log_page_action: QAction = QAction("Change log...", mw)
+        qconnect(change_log_page_action.triggered, lambda: self.__open_web_page(UrlType.INFO_CHANGE_LOG))
 
-        open_bug_tracker_page_action: QAction = QAction("Bug tracker...", mw)
-        qconnect(open_bug_tracker_page_action.triggered,
-                 lambda: self.__open_web_page("https://github.com/Aleks-Ya/note-size-anki-addon/issues"))
+        bug_tracker_page_action: QAction = QAction("Bug tracker...", mw)
+        qconnect(bug_tracker_page_action.triggered, lambda: self.__open_web_page(UrlType.INFO_BUG_TRACKER))
 
-        open_github_page_action: QAction = QAction("GitHub project...", mw)
-        qconnect(open_github_page_action.triggered,
-                 lambda: self.__open_web_page("https://github.com/Aleks-Ya/note-size-anki-addon"))
+        github_page_action: QAction = QAction("GitHub project...", mw)
+        qconnect(github_page_action.triggered, lambda: self.__open_web_page(UrlType.INFO_GITHUB))
 
         info_menu: QMenu = QMenu("Info", mw)
-        info_menu.addAction(open_user_manual_action)
-        info_menu.addAction(open_addon_page_action)
-        info_menu.addAction(open_support_page_action)
-        info_menu.addAction(open_change_log_page_action)
-        info_menu.addAction(open_bug_tracker_page_action)
-        info_menu.addAction(open_github_page_action)
+        info_menu.addAction(user_manual_action)
+        info_menu.addAction(addon_page_action)
+        info_menu.addAction(support_page_action)
+        info_menu.addAction(change_log_page_action)
+        info_menu.addAction(bug_tracker_page_action)
+        info_menu.addAction(github_page_action)
 
         root_menu: QMenu = QMenu("Note Size", mw)
-        root_menu.addAction(open_configuration_action)
+        root_menu.addAction(configuration_action)
         root_menu.addMenu(info_menu)
         return root_menu

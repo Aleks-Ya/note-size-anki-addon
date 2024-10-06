@@ -85,7 +85,7 @@ def __initialize(col: Collection):
     collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(
         col, item_id_cache, media_cache, trash, size_formatter, used_files_calculator, settings)
     desktop_services: QDesktopServices = QDesktopServices()
-    url_manager: UrlManager = UrlManager(settings)
+    url_manager: UrlManager = UrlManager()
     config_ui: ConfigUi = ConfigUi(
         config, config_loader, logs, cache_initializer, desktop_services, level_parser, url_manager, settings)
     details_model_filler: DetailsModelFiller = DetailsModelFiller(size_calculator, size_formatter)
@@ -100,7 +100,7 @@ def __initialize(col: Collection):
     deck_browser_hooks.setup_hooks()
     cache_hooks: CacheHooks = CacheHooks(cache_manager, cache_initializer, updated_files_calculator)
     cache_hooks.setup_hooks()
-    config_hooks: ConfigHooks = ConfigHooks(config_ui, desktop_services)
+    config_hooks: ConfigHooks = ConfigHooks(config_ui, desktop_services, url_manager)
     config_hooks.setup_hooks()
     browser_button_manager: BrowserButtonManager = BrowserButtonManager(
         col, item_id_cache, size_str_cache, details_dialog, config)

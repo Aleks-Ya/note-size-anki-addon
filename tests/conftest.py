@@ -329,5 +329,5 @@ def profiler(config: Config, settings: Settings) -> Profiler:
 
 
 @pytest.fixture
-def url_manager(settings: Settings) -> UrlManager:
-    return UrlManager(settings)
+def url_manager() -> UrlManager:
+    return UrlManager()

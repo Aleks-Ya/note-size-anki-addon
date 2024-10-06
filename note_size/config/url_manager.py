@@ -4,8 +4,6 @@ from logging import Logger
 from typing import NewType
 from urllib.parse import urljoin
 
-from ..config.settings import Settings
-
 log: Logger = logging.getLogger(__name__)
 
 URL = NewType("URL", str)
@@ -20,6 +18,12 @@ class UrlType(Enum):
     CONFIGURATION_LOGGING_LEVEL = 6
     CONFIGURATION_CACHE_WARM_UP_ENABLED = 7
     CONFIGURATION_CACHE_STORE_ON_DISK = 8
+    INFO_USER_MANUAL = 9
+    INFO_ADDON_PAGE = 10
+    INFO_FORUM = 11
+    INFO_CHANGE_LOG = 12
+    INFO_BUG_TRACKER = 13
+    INFO_GITHUB = 14
 
 
 class UrlManager:
@@ -32,14 +36,23 @@ class UrlManager:
         UrlType.CONFIGURATION_DECK_BROWSER_SHOW_COLLECTION_SIZE: "docs/configuration.md#show-collection-size",
         UrlType.CONFIGURATION_EDITOR_SIZE_BUTTON_ENABLED: "docs/configuration.md#enabled",
         UrlType.CONFIGURATION_LOGGING_LEVEL: "docs/configuration.md#logging",
+        UrlType.INFO_USER_MANUAL: "docs/user-manual.md",
+        UrlType.INFO_ADDON_PAGE: "https://ankiweb.net/shared/info/1188705668",
+        UrlType.INFO_FORUM: "https://forums.ankiweb.net/t/note-size-addon-support/46001",
+        UrlType.INFO_CHANGE_LOG: "https://github.com/Aleks-Ya/note-size-anki-addon/blob/main/CHANGELOG.md",
+        UrlType.INFO_BUG_TRACKER: "https://github.com/Aleks-Ya/note-size-anki-addon/issues",
+        UrlType.INFO_GITHUB: "https://github.com/Aleks-Ya/note-size-anki-addon",
     }
 
-    def __init__(self, settings: Settings) -> None:
-        self.__settings: Settings = settings
+    def __init__(self) -> None:
+        self.docs_base_url: str = "https://github.com/Aleks-Ya/note-size-anki-addon/blob/main/"
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def get_url(self, url_type: UrlType) -> URL:
-        return URL(urljoin(self.__settings.docs_base_url, self.__links[url_type]))
+        link: URL = self.__links[url_type]
+        if link.startswith("docs/"):
+            link = URL(urljoin(self.docs_base_url, link))
+        return link
 
     def get_all_urls(self) -> dict[UrlType, URL]:
         return {url_type: self.get_url(url_type) for url_type in UrlType}
