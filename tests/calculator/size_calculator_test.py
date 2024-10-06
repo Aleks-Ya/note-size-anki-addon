@@ -9,7 +9,7 @@ from pytest import raises
 
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.types import SizeBytes, MediaFile, SizeType
-from tests.data import Data, DefaultFields, FileNames
+from tests.data import Data, DefaultFields, FileNames, MediaFiles
 
 
 @pytest.fixture
@@ -78,9 +78,9 @@ def test_calculate_note_size_total_performance(size_calculator: SizeCalculator, 
 def test_calculate_note_file_sizes(size_calculator: SizeCalculator, note: Note):
     act_file_sizes: dict[MediaFile, SizeBytes] = size_calculator.calculate_note_file_sizes(note, use_cache=False)
     exp_file_sizes: dict[MediaFile, SizeBytes] = {
-        DefaultFields.file0: SizeBytes(len(DefaultFields.content0)),
-        DefaultFields.file1: SizeBytes(len(DefaultFields.content1)),
-        DefaultFields.file2: SizeBytes(len(DefaultFields.content2))}
+        MediaFiles.picture: SizeBytes(len(DefaultFields.content0)),
+        MediaFiles.sound: SizeBytes(len(DefaultFields.content1)),
+        MediaFiles.animation: SizeBytes(len(DefaultFields.content2))}
     assert act_file_sizes == exp_file_sizes
 
 

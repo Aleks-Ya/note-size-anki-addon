@@ -22,17 +22,22 @@ class FileNames:
     video: str = 'video.mov'
 
 
+class MediaFiles:
+    picture: MediaFile = MediaFile(FileNames.picture)
+    sound: MediaFile = MediaFile(FileNames.sound)
+    animation: MediaFile = MediaFile(FileNames.animation)
+
+
 class DefaultFields:
     content0: FileContent = FileContent('picture')
     content1: FileContent = FileContent('sound')
     content2: FileContent = FileContent('animation')
-    file0: MediaFile = MediaFile(FileNames.picture)
-    file1: MediaFile = MediaFile(FileNames.sound)
-    file2: MediaFile = MediaFile(FileNames.animation)
     front_field_name: FieldName = FieldName('Front')
     back_field_name: FieldName = FieldName('Back')
-    front_field_content: FieldContent = FieldContent(f'Files ∑￡: <img src="{file0}"> <img src="{file1}">')
-    back_field_content: FieldContent = FieldContent(f'Files ∑￡: <img src="{file0}"> <img src="{file2}">')
+    front_field_content: FieldContent = FieldContent(
+        f'Files ∑￡: <img src="{MediaFiles.picture}"> <img src="{MediaFiles.sound}">')
+    back_field_content: FieldContent = FieldContent(
+        f'Files ∑￡: <img src="{MediaFiles.picture}"> <img src="{MediaFiles.animation}">')
 
 
 class Data:
@@ -46,12 +51,12 @@ class Data:
     def create_note_with_files(self) -> Note:
         note: Note = self.create_note_with_given_files({
             DefaultFields.front_field_name: {
-                DefaultFields.file0: DefaultFields.content0,
-                DefaultFields.file1: DefaultFields.content1
+                MediaFiles.picture: DefaultFields.content0,
+                MediaFiles.sound: DefaultFields.content1
             },
             DefaultFields.back_field_name: {
-                DefaultFields.file0: DefaultFields.content0,
-                DefaultFields.file2: DefaultFields.content2
+                MediaFiles.picture: DefaultFields.content0,
+                MediaFiles.animation: DefaultFields.content2
             }
         })
         return note

@@ -3,7 +3,7 @@ from anki.notes import Note, NoteId
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
 from note_size.types import MediaFile, FileContent
-from tests.data import Data, DefaultFields, FileNames
+from tests.data import Data, DefaultFields, FileNames, MediaFiles
 
 
 def test_get_notes_having_updated_files(updated_files_calculator: UpdatedFilesCalculator, td: Data):
@@ -11,11 +11,11 @@ def test_get_notes_having_updated_files(updated_files_calculator: UpdatedFilesCa
     note1: Note = td.create_note_with_files()
     note2: Note = td.create_note_with_given_files({
         DefaultFields.front_field_name: {
-            DefaultFields.file0: DefaultFields.content0,
+            MediaFiles.picture: DefaultFields.content0,
             MediaFile(FileNames.video): FileContent('video')
         },
         DefaultFields.back_field_name: {
-            DefaultFields.file1: DefaultFields.content1,
+            MediaFiles.sound: DefaultFields.content1,
             MediaFile(FileNames.image): FileContent('image')
         }
     })
@@ -28,7 +28,7 @@ def test_get_notes_having_updated_files(updated_files_calculator: UpdatedFilesCa
         }
     })
     assert updated_files_calculator.get_notes_having_updated_files() == set()
-    td.write_file(DefaultFields.file0, "new content")
+    td.write_file(MediaFiles.picture, "new content")
     updated_notes: set[NoteId] = updated_files_calculator.get_notes_having_updated_files()
     assert updated_notes == {note1.id, note2.id}
 
@@ -39,11 +39,11 @@ def test_evict_note(updated_files_calculator: UpdatedFilesCalculator, td: Data):
     note1: Note = td.create_note_with_files()
     note2: Note = td.create_note_with_given_files({
         DefaultFields.front_field_name: {
-            DefaultFields.file0: DefaultFields.content0,
+            MediaFiles.picture: DefaultFields.content0,
             MediaFile(FileNames.video): FileContent('video')
         },
         DefaultFields.back_field_name: {
-            DefaultFields.file1: DefaultFields.content1,
+            MediaFiles.sound: DefaultFields.content1,
             MediaFile(FileNames.image): FileContent('image')
         }
     })
@@ -60,7 +60,7 @@ def test_evict_note(updated_files_calculator: UpdatedFilesCalculator, td: Data):
     assert updated_files_calculator.get_notes_having_updated_files() == set()
     assert updated_files_calculator.as_dict_list() == [{}]
 
-    td.write_file(DefaultFields.file0, "new content")
+    td.write_file(MediaFiles.picture, "new content")
     updated_files_calculator.get_notes_having_updated_files()
     assert updated_files_calculator.as_dict_list() == [{FileNames.animation: {note1.id},
                                                         FileNames.image: {note2.id},
@@ -90,8 +90,8 @@ def test_initialized(updated_files_calculator: UpdatedFilesCalculator):
 def test_get_cache_size(updated_files_calculator: UpdatedFilesCalculator, media_cache: MediaCache, td: Data):
     updated_files_calculator.set_initialized(True)
     assert updated_files_calculator.get_cache_size() == 0
-    media_cache.get_file_size(DefaultFields.file0, use_cache=True)
+    media_cache.get_file_size(MediaFiles.picture, use_cache=True)
     td.create_note_with_files()
-    td.write_file(DefaultFields.file0, "new content")
+    td.write_file(MediaFiles.picture, "new content")
     updated_files_calculator.get_notes_having_updated_files()
     assert updated_files_calculator.get_cache_size() == 3

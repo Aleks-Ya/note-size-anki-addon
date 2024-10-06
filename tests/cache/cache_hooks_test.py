@@ -13,7 +13,7 @@ from note_size.cache.media_cache import MediaCache
 from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.types import SizeType
-from tests.data import Data, DefaultFields
+from tests.data import Data, MediaFiles
 
 
 @pytest.fixture
@@ -70,17 +70,17 @@ def test_media_sync_did_start_or_stop(cache_hooks: CacheHooks, col: Collection, 
     td.create_note_with_files()
     original_file_size: int = 7
 
-    assert media_cache.get_file_size(DefaultFields.file0, use_cache=True) == original_file_size
+    assert media_cache.get_file_size(MediaFiles.picture, use_cache=True) == original_file_size
     new_content: str = "abc"
-    td.write_file(DefaultFields.file0, new_content)
-    assert media_cache.get_file_size(DefaultFields.file0, use_cache=True) == original_file_size
+    td.write_file(MediaFiles.picture, new_content)
+    assert media_cache.get_file_size(MediaFiles.picture, use_cache=True) == original_file_size
     gui_hooks.media_sync_did_start_or_stop(True)
-    assert media_cache.get_file_size(DefaultFields.file0, use_cache=True) == original_file_size
+    assert media_cache.get_file_size(MediaFiles.picture, use_cache=True) == original_file_size
 
     assert not updated_files_calculator.is_initialized()
     gui_hooks.media_sync_did_start_or_stop(False)
-    assert media_cache.get_file_size(DefaultFields.file0, use_cache=True) == original_file_size
+    assert media_cache.get_file_size(MediaFiles.picture, use_cache=True) == original_file_size
 
     updated_files_calculator.set_initialized(True)
     gui_hooks.media_sync_did_start_or_stop(False)
-    assert media_cache.get_file_size(DefaultFields.file0, use_cache=True) == len(new_content)
+    assert media_cache.get_file_size(MediaFiles.picture, use_cache=True) == len(new_content)

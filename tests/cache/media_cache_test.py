@@ -5,12 +5,12 @@ from anki.notes import Note
 
 from note_size.cache.media_cache import MediaCache
 from note_size.types import SizeBytes, FilesNumber, MediaFile
-from tests.data import Data, DefaultFields, FileNames
+from tests.data import Data, DefaultFields, FileNames, MediaFiles
 
 
 def test_get_file_size(td: Data, media_cache: MediaCache):
     td.create_note_with_files()
-    act_file_size_1: SizeBytes = media_cache.get_file_size(DefaultFields.file0, use_cache=False)
+    act_file_size_1: SizeBytes = media_cache.get_file_size(MediaFiles.picture, use_cache=False)
     exp_file_size_1: SizeBytes = SizeBytes(len(DefaultFields.content0))
     assert act_file_size_1 == exp_file_size_1
 
@@ -19,7 +19,7 @@ def test_get_file_size(td: Data, media_cache: MediaCache):
 def test_get_file_size_cached_performance(media_cache: MediaCache, td: Data):
     td.create_note_with_files()
     execution_time: float = timeit.timeit(
-        lambda: media_cache.get_file_size(DefaultFields.file0, use_cache=True), number=1_000_000)
+        lambda: media_cache.get_file_size(MediaFiles.picture, use_cache=True), number=1_000_000)
     assert execution_time <= 1
 
 
@@ -36,7 +36,7 @@ def test_get_unused_files_size(media_cache: MediaCache, td: Data):
 def test_get_cache_size(media_cache: MediaCache, td: Data):
     assert media_cache.get_cache_size() == 0
     td.create_note_with_files()
-    media_cache.get_file_size(DefaultFields.file0, use_cache=True)
+    media_cache.get_file_size(MediaFiles.picture, use_cache=True)
     assert media_cache.get_cache_size() == 1
     media_cache.invalidate_cache()
     assert media_cache.get_cache_size() == 0
@@ -47,13 +47,13 @@ def test_get_updated_files(media_cache: MediaCache, td: Data):
     exp_size_0: SizeBytes = SizeBytes(7)
     exp_size_1: SizeBytes = SizeBytes(5)
     exp_size_2: SizeBytes = SizeBytes(9)
-    assert media_cache.get_file_size(DefaultFields.file0, use_cache=True) == exp_size_0
-    assert media_cache.get_file_size(DefaultFields.file1, use_cache=True) == exp_size_1
-    assert media_cache.get_file_size(DefaultFields.file2, use_cache=True) == exp_size_2
-    td.write_file(DefaultFields.file1, "new content 1")
-    td.write_file(DefaultFields.file2, "new content 2")
-    assert media_cache.get_file_size(DefaultFields.file0, use_cache=True) == exp_size_0
-    assert media_cache.get_file_size(DefaultFields.file1, use_cache=True) == exp_size_1
-    assert media_cache.get_file_size(DefaultFields.file2, use_cache=True) == exp_size_2
+    assert media_cache.get_file_size(MediaFiles.picture, use_cache=True) == exp_size_0
+    assert media_cache.get_file_size(MediaFiles.sound, use_cache=True) == exp_size_1
+    assert media_cache.get_file_size(MediaFiles.animation, use_cache=True) == exp_size_2
+    td.write_file(MediaFiles.sound, "new content 1")
+    td.write_file(MediaFiles.animation, "new content 2")
+    assert media_cache.get_file_size(MediaFiles.picture, use_cache=True) == exp_size_0
+    assert media_cache.get_file_size(MediaFiles.sound, use_cache=True) == exp_size_1
+    assert media_cache.get_file_size(MediaFiles.animation, use_cache=True) == exp_size_2
     updated_files: set[MediaFile] = media_cache.get_updated_files()
-    assert updated_files == {DefaultFields.file1, DefaultFields.file2}
+    assert updated_files == {MediaFiles.sound, MediaFiles.animation}
