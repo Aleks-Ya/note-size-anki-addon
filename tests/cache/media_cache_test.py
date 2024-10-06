@@ -5,7 +5,7 @@ from anki.notes import Note
 
 from note_size.cache.media_cache import MediaCache
 from note_size.types import SizeBytes, FilesNumber, MediaFile
-from tests.data import Data, DefaultFields
+from tests.data import Data, DefaultFields, FileNames
 
 
 def test_get_file_size(td: Data, media_cache: MediaCache):
@@ -16,24 +16,24 @@ def test_get_file_size(td: Data, media_cache: MediaCache):
 
 
 @pytest.mark.performance
-def test_get_file_size_cached_performance(td: Data, media_cache: MediaCache):
+def test_get_file_size_cached_performance(media_cache: MediaCache, td: Data):
     td.create_note_with_files()
     execution_time: float = timeit.timeit(
         lambda: media_cache.get_file_size(DefaultFields.file0, use_cache=True), number=1_000_000)
     assert execution_time <= 1
 
 
-def test_get_unused_files_size(td: Data, media_cache: MediaCache):
+def test_get_unused_files_size(media_cache: MediaCache, td: Data):
     assert media_cache.get_unused_files_size(use_cache=True) == (SizeBytes(0), FilesNumber(0))
     note: Note = td.create_note_with_files()
     assert media_cache.get_unused_files_size(use_cache=True) == (SizeBytes(0), FilesNumber(0))
-    Data.replace_in_front_field(note, '<img src="picture.jpg">', '')
-    Data.replace_in_front_field(note, '<img src="animation.gif">', '')
-    assert media_cache.get_unused_files_size(use_cache=True) == (SizeBytes(0), FilesNumber(0))
-    assert media_cache.get_unused_files_size(use_cache=False) == (SizeBytes(0), FilesNumber(0))  # TODO fix it
+    assert media_cache.get_unused_files_size(use_cache=False) == (SizeBytes(0), FilesNumber(0))
+    Data.replace_in_front_field(note, f'<img src="{FileNames.sound}">', '')
+    assert media_cache.get_unused_files_size(use_cache=True) == (SizeBytes(5), FilesNumber(1))
+    assert media_cache.get_unused_files_size(use_cache=False) == (SizeBytes(5), FilesNumber(1))
 
 
-def test_get_cache_size(td: Data, media_cache: MediaCache):
+def test_get_cache_size(media_cache: MediaCache, td: Data):
     assert media_cache.get_cache_size() == 0
     td.create_note_with_files()
     media_cache.get_file_size(DefaultFields.file0, use_cache=True)
@@ -42,7 +42,7 @@ def test_get_cache_size(td: Data, media_cache: MediaCache):
     assert media_cache.get_cache_size() == 0
 
 
-def test_get_updated_files(td: Data, media_cache: MediaCache):
+def test_get_updated_files(media_cache: MediaCache, td: Data):
     td.create_note_with_files()
     exp_size_0: SizeBytes = SizeBytes(7)
     exp_size_1: SizeBytes = SizeBytes(5)
