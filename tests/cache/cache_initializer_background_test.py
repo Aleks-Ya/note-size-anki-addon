@@ -68,7 +68,7 @@ def test_update_progress(td: Data, col: Collection, cache_manager: CacheManager,
                          file_type_helper: FileTypeHelper, config: Config, cache_storage: CacheStorage):
     update_progress_step: int = 10
     note_count: int = update_progress_step * 2 + 1
-    for i in range(note_count):
+    for _ in range(note_count):
         td.create_note_without_files()
     cache_initializer_background: CacheInitializerBackground = CacheInitializerBackground(
         cache_manager, update_progress_callback, update_progress_step)

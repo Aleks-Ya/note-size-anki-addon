@@ -72,7 +72,7 @@ class CollectionSizeFormatter:
                             f'media files not used in any notes (can be moved to Trash)'
         trash_title: str = f'Size of {trash_files_number_str} media files in the Trash (can be emptied)\n' \
                            f'Folder "{trash_dir_path}"'
-        total_title: str = f'Total size of collection, media files, unused files and trash files'
+        total_title: str = 'Total size of collection, media files, unused files and trash files'
         div.append(self.__span(soup, "Collection", collection_size, collection_title))
         div.append(self.__span(soup, "Media", used_files_size, media_title))
         div.append(self.__span(soup, "Unused", unused_files_size, unused_title, self.__details_icon(soup)))

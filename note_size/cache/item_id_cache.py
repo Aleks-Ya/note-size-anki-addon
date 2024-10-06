@@ -44,7 +44,7 @@ class ItemIdCache(Cache):
     def read_from_dict_list(self, caches: list[dict[Any, Any]]) -> None:
         with self._lock:
             self.__id_cache = caches[0]
-            log.info(f"Caches were read dict list")
+            log.info("Cache was read from dict list")
 
     def invalidate_cache(self) -> None:
         with self._lock:

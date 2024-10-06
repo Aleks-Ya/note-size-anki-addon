@@ -117,7 +117,3 @@ class Data:
             media_file: MediaFile = self.col.media.write_data(media_file, file_content.encode())
             field_content += f' <img src="{media_file}">'
         return field_content
-
-    def __new_note(self) -> Note:
-        note_type: NotetypeDict = self.col.models.by_name('Basic')
-        return self.col.new_note(note_type)

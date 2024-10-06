@@ -82,7 +82,7 @@ class DetailsDialog(QDialog):
         log.info(f"Data preparation for showing notes finished: duration_sec={duration_sec}")
 
     def show_notes(self, parent: Optional[QWidget] = None) -> None:
-        log.debug(f"Start showing notes")
+        log.debug("Start showing notes")
         start_time: datetime = datetime.now()
         self.__show_model(parent)
         end_time: datetime = datetime.now()

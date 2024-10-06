@@ -33,18 +33,18 @@ class EditorButtonJs:
                 }}
             }} catch (error) {{
               error.stack
-            }} """
+            }}"""
         return js
 
     @staticmethod
     def hide_size_button_js() -> str:
-        js: str = f"""
-            try {{
+        js: str = """
+            try {
                 const sizeButton = document.getElementById('size_button');
-                if (sizeButton) {{
+                if (sizeButton) {
                     sizeButton.style.display = 'none';
-                }}
-            }} catch (error) {{
+                }
+            } catch (error) {
               error.stack
-            }} """
+            }"""
         return js

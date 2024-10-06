@@ -18,7 +18,7 @@ def test_show_size_button_js_edit_mode(editor_button_js: EditorButtonJs, td: Dat
                 }
             } catch (error) {
               error.stack
-            } """
+            }"""
 
 
 def test_show_size_button_js_add_mode(editor_button_js: EditorButtonJs, td: Data):
@@ -35,7 +35,7 @@ def test_show_size_button_js_add_mode(editor_button_js: EditorButtonJs, td: Data
                 }
             } catch (error) {
               error.stack
-            } """
+            }"""
 
 
 def test_show_size_button_js_no_note(editor_button_js: EditorButtonJs, td: Data):
@@ -50,7 +50,7 @@ def test_show_size_button_js_no_note(editor_button_js: EditorButtonJs, td: Data)
                 }
             } catch (error) {
               error.stack
-            } """
+            }"""
 
 
 def test_hide_size_button_js(editor_button_js: EditorButtonJs, td: Data):
@@ -63,4 +63,4 @@ def test_hide_size_button_js(editor_button_js: EditorButtonJs, td: Data):
                 }
             } catch (error) {
               error.stack
-            } """
+            }"""

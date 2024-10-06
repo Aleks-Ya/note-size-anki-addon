@@ -42,7 +42,7 @@ class DeckBrowserHooks:
             content.stats += html
             log.debug(f"DeckBrowserContent stats (edited): {content.stats}")
         else:
-            log.debug(f"Showing collection size in DeckBrowser is disabled")
+            log.debug("Showing collection size in DeckBrowser is disabled")
 
     def __on_js_message(self, handled: tuple[bool, Any], message: str, _: Any) -> tuple[bool, Any]:
         if message == JsActions.open_config_action:

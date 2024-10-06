@@ -37,6 +37,7 @@ class MakeDistributionCommand(Command):
             shutil.rmtree(self.build_dir)
 
     def finalize_options(self):
+        # Nothing to finalize
         pass
 
     def run(self):

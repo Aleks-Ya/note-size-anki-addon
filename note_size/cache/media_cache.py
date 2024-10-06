@@ -74,7 +74,7 @@ class MediaCache(Cache):
     def read_from_dict_list(self, caches: list[dict[Any, Any]]):
         with self._lock:
             self.__file_sizes_cache = caches[0]
-            log.info(f"Cache was read from dict list")
+            log.info("Cache was read from dict list")
 
     def get_cache_size(self) -> int:
         with self._lock:

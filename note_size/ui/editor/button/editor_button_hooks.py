@@ -94,10 +94,10 @@ class EditorButtonHooks:
             if self.__config.get_size_button_enabled():
                 js: str = self.__editor_button_js.show_size_button_js(editor.note, editor.addMode)
                 editor.web.evalWithCallback(js, self.__eval_callback)
-                log.debug(f"Size button was refreshed")
+                log.debug("Size button was refreshed")
             else:
                 js: str = self.__editor_button_js.hide_size_button_js()
                 editor.web.evalWithCallback(js, self.__eval_callback)
-                log.debug(f"Size button was hidden")
+                log.debug("Size button was hidden")
         else:
             log.debug("Skip size button refresh as editor.web is empty")

@@ -149,7 +149,7 @@ class SizeCalculator(Cache):
             self.__caches.size_caches = caches[0]
             self.__caches.note_files_cache = caches[1]
             self.__caches.note_file_sizes_cache = caches[2]
-            log.info(f"Caches were read dict list")
+            log.info("Caches were read from dict list")
 
     def get_cache_size(self) -> int:
         with self._lock:
