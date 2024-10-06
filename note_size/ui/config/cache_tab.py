@@ -1,12 +1,12 @@
 import logging
 from logging import Logger
-from urllib.parse import urljoin
 
 from aqt.qt import QVBoxLayout, QWidget, Qt, QPushButton, QDesktopServices
 
 from .widgets import CheckboxWithInfo
 from ...config.settings import Settings
 from ...cache.cache_initializer import CacheInitializer
+from ...config.url_manager import UrlManager, UrlType
 from ...ui.config.ui_model import UiModel
 
 log: Logger = logging.getLogger(__name__)
@@ -16,16 +16,15 @@ class CacheTab(QWidget):
     name: str = "Cache"
 
     def __init__(self, model: UiModel, cache_initializer: CacheInitializer, desktop_services: QDesktopServices,
-                 settings: Settings) -> None:
+                 url_manager: UrlManager, settings: Settings) -> None:
         super().__init__()
         self.__model: UiModel = model
         self.__cache_initializer: CacheInitializer = cache_initializer
-        warmup_enabled_url: str = urljoin(settings.docs_base_url, "docs/configuration.md#warmup-enabled")
+        warmup_enabled_url: str = url_manager.get_url(UrlType.CONFIGURATION_CACHE_WARM_UP_ENABLED)
         self.__enable_warmup_checkbox: CheckboxWithInfo = CheckboxWithInfo(
             "Enable cache warm-up", warmup_enabled_url, desktop_services, settings)
         self.__enable_warmup_checkbox.add_checkbox_listener(self.__on_warmup_checkbox_state_changed)
-        store_cache_to_file_enabled_url: str = urljoin(settings.docs_base_url,
-                                                       "docs/configuration.md#store-cache-on-disk")
+        store_cache_to_file_enabled_url: str = url_manager.get_url(UrlType.CONFIGURATION_CACHE_STORE_ON_DISK)
         self.__store_cache_to_file_checkbox: CheckboxWithInfo = CheckboxWithInfo(
             "Store cache in file on exit", store_cache_to_file_enabled_url, desktop_services, settings)
         self.__store_cache_to_file_checkbox.add_checkbox_listener(self.__on_store_to_file_checkbox_state_changed)

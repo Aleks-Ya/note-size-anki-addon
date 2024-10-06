@@ -8,6 +8,7 @@ from ...config.config import Config
 from ...config.config_loader import ConfigLoader
 from ...config.level_parser import LevelParser
 from ...config.settings import Settings
+from ...config.url_manager import UrlManager
 from ...log.logs import Logs
 from .config_dialog import ConfigDialog
 from .ui_model import UiModel
@@ -17,10 +18,11 @@ log: Logger = logging.getLogger(__name__)
 
 class ConfigUi:
     def __init__(self, config: Config, config_loader: ConfigLoader, logs: Logs, cache_initializer: CacheInitializer,
-                 desktop_services: QDesktopServices, level_parser: LevelParser, settings: Settings) -> None:
+                 desktop_services: QDesktopServices, level_parser: LevelParser, url_manager: UrlManager,
+                 settings: Settings) -> None:
         model: UiModel = UiModel()
         self.__dialog: ConfigDialog = ConfigDialog(config, config_loader, model, logs, cache_initializer,
-                                                   desktop_services, level_parser, settings)
+                                                   desktop_services, level_parser, url_manager, settings)
 
     def show_configuration_dialog(self) -> None:
         self.__dialog.refresh_from_model()

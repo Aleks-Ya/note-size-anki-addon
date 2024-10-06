@@ -15,6 +15,7 @@ def __initialize(col: Collection):
     from .config.config_hooks import ConfigHooks
     from .config.settings import Settings
     from .config.level_parser import LevelParser
+    from .config.url_manager import UrlManager
     from .calculator.size_calculator import SizeCalculator
     from .calculator.size_formatter import SizeFormatter
     from .calculator.updated_files_calculator import UpdatedFilesCalculator
@@ -86,8 +87,9 @@ def __initialize(col: Collection):
     collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(
         col, item_id_cache, media_cache, trash, size_formatter, used_files_calculator, settings)
     desktop_services: QDesktopServices = QDesktopServices()
+    url_manager: UrlManager = UrlManager(settings)
     config_ui: ConfigUi = ConfigUi(
-        config, config_loader, logs, cache_initializer, desktop_services, level_parser, settings)
+        config, config_loader, logs, cache_initializer, desktop_services, level_parser, url_manager, settings)
     details_model_filler: DetailsModelFiller = DetailsModelFiller(size_calculator, size_formatter)
     details_dialog: DetailsDialog = DetailsDialog(
         size_calculator, size_formatter, file_type_helper, details_model_filler, config_ui, config, settings)

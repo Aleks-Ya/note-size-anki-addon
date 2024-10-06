@@ -4,6 +4,7 @@ from pytestqt.qtbot import QtBot
 
 from note_size.config.config import Config
 from note_size.config.settings import Settings
+from note_size.config.url_manager import UrlManager
 from note_size.ui.config.browser_tab import BrowserTab
 from note_size.ui.config.model_converter import ModelConverter
 from note_size.ui.config.ui_model import UiModel
@@ -12,10 +13,11 @@ from note_size.ui.config.widgets import CheckboxWithInfo
 
 @pytest.fixture
 def browser_tab(qtbot: QtBot, config: Config, desktop_services: QDesktopServices, settings: Settings,
-                ui_model: UiModel) -> BrowserTab:
+                ui_model: UiModel, url_manager: UrlManager) -> BrowserTab:
     ModelConverter.apply_config_to_model(ui_model, config)
-    browser_tab: BrowserTab = BrowserTab(ui_model, desktop_services, settings)
+    browser_tab: BrowserTab = BrowserTab(ui_model, desktop_services, url_manager, settings)
     browser_tab.refresh_from_model()
+    # noinspection PyUnresolvedReferences
     browser_tab.show()
     qtbot.addWidget(browser_tab)
     return browser_tab

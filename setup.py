@@ -3,6 +3,7 @@ import os
 import shutil
 import subprocess
 from pathlib import Path
+from subprocess import CompletedProcess
 
 import setuptools
 from setuptools import Command
@@ -39,11 +40,30 @@ class MakeDistributionCommand(Command):
         pass
 
     def run(self):
-        print("Testing...")
-        result = subprocess.run(['tox'], capture_output=True, text=True)
+        self.__run_unit_tests()
+        self.__run_integration_tests()
+        self.__package_zip()
+
+    @staticmethod
+    def __run_unit_tests():
+        print("Running unit tests...")
+        result: CompletedProcess[str] = subprocess.run(['tox'], capture_output=True, text=True)
         if result.returncode != 0:
+            print(result.stderr)
+            print(result.stdout)
             raise SystemExit(result.returncode)
 
+    @staticmethod
+    def __run_integration_tests():
+        print("Running integration tests...")
+        result: CompletedProcess[str] = subprocess.run(
+            ['pytest', '-m', 'integration'], capture_output=True, text=True)
+        if result.returncode != 0:
+            print(result.stderr)
+            print(result.stdout)
+            raise SystemExit(result.returncode)
+
+    def __package_zip(self):
         print("Packaging...")
         note_size_dir: str = 'note_size'
         note_size_package_dir: Path = Path(self.project_dir, note_size_dir)
@@ -54,7 +74,6 @@ class MakeDistributionCommand(Command):
         self.__copy_file_to_build("LICENSE", dest_subdir)
         self.__copy_file_to_build("README.md", dest_subdir)
         self.__copy_file_to_build("CHANGELOG.md", dest_subdir)
-
         output_zip: Path = Path(self.build_dir, f'note-size-{_version}')
         actual_output_zip: Path = Path(shutil.make_archive(str(output_zip), 'zip', dest_subdir))
         renamed_output_zip: Path = Path(actual_output_zip.parent, f"{actual_output_zip.stem}.ankiaddon")
@@ -85,6 +104,7 @@ class MakeDistributionCommand(Command):
         }
         path: Path = Path(dest_subdir, 'manifest.json')
         with open(path, 'w') as fp:
+            # noinspection PyTypeChecker
             json.dump(draft, fp, indent=2)
 
 

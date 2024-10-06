@@ -1,11 +1,11 @@
 import logging
 from logging import Logger
-from urllib.parse import urljoin
 
 from aqt.qt import QVBoxLayout, QWidget, Qt, QDesktopServices
 
 from .widgets import CheckboxWithInfo
 from ...config.settings import Settings
+from ...config.url_manager import UrlManager, UrlType
 from ...ui.config.ui_model import UiModel
 
 log: Logger = logging.getLogger(__name__)
@@ -14,12 +14,12 @@ log: Logger = logging.getLogger(__name__)
 class DeckBrowserTab(QWidget):
     name: str = "Deck Browser"
 
-    def __init__(self, model: UiModel, desktop_services: QDesktopServices, settings: Settings):
+    def __init__(self, model: UiModel, desktop_services: QDesktopServices, url_manager: UrlManager, settings: Settings):
         super().__init__()
         self.__model: UiModel = model
-        url: str = urljoin(settings.docs_base_url, "docs/configuration.md#show-collection-size")
-        self.__checkbox: CheckboxWithInfo = CheckboxWithInfo("Show collection size in Deck Browser", url,
-                                                             desktop_services, settings)
+        url: str = url_manager.get_url(UrlType.CONFIGURATION_DECK_BROWSER_SHOW_COLLECTION_SIZE)
+        self.__checkbox: CheckboxWithInfo = CheckboxWithInfo(
+            "Show collection size in Deck Browser", url, desktop_services, settings)
         self.__checkbox.add_checkbox_listener(self.__on_checkbox_state_changed)
         layout: QVBoxLayout = QVBoxLayout()
         layout.setAlignment(Qt.AlignmentFlag.AlignTop)

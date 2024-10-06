@@ -28,6 +28,7 @@ from note_size.config.config import Config
 from note_size.config.config_loader import ConfigLoader
 from note_size.config.level_parser import LevelParser
 from note_size.config.settings import Settings
+from note_size.config.url_manager import UrlManager
 from note_size.log.logs import Logs
 from note_size.profiler.profiler import Profiler
 from note_size.ui.browser.browser_button_manager import BrowserButtonManager
@@ -208,8 +209,10 @@ def desktop_services() -> QDesktopServices:
 
 @pytest.fixture
 def config_ui(config: Config, config_loader: ConfigLoader, logs: Logs, cache_initializer: CacheInitializer,
-              desktop_services: QDesktopServices, level_parser: LevelParser, settings: Settings) -> ConfigUi:
-    return ConfigUi(config, config_loader, logs, cache_initializer, desktop_services, level_parser, settings)
+              desktop_services: QDesktopServices, level_parser: LevelParser, url_manager: UrlManager,
+              settings: Settings) -> ConfigUi:
+    return ConfigUi(config, config_loader, logs, cache_initializer, desktop_services, level_parser, url_manager,
+                    settings)
 
 
 @pytest.fixture
@@ -329,3 +332,8 @@ def updated_files_calculator(col: Collection, size_calculator: SizeCalculator,
 @pytest.fixture
 def profiler(config: Config, settings: Settings) -> Profiler:
     return Profiler(config, settings)
+
+
+@pytest.fixture
+def url_manager(settings: Settings) -> UrlManager:
+    return UrlManager(settings)

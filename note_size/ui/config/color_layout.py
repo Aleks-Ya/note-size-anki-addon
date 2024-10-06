@@ -1,13 +1,13 @@
 import logging
 from logging import Logger
 from typing import Optional
-from urllib.parse import urljoin
 
 from aqt.qt import QVBoxLayout, QTableWidget, QPushButton, QColorDialog, Qt, \
     QHBoxLayout, QColor, QTableWidgetItem, QDesktopServices
 
 from ...config.level_parser import Level, LevelParser, LevelDict
 from ...config.settings import Settings
+from ...config.url_manager import UrlType, UrlManager
 from ...ui.config.ui_model import UiModel
 from ...ui.config.widgets import GroupVBox, CheckboxWithInfo, InfoButton
 
@@ -23,17 +23,18 @@ class ColorLayout(QVBoxLayout):
     __max_size_key: str = 'Max Size'
 
     def __init__(self, model: UiModel, desktop_services: QDesktopServices, level_parser: LevelParser,
-                 settings: Settings):
+                 url_manager: UrlManager, settings: Settings):
         super().__init__()
         self.__model: UiModel = model
         self.__level_parser: LevelParser = level_parser
-        url: str = urljoin(settings.docs_base_url, "docs/configuration.md#color---enabled")
-        self.__color_enabled_checkbox: CheckboxWithInfo = CheckboxWithInfo("Enable colors", url, desktop_services,
-                                                                           settings)
+        url: str = url_manager.get_url(UrlType.CONFIGURATION_EDITOR_SIZE_BUTTON_COLOR_ENABLED)
+        self.__color_enabled_checkbox: CheckboxWithInfo = CheckboxWithInfo(
+            "Enable colors", url, desktop_services, settings)
         self.__color_enabled_checkbox.add_checkbox_listener(self.__on_color_enabled_checkbox_state_changed)
         headers: list[str] = ["Min Size", "Max Size", "Color"]
         # noinspection PyTypeChecker
         self.__table: QTableWidget = QTableWidget(0, len(headers))
+        # noinspection PyUnresolvedReferences
         self.__table.setHorizontalHeaderLabels(headers)
         self.__table.verticalHeader().setVisible(False)
         # noinspection PyUnresolvedReferences
@@ -44,16 +45,18 @@ class ColorLayout(QVBoxLayout):
         add_remove_level_layout: QHBoxLayout = QHBoxLayout()
         add_remove_level_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self.__add_button: QPushButton = QPushButton("+")
+        # noinspection PyUnresolvedReferences
         self.__add_button.setToolTip("Add a color level")
         self.__add_button.setFixedWidth(self.__add_button.sizeHint().width())
         # noinspection PyUnresolvedReferences
         self.__add_button.clicked.connect(self.__add_row)
         self.__remove_button: QPushButton = QPushButton("-")
+        # noinspection PyUnresolvedReferences
         self.__remove_button.setToolTip("Remove selected color level")
         self.__remove_button.setFixedWidth(self.__remove_button.sizeHint().width())
         # noinspection PyUnresolvedReferences
         self.__remove_button.clicked.connect(self.__remove_row)
-        button_url: str = urljoin(settings.docs_base_url, "docs/configuration.md#color---levels")
+        button_url: str = url_manager.get_url(UrlType.CONFIGURATION_EDITOR_SIZE_BUTTON_COLOR_LEVELS)
         info_button: InfoButton = InfoButton(button_url, desktop_services, settings)
         add_remove_level_layout.addWidget(self.__add_button)
         add_remove_level_layout.addWidget(self.__remove_button)
@@ -101,6 +104,7 @@ class ColorLayout(QVBoxLayout):
     def __open_color_dialog(self, row, column) -> None:
         if column == self.__color_column:
             if not self.__table.item(row, column):
+                # noinspection PyUnresolvedReferences
                 self.__table.setItem(row, column, QTableWidgetItem(""))
             item: QTableWidgetItem = self.__table.item(row, column)
             init_color: QColor = item.background().color()
@@ -128,6 +132,7 @@ class ColorLayout(QVBoxLayout):
         return color_levels
 
     def __set_color_levels(self, levels: list[LevelDict]) -> None:
+        # noinspection PyUnresolvedReferences
         self.__table.setRowCount(len(levels))
         levels_parsed: list[Level] = self.__level_parser.parse_levels(levels)
         for row, level in enumerate(levels_parsed):
@@ -136,8 +141,11 @@ class ColorLayout(QVBoxLayout):
             color_item.setBackground(color)
             min_size_item: QTableWidgetItem = QTableWidgetItem(level.min_size_str)
             max_size_item: QTableWidgetItem = QTableWidgetItem(level.max_size_str)
+            # noinspection PyUnresolvedReferences
             self.__table.setItem(row, self.__color_column, color_item)
+            # noinspection PyUnresolvedReferences
             self.__table.setItem(row, self.__min_size_column, min_size_item)
+            # noinspection PyUnresolvedReferences
             self.__table.setItem(row, self.__max_size_column, max_size_item)
 
     def __disable_column(self, column: int) -> None:

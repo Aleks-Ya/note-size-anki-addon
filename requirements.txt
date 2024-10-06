@@ -13,3 +13,5 @@ mock
 pytest
 pytest-qt
 PyQtPath
+requests
+md_toc
