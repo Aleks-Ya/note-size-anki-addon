@@ -1,3 +1,5 @@
+import logging
+from logging import Logger
 from pathlib import Path
 from typing import Optional, Callable, Any
 
@@ -5,6 +7,8 @@ from aqt.qt import QHBoxLayout, QLabel, Qt, QSpinBox, QComboBox, QGroupBox, QWid
     QIcon, QCheckBox, QDesktopServices, QUrl, QSize
 
 from ...config.settings import Settings
+
+log: Logger = logging.getLogger(__name__)
 
 
 class GroupVBox(QGroupBox):
@@ -14,6 +18,7 @@ class GroupVBox(QGroupBox):
         self.setLayout(self.__layout)
         if title:
             self.setTitle(title)
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     def set_enabled(self, enabled: bool) -> None:
         self.setEnabled(enabled)
@@ -26,6 +31,9 @@ class GroupVBox(QGroupBox):
 
     def set_alignment(self, alignment: Qt.AlignmentFlag) -> None:
         self.__layout.setAlignment(alignment)
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")
 
 
 class TitledComboBoxLayout(QHBoxLayout):
@@ -41,6 +49,7 @@ class TitledComboBoxLayout(QHBoxLayout):
         self.addWidget(label)
         self.addWidget(self.__combo_box)
         self.addWidget(button)
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     def set_current_text(self, current_text: str) -> None:
         self.__combo_box.setCurrentText(current_text)
@@ -48,6 +57,9 @@ class TitledComboBoxLayout(QHBoxLayout):
     def add_current_text_changed_callback(self, callback: Callable[[Any], None]) -> None:
         # noinspection PyUnresolvedReferences
         self.__combo_box.currentTextChanged.connect(callback)
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")
 
 
 class TitledSpinBoxLayout(QHBoxLayout):
@@ -67,6 +79,7 @@ class TitledSpinBoxLayout(QHBoxLayout):
         self.addWidget(self.__label)
         self.addWidget(self.__spin_box)
         self.addWidget(button)
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     def get_value(self) -> int:
         return self.__spin_box.value()
@@ -82,6 +95,9 @@ class TitledSpinBoxLayout(QHBoxLayout):
         # noinspection PyUnresolvedReferences
         self.__spin_box.editingFinished.connect(callback)
 
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")
+
 
 class CheckboxWithInfo(QHBoxLayout):
     def __init__(self, text: str, url: str, desktop_services: QDesktopServices, settings: Settings):
@@ -91,6 +107,7 @@ class CheckboxWithInfo(QHBoxLayout):
         self.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self.addWidget(self.__checkbox)
         self.addWidget(button)
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     def add_checkbox_listener(self, callback: Callable[[bool], None]) -> None:
         # noinspection PyUnresolvedReferences
@@ -101,6 +118,9 @@ class CheckboxWithInfo(QHBoxLayout):
 
     def set_checked(self, checked: bool) -> None:
         self.__checkbox.setChecked(checked)
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")
 
 
 # noinspection PyUnresolvedReferences
@@ -117,6 +137,10 @@ class InfoButton(QPushButton):
         self.clicked.connect(self.__open_link)
         self.setToolTip("Open documentation in browser")
         self.setStyleSheet("border: none;")
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     def __open_link(self) -> None:
         self.__desktop_services.openUrl(self.__url)
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

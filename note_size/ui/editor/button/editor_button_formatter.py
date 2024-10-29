@@ -55,3 +55,6 @@ class EditorButtonFormatter:
                 if level.min_size_bytes <= size < level.max_size_bytes:
                     return level.color
         return ""
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

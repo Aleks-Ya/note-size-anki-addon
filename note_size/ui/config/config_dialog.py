@@ -71,6 +71,7 @@ class ConfigDialog(QDialog):
         self.setLayout(layout)
         self.setMinimumWidth(500)
         self.adjustSize()
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     def refresh_from_model(self) -> None:
         self.deck_browser_tab.refresh_from_model()
@@ -100,3 +101,6 @@ class ConfigDialog(QDialog):
         ModelConverter.apply_config_to_model(self.__model, config)
         self.refresh_from_model()
         self.__config.fire_config_changed()
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

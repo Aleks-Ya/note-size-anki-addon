@@ -24,3 +24,6 @@ class EditorButtonLabel:
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(text='{self.__text}', background_color='{self.__background_color}')"
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

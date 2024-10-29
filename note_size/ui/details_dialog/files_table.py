@@ -80,6 +80,7 @@ class FilesTable(QTableWidget):
         horizontal_header.setSectionResizeMode(self.__icon_column, QHeaderView.ResizeMode.ResizeToContents)
         horizontal_header.setSectionResizeMode(self.__filename_column, QHeaderView.ResizeMode.Stretch)
         horizontal_header.setSectionResizeMode(self.__size_column, QHeaderView.ResizeMode.ResizeToContents)
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     def prepare_items(self, file_sizes: dict[MediaFile, SizeBytes]) -> None:
         files_number: int = len(file_sizes)
@@ -158,3 +159,6 @@ class FilesTable(QTableWidget):
         icon: QIcon = self.__icons[file_type]
         icon_item: IconTableWidgetItem = IconTableWidgetItem(icon, file_type)
         return icon_item
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

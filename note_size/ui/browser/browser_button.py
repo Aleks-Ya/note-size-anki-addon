@@ -69,3 +69,6 @@ class BrowserButton(QPushButton):
         op: WithProgressQueryOp = WithProgressQueryOp(self.__details_dialog, self.__current_note_ids, self.__browser)
         op.run()
         log.debug("Browser size button click finished")
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

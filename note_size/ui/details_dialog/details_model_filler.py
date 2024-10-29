@@ -19,6 +19,7 @@ class DetailsModelFiller:
     def __init__(self, size_calculator: SizeCalculator, size_formatter: SizeFormatter):
         self.__size_calculator: SizeCalculator = size_calculator
         self.__size_formatter: SizeFormatter = size_formatter
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     def prepare_note_model(self, note: Note) -> DetailsModel:
         model: DetailsModel = DetailsModel()
@@ -79,3 +80,6 @@ class DetailsModelFiller:
 
     def __file_sizes(self, note: Note) -> dict[MediaFile, SizeBytes]:
         return self.__size_calculator.calculate_note_file_sizes(note, use_cache=False)
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

@@ -52,3 +52,6 @@ class DeckBrowserHooks:
             check_media_db(mw)
             return True, None
         return handled
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

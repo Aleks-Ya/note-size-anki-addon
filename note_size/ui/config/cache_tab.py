@@ -38,6 +38,7 @@ class CacheTab(QWidget):
         layout.addLayout(self.__store_cache_to_file_checkbox)
         layout.addWidget(refresh_cache_button)
         self.setLayout(layout)
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     def refresh_from_model(self):
         self.__enable_warmup_checkbox.set_checked(self.__model.cache_warmup_enabled)
@@ -51,3 +52,6 @@ class CacheTab(QWidget):
 
     def __refresh_caches(self):
         self.__cache_initializer.refresh_caches(parent=self)
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

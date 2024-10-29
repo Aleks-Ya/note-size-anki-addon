@@ -66,6 +66,7 @@ class DetailsDialog(QDialog):
 
         self.setLayout(layout)
         self.setMinimumSize(300, 200)
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     def show_note(self, note: Note, parent: Optional[QWidget] = None) -> None:
         self.__model = self.__details_model_filler.prepare_note_model(note)
@@ -135,3 +136,6 @@ class DetailsDialog(QDialog):
         end_time: datetime = datetime.now()
         duration_sec: int = round((end_time - start_time).total_seconds())
         log.info(f"Displaying details dialog duration sec: {duration_sec}")
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

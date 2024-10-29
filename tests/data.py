@@ -4,7 +4,7 @@ from typing import Any
 from anki.cards import Card
 from anki.collection import Collection
 from anki.decks import DeckId
-from anki.models import NotetypeDict
+from anki.models import NoteType
 from anki.notes import Note
 from aqt import gui_hooks
 
@@ -47,7 +47,7 @@ class Data:
 
     def __init__(self, col: Collection, module_dir: Path):
         self.col: Collection = col
-        self.note_type: NotetypeDict = self.col.models.by_name('Basic')
+        self.note_type: NoteType = self.col.models.by_name('Basic')
         self.deck_id: DeckId = self.col.decks.get_current_id()
         self.config_json: Path = module_dir.joinpath("config.json")
 

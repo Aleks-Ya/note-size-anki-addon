@@ -115,3 +115,6 @@ class ColumnHooks:
                               is_note: bool) -> None:
         if context.ids and isinstance(context.order, Column) and context.order.notes_mode_label == column_label:
             context.ids = self.__item_id_sorter.sort_item_ids(context.ids, size_type, is_note)
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

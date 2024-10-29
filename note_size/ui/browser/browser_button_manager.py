@@ -41,6 +41,10 @@ class BrowserButtonManager(ConfigListener):
         log.debug(f"On config changed: {self.__config.get_browser_show_found_notes_size()}")
         if self.__button:
             if self.__config.get_browser_show_found_notes_size():
+                # noinspection PyUnresolvedReferences
                 self.__button.show()
             else:
                 self.__button.hide()
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

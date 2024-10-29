@@ -40,3 +40,6 @@ class WithProgressQueryOp:
     def __on_failure(e: Exception) -> None:
         log.error("Error during cache initialization", exc_info=e)
         show_critical(title="Showing note details", text="Failed")
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

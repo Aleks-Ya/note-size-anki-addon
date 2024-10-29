@@ -48,3 +48,6 @@ class EditorButtonJs:
               error.stack
             }"""
         return js
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

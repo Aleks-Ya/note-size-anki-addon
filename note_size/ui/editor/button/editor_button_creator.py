@@ -36,3 +36,6 @@ class EditorButtonCreator:
             log.debug(f"Show details dialog for NoteId: {note.id}")
             parent: QWidget = editor.parentWindow.parent()
             self.__details_dialog.show_note(note, parent)
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

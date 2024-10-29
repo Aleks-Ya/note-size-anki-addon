@@ -70,6 +70,7 @@ class ColorLayout(QVBoxLayout):
         self.addWidget(self.__group_box)
 
         self.__group_box.adjustSize()
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     def refresh_from_model(self) -> None:
         self.__color_enabled_checkbox.set_checked(self.__model.size_button_color_enabled)
@@ -166,3 +167,6 @@ class ColorLayout(QVBoxLayout):
         table_width: int = self.__table.verticalHeader().width() + self.__table.horizontalHeader().length() + 1
         table_height: int = self.__table.horizontalHeader().height() + self.__table.verticalHeader().length()
         self.__table.setFixedSize(table_width, table_height)
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

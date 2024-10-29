@@ -28,3 +28,6 @@ class Trash:
 
     def get_trash_dir_path(self) -> Path:
         return self.__trash_dir
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

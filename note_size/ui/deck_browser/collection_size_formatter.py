@@ -125,3 +125,6 @@ class CollectionSizeFormatter:
             outer_span.append(number_span)
             number_span.string = self.__sand_clock
         return outer_span
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

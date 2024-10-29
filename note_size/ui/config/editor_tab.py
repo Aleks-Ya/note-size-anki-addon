@@ -32,6 +32,7 @@ class EditorTab(QWidget):
         layout.addLayout(self.__color_layout)
         layout.addStretch()
         self.setLayout(layout)
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     def refresh_from_model(self):
         self.__size_button_enabled.set_checked(self.__model.size_button_enabled)
@@ -40,3 +41,6 @@ class EditorTab(QWidget):
     def __on_size_button_enabled(self, _: int):
         self.__model.size_button_enabled = self.__size_button_enabled.is_checked()
         self.__color_layout.refresh_from_model()
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

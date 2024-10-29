@@ -35,6 +35,7 @@ class LoggingTab(QWidget):
         layout.addLayout(self.__combo_box_layout)
         layout.addWidget(open_log_file_button)
         self.setLayout(layout)
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     def refresh_from_model(self):
         self.__combo_box_layout.set_current_text(self.__model.log_level)
@@ -44,5 +45,9 @@ class LoggingTab(QWidget):
 
     def __on_open_log_file_click(self):
         log_file: str = str(self.__logs.get_log_file())
+        # noinspection PyArgumentList
         url: QUrl = QUrl.fromLocalFile(log_file)
         self.__desktop_services.openUrl(url)
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

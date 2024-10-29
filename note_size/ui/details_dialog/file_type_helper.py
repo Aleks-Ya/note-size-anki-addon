@@ -65,3 +65,6 @@ class FileTypeHelper(Cache):
         if general_mime_type == "video":
             return FileType.VIDEO
         return FileType.OTHER
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

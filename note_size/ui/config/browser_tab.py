@@ -25,9 +25,13 @@ class BrowserTab(QWidget):
         layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         layout.addLayout(self.__checkbox)
         self.setLayout(layout)
+        log.debug(f"{self.__class__.__name__} was instantiated")
 
     def refresh_from_model(self):
         self.__checkbox.set_checked(self.__model.browser_show_found_notes_size)
 
     def __on_checkbox_state_changed(self, _: int):
         self.__model.browser_show_found_notes_size = self.__checkbox.is_checked()
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

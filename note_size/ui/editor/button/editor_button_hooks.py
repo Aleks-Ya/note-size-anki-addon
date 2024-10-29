@@ -101,3 +101,6 @@ class EditorButtonHooks:
                 log.debug("Size button was hidden")
         else:
             log.debug("Skip size button refresh as editor.web is empty")
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

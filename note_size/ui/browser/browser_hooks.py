@@ -54,3 +54,6 @@ class BrowserHooks:
                 self.__browser_button_manager.get_current_button().show_cards_size(card_ids)
         else:
             log.debug("Browser size button is disabled")
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")
