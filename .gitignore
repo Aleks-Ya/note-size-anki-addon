@@ -7,3 +7,6 @@ dist
 meta.json
 *.kra~
 *.png~
+.coverage
+coverage.xml
+.scannerwork

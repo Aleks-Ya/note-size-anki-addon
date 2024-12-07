@@ -41,6 +41,17 @@ Run all tests except performance tests: `pytest -m "not performance"`
 
 Report at [SonarCloud](https://sonarcloud.io/project/overview?id=Aleks-Ya_note-size-anki-addon)
 
+Scan locally:
+
+1. Prepare once
+    1. Install Sonar Scanner: `brew install sonar-scanner`
+    2. Find config file `sonar-scanner.properties`: `sonar-scanner -v`
+    3. Add token to `sonar-scanner.properties`: `sonar.token=XXX`
+2. Execute
+    1. Generate coverage report: `tox`
+    2. Run Scanner: `sonar-scanner`
+    3. See report at https://sonarcloud.io/project/overview?id=Aleks-Ya_note-size-anki-addon
+
 ## Local deploy
 
 Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
@@ -49,6 +60,11 @@ Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
 
 1. Build ZIP: `python setup.py dist` (includes unit-tests)
 2. Output: `./dist/note-size-X.X-X.zip`
+
+## Execute GitHub Actions locally
+
+1. Install `act`: `brew install act`
+2. Run: `act`
 
 ## Render documentation
 
@@ -60,13 +76,14 @@ Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
 
 ## Release
 
-1. Update `CHANGELOG.md` manually
-2. Update documentation: `./docs_render.sh`
-3. Increment version:
+1. Check SonarQube warnings: https://sonarcloud.io/project/overview?id=Aleks-Ya_note-size-anki-addon
+2. Update `CHANGELOG.md` manually
+3. Update documentation: `./docs_render.sh`
+4. Increment version:
     1. Major: `bump-my-version bump major`
     2. Minor: `bump-my-version bump minor`
     3. Patch: `bump-my-version bump patch`
-4. Build ZIP: `python setup.py dist`
-5. Upload ZIP to the Addon page: https://ankiweb.net/shared/info/1188705668
-6. Push Git branch and tags: `git push --follow-tags`
-7. Create a GitHub release from tag
+5. Build ZIP: `python setup.py dist`
+6. Upload ZIP to the Addon page: https://ankiweb.net/shared/info/1188705668
+7. Push Git branch and tags: `git push --follow-tags`
+8. Create a GitHub release from tag
