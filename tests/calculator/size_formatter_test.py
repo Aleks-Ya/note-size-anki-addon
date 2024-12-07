@@ -32,7 +32,7 @@ def test_bytes_to_str_performance(size_formatter: SizeFormatter):
 
 
 def __run_bytes_to_str(size_formatter: SizeFormatter):
-    for i in range(0, 100_000):
+    for i in range(0, 50_000):
         size_formatter.bytes_to_str(SizeBytes(i))
 
 

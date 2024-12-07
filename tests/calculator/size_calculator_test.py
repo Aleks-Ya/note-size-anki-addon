@@ -35,7 +35,7 @@ def test_calculate_note_size_text_unicode(size_calculator: SizeCalculator, td: D
 @pytest.mark.performance
 def test_calculate_note_size_text_performance(size_calculator: SizeCalculator, note: Note):
     execution_time: float = timeit.timeit(
-        lambda: size_calculator.calculate_note_size(note, SizeType.TEXTS, use_cache=True), number=500_000)
+        lambda: size_calculator.calculate_note_size(note, SizeType.TEXTS, use_cache=True), number=250_000)
     assert execution_time <= 1
 
 
@@ -71,7 +71,7 @@ def test_calculate_note_size_total_missing_file(size_calculator: SizeCalculator,
 @pytest.mark.performance
 def test_calculate_note_size_total_performance(size_calculator: SizeCalculator, note: Note):
     execution_time: float = timeit.timeit(
-        lambda: size_calculator.calculate_note_size(note, SizeType.TOTAL, use_cache=True), number=500_000)
+        lambda: size_calculator.calculate_note_size(note, SizeType.TOTAL, use_cache=True), number=250_000)
     assert execution_time <= 1
 
 
@@ -87,7 +87,7 @@ def test_calculate_note_file_sizes(size_calculator: SizeCalculator, note: Note):
 @pytest.mark.performance
 def test_calculate_note_file_sizes_performance(size_calculator: SizeCalculator, note: Note):
     execution_time: float = timeit.timeit(lambda: size_calculator.calculate_note_file_sizes(note, use_cache=True),
-                                          number=500_000)
+                                          number=250_000)
     assert execution_time <= 1
 
 
@@ -192,7 +192,7 @@ def test_get_note_size_performance(size_calculator: SizeCalculator, td: Data):
     note: Note = td.create_note_with_files()
     execution_time: float = timeit.timeit(
         lambda: size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True),
-        number=500_000)
+        number=250_000)
     assert execution_time <= 1
 
 

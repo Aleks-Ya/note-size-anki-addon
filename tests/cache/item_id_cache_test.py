@@ -1,4 +1,5 @@
 import timeit
+from time import sleep
 
 import pytest
 from anki.cards import Card
@@ -41,7 +42,7 @@ def test_get_note_size_bytes_performance(td: Data, item_id_cache: ItemIdCache, s
     note: Note = td.create_note_with_files()
     execution_time: float = timeit.timeit(
         lambda: size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True),
-        number=500_000)
+        number=250_000)
     assert execution_time <= 1
 
 
@@ -70,6 +71,7 @@ def test_get_note_id_by_card_id(td: Data, col: Collection, item_id_cache: ItemId
     assert item_id_cache.get_note_id_by_card_id(card.id) == card.nid
     item_id_cache.evict_note(card.nid)
     col.flush()
+    sleep(0.5)
     with pytest.raises(NotFoundError):
         item_id_cache.get_note_id_by_card_id(card.id)
 

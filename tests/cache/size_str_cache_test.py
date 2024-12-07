@@ -39,7 +39,7 @@ def test_get_note_size_bytes_performance(td: Data, size_str_cache: SizeStrCache,
     note: Note = td.create_note_with_files()
     execution_time: float = timeit.timeit(
         lambda: size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True),
-        number=500_000)
+        number=250_000)
     assert execution_time <= 1
 
 

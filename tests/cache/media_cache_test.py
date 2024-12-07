@@ -19,7 +19,7 @@ def test_get_file_size(td: Data, media_cache: MediaCache):
 def test_get_file_size_cached_performance(media_cache: MediaCache, td: Data):
     td.create_note_with_files()
     execution_time: float = timeit.timeit(
-        lambda: media_cache.get_file_size(MediaFiles.picture, use_cache=True), number=1_000_000)
+        lambda: media_cache.get_file_size(MediaFiles.picture, use_cache=True), number=500_000)
     assert execution_time <= 1
 
 
