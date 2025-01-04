@@ -87,3 +87,13 @@ Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
 6. Upload ZIP to the Addon page: https://ankiweb.net/shared/info/1188705668
 7. Push Git branch and tags: `git push --follow-tags`
 8. Create a GitHub release from tag
+
+## Profiler
+
+1. Enable profiler: `Profiler.Enabled = true` in `Anki2/addons21/1188705668/meta.json`
+2. Restart Anki
+3. Close Anki
+4. See result files in dir `Anki2/logs/addons/1188705668/`:
+    1. `profiler_report_by_cumulative_time.txt`
+    2. `profiler_report_by_internal_time.txt`
+    3. `profiler_report_by_call_number.txt`
