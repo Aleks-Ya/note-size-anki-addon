@@ -20,6 +20,13 @@ class ItemIdCache(Cache):
         self.invalidate_cache()
         log.debug(f"{self.__class__.__name__} was instantiated")
 
+    def initialize_cache(self) -> None:
+        log.debug(f"Initializing ItemIdCache: size={len(self.__id_cache)}")
+        with self._lock:
+            for cid, nid in self.__col.db.execute("select id, nid from cards"):
+                self.__id_cache[cid] = nid
+        log.debug(f"Initialized ItemIdCache: size={len(self.__id_cache)}")
+
     def get_note_id_by_card_id(self, card_id: CardId) -> NoteId:
         with self._lock:
             if card_id not in self.__id_cache:

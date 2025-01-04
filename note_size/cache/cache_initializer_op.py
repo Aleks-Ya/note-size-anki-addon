@@ -56,7 +56,7 @@ class CacheInitializerOp:
         log.info(f"Cache initialization finished: {count}")
         if self.__show_success_info:
             count_str: str = NumberFormatter.with_thousands_separator(count)
-            showInfo(title=self.__progress_dialog_title, text=f"Cache was initialized ({count_str} notes and cards)")
+            showInfo(title=self.__progress_dialog_title, text=f"Cache was initialized ({count_str} notes)")
 
     def __on_failure(self, e: Exception) -> None:
         log.error("Error during cache initialization", exc_info=e)

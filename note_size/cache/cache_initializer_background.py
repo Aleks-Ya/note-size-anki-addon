@@ -37,7 +37,7 @@ class CacheInitializerBackground:
         start_time: datetime = datetime.now()
         self.__update_progress("Note Size cache initializing", None, None)
 
-        all_note_ids: Sequence[NoteId] = col.find_notes("deck:*")
+        all_note_ids: Sequence[NoteId] = col.db.list("select id from notes")
         note_number: int = len(all_note_ids)
         note_number_str: str = NumberFormatter.with_thousands_separator(note_number)
         self.__update_progress("Note Size cache initializing", 0, note_number)
@@ -54,24 +54,16 @@ class CacheInitializerBackground:
                 for note_file in note_files:
                     file_type_helper.get_file_type(note_file, use_cache=True)
 
-        all_card_ids: Sequence[int] = col.find_cards("deck:*")
-        card_number: int = len(all_card_ids)
-        card_number_str: str = NumberFormatter.with_thousands_separator(card_number)
-        for i, card_id in enumerate(all_card_ids):
-            if self.__wants_cancel:
-                log.info(f"User cancelled cards cache initialization at {i}")
-                return note_number + i
-            i_str: str = NumberFormatter.with_thousands_separator(i)
-            self.__update_progress(f"Caching card sizes: {i_str} of {card_number_str}", i, card_number)
-            item_id_cache.get_note_id_by_card_id(card_id)
+        self.__update_progress(f"Caching card ids...", None, None)
+        item_id_cache.initialize_cache()
 
         self.__cache_manager.set_caches_initialized(True)
 
         end_time: datetime = datetime.now()
         duration_sec: int = round((end_time - start_time).total_seconds())
-        log.info(f"Cache initialization finished: notes={note_number}, cards={card_number}, "
+        log.info(f"Cache initialization finished: notes={note_number}, "
                  f"duration_sec={duration_sec}, {item_id_cache.get_cache_size()}")
-        return note_number + card_number
+        return note_number
 
     def cancel(self):
         self.__wants_cancel = True

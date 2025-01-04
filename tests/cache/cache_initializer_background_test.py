@@ -38,7 +38,7 @@ def test_initialize_caches(td: Data, col: Collection, cache_manager: CacheManage
     cache_initializer_background: CacheInitializerBackground = CacheInitializerBackground(
         cache_manager, update_progress_callback)
     count: int = cache_initializer_background.initialize_caches(col)
-    assert count == 4
+    assert count == 2
     assert update_progress_history == []
 
     assert media_cache.is_initialized()
@@ -74,8 +74,6 @@ def test_update_progress(td: Data, col: Collection, cache_manager: CacheManager,
     cache_initializer_background: CacheInitializerBackground = CacheInitializerBackground(
         cache_manager, update_progress_callback, update_progress_step)
     count: int = cache_initializer_background.initialize_caches(col)
-    assert count == 42
+    assert count == 21
     assert update_progress_history == ['Caching note sizes: 10 of 21 - 10 - 21',
-                                       'Caching note sizes: 20 of 21 - 20 - 21',
-                                       'Caching card sizes: 10 of 21 - 10 - 21',
-                                       'Caching card sizes: 20 of 21 - 20 - 21']
+                                       'Caching note sizes: 20 of 21 - 20 - 21']
