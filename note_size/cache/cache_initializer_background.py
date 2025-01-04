@@ -3,6 +3,7 @@ from datetime import datetime
 from logging import Logger
 from typing import Sequence, Optional, Callable
 
+import aqt
 from anki.collection import Collection
 from anki.notes import NoteId
 
@@ -61,6 +62,8 @@ class CacheInitializerBackground:
 
         end_time: datetime = datetime.now()
         duration_sec: int = round((end_time - start_time).total_seconds())
+        if aqt.mw and aqt.mw.deckBrowser:
+            aqt.mw.taskman.run_on_main(aqt.mw.deckBrowser.refresh)
         log.info(f"Cache initialization finished: notes={note_number}, "
                  f"duration_sec={duration_sec}, {item_id_cache.get_cache_size()}")
         return note_number

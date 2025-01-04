@@ -41,7 +41,6 @@ class CacheInitializerOp:
             query_op.run_in_background()
         else:
             log.info("Cache initialization is disabled")
-            self.__cache_manager.set_caches_initialized(True)
 
     def __update_progress(self, label: str, value: int, max_value: int) -> None:
         self.__task_manager.run_on_main(lambda: self.__update_progress_in_main(label, value, max_value))

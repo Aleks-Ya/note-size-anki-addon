@@ -42,6 +42,7 @@ class CacheManager:
             cache.set_initialized(initialized)
 
     def invalidate_caches(self) -> None:
+        log.debug("Invalidate caches")
         for cache in self.__caches:
             cache.invalidate_cache()
 

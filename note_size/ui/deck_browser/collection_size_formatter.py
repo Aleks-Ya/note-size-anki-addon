@@ -38,8 +38,9 @@ class CollectionSizeFormatter:
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def format_collection_size_html(self) -> str:
-        log.debug("Formatting collection size started")
+        log.debug("Preparing data for formatting collection size has started")
         if self.__item_id_cache.is_initialized():
+            log.debug("Use actual collection sizes")
             collection_size: SizeBytes = SizeBytes(self.__collection_file_path.stat().st_size)
             used_files_size, used_files_number = self.__used_files_calculator.get_used_files_size(use_cache=True)
             unused_files_size, unused_files_number = self.__media_cache.get_unused_files_size(use_cache=True)
@@ -52,6 +53,7 @@ class CollectionSizeFormatter:
             trash_files_number_str: str = NumberFormatter.with_thousands_separator(trash_files_number)
             total_size: SizeBytes = SizeBytes(collection_size + used_files_size + unused_files_size + trash_dir_size)
         else:
+            log.debug("Use sand clocks instead of actual collection sizes")
             collection_size: Optional[SizeBytes] = None
             used_files_size: Optional[SizeBytes] = None
             unused_files_size: Optional[SizeBytes] = None
@@ -61,6 +63,7 @@ class CollectionSizeFormatter:
             used_files_number_str: str = self.__sand_clock
             unused_files_size_str: str = self.__sand_clock
             trash_files_number_str: str = self.__sand_clock
+        log.debug("Preparing data for formatting collection size has finished")
         trash_dir_path: Path = self.__trash.get_trash_dir_path()
         soup: BeautifulSoup = BeautifulSoup()
         div: Tag = soup.new_tag('div')
@@ -87,7 +90,7 @@ class CollectionSizeFormatter:
         div.append(config_icon)
 
         soup.append(div)
-        html = str(soup)
+        html: str = str(soup)
         log.debug("Formatting collection size finished")
         return html
 

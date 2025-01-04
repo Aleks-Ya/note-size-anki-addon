@@ -20,7 +20,7 @@ def test_initialize_caches_no_file(cache_initializer: CacheInitializer, cache_ma
         assert not cache.is_initialized()
     cache_initializer.initialize_caches()
     for cache in cache_manager.get_caches():
-        assert cache.is_initialized()
+        assert not cache.is_initialized()
     assert cache_manager.get_cache_size() == 0
 
 
