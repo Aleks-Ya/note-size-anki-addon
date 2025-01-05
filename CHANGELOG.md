@@ -1,5 +1,12 @@
 # Changelog for "Note Size" Anki addon
 
+## [v2.5.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.5.0) - 2025-01-05
+
+1. __[FEATURE]__ Speed up cache initialization
+2. __[BUG]__ DeckBrowser uses cache before cache initialization
+3. __[BUG]__ "Refresh cache" button does not work when cache warmup is disabled
+4. __[MISC]__ Setup GitHub actions
+
 ## [v2.4.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.4.0) - 2024-10-06
 
 1. __[FEATURE]__ Show size of notes found in Browser
