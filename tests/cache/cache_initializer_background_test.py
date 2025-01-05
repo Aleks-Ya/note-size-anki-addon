@@ -50,15 +50,15 @@ def test_initialize_caches(td: Data, col: Collection, cache_manager: CacheManage
     assert media_cache.as_dict_list() == [{FileNames.animation: 9, FileNames.picture: 7, FileNames.sound: 5}]
     assert item_id_cache.as_dict_list() == [{card1.id: card1.nid,
                                              card2.id: card2.nid}]
-    assert size_calculator.as_dict_list() == [{SizeType.TOTAL: {card1.nid: 143, card2.nid: 70},
-                                               SizeType.TEXTS: {card1.nid: 122, card2.nid: 70},
+    assert size_calculator.as_dict_list() == [{SizeType.TOTAL: {card1.nid: 144, card2.nid: 71},
+                                               SizeType.TEXTS: {card1.nid: 123, card2.nid: 71},
                                                SizeType.FILES: {card1.nid: 21, card2.nid: 0}},
                                               {card1.nid: {FileNames.picture, FileNames.sound, FileNames.animation},
                                                card2.nid: set()},
                                               {card1.nid: {FileNames.animation: 9, FileNames.picture: 7,
                                                            FileNames.sound: 5},
                                                card2.nid: {}}]
-    assert size_formatter.as_dict_list() == [{0: '0 B', 21: '21 B', 70: '70 B', 122: '122 B', 143: '143 B'}]
+    assert size_formatter.as_dict_list() == [{0: '0 B', 21: '21 B', 71: '71 B', 123: '123 B', 144: '144 B'}]
     assert file_type_helper.as_dict_list() == [{FileNames.animation: FileType.IMAGE,
                                                 FileNames.picture: FileType.IMAGE,
                                                 FileNames.sound: FileType.AUDIO}]
