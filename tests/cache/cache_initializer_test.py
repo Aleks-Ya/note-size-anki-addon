@@ -18,7 +18,7 @@ def test_initialize_caches_no_file(cache_initializer: CacheInitializer, cache_ma
     assert cache_manager.get_cache_size() == 0
     for cache in cache_manager.get_caches():
         assert not cache.is_initialized()
-    cache_initializer.initialize_caches()
+    cache_initializer.warmup_caches()
     for cache in cache_manager.get_caches():
         assert not cache.is_initialized()
     assert cache_manager.get_cache_size() == 0
@@ -41,7 +41,7 @@ def test_initialize_caches_from_file(cache_initializer: CacheInitializer, td: Da
     assert cache_file.exists()
     for cache in cache_manager.get_caches():
         assert not cache.is_initialized()
-    cache_initializer.initialize_caches()
+    cache_initializer.warmup_caches()
     for cache in cache_manager.get_caches():
         assert cache.is_initialized()
     assert cache_manager.get_cache_size() == 12

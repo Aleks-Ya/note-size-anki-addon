@@ -50,7 +50,7 @@ class CacheHooks:
         log.info(f"{self.__class__.__name__} was removed")
 
     def __initialize_cache_on_startup(self) -> None:
-        self.__cache_initializer.initialize_caches()
+        self.__cache_initializer.warmup_caches()
 
     def __save_cache_to_file(self) -> None:
         self.__cache_initializer.save_cache_to_file()

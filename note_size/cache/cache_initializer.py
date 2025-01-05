@@ -20,8 +20,12 @@ class CacheInitializer:
         self.__config: Config = config
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def initialize_caches(self) -> None:
-        self.__initialize_caches(self.__mw, False)
+    def warmup_caches(self) -> None:
+        log.info("Warmup caches if enabled")
+        if self.__config.get_cache_warmup_enabled():
+            self.__initialize_caches(self.__mw, False)
+        else:
+            log.info("Cache initialization is disabled")
 
     def refresh_caches(self, parent: QWidget) -> None:
         log.info("Refresh caches")
@@ -47,7 +51,7 @@ class CacheInitializer:
         self.__cache_storage.delete_cache_file()
         if not read_from_file_success:
             cache_initializer_op: CacheInitializerOp = CacheInitializerOp(
-                self.__mw.taskman, self.__mw.progress, self.__cache_manager, self.__config, parent, show_success_info)
+                self.__mw.taskman, self.__mw.progress, self.__cache_manager, parent, show_success_info)
             cache_initializer_op.initialize_cache_in_background()
         else:
             log.info("Skip cache initialization because the cache was read from file")
