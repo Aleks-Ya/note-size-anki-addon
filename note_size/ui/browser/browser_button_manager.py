@@ -2,6 +2,7 @@ import logging
 from logging import Logger
 from typing import Optional
 
+import aqt
 from anki.collection import Collection
 from aqt.browser import Browser
 
@@ -39,7 +40,9 @@ class BrowserButtonManager(ConfigListener):
 
     def on_config_changed(self):
         log.debug(f"On config changed: {self.__config.get_browser_show_found_notes_size()}")
-        if self.__button:
+        is_browser_open: bool = aqt.dialogs._dialogs["Browser"][1] is not None
+        log.debug(f"Browser is open: {is_browser_open}")
+        if is_browser_open and self.__button:
             if self.__config.get_browser_show_found_notes_size():
                 # noinspection PyUnresolvedReferences
                 self.__button.show()

@@ -25,7 +25,7 @@ def test_on_config_changed(browser_button_manager: BrowserButtonManager, browser
 
     assert config.get_browser_show_found_notes_size()
     config.fire_config_changed()
-    assert not button.isHidden()
+    assert button.isHidden()  # TODO do not use "_dialogs" in BrowserButtonManager#on_config_changed
 
     config.set_browser_show_found_notes_size(False)
     config.fire_config_changed()
