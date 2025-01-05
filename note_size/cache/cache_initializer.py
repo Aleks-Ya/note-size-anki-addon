@@ -2,6 +2,7 @@ import logging
 from logging import Logger
 
 from aqt import AnkiQt
+from aqt.deckbrowser import DeckBrowser
 from aqt.qt import QWidget
 
 from .cache_initializer_op import CacheInitializerOp
@@ -13,10 +14,12 @@ log: Logger = logging.getLogger(__name__)
 
 
 class CacheInitializer:
-    def __init__(self, mw: AnkiQt, cache_manager: CacheManager, cache_storage: CacheStorage, config: Config) -> None:
+    def __init__(self, mw: AnkiQt, cache_manager: CacheManager, cache_storage: CacheStorage, deck_browser: DeckBrowser,
+                 config: Config) -> None:
         self.__mw: AnkiQt = mw
         self.__cache_manager: CacheManager = cache_manager
         self.__cache_storage: CacheStorage = cache_storage
+        self.__deck_browser: DeckBrowser = deck_browser
         self.__config: Config = config
         log.debug(f"{self.__class__.__name__} was instantiated")
 
@@ -51,7 +54,8 @@ class CacheInitializer:
         self.__cache_storage.delete_cache_file()
         if not read_from_file_success:
             cache_initializer_op: CacheInitializerOp = CacheInitializerOp(
-                self.__mw.taskman, self.__mw.progress, self.__cache_manager, parent, show_success_info)
+                self.__mw.taskman, self.__mw.progress, self.__cache_manager, self.__deck_browser, parent,
+                show_success_info)
             cache_initializer_op.initialize_cache_in_background()
         else:
             log.info("Skip cache initialization because the cache was read from file")

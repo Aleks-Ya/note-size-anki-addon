@@ -6,14 +6,17 @@ from typing import Callable, Any
 import aqt
 import pytest
 from anki.collection import Collection
-from aqt import AnkiQt, ProfileManager, QApplication, QDesktopServices, QWidget
+from aqt import AnkiQt, ProfileManager, QApplication, QDesktopServices, QWidget, utils
 from aqt.addons import AddonManager
 from aqt.browser import Browser
 from aqt.editor import Editor
+from aqt.taskman import TaskManager
 from aqt.theme import ThemeManager
 from mock.mock import MagicMock
 from pytestqt.qtbot import QtBot
 
+utils.tr = MagicMock()
+from aqt.deckbrowser import DeckBrowser
 from note_size.cache.cache_initializer import CacheInitializer
 from note_size.cache.cache_manager import CacheManager
 from note_size.cache.cache_storage import CacheStorage
@@ -151,9 +154,19 @@ def cache_storage(settings: Settings) -> CacheStorage:
 
 
 @pytest.fixture
-def cache_initializer(mw: AnkiQt, cache_manager: CacheManager, cache_storage: CacheStorage,
+def task_manager(mw: AnkiQt) -> TaskManager:
+    return TaskManager(mw)
+
+
+@pytest.fixture
+def deck_browser(mw: AnkiQt) -> DeckBrowser:
+    return DeckBrowser(mw)
+
+
+@pytest.fixture
+def cache_initializer(mw: AnkiQt, cache_manager: CacheManager, cache_storage: CacheStorage, deck_browser: DeckBrowser,
                       config: Config) -> CacheInitializer:
-    return CacheInitializer(mw, cache_manager, cache_storage, config)
+    return CacheInitializer(mw, cache_manager, cache_storage, deck_browser, config)
 
 
 @pytest.fixture
@@ -210,9 +223,9 @@ def desktop_services() -> QDesktopServices:
 @pytest.fixture
 def config_ui(config: Config, config_loader: ConfigLoader, logs: Logs, cache_initializer: CacheInitializer,
               desktop_services: QDesktopServices, level_parser: LevelParser, url_manager: UrlManager,
-              settings: Settings) -> ConfigUi:
+              deck_browser: DeckBrowser, settings: Settings) -> ConfigUi:
     return ConfigUi(config, config_loader, logs, cache_initializer, desktop_services, level_parser, url_manager,
-                    settings)
+                    deck_browser, settings)
 
 
 @pytest.fixture

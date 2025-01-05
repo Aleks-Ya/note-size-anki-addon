@@ -10,6 +10,7 @@ profiler: Profiler
 
 
 def __initialize(col: Collection):
+    from aqt.deckbrowser import DeckBrowser
     from .config.config import Config
     from .config.config_loader import ConfigLoader
     from .config.config_hooks import ConfigHooks
@@ -80,14 +81,16 @@ def __initialize(col: Collection):
     cache_manager: CacheManager = CacheManager(
         media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, size_str_cache,
         updated_files_calculator)
-    cache_initializer: CacheInitializer = CacheInitializer(mw, cache_manager, cache_storage, config)
+    deck_browser: DeckBrowser = mw.deckBrowser
+    cache_initializer: CacheInitializer = CacheInitializer(mw, cache_manager, cache_storage, deck_browser, config)
     used_files_calculator: UsedFilesCalculator = UsedFilesCalculator(col, size_calculator)
     collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(
         col, item_id_cache, media_cache, trash, size_formatter, used_files_calculator, settings)
     desktop_services: QDesktopServices = QDesktopServices()
     url_manager: UrlManager = UrlManager()
     config_ui: ConfigUi = ConfigUi(
-        config, config_loader, logs, cache_initializer, desktop_services, level_parser, url_manager, settings)
+        config, config_loader, logs, cache_initializer, desktop_services, level_parser, url_manager, deck_browser,
+        settings)
     details_model_filler: DetailsModelFiller = DetailsModelFiller(size_calculator, size_formatter)
     details_dialog: DetailsDialog = DetailsDialog(
         size_calculator, size_formatter, file_type_helper, details_model_filler, config_ui, config, settings)

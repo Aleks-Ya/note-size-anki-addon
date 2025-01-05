@@ -2,6 +2,7 @@ import logging
 from logging import Logger
 from typing import Optional
 
+from aqt.deckbrowser import DeckBrowser
 from aqt.operations import QueryOp
 from aqt.progress import ProgressManager
 from aqt.qt import QWidget
@@ -19,14 +20,14 @@ class CacheInitializerOp:
     __progress_dialog_title: str = '"Note Size" addon'
 
     def __init__(self, task_manager: TaskManager, progress_manager: ProgressManager, cache_manager: CacheManager,
-                 parent: QWidget, show_success_info: bool):
+                 deck_browser: DeckBrowser, parent: QWidget, show_success_info: bool):
         self.__task_manager: TaskManager = task_manager
         self.__progress_manager: ProgressManager = progress_manager
         self.__cache_manager: CacheManager = cache_manager
         self.__parent: QWidget = parent
         self.__show_success_info: bool = show_success_info
         self.__cache_initializer_background: CacheInitializerBackground = CacheInitializerBackground(
-            cache_manager, self.__update_progress)
+            cache_manager, deck_browser, task_manager, self.__update_progress)
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def initialize_cache_in_background(self) -> None:

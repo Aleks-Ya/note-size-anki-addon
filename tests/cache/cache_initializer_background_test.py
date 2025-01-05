@@ -2,6 +2,8 @@ from typing import Optional
 
 from anki.cards import Card
 from anki.collection import Collection
+from aqt.deckbrowser import DeckBrowser
+from aqt.taskman import TaskManager
 
 from note_size.cache.cache_initializer_background import CacheInitializerBackground
 from note_size.cache.cache_manager import CacheManager
@@ -25,7 +27,8 @@ def update_progress_callback(label: str, value: Optional[int], max_value: Option
 
 def test_initialize_caches(td: Data, col: Collection, cache_manager: CacheManager, media_cache: MediaCache,
                            item_id_cache: ItemIdCache, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
-                           file_type_helper: FileTypeHelper, config: Config, cache_storage: CacheStorage):
+                           file_type_helper: FileTypeHelper, config: Config, cache_storage: CacheStorage,
+                           task_manager: TaskManager, deck_browser: DeckBrowser):
     card1: Card = td.create_card_with_files()
     card2: Card = td.create_card_without_files()
 
@@ -36,7 +39,7 @@ def test_initialize_caches(td: Data, col: Collection, cache_manager: CacheManage
     assert not file_type_helper.is_initialized()
 
     cache_initializer_background: CacheInitializerBackground = CacheInitializerBackground(
-        cache_manager, update_progress_callback)
+        cache_manager, deck_browser, task_manager, update_progress_callback)
     count: int = cache_initializer_background.initialize_caches(col)
     assert count == 2
     assert update_progress_history == []
@@ -66,13 +69,14 @@ def test_initialize_caches(td: Data, col: Collection, cache_manager: CacheManage
 
 def test_update_progress(td: Data, col: Collection, cache_manager: CacheManager, media_cache: MediaCache,
                          item_id_cache: ItemIdCache, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
-                         file_type_helper: FileTypeHelper, config: Config, cache_storage: CacheStorage):
+                         file_type_helper: FileTypeHelper, config: Config, cache_storage: CacheStorage,
+                         task_manager: TaskManager, deck_browser: DeckBrowser):
     update_progress_step: int = 10
     note_count: int = update_progress_step * 2 + 1
     for _ in range(note_count):
         td.create_note_without_files()
     cache_initializer_background: CacheInitializerBackground = CacheInitializerBackground(
-        cache_manager, update_progress_callback, update_progress_step)
+        cache_manager, deck_browser, task_manager, update_progress_callback, update_progress_step)
     count: int = cache_initializer_background.initialize_caches(col)
     assert count == 21
     assert update_progress_history == ['Caching note sizes: 10 of 21 - 10 - 21',

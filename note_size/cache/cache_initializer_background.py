@@ -3,8 +3,9 @@ from datetime import datetime
 from logging import Logger
 from typing import Optional, Callable
 
-import aqt
 from anki.collection import Collection
+from aqt.deckbrowser import DeckBrowser
+from aqt.taskman import TaskManager
 
 from .cache_manager import CacheManager
 from .item_id_cache import ItemIdCache
@@ -19,10 +20,12 @@ log: Logger = logging.getLogger(__name__)
 
 class CacheInitializerBackground:
 
-    def __init__(self, cache_manager: CacheManager,
+    def __init__(self, cache_manager: CacheManager, deck_browser: DeckBrowser, task_manager: TaskManager,
                  update_progress_callback: Callable[[str, Optional[int], Optional[int]], None],
                  update_progress_step: int = 500):
         self.__cache_manager: CacheManager = cache_manager
+        self.__deck_browser: DeckBrowser = deck_browser
+        self.__task_manager: TaskManager = task_manager
         self.__wants_cancel: bool = False
         self.__update_progress_callback: Callable[[str, Optional[int], Optional[int]], None] = update_progress_callback
         self.__update_progress_step: int = update_progress_step
@@ -59,8 +62,7 @@ class CacheInitializerBackground:
 
         end_time: datetime = datetime.now()
         duration_sec: int = round((end_time - start_time).total_seconds())
-        if aqt.mw and aqt.mw.deckBrowser:
-            aqt.mw.taskman.run_on_main(aqt.mw.deckBrowser.refresh)
+        self.__task_manager.run_on_main(self.__deck_browser.refresh)
         log.info(f"Cache initialization finished: notes={note_number}, "
                  f"duration_sec={duration_sec}, {item_id_cache.get_cache_size()}")
         return note_number

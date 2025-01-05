@@ -2,7 +2,7 @@ import logging
 from logging import Logger
 from typing import Optional, Any
 
-import aqt
+from aqt.deckbrowser import DeckBrowser
 from aqt.qt import QDialog, QVBoxLayout, QDialogButtonBox, QTabWidget, QPushButton, QDesktopServices
 
 from .browser_tab import BrowserTab
@@ -26,12 +26,13 @@ log: Logger = logging.getLogger(__name__)
 class ConfigDialog(QDialog):
     def __init__(self, config: Config, config_loader: ConfigLoader, model: UiModel, logs: Logs,
                  cache_initializer: CacheInitializer, desktop_services: QDesktopServices, level_parser: LevelParser,
-                 url_manager: UrlManager, settings: Settings):
+                 url_manager: UrlManager, deck_browser: DeckBrowser, settings: Settings):
         super().__init__(parent=None)
         self.__config: Config = config
         self.__model: UiModel = model
         self.__logs: Logs = logs
         self.__config_loader: ConfigLoader = config_loader
+        self.__deck_browser: DeckBrowser = deck_browser
         ModelConverter.apply_config_to_model(model, config)
         # noinspection PyUnresolvedReferences
         self.setWindowTitle('"Note Size" addon configuration')
@@ -83,8 +84,7 @@ class ConfigDialog(QDialog):
     def __accept(self) -> None:
         ModelConverter.apply_model_to_config(self.__model, self.__config)
         self.__config_loader.write_config(self.__config)
-        if aqt.mw.deckBrowser:
-            aqt.mw.deckBrowser.refresh()
+        self.__deck_browser.refresh()
         self.__logs.set_level(self.__config.get_log_level())
         self.accept()
         log.info("Config accepted")
