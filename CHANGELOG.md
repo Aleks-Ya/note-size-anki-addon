@@ -1,5 +1,11 @@
 # Changelog for "Note Size" Anki addon
 
+## [v2.5.1](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.5.1) - 2025-01-06
+
+1. __[BUG]__ Do not save caches to file if caches were not initialized
+2. __[MISC]__ Read cache file in background
+3. __[MISC]__ Set title for progress bar in Details Dialog
+
 ## [v2.5.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.5.0) - 2025-01-05
 
 1. __[FEATURE]__ Speed up cache initialization
