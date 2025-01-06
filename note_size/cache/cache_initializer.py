@@ -37,10 +37,13 @@ class CacheInitializer:
         self.__initialize_caches(parent, True)
 
     def save_cache_to_file(self) -> None:
-        if self.__config.get_store_cache_in_file_enabled():
+        enabled: bool = self.__config.get_store_cache_in_file_enabled()
+        initialized: bool = self.__cache_manager.get_caches_initialized()
+        if enabled and initialized:
             self.__cache_storage.save_caches_to_file(self.__cache_manager.get_caches())
         else:
-            log.info("Saving cache file is disabled")
+            log.info(f"Skip saving cache file: "
+                     f"store_cache_in_file_enabled={enabled}, caches_initialized={initialized}")
             self.__cache_storage.delete_cache_file()
 
     def __initialize_caches(self, parent: QWidget, show_success_info: bool) -> None:

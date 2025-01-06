@@ -30,14 +30,25 @@ def test_get_caches(cache_manager: CacheManager, media_cache: MediaCache, item_i
 
 def test_set_caches_initialized(cache_manager: CacheManager):
     caches: list[Cache] = cache_manager.get_caches()
+    assert not cache_manager.get_caches_initialized()
     for cache in caches:
         assert not cache.is_initialized()
     cache_manager.set_caches_initialized(True)
+    assert cache_manager.get_caches_initialized()
     for cache in caches:
         assert cache.is_initialized()
     cache_manager.set_caches_initialized(False)
+    assert not cache_manager.get_caches_initialized()
     for cache in caches:
         assert not cache.is_initialized()
+
+
+def test_cache_initialized(cache_manager: CacheManager):
+    assert not cache_manager.get_caches_initialized()
+    cache_manager.set_caches_initialized(True)
+    assert cache_manager.get_caches_initialized()
+    cache_manager.get_item_id_cache().set_initialized(False)
+    assert not cache_manager.get_caches_initialized()
 
 
 def test_invalidate_caches(col: Collection, cache_manager: CacheManager, media_cache: MediaCache,

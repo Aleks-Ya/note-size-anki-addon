@@ -50,8 +50,10 @@ def test_initialize_caches_from_file(cache_initializer: CacheInitializer, td: Da
 
 def test_save_cache_to_file_enabled(cache_initializer: CacheInitializer, td: Data, cache_manager: CacheManager,
                                     settings: Settings, config: Config):
-    assert config.get_store_cache_in_file_enabled()
     __fill_cache(cache_manager, td)
+    cache_manager.set_caches_initialized(True)
+    assert config.get_store_cache_in_file_enabled()
+    assert cache_manager.get_caches_initialized()
     assert cache_manager.get_cache_size() == 12
 
     cache_file: Path = settings.cache_file
@@ -72,12 +74,28 @@ def test_save_cache_to_file_disabled(cache_initializer: CacheInitializer, td: Da
     assert not cache_file.exists()
 
 
+# Do not save caches to file if any of caches was not initialized
+def test_save_cache_to_file_not_initialized(cache_initializer: CacheInitializer, td: Data, cache_manager: CacheManager,
+                                            settings: Settings, config: Config):
+    assert config.get_store_cache_in_file_enabled()
+    __fill_cache(cache_manager, td)
+    cache_manager.get_item_id_cache().set_initialized(False)
+    assert cache_manager.get_cache_size() == 12
+
+    cache_file: Path = settings.cache_file
+    assert not cache_file.exists()
+    cache_initializer.save_cache_to_file()
+    assert not cache_file.exists()
+
+
 def test_save_cache_to_file_delete_existing(cache_initializer: CacheInitializer, td: Data, cache_manager: CacheManager,
                                             settings: Settings, config: Config):
     cache_file: Path = settings.cache_file
     __fill_cache(cache_manager, td)
+    cache_manager.set_caches_initialized(True)
 
     assert config.get_store_cache_in_file_enabled()
+    assert cache_manager.get_caches_initialized()
     assert cache_manager.get_cache_size() == 12
     assert not cache_file.exists()
     cache_initializer.save_cache_to_file()
@@ -89,7 +107,7 @@ def test_save_cache_to_file_delete_existing(cache_initializer: CacheInitializer,
     assert not cache_file.exists()
 
 
-def __fill_cache(cache_manager, td) -> None:
+def __fill_cache(cache_manager: CacheManager, td: Data) -> None:
     card: Card = td.create_card_with_files()
     cache_manager.get_item_id_cache().get_note_id_by_card_id(card.id)
     cache_manager.get_size_calculator().get_note_size(card.nid, SizeType.TOTAL, use_cache=True)

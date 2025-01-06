@@ -41,6 +41,12 @@ class CacheManager:
         for cache in self.__caches:
             cache.set_initialized(initialized)
 
+    def get_caches_initialized(self) -> bool:
+        for cache in self.__caches:
+            if not cache.is_initialized():
+                return False
+        return True
+
     def invalidate_caches(self) -> None:
         log.debug("Invalidate caches")
         for cache in self.__caches:
