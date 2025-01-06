@@ -39,7 +39,7 @@ def test_initialize_caches(td: Data, col: Collection, cache_manager: CacheManage
     assert not file_type_helper.is_initialized()
 
     cache_initializer_background: CacheInitializerBackground = CacheInitializerBackground(
-        cache_manager, deck_browser, task_manager, update_progress_callback)
+        cache_storage, cache_manager, deck_browser, task_manager, config, update_progress_callback)
     count: int = cache_initializer_background.initialize_caches(col)
     assert count == 2
     assert update_progress_history == []
@@ -76,7 +76,8 @@ def test_update_progress(td: Data, col: Collection, cache_manager: CacheManager,
     for _ in range(note_count):
         td.create_note_without_files()
     cache_initializer_background: CacheInitializerBackground = CacheInitializerBackground(
-        cache_manager, deck_browser, task_manager, update_progress_callback, update_progress_step)
+        cache_storage, cache_manager, deck_browser, task_manager, config, update_progress_callback,
+        update_progress_step)
     count: int = cache_initializer_background.initialize_caches(col)
     assert count == 21
     assert update_progress_history == ['Caching note sizes: 10 of 21 - 10 - 21',

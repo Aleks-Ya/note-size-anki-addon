@@ -11,6 +11,8 @@ from aqt.utils import showInfo, show_critical
 
 from .cache_initializer_background import CacheInitializerBackground
 from .cache_manager import CacheManager
+from .cache_storage import CacheStorage
+from ..config.config import Config
 from ..ui.common.number_formatter import NumberFormatter
 
 log: Logger = logging.getLogger(__name__)
@@ -19,15 +21,16 @@ log: Logger = logging.getLogger(__name__)
 class CacheInitializerOp:
     __progress_dialog_title: str = '"Note Size" addon'
 
-    def __init__(self, task_manager: TaskManager, progress_manager: ProgressManager, cache_manager: CacheManager,
-                 deck_browser: DeckBrowser, parent: QWidget, show_success_info: bool):
+    def __init__(self, task_manager: TaskManager, progress_manager: ProgressManager, cache_storage: CacheStorage,
+                 cache_manager: CacheManager, deck_browser: DeckBrowser, parent: QWidget, show_success_info: bool,
+                 config: Config):
         self.__task_manager: TaskManager = task_manager
         self.__progress_manager: ProgressManager = progress_manager
         self.__cache_manager: CacheManager = cache_manager
         self.__parent: QWidget = parent
         self.__show_success_info: bool = show_success_info
         self.__cache_initializer_background: CacheInitializerBackground = CacheInitializerBackground(
-            cache_manager, deck_browser, task_manager, self.__update_progress)
+            cache_storage, cache_manager, deck_browser, task_manager, config, self.__update_progress)
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def initialize_cache_in_background(self) -> None:

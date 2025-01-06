@@ -8,6 +8,7 @@ from note_size.cache.cache_storage import CacheStorage
 from note_size.config.config import Config
 from note_size.config.settings import Settings
 from note_size.types import SizeType
+from tests import wait_until
 from tests.conftest import cache_manager
 from tests.data import Data, FileNames
 
@@ -16,12 +17,10 @@ update_progress_history: list[str] = []
 
 def test_initialize_caches_no_file(cache_initializer: CacheInitializer, cache_manager: CacheManager):
     assert cache_manager.get_cache_size() == 0
-    for cache in cache_manager.get_caches():
-        assert not cache.is_initialized()
+    assert not cache_manager.get_caches_initialized()
     cache_initializer.warmup_caches()
-    for cache in cache_manager.get_caches():
-        assert not cache.is_initialized()
-    assert cache_manager.get_cache_size() == 0
+    wait_until(lambda: not cache_manager.get_caches_initialized())
+    wait_until(lambda: cache_manager.get_cache_size() == 0)
 
 
 def test_initialize_caches_from_file(cache_initializer: CacheInitializer, td: Data, cache_manager: CacheManager,
@@ -39,13 +38,11 @@ def test_initialize_caches_from_file(cache_initializer: CacheInitializer, td: Da
     assert cache_manager.get_cache_size() == 0
 
     assert cache_file.exists()
-    for cache in cache_manager.get_caches():
-        assert not cache.is_initialized()
+    assert not cache_manager.get_caches_initialized()
     cache_initializer.warmup_caches()
-    for cache in cache_manager.get_caches():
-        assert cache.is_initialized()
-    assert cache_manager.get_cache_size() == 12
-    assert not cache_file.exists()
+    wait_until(lambda: cache_manager.get_caches_initialized())
+    wait_until(lambda: cache_manager.get_cache_size() == 12)
+    wait_until(lambda: not cache_file.exists())
 
 
 def test_save_cache_to_file_enabled(cache_initializer: CacheInitializer, td: Data, cache_manager: CacheManager,

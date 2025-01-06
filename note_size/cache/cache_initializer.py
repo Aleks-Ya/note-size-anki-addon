@@ -51,18 +51,7 @@ class CacheInitializer:
             self.__cache_storage.delete_cache_file()
 
     def __initialize_caches(self, parent: QWidget, show_success_info: bool) -> None:
-        read_from_file_success: bool = False
-        if self.__config.get_store_cache_in_file_enabled():
-            read_from_file_success = self.__cache_storage.read_caches_from_file(self.__cache_manager.get_caches())
-            if read_from_file_success:
-                self.__cache_manager.set_caches_initialized(True)
-        else:
-            log.info("Reading cache file is disabled")
-        self.__cache_storage.delete_cache_file()
-        if not read_from_file_success:
-            cache_initializer_op: CacheInitializerOp = CacheInitializerOp(
-                self.__task_manager, self.__progress_manager, self.__cache_manager, self.__deck_browser, parent,
-                show_success_info)
-            cache_initializer_op.initialize_cache_in_background()
-        else:
-            log.info("Skip cache initialization because the cache was read from file")
+        cache_initializer_op: CacheInitializerOp = CacheInitializerOp(
+            self.__task_manager, self.__progress_manager, self.__cache_storage, self.__cache_manager,
+            self.__deck_browser, parent, show_success_info, self.__config)
+        cache_initializer_op.initialize_cache_in_background()

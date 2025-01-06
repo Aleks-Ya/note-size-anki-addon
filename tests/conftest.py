@@ -156,7 +156,7 @@ def cache_storage(settings: Settings) -> CacheStorage:
 
 @pytest.fixture
 def task_manager(mw: AnkiQt) -> TaskManager:
-    return TaskManager(mw)
+    return mw.taskman
 
 
 @pytest.fixture
@@ -235,6 +235,7 @@ def mw(profile_manager: ProfileManager, qapp: QApplication) -> AnkiQt:
     mw_mock: MagicMock = MagicMock()
     mw_mock.pm = profile_manager
     mw_mock.app = qapp
+    mw_mock.taskman = TaskManager(mw_mock)
     mw_mock.progress = ProgressManager(mw_mock)
     aqt.mw = mw_mock
     return mw_mock
