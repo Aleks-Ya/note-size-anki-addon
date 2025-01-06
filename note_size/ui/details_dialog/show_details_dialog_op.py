@@ -14,7 +14,7 @@ from .details_dialog import DetailsDialog
 log: Logger = logging.getLogger(__name__)
 
 
-class WithProgressQueryOp:
+class ShowDetailsDialogOp:
     __progress_dialog_title: str = '"Note Size" addon'
 
     def __init__(self, details_dialog: DetailsDialog, note_ids: Sequence[NoteId], progress_manager: ProgressManager,
@@ -26,11 +26,11 @@ class WithProgressQueryOp:
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def run(self):
-        log.debug("Start running WithProgressQueryOp")
+        log.debug("Start running ShowDetailsDialogOp")
         QueryOp(parent=self.__parent, op=self.__background_op, success=self.__on_success).failure(
             self.__on_failure).without_collection().with_progress().run_in_background()
         self.__progress_manager.set_title(self.__progress_dialog_title)
-        log.debug("Finished running WithProgressQueryOp")
+        log.debug("Finished running ShowDetailsDialogOp")
 
     def __background_op(self, _: Collection) -> int:
         log.debug(f"Background operation started: {len(self.__note_ids)}")
