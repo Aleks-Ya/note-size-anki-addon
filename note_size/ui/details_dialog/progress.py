@@ -5,6 +5,7 @@ from typing import Sequence
 from anki.collection import Collection
 from anki.notes import NoteId
 from aqt.operations import QueryOp
+from aqt.progress import ProgressManager
 from aqt.utils import show_critical
 from aqt import QWidget
 
@@ -14,9 +15,13 @@ log: Logger = logging.getLogger(__name__)
 
 
 class WithProgressQueryOp:
-    def __init__(self, details_dialog: DetailsDialog, note_ids: Sequence[NoteId], parent: QWidget):
+    __progress_dialog_title: str = '"Note Size" addon'
+
+    def __init__(self, details_dialog: DetailsDialog, note_ids: Sequence[NoteId], progress_manager: ProgressManager,
+                 parent: QWidget):
         self.__details_dialog: DetailsDialog = details_dialog
         self.__note_ids: Sequence[NoteId] = note_ids
+        self.__progress_manager: ProgressManager = progress_manager
         self.__parent: QWidget = parent
         log.debug(f"{self.__class__.__name__} was instantiated")
 
@@ -24,6 +29,7 @@ class WithProgressQueryOp:
         log.debug("Start running WithProgressQueryOp")
         QueryOp(parent=self.__parent, op=self.__background_op, success=self.__on_success).failure(
             self.__on_failure).without_collection().with_progress().run_in_background()
+        self.__progress_manager.set_title(self.__progress_dialog_title)
         log.debug("Finished running WithProgressQueryOp")
 
     def __background_op(self, _: Collection) -> int:

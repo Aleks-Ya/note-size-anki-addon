@@ -2,7 +2,7 @@ from logging import Logger
 from pathlib import Path
 
 from anki.collection import Collection
-from aqt import mw, gui_hooks, QDesktopServices
+from aqt import gui_hooks
 
 from .profiler.profiler import Profiler
 
@@ -11,6 +11,9 @@ profiler: Profiler
 
 def __initialize(col: Collection):
     from aqt.deckbrowser import DeckBrowser
+    from aqt.progress import ProgressManager
+    from aqt import mw, QDesktopServices
+
     from .config.config import Config
     from .config.config_loader import ConfigLoader
     from .config.config_hooks import ConfigHooks
@@ -105,8 +108,9 @@ def __initialize(col: Collection):
     cache_hooks.setup_hooks()
     config_hooks: ConfigHooks = ConfigHooks(config_ui, desktop_services, url_manager)
     config_hooks.setup_hooks()
+    progress_manager: ProgressManager = mw.progress
     browser_button_manager: BrowserButtonManager = BrowserButtonManager(
-        col, item_id_cache, size_str_cache, details_dialog, config)
+        col, item_id_cache, size_str_cache, details_dialog, progress_manager, config)
     browser_hooks: BrowserHooks = BrowserHooks(browser_button_manager, config)
     browser_hooks.setup_hooks()
 

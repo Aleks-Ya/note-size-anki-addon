@@ -5,6 +5,7 @@ from typing import Optional
 import aqt
 from anki.collection import Collection
 from aqt.browser import Browser
+from aqt.progress import ProgressManager
 
 from .browser_button import BrowserButton
 from ..details_dialog.details_dialog import DetailsDialog
@@ -19,20 +20,21 @@ log: Logger = logging.getLogger(__name__)
 class BrowserButtonManager(ConfigListener):
 
     def __init__(self, col: Collection, item_id_cache: ItemIdCache, size_str_cache: SizeStrCache,
-                 details_dialog: DetailsDialog, config: Config) -> None:
+                 details_dialog: DetailsDialog, progress_manager: ProgressManager, config: Config) -> None:
         super().__init__()
         self.__col: Collection = col
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__size_str_cache: SizeStrCache = size_str_cache
         self.__details_dialog: DetailsDialog = details_dialog
+        self.__progress_manager: ProgressManager = progress_manager
         self.__config: Config = config
         self.__button: Optional[BrowserButton] = None
         self.__config.add_listener(self)
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def create_browser_button(self, browser: Browser) -> BrowserButton:
-        self.__button = BrowserButton(
-            self.__col, self.__item_id_cache, self.__size_str_cache, self.__details_dialog, browser)
+        self.__button = BrowserButton(self.__col, self.__item_id_cache, self.__size_str_cache, self.__details_dialog,
+                                      browser, self.__progress_manager)
         return self.__button
 
     def get_current_button(self) -> BrowserButton:

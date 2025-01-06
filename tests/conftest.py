@@ -10,6 +10,7 @@ from aqt import AnkiQt, ProfileManager, QApplication, QDesktopServices, QWidget,
 from aqt.addons import AddonManager
 from aqt.browser import Browser
 from aqt.editor import Editor
+from aqt.progress import ProgressManager
 from aqt.taskman import TaskManager
 from aqt.theme import ThemeManager
 from mock.mock import MagicMock
@@ -233,8 +234,14 @@ def mw(profile_manager: ProfileManager, qapp: QApplication) -> AnkiQt:
     mw_mock: MagicMock = MagicMock()
     mw_mock.pm = profile_manager
     mw_mock.app = qapp
+    mw_mock.progress = ProgressManager(mw_mock)
     aqt.mw = mw_mock
     return mw_mock
+
+
+@pytest.fixture
+def progress_manager(mw: AnkiQt) -> ProgressManager:
+    return mw.progress
 
 
 def __editor(mw: AnkiQt, add_mode: bool) -> Editor:
@@ -303,8 +310,9 @@ def editor_button_creator(editor_button_formatter: EditorButtonFormatter,
 
 @pytest.fixture
 def browser_button_manager(col: Collection, item_id_cache: ItemIdCache, size_str_cache: SizeStrCache,
-                           details_dialog: DetailsDialog, config: Config) -> BrowserButtonManager:
-    return BrowserButtonManager(col, item_id_cache, size_str_cache, details_dialog, config)
+                           details_dialog: DetailsDialog, progress_manager: ProgressManager,
+                           config: Config) -> BrowserButtonManager:
+    return BrowserButtonManager(col, item_id_cache, size_str_cache, details_dialog, progress_manager, config)
 
 
 @pytest.fixture

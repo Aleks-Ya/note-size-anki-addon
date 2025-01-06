@@ -6,6 +6,7 @@ from anki.cards import CardId
 from anki.collection import Collection
 from anki.notes import NoteId
 from aqt.browser import Browser
+from aqt.progress import ProgressManager
 from aqt.qt import QPushButton
 
 from ..common.number_formatter import NumberFormatter
@@ -21,13 +22,14 @@ log: Logger = logging.getLogger(__name__)
 class BrowserButton(QPushButton):
 
     def __init__(self, col: Collection, item_id_cache: ItemIdCache, size_str_cache: SizeStrCache,
-                 details_dialog: DetailsDialog, browser: Browser) -> None:
+                 details_dialog: DetailsDialog, browser: Browser, progress_manager: ProgressManager) -> None:
         super().__init__()
         self.__col: Collection = col
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__size_str_cache: SizeStrCache = size_str_cache
         self.__details_dialog: DetailsDialog = details_dialog
         self.__browser: Browser = browser
+        self.__progress_manager: ProgressManager = progress_manager
         self.__current_note_ids: Sequence[NoteId] = []
         # noinspection PyUnresolvedReferences
         self.setStyleSheet("""
@@ -66,7 +68,8 @@ class BrowserButton(QPushButton):
 
     def __on_click(self) -> None:
         log.debug("Browser size button clicked")
-        op: WithProgressQueryOp = WithProgressQueryOp(self.__details_dialog, self.__current_note_ids, self.__browser)
+        op: WithProgressQueryOp = WithProgressQueryOp(self.__details_dialog, self.__current_note_ids,
+                                                      self.__progress_manager, self.__browser)
         op.run()
         log.debug("Browser size button click finished")
 
