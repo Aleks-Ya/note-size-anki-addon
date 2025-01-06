@@ -165,9 +165,10 @@ def deck_browser(mw: AnkiQt) -> DeckBrowser:
 
 
 @pytest.fixture
-def cache_initializer(mw: AnkiQt, cache_manager: CacheManager, cache_storage: CacheStorage, deck_browser: DeckBrowser,
+def cache_initializer(mw: AnkiQt, task_manager: TaskManager, progress_manager: ProgressManager,
+                      cache_manager: CacheManager, cache_storage: CacheStorage, deck_browser: DeckBrowser,
                       config: Config) -> CacheInitializer:
-    return CacheInitializer(mw, cache_manager, cache_storage, deck_browser, config)
+    return CacheInitializer(mw, cache_manager, cache_storage, deck_browser, task_manager, progress_manager, config)
 
 
 @pytest.fixture

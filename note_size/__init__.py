@@ -10,9 +10,10 @@ profiler: Profiler
 
 
 def __initialize(col: Collection):
+    from aqt import mw, QDesktopServices
     from aqt.deckbrowser import DeckBrowser
     from aqt.progress import ProgressManager
-    from aqt import mw, QDesktopServices
+    from aqt.taskman import TaskManager
 
     from .config.config import Config
     from .config.config_loader import ConfigLoader
@@ -85,7 +86,10 @@ def __initialize(col: Collection):
         media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, size_str_cache,
         updated_files_calculator)
     deck_browser: DeckBrowser = mw.deckBrowser
-    cache_initializer: CacheInitializer = CacheInitializer(mw, cache_manager, cache_storage, deck_browser, config)
+    progress_manager: ProgressManager = mw.progress
+    task_manager: TaskManager = mw.taskman
+    cache_initializer: CacheInitializer = CacheInitializer(mw, cache_manager, cache_storage, deck_browser,
+                                                           task_manager, progress_manager, config)
     used_files_calculator: UsedFilesCalculator = UsedFilesCalculator(col, size_calculator)
     collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(
         col, item_id_cache, media_cache, trash, size_formatter, used_files_calculator, settings)
@@ -108,7 +112,6 @@ def __initialize(col: Collection):
     cache_hooks.setup_hooks()
     config_hooks: ConfigHooks = ConfigHooks(config_ui, desktop_services, url_manager)
     config_hooks.setup_hooks()
-    progress_manager: ProgressManager = mw.progress
     browser_button_manager: BrowserButtonManager = BrowserButtonManager(
         col, item_id_cache, size_str_cache, details_dialog, progress_manager, config)
     browser_hooks: BrowserHooks = BrowserHooks(browser_button_manager, config)
