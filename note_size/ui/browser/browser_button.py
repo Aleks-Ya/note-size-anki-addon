@@ -5,10 +5,11 @@ from typing import Sequence
 from anki.cards import CardId
 from anki.collection import Collection
 from anki.notes import NoteId
-from aqt.browser import Browser
+from aqt.browser import Browser, ItemId
 from aqt.progress import ProgressManager
 from aqt.qt import QPushButton
 
+from ..common.browser_helper import BrowserHelper
 from ..common.number_formatter import NumberFormatter
 from ..details_dialog.details_dialog import DetailsDialog
 from ..details_dialog.show_details_dialog_op import ShowDetailsDialogOp
@@ -42,7 +43,16 @@ class BrowserButton(QPushButton):
         self.clicked.connect(self.__on_click)
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def show_notes_size(self, note_ids: Sequence[NoteId]) -> None:
+    def show_items_size(self, item_ids: Sequence[ItemId]) -> None:
+        log.debug(f"Update browser size button for {len(item_ids)} items")
+        if BrowserHelper.is_notes_mode(self.__browser):
+            note_ids: Sequence[NoteId] = item_ids
+            self.__show_notes_size(note_ids)
+        else:
+            card_ids: Sequence[CardId] = item_ids
+            self.__show_cards_size(card_ids)
+
+    def __show_notes_size(self, note_ids: Sequence[NoteId]) -> None:
         self.__current_note_ids = note_ids
         size: SizeStr = self.__size_str_cache.get_notes_size_str(note_ids, SizeType.TOTAL, use_cache=True)
         self.setText(size)
@@ -53,7 +63,7 @@ class BrowserButton(QPushButton):
         # noinspection PyUnresolvedReferences
         self.setToolTip(tooltip)
 
-    def show_cards_size(self, card_ids: Sequence[CardId]) -> None:
+    def __show_cards_size(self, card_ids: Sequence[CardId]) -> None:
         note_ids: Sequence[NoteId] = self.__item_id_cache.get_note_ids_by_card_ids(card_ids)
         self.__current_note_ids = note_ids
         size: SizeStr = self.__size_str_cache.get_notes_size_str(note_ids, SizeType.TOTAL, use_cache=True)
@@ -68,6 +78,7 @@ class BrowserButton(QPushButton):
 
     def __on_click(self) -> None:
         log.debug("Browser size button clicked")
+        self.show_items_size(self.__current_note_ids)
         op: ShowDetailsDialogOp = ShowDetailsDialogOp(self.__details_dialog, self.__current_note_ids,
                                                       self.__progress_manager, self.__browser)
         op.run()

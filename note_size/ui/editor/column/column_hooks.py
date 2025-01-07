@@ -106,7 +106,7 @@ class ColumnHooks:
 
     def __on_browser_did_search(self, context: SearchContext) -> None:
         log.debug("Browser did search")
-        is_note: bool = BrowserHelper.is_notes_mode(context)
+        is_note: bool = BrowserHelper.is_notes_mode(context.browser)
         self.__sort_rows_by_column(ColumnHooks.__column_total_label, SizeType.TOTAL, context, is_note)
         self.__sort_rows_by_column(ColumnHooks.__column_texts_label, SizeType.TEXTS, context, is_note)
         self.__sort_rows_by_column(ColumnHooks.__column_files_label, SizeType.FILES, context, is_note)

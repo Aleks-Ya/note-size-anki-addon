@@ -1,15 +1,12 @@
 import logging
 from logging import Logger
-from typing import Callable, Sequence
+from typing import Callable
 
-from anki.cards import CardId
-from anki.notes import NoteId
 from aqt import gui_hooks
-from aqt.browser import Browser, SearchContext, ItemId
+from aqt.browser import Browser, SearchContext
 
 from .browser_button import BrowserButton
 from .browser_button_manager import BrowserButtonManager
-from ..common.browser_helper import BrowserHelper
 from ...config.config import Config
 
 log: Logger = logging.getLogger(__name__)
@@ -44,14 +41,7 @@ class BrowserHooks:
 
     def __update_button(self, context: SearchContext) -> None:
         if self.__config.get_browser_show_found_notes_size():
-            item_ids: Sequence[ItemId] = context.ids
-            log.debug(f"Update browser size button for {len(item_ids)} items")
-            if BrowserHelper.is_notes_mode(context):
-                note_ids: Sequence[NoteId] = item_ids
-                self.__browser_button_manager.get_current_button().show_notes_size(note_ids)
-            else:
-                card_ids: Sequence[CardId] = item_ids
-                self.__browser_button_manager.get_current_button().show_cards_size(card_ids)
+            self.__browser_button_manager.get_current_button().show_items_size(context.ids)
         else:
             log.debug("Browser size button is disabled")
 
