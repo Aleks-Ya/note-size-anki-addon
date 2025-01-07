@@ -11,6 +11,7 @@ from note_size.calculator.size_formatter import SizeFormatter
 from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
 from note_size.types import SizeType, SizeBytes
 from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
+from tests import wait_until
 from tests.conftest import item_id_cache
 from tests.data import Data, MediaFiles
 
@@ -116,9 +117,9 @@ def test_evict_note(col: Collection, cache_manager: CacheManager, media_cache: M
                     file_type_helper: FileTypeHelper, size_str_cache: SizeStrCache, td: Data):
     assert cache_manager.get_cache_size() == 0
     card: Card = __use_all_caches(cache_manager, td)
-    assert cache_manager.get_cache_size() == 13
+    wait_until(lambda: cache_manager.get_cache_size() == 13)
     cache_manager.evict_note(card.nid)
-    assert cache_manager.get_cache_size() == 6
+    wait_until(lambda: cache_manager.get_cache_size() == 6)
 
 
 def __use_all_caches(cache_manager: CacheManager, td: Data) -> Card:
