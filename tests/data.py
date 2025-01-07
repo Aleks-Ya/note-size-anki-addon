@@ -41,7 +41,8 @@ class DefaultFields:
         f'Files ∑￡: <img src="{MediaFiles.picture}"> <img src="{MediaFiles.sound}">')
     back_field_content: FieldContent = FieldContent(
         f'Files ∑￡: <img src="{MediaFiles.picture}"> <img src="{MediaFiles.animation}">')
-
+    front_field_content_2: FieldContent = FieldContent('The field on the front card ∑￡')
+    back_field_content_2: FieldContent = FieldContent('Another field on the back card ∆¥')
 
 class Data:
 
@@ -79,8 +80,8 @@ class Data:
         return note
 
     def create_note_without_files(self, new_note: bool = False) -> Note:
-        return self.create_note_with_given_fields('The field on the front card ∑￡',
-                                                  'Another field on the back card ∆¥',
+        return self.create_note_with_given_fields(DefaultFields.front_field_content_2,
+                                                  DefaultFields.back_field_content_2,
                                                   new_note)
 
     def create_note_with_given_files(self, fields: dict[FieldName, dict[MediaFile, FileContent]]) -> Note:

@@ -221,3 +221,17 @@ def test_get_notes_file_sizes(size_calculator: SizeCalculator, td: Data):
     note_ids: Sequence[NoteId] = [note1.id, note2.id]
     file_sizes: dict[MediaFile, SizeBytes] = size_calculator.get_notes_file_sizes(note_ids, use_cache=True)
     assert file_sizes == {FileNames.animation: 9, FileNames.picture: 7, FileNames.sound: 5}
+
+
+def test_get_notes_size(size_calculator: SizeCalculator, td: Data):
+    note1: Note = td.create_note_with_files()
+    note2: Note = td.create_note_without_files()
+    note_ids: Sequence[NoteId] = [note1.id, note2.id]
+    total_size: SizeBytes = size_calculator.get_notes_size(note_ids, SizeType.TOTAL, use_cache=True)
+    exp_size_1: SizeBytes = SizeBytes(len(DefaultFields.front_field_content.encode()) +
+                                      len(DefaultFields.back_field_content.encode()) +
+                                      len(FileContents.picture) + len(FileContents.sound) +
+                                      len(FileContents.animation))
+    exp_size_2: SizeBytes = SizeBytes(len(DefaultFields.front_field_content_2.encode()) +
+                                      len(DefaultFields.back_field_content_2.encode()))
+    assert total_size == exp_size_1 + exp_size_2
