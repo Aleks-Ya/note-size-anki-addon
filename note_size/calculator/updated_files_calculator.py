@@ -1,6 +1,6 @@
 import logging
 from logging import Logger
-from typing import Sequence, Any
+from typing import Any
 
 from anki.collection import Collection
 from anki.notes import NoteId
@@ -65,8 +65,7 @@ class UpdatedFilesCalculator(Cache):
             if use_cache and file in self.__file_note_ids_cache:
                 return self.__file_note_ids_cache[file]
             else:
-                note_ids: Sequence[NoteId] = self.__col.find_notes("deck:*")
-                for note_id in note_ids:
+                for note_id in self.__col.db.list("select id from notes"):
                     files: set[MediaFile] = self.__size_calculator.get_note_files(note_id, use_cache)
                     for note_file in files:
                         if note_file in self.__file_note_ids_cache:
