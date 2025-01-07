@@ -25,7 +25,7 @@ class CacheInitializerBackground:
     def __init__(self, cache_storage: CacheStorage, cache_manager: CacheManager, deck_browser: DeckBrowser,
                  task_manager: TaskManager, config: Config,
                  update_progress_callback: Callable[[str, Optional[int], Optional[int]], None],
-                 update_progress_step: int = 500):
+                 update_progress_step: int = 1000):
         self.__cache_storage: CacheStorage = cache_storage
         self.__cache_manager: CacheManager = cache_manager
         self.__deck_browser: DeckBrowser = deck_browser
@@ -57,11 +57,11 @@ class CacheInitializerBackground:
         processed_notes: int = 0
         self.__update_progress("Cache initializing", processed_notes, note_number)
         for note_id, note_type_id, fields in col.db.execute("select id, mid, flds from notes"):
-            size_calculator.initialize_note_in_caches(note_id, note_type_id, fields)
             if self.__wants_cancel:
                 log.info(f"User cancelled notes cache initialization at {processed_notes}")
                 return processed_notes
             self.__update_progress("Caching note sizes", processed_notes, note_number)
+            size_calculator.initialize_note_in_caches(note_id, note_type_id, fields)
             for size_type in SizeType:
                 size_str_cache.get_note_size_str(note_id, size_type, use_cache=True)
                 note_files: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
@@ -74,7 +74,7 @@ class CacheInitializerBackground:
         end_time: datetime = datetime.now()
         duration_sec: int = round((end_time - start_time).total_seconds())
         log.info(f"Cache initialization finished: notes={note_number}, "
-                 f"duration_sec={duration_sec}, {item_id_cache.get_cache_size()}")
+                 f"duration_sec={duration_sec}, cache_size={item_id_cache.get_cache_size()}")
         return note_number
 
     def cancel(self):
