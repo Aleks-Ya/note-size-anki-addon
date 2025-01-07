@@ -1,5 +1,11 @@
 # Changelog for "Note Size" Anki addon
 
+## [v2.5.2](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.5.2) - 2025-01-07
+
+1. __[BUG]__ Size calculator properly handles files used in several notes
+2. __[BUG]__ Refresh BrowserButton when clicked
+3. __[MISC]__ Profiler does not overwrite previous reports
+
 ## [v2.5.1](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.5.1) - 2025-01-06
 
 1. __[BUG]__ Do not save caches to file if caches were not initialized
