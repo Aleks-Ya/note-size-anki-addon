@@ -33,7 +33,7 @@ def test_ping_all_urls(url_manager: UrlManager):
     urls: dict[UrlType, URL] = url_manager.get_all_urls()
     failed_urls: dict[UrlType, URL] = {}
     for url_type, url in urls.items():
-        response: Response = requests.get(url, timeout=30)
+        response: Response = requests.get(url, timeout=60)
         if response.status_code >= 300:
             failed_urls[url_type] = url
             print(f"Unavailable URL {url_type} -> {url}: status code {response.status_code}")

@@ -3,6 +3,7 @@ from typing import NewType
 
 SizeBytes = NewType("SizeBytes", int)
 FilesNumber = NewType("FilesNumber", int)
+NotesNumber = NewType("NotesNumber", int)
 MediaFile = NewType("MediaFile", str)
 SizeStr = NewType("SizeStr", str)
 ShortFilename = NewType("ShortFilename", str)

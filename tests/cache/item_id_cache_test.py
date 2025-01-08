@@ -10,6 +10,7 @@ from anki.notes import NoteId, Note
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.types import SizeBytes, SizeType, MediaFile
+from tests import wait_until
 from tests.conftest import size_calculator
 from tests.data import Data, DefaultFields, FileNames, FileContents
 
@@ -119,6 +120,6 @@ def test_get_cache_size(col: Collection, td: Data, item_id_cache: ItemIdCache):
     item_id_cache.get_note_id_by_card_id(card2.id)
     assert item_id_cache.get_cache_size() == 2
     item_id_cache.evict_note(card1.nid)
-    assert item_id_cache.get_cache_size() == 1
+    wait_until(lambda: item_id_cache.get_cache_size() == 1)
     item_id_cache.invalidate_cache()
     assert item_id_cache.get_cache_size() == 0
