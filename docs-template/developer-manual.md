@@ -78,15 +78,19 @@ Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
 
 1. Update `CHANGELOG.md` manually
 2. Update documentation: `./docs_render.sh`
-3. Check SonarQube warnings: https://sonarcloud.io/project/overview?id=Aleks-Ya_note-size-anki-addon
+3. CI:
+    1. Push: `git push`
+    2. Check GitHub actions: https://github.com/Aleks-Ya/note-size-anki-addon/actions
+    3. Check SonarQube warnings: https://sonarcloud.io/project/overview?id=Aleks-Ya_note-size-anki-addon
 4. Increment version:
-    1. Major: `bump-my-version bump major`
-    2. Minor: `bump-my-version bump minor`
-    3. Patch: `bump-my-version bump patch`
+    1. Major: `bump-my-version bump major -v`
+    2. Minor: `bump-my-version bump minor -v`
+    3. Patch: `bump-my-version bump patch -v`
 5. Build ZIP: `python setup.py dist`
 6. Upload ZIP to the Addon page: https://ankiweb.net/shared/info/1188705668
 7. Push Git branch and tags: `git push --follow-tags`
-8. Create a GitHub release from tag
+8. Create a GitHub release from tag: https://github.com/Aleks-Ya/note-size-anki-addon/releases
+9. Notify the Anki Forum support thread: https://forums.ankiweb.net/t/note-size-addon-support/46001
 
 ## Profiler
 

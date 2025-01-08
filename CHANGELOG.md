@@ -1,5 +1,11 @@
 # Changelog for "Note Size" Anki addon
 
+## [v2.6.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.6.0) - 2025-01-09
+
+1. __[FEATURE]__ Display missing media files
+2. __[FEATURE]__ Show number of notes in used Media tooltip
+3. __[FEATURE]__ Add "Size Precision" configuration property (JSON only)
+
 ## [v2.5.3](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.5.3) - 2025-01-08
 
 1. __[BUG]__ Error when click on Browser Button in cards mode
