@@ -31,7 +31,7 @@ class BrowserButton(QPushButton):
         self.__details_dialog: DetailsDialog = details_dialog
         self.__browser: Browser = browser
         self.__progress_manager: ProgressManager = progress_manager
-        self.__current_note_ids: Sequence[NoteId] = []
+        self.__current_item_ids: Sequence[ItemId] = []
         # noinspection PyUnresolvedReferences
         self.setStyleSheet("""
         QPushButton {
@@ -45,6 +45,7 @@ class BrowserButton(QPushButton):
 
     def show_items_size(self, item_ids: Sequence[ItemId]) -> None:
         log.debug(f"Update browser size button for {len(item_ids)} items")
+        self.__current_item_ids = item_ids
         if BrowserHelper.is_notes_mode(self.__browser):
             note_ids: Sequence[NoteId] = item_ids
             self.__show_notes_size(note_ids)
@@ -53,7 +54,6 @@ class BrowserButton(QPushButton):
             self.__show_cards_size(card_ids)
 
     def __show_notes_size(self, note_ids: Sequence[NoteId]) -> None:
-        self.__current_note_ids = note_ids
         size: SizeStr = self.__size_str_cache.get_notes_size_str(note_ids, SizeType.TOTAL, use_cache=True)
         self.setText(size)
         note_ids_number: str = NumberFormatter.with_thousands_separator(len(note_ids))
@@ -64,8 +64,7 @@ class BrowserButton(QPushButton):
         self.setToolTip(tooltip)
 
     def __show_cards_size(self, card_ids: Sequence[CardId]) -> None:
-        note_ids: Sequence[NoteId] = self.__item_id_cache.get_note_ids_by_card_ids(card_ids)
-        self.__current_note_ids = note_ids
+        note_ids: Sequence[NoteId] = self.__item_ids_to_note_ids(card_ids)
         size: SizeStr = self.__size_str_cache.get_notes_size_str(note_ids, SizeType.TOTAL, use_cache=True)
         self.setText(size)
         note_ids_number: str = NumberFormatter.with_thousands_separator(len(note_ids))
@@ -78,11 +77,18 @@ class BrowserButton(QPushButton):
 
     def __on_click(self) -> None:
         log.debug("Browser size button clicked")
-        self.show_items_size(self.__current_note_ids)
-        op: ShowDetailsDialogOp = ShowDetailsDialogOp(self.__details_dialog, self.__current_note_ids,
-                                                      self.__progress_manager, self.__browser)
+        self.show_items_size(self.__current_item_ids)
+        note_ids: Sequence[NoteId] = self.__item_ids_to_note_ids(self.__current_item_ids)
+        op: ShowDetailsDialogOp = ShowDetailsDialogOp(self.__details_dialog, note_ids, self.__progress_manager,
+                                                      self.__browser)
         op.run()
         log.debug("Browser size button click finished")
+
+    def __item_ids_to_note_ids(self, item_ids: Sequence[ItemId]) -> Sequence[NoteId]:
+        if BrowserHelper.is_notes_mode(self.__browser):
+            return item_ids
+        else:
+            return self.__item_id_cache.get_note_ids_by_card_ids(item_ids)
 
     def __del__(self):
         log.debug(f"{self.__class__.__name__} was deleted")
