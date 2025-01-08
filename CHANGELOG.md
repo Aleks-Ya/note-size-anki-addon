@@ -1,5 +1,9 @@
 # Changelog for "Note Size" Anki addon
 
+## [v2.5.3](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.5.3) - 2025-01-08
+
+1. __[BUG]__ Error when click on Browser Button in cards mode
+
 ## [v2.5.2](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.5.2) - 2025-01-07
 
 1. __[BUG]__ Size calculator properly handles files used in several notes

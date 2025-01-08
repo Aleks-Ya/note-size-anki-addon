@@ -89,9 +89,9 @@ Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
 
 ## Release
 
-1. Check SonarQube warnings: https://sonarcloud.io/project/overview?id=Aleks-Ya_note-size-anki-addon
-2. Update `CHANGELOG.md` manually
-3. Update documentation: `./docs_render.sh`
+1. Update `CHANGELOG.md` manually
+2. Update documentation: `./docs_render.sh`
+3. Check SonarQube warnings: https://sonarcloud.io/project/overview?id=Aleks-Ya_note-size-anki-addon
 4. Increment version:
     1. Major: `bump-my-version bump major`
     2. Minor: `bump-my-version bump minor`
