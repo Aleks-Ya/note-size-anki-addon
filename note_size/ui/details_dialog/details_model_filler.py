@@ -9,7 +9,7 @@ from .details_model import DetailsModel
 from ..common.number_formatter import NumberFormatter
 from ...calculator.size_calculator import SizeCalculator
 from ...calculator.size_formatter import SizeFormatter
-from ...types import SizeStr, SizeBytes, MediaFile, SizeType
+from ...types import SizeStr, SizeBytes, MediaFile, SizeType, FileSize
 
 log: Logger = logging.getLogger(__name__)
 
@@ -78,7 +78,7 @@ class DetailsModelFiller:
         note_number_str: str = NumberFormatter.with_thousands_separator(len(note_ids))
         return f"Size of {files_number_str} files in {note_number_str} notes: {size_str}"
 
-    def __file_sizes(self, note: Note) -> dict[MediaFile, SizeBytes]:
+    def __file_sizes(self, note: Note) -> dict[MediaFile, FileSize]:
         return self.__size_calculator.calculate_note_file_sizes(note, use_cache=False)
 
     def __del__(self):

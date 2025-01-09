@@ -8,7 +8,7 @@ from anki.notes import Note, NoteId
 from pytest import raises
 
 from note_size.calculator.size_calculator import SizeCalculator
-from note_size.types import SizeBytes, MediaFile, SizeType
+from note_size.types import SizeBytes, MediaFile, SizeType, FileSize
 from tests.data import Data, DefaultFields, MediaFiles, FileContents
 
 
@@ -76,11 +76,11 @@ def test_calculate_note_size_total_performance(size_calculator: SizeCalculator, 
 
 
 def test_calculate_note_file_sizes(size_calculator: SizeCalculator, note: Note):
-    act_file_sizes: dict[MediaFile, SizeBytes] = size_calculator.calculate_note_file_sizes(note, use_cache=False)
-    exp_file_sizes: dict[MediaFile, SizeBytes] = {
-        MediaFiles.picture: SizeBytes(len(FileContents.picture)),
-        MediaFiles.sound: SizeBytes(len(FileContents.sound)),
-        MediaFiles.animation: SizeBytes(len(FileContents.animation))}
+    act_file_sizes: dict[MediaFile, FileSize] = size_calculator.calculate_note_file_sizes(note, use_cache=False)
+    exp_file_sizes: dict[MediaFile, FileSize] = {
+        MediaFiles.picture: FileSize(SizeBytes(len(FileContents.picture))),
+        MediaFiles.sound: FileSize(SizeBytes(len(FileContents.sound))),
+        MediaFiles.animation: FileSize(SizeBytes(len(FileContents.animation)))}
     assert act_file_sizes == exp_file_sizes
 
 
@@ -153,8 +153,9 @@ def test_evict_note(size_calculator: SizeCalculator, td: Data):
                                                SizeType.TEXTS: {nid1: 122, nid2: 70},
                                                SizeType.FILES: {nid1: 21}},
                                               {nid1: {MediaFiles.animation, MediaFiles.sound, MediaFiles.picture}},
-                                              {nid1: {MediaFiles.animation: 9, MediaFiles.picture: 7,
-                                                      MediaFiles.sound: 5}}]
+                                              {nid1: {MediaFiles.animation: FileSize(SizeBytes(9)),
+                                                      MediaFiles.picture: FileSize(SizeBytes(7)),
+                                                      MediaFiles.sound: FileSize(SizeBytes(5))}}]
     size_calculator.evict_note(nid1)
     assert size_calculator.get_cache_size() == 1
     assert size_calculator.as_dict_list() == [{SizeType.TOTAL: {},
@@ -219,8 +220,10 @@ def test_get_notes_file_sizes(size_calculator: SizeCalculator, td: Data):
     note1: Note = td.create_note_with_files()
     note2: Note = td.create_note_without_files()
     note_ids: Sequence[NoteId] = [note1.id, note2.id]
-    file_sizes: dict[MediaFile, SizeBytes] = size_calculator.get_notes_file_sizes(note_ids, use_cache=True)
-    assert file_sizes == {MediaFiles.animation: 9, MediaFiles.picture: 7, MediaFiles.sound: 5}
+    file_sizes: dict[MediaFile, FileSize] = size_calculator.get_notes_file_sizes(note_ids, use_cache=True)
+    assert file_sizes == {MediaFiles.animation: FileSize(SizeBytes(9)),
+                          MediaFiles.picture: FileSize(SizeBytes(7)),
+                          MediaFiles.sound: FileSize(SizeBytes(5))}
 
 
 def test_get_notes_size(size_calculator: SizeCalculator, td: Data):

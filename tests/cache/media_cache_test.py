@@ -4,14 +4,14 @@ import pytest
 from anki.notes import Note
 
 from note_size.cache.media_cache import MediaCache
-from note_size.types import SizeBytes, FilesNumber, MediaFile
+from note_size.types import SizeBytes, FilesNumber, MediaFile, FileSize
 from tests.data import Data, MediaFiles, FileContents
 
 
 def test_get_file_size(td: Data, media_cache: MediaCache):
     td.create_note_with_files()
-    act_file_size_1: SizeBytes = media_cache.get_file_size(MediaFiles.picture, use_cache=False)
-    exp_file_size_1: SizeBytes = SizeBytes(len(FileContents.picture))
+    act_file_size_1: FileSize = media_cache.get_file_size(MediaFiles.picture, use_cache=False)
+    exp_file_size_1: FileSize = FileSize(SizeBytes(len(FileContents.picture)))
     assert act_file_size_1 == exp_file_size_1
 
 
@@ -44,9 +44,9 @@ def test_get_cache_size(media_cache: MediaCache, td: Data):
 
 def test_get_updated_files(media_cache: MediaCache, td: Data):
     td.create_note_with_files()
-    exp_size_0: SizeBytes = SizeBytes(7)
-    exp_size_1: SizeBytes = SizeBytes(5)
-    exp_size_2: SizeBytes = SizeBytes(9)
+    exp_size_0: FileSize = FileSize(SizeBytes(7))
+    exp_size_1: FileSize = FileSize(SizeBytes(5))
+    exp_size_2: FileSize = FileSize(SizeBytes(9))
     assert media_cache.get_file_size(MediaFiles.picture, use_cache=True) == exp_size_0
     assert media_cache.get_file_size(MediaFiles.sound, use_cache=True) == exp_size_1
     assert media_cache.get_file_size(MediaFiles.animation, use_cache=True) == exp_size_2

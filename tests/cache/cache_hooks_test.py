@@ -12,7 +12,7 @@ from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
 from note_size.calculator.size_calculator import SizeCalculator
-from note_size.types import SizeType
+from note_size.types import SizeType, FileSize, SizeBytes
 from tests.data import Data, MediaFiles
 
 
@@ -68,7 +68,7 @@ def test_media_sync_did_start_or_stop(cache_hooks: CacheHooks, col: Collection, 
                                       updated_files_calculator: UpdatedFilesCalculator):
     cache_hooks.setup_hooks()
     td.create_note_with_files()
-    original_file_size: int = 7
+    original_file_size: FileSize = FileSize(SizeBytes(7))
 
     assert media_cache.get_file_size(MediaFiles.picture, use_cache=True) == original_file_size
     new_content: str = "abc"
@@ -83,4 +83,4 @@ def test_media_sync_did_start_or_stop(cache_hooks: CacheHooks, col: Collection, 
 
     updated_files_calculator.set_initialized(True)
     gui_hooks.media_sync_did_start_or_stop(False)
-    assert media_cache.get_file_size(MediaFiles.picture, use_cache=True) == len(new_content)
+    assert media_cache.get_file_size(MediaFiles.picture, use_cache=True) == FileSize(SizeBytes(len(new_content)))

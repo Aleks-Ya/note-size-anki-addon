@@ -10,7 +10,7 @@ from .size_table_widget_item import SizeTableWidgetItem
 from ...calculator.size_formatter import SizeFormatter
 from ...config.config import Config
 from ...config.settings import Settings
-from ...types import MediaFile, SizeStr, FileType, SizeBytes
+from ...types import MediaFile, SizeStr, FileType, FileSize
 
 log: Logger = logging.getLogger(__name__)
 
@@ -82,20 +82,20 @@ class FilesTable(QTableWidget):
         horizontal_header.setSectionResizeMode(self.__size_column, QHeaderView.ResizeMode.ResizeToContents)
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def prepare_items(self, file_sizes: dict[MediaFile, SizeBytes]) -> None:
+    def prepare_items(self, file_sizes: dict[MediaFile, FileSize]) -> None:
         files_number: int = len(file_sizes)
         log.debug(f"Prepare for showing files: {files_number}")
         self.__items_dict: dict[int, dict[int, QTableWidgetItem]] = {}
-        sorted_file_sizes: dict[MediaFile, SizeBytes] = dict(
-            sorted(file_sizes.items(), key=lambda item: item[1], reverse=True))
-        for row_index, (file, size) in enumerate(sorted_file_sizes.items()):
+        sorted_file_sizes: dict[MediaFile, FileSize] = dict(
+            sorted(file_sizes.items(), key=lambda item: item[1].size, reverse=True))
+        for row_index, (file, file_size) in enumerate(sorted_file_sizes.items()):
             icon_item: IconTableWidgetItem = self.__create_icon_item(file)
 
             filename_item: QTableWidgetItem = QTableWidgetItem(file)
             filename_item.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
 
-            size_str: SizeStr = self.__size_formatter.bytes_to_str(size)
-            size_item: SizeTableWidgetItem = SizeTableWidgetItem(size, size_str)
+            size_str: SizeStr = self.__size_formatter.bytes_to_str(file_size.size)
+            size_item: SizeTableWidgetItem = SizeTableWidgetItem(file_size, size_str)
 
             self.__items_dict[row_index] = {}
             self.__items_dict[row_index][self.__icon_column] = icon_item

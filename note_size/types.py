@@ -23,3 +23,18 @@ class SizeType(Enum):
     TOTAL = "total"
     TEXTS = "texts"
     FILES = "files"
+
+
+class FileSize:
+    def __init__(self, size: SizeBytes, exists: bool = True) -> None:
+        self.size: SizeBytes = size
+        self.exists: bool = exists
+
+    def __hash__(self):
+        return hash((self.size, self.exists))
+
+    def __eq__(self, __other):
+        return type(self) == type(__other) and self.size == __other.size and self.exists == __other.exists
+
+    def __repr__(self):
+        return f"FileSize(size={self.size},exists={self.exists})"
