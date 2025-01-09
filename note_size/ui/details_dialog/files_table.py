@@ -88,14 +88,14 @@ class FilesTable(QTableWidget):
         self.__items_dict: dict[int, dict[int, QTableWidgetItem]] = {}
         sorted_file_sizes: dict[MediaFile, FileSize] = dict(
             sorted(file_sizes.items(), key=lambda item: item[1].size, reverse=True))
-        for row_index, (file, file_size) in enumerate(sorted_file_sizes.items()):
-            icon_item: IconTableWidgetItem = self.__create_icon_item(file)
+        for row_index, (media_file, file_size) in enumerate(sorted_file_sizes.items()):
+            icon_item: IconTableWidgetItem = self.__create_icon_item(media_file)
 
-            filename_item: QTableWidgetItem = QTableWidgetItem(file)
+            filename_item: QTableWidgetItem = QTableWidgetItem(media_file)
             filename_item.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
 
             size_str: SizeStr = self.__size_formatter.bytes_to_str(file_size.size)
-            size_item: SizeTableWidgetItem = SizeTableWidgetItem(file_size, size_str)
+            size_item: SizeTableWidgetItem = SizeTableWidgetItem(media_file, file_size, size_str)
 
             self.__items_dict[row_index] = {}
             self.__items_dict[row_index][self.__icon_column] = icon_item
