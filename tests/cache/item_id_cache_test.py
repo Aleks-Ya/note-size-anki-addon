@@ -1,5 +1,4 @@
 import timeit
-from time import sleep
 
 import pytest
 from anki.cards import Card
@@ -10,7 +9,7 @@ from anki.notes import NoteId, Note
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.types import SizeBytes, SizeType, MediaFile
-from tests import wait_until
+from tests import wait_until, wait_until_exception
 from tests.conftest import size_calculator
 from tests.data import Data, DefaultFields, MediaFiles, FileContents
 
@@ -72,9 +71,7 @@ def test_get_note_id_by_card_id(td: Data, col: Collection, item_id_cache: ItemId
     assert item_id_cache.get_note_id_by_card_id(card.id) == card.nid
     item_id_cache.evict_note(card.nid)
     col.flush()
-    sleep(0.5)
-    with pytest.raises(NotFoundError):
-        item_id_cache.get_note_id_by_card_id(card.id)
+    wait_until_exception(lambda: item_id_cache.get_note_id_by_card_id(card.id), NotFoundError)
 
 
 def test_get_note_files(td: Data, item_id_cache: ItemIdCache, size_calculator: SizeCalculator):
