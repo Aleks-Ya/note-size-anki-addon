@@ -12,22 +12,14 @@ from note_size.config.config import Config
 from note_size.types import MediaFile, FieldName, FieldContent, FileContent
 
 
-class FileNames:
-    picture: str = 'picture.jpg'
-    sound: str = 'sound.mp3'
-    animation: str = 'animation.gif'
-    image: str = 'image.png'
-    movie: str = 'movie.mp4'
-    photo: str = 'photo.tiff'
-    video: str = 'video.mov'
-
-
 class MediaFiles:
-    picture: MediaFile = MediaFile(FileNames.picture)
-    sound: MediaFile = MediaFile(FileNames.sound)
-    animation: MediaFile = MediaFile(FileNames.animation)
-    image: MediaFile = MediaFile(FileNames.image)
-    video: MediaFile = MediaFile(FileNames.video)
+    picture: MediaFile = MediaFile('picture.jpg')
+    sound: MediaFile = MediaFile('sound.mp3')
+    animation: MediaFile = MediaFile('animation.gif')
+    image: MediaFile = MediaFile('image.png')
+    movie: MediaFile = MediaFile('movie.mp4')
+    photo: MediaFile = MediaFile('photo.tiff')
+    video: MediaFile = MediaFile('video.mov')
 
 
 class FileContents:

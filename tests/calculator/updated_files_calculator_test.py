@@ -2,8 +2,8 @@ from anki.notes import Note, NoteId
 
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
-from note_size.types import MediaFile, FileContent
-from tests.data import Data, DefaultFields, FileNames, MediaFiles, FileContents
+from note_size.types import FileContent
+from tests.data import Data, DefaultFields, MediaFiles, FileContents
 
 
 def test_get_notes_having_updated_files(updated_files_calculator: UpdatedFilesCalculator, td: Data):
@@ -12,19 +12,19 @@ def test_get_notes_having_updated_files(updated_files_calculator: UpdatedFilesCa
     note2: Note = td.create_note_with_given_files({
         DefaultFields.front_field_name: {
             MediaFiles.picture: FileContents.picture,
-            MediaFile(FileNames.video): FileContent('video')
+            MediaFiles.video: FileContent('video')
         },
         DefaultFields.back_field_name: {
             MediaFiles.sound: FileContents.sound,
-            MediaFile(FileNames.image): FileContent('image')
+            MediaFiles.image: FileContent('image')
         }
     })
     td.create_note_with_given_files({
         DefaultFields.front_field_name: {
-            MediaFile(FileNames.photo): FileContent('photo')
+            MediaFiles.photo: FileContent('photo')
         },
         DefaultFields.back_field_name: {
-            MediaFile(FileNames.movie): FileContent('movie')
+            MediaFiles.movie: FileContent('movie')
         }
     })
     assert updated_files_calculator.get_notes_having_updated_files() == set()
@@ -40,19 +40,19 @@ def test_evict_note(updated_files_calculator: UpdatedFilesCalculator, td: Data):
     note2: Note = td.create_note_with_given_files({
         DefaultFields.front_field_name: {
             MediaFiles.picture: FileContents.picture,
-            MediaFile(FileNames.video): FileContent('video')
+            MediaFiles.video: FileContent('video')
         },
         DefaultFields.back_field_name: {
             MediaFiles.sound: FileContents.sound,
-            MediaFile(FileNames.image): FileContent('image')
+            MediaFiles.image: FileContent('image')
         }
     })
     note3: Note = td.create_note_with_given_files({
         DefaultFields.front_field_name: {
-            MediaFile(FileNames.photo): FileContent('photo')
+            MediaFiles.photo: FileContent('photo')
         },
         DefaultFields.back_field_name: {
-            MediaFile(FileNames.movie): FileContent('movie')
+            MediaFiles.movie: FileContent('movie')
         }
     })
     assert updated_files_calculator.as_dict_list() == [{}]
@@ -62,21 +62,21 @@ def test_evict_note(updated_files_calculator: UpdatedFilesCalculator, td: Data):
 
     td.write_file(MediaFiles.picture, "new content")
     updated_files_calculator.get_notes_having_updated_files()
-    assert updated_files_calculator.as_dict_list() == [{FileNames.animation: {note1.id},
-                                                        FileNames.image: {note2.id},
-                                                        FileNames.movie: {note3.id},
-                                                        FileNames.photo: {note3.id},
-                                                        FileNames.picture: {note1.id, note2.id},
-                                                        FileNames.sound: {note1.id, note2.id},
-                                                        FileNames.video: {note2.id}}]
+    assert updated_files_calculator.as_dict_list() == [{MediaFiles.animation: {note1.id},
+                                                        MediaFiles.image: {note2.id},
+                                                        MediaFiles.movie: {note3.id},
+                                                        MediaFiles.photo: {note3.id},
+                                                        MediaFiles.picture: {note1.id, note2.id},
+                                                        MediaFiles.sound: {note1.id, note2.id},
+                                                        MediaFiles.video: {note2.id}}]
     updated_files_calculator.evict_note(note1.id)
-    assert updated_files_calculator.as_dict_list() == [{FileNames.animation: set(),
-                                                        FileNames.image: {note2.id},
-                                                        FileNames.movie: {note3.id},
-                                                        FileNames.photo: {note3.id},
-                                                        FileNames.picture: {note2.id},
-                                                        FileNames.sound: {note2.id},
-                                                        FileNames.video: {note2.id}}]
+    assert updated_files_calculator.as_dict_list() == [{MediaFiles.animation: set(),
+                                                        MediaFiles.image: {note2.id},
+                                                        MediaFiles.movie: {note3.id},
+                                                        MediaFiles.photo: {note3.id},
+                                                        MediaFiles.picture: {note2.id},
+                                                        MediaFiles.sound: {note2.id},
+                                                        MediaFiles.video: {note2.id}}]
 
 
 def test_initialized(updated_files_calculator: UpdatedFilesCalculator):
