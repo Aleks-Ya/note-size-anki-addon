@@ -24,17 +24,17 @@ class MediaCache(Cache):
         self.__file_sizes_cache: dict[MediaFile, SizeBytes] = {}
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def get_file_size(self, file: MediaFile, use_cache: bool) -> SizeBytes:
+    def get_file_size(self, media_file: MediaFile, use_cache: bool) -> SizeBytes:
         with self._lock:
-            if not use_cache or file not in self.__file_sizes_cache:
-                full_path: Path = self.__media_dir.joinpath(file)
+            if not use_cache or media_file not in self.__file_sizes_cache:
+                full_path: Path = self.__media_dir.joinpath(media_file)
                 if os.path.exists(full_path):
                     new_size: SizeBytes = SizeBytes(os.path.getsize(full_path))
                 else:
                     log.warning(f"File absents: {full_path}")
                     new_size: SizeBytes = SizeBytes(0)
-                self.__file_sizes_cache[file] = new_size
-            return self.__file_sizes_cache[file]
+                self.__file_sizes_cache[media_file] = new_size
+            return self.__file_sizes_cache[media_file]
 
     def invalidate_cache(self) -> None:
         with self._lock:

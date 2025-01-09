@@ -154,8 +154,8 @@ class FilesTable(QTableWidget):
         self.setRowCount(0)
         self.clearContents()
 
-    def __create_icon_item(self, file: MediaFile) -> IconTableWidgetItem:
-        file_type: FileType = self.__file_type_helper.get_file_type(file)
+    def __create_icon_item(self, media_file: MediaFile) -> IconTableWidgetItem:
+        file_type: FileType = self.__file_type_helper.get_file_type(media_file)
         icon: QIcon = self.__icons[file_type]
         icon_item: IconTableWidgetItem = IconTableWidgetItem(icon, file_type)
         return icon_item
