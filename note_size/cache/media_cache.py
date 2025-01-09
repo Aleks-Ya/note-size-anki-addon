@@ -36,6 +36,14 @@ class MediaCache(Cache):
                 self.__file_sizes_cache[media_file] = new_size
             return self.__file_sizes_cache[media_file]
 
+    def get_missing_files_number(self, files: set[MediaFile], use_cache: bool) -> FilesNumber:
+        with self._lock:
+            counter: int = 0
+            for media_file in files:
+                if not self.get_file_size(media_file, use_cache).exists:
+                    counter += 1
+            return FilesNumber(counter)
+
     def invalidate_cache(self) -> None:
         with self._lock:
             self.__file_sizes_cache.clear()

@@ -336,8 +336,9 @@ def size_str_cache(col: Collection, size_calculator: SizeCalculator, size_format
 
 
 @pytest.fixture
-def used_files_calculator(col: Collection, size_calculator: SizeCalculator) -> UsedFilesCalculator:
-    return UsedFilesCalculator(col, size_calculator)
+def used_files_calculator(col: Collection, size_calculator: SizeCalculator,
+                          media_cache: MediaCache) -> UsedFilesCalculator:
+    return UsedFilesCalculator(col, size_calculator, media_cache)
 
 
 @pytest.fixture

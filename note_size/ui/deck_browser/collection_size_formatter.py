@@ -42,8 +42,8 @@ class CollectionSizeFormatter:
         if self.__item_id_cache.is_initialized():
             log.debug("Use actual collection sizes")
             collection_size: SizeBytes = SizeBytes(self.__collection_file_path.stat().st_size)
-            used_files_size, used_files_number, used_notes_numbers = self.__used_files_calculator.get_used_files_size(
-                use_cache=True)
+            used_files_size, used_files_number, missing_files_number, used_notes_numbers \
+                = self.__used_files_calculator.get_used_files_size(use_cache=True)
             unused_files_size, unused_files_number = self.__media_cache.get_unused_files_size(use_cache=True)
             trash_dir_size: SizeBytes = self.__trash.get_trash_dir_size()
             trash_files_number: FilesNumber = self.__trash.get_trash_files_number()
@@ -51,6 +51,7 @@ class CollectionSizeFormatter:
             note_number_str: str = NumberFormatter.with_thousands_separator(note_count)
             used_notes_numbers_str: str = NumberFormatter.with_thousands_separator(used_notes_numbers)
             used_files_number_str: str = NumberFormatter.with_thousands_separator(used_files_number)
+            missing_files_number_str: str = NumberFormatter.with_thousands_separator(missing_files_number)
             unused_files_size_str: str = NumberFormatter.with_thousands_separator(unused_files_number)
             trash_files_number_str: str = NumberFormatter.with_thousands_separator(trash_files_number)
             total_size: SizeBytes = SizeBytes(collection_size + used_files_size + unused_files_size + trash_dir_size)
@@ -64,6 +65,7 @@ class CollectionSizeFormatter:
             note_number_str: str = self.__sand_clock
             used_notes_numbers_str: str = self.__sand_clock
             used_files_number_str: str = self.__sand_clock
+            missing_files_number_str: str = self.__sand_clock
             unused_files_size_str: str = self.__sand_clock
             trash_files_number_str: str = self.__sand_clock
         log.debug("Preparing data for formatting collection size has finished")
@@ -71,8 +73,8 @@ class CollectionSizeFormatter:
         soup: BeautifulSoup = BeautifulSoup()
         div: Tag = soup.new_tag('div')
         collection_title: str = f'Size of {note_number_str} notes in file "{self.__collection_file_path}"'
-        media_title: str = f'Size of {used_files_number_str} ' \
-                           f'media files used in {used_notes_numbers_str} notes (not include Unused and Trash)\n' \
+        media_title: str = f'Size of {used_files_number_str} media files (including {missing_files_number_str} ' \
+                           f'missing files) used in {used_notes_numbers_str} notes (not include Unused and Trash)\n' \
                            f'Folder "{self.__media_folder_path}"'
         unused_title: str = f'Size of {unused_files_size_str} ' \
                             f'media files not used in any notes (can be moved to Trash)'

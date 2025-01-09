@@ -4,7 +4,8 @@ from tests.data import Data, DefaultFields, MediaFiles
 
 
 def test_get_used_files_size(td: Data, used_files_calculator: UsedFilesCalculator):
-    assert used_files_calculator.get_used_files_size(use_cache=True) == (SizeBytes(0), FilesNumber(0), NotesNumber(0))
+    assert used_files_calculator.get_used_files_size(use_cache=True) == (
+        SizeBytes(0), FilesNumber(0), FilesNumber(0), NotesNumber(0))
     media_file_1: MediaFile = MediaFiles.picture
     media_file_2: MediaFile = MediaFiles.sound
     media_file_3: MediaFile = MediaFiles.animation
@@ -23,7 +24,7 @@ def test_get_used_files_size(td: Data, used_files_calculator: UsedFilesCalculato
         }
     })
     assert used_files_calculator.get_used_files_size(use_cache=True) == (
-        SizeBytes(content_length_1), FilesNumber(3), NotesNumber(1))
+        SizeBytes(content_length_1), FilesNumber(3), FilesNumber(0), NotesNumber(1))
 
     media_file_4: MediaFile = MediaFile('video.mp4')
     content_4: FileContent = FileContent('video')
@@ -37,4 +38,4 @@ def test_get_used_files_size(td: Data, used_files_calculator: UsedFilesCalculato
     })
     content_length_2: int = content_length_1 + len(content_4.encode())
     assert used_files_calculator.get_used_files_size(use_cache=True) == (
-        SizeBytes(content_length_2), FilesNumber(4), NotesNumber(2))
+        SizeBytes(content_length_2), FilesNumber(4), FilesNumber(0), NotesNumber(2))

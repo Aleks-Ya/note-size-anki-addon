@@ -90,7 +90,7 @@ def __initialize(col: Collection):
     task_manager: TaskManager = mw.taskman
     cache_initializer: CacheInitializer = CacheInitializer(mw, cache_manager, cache_storage, deck_browser,
                                                            task_manager, progress_manager, config)
-    used_files_calculator: UsedFilesCalculator = UsedFilesCalculator(col, size_calculator)
+    used_files_calculator: UsedFilesCalculator = UsedFilesCalculator(col, size_calculator, media_cache)
     collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(
         col, item_id_cache, media_cache, trash, size_formatter, used_files_calculator, settings)
     desktop_services: QDesktopServices = QDesktopServices()

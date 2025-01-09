@@ -15,6 +15,13 @@ def test_get_file_size(td: Data, media_cache: MediaCache):
     assert act_file_size_1 == exp_file_size_1
 
 
+def test_get_missing_files_number(td: Data, media_cache: MediaCache):
+    media_files: set[MediaFile] = {MediaFiles.picture, MediaFiles.sound, MediaFiles.animation, MediaFiles.video}
+    assert media_cache.get_missing_files_number(media_files, use_cache=False) == 4
+    td.create_note_with_files()
+    assert media_cache.get_missing_files_number(media_files, use_cache=False) == 1
+
+
 @pytest.mark.performance
 def test_get_file_size_cached_performance(media_cache: MediaCache, td: Data):
     td.create_note_with_files()
