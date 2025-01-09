@@ -295,8 +295,9 @@ def level_parser(size_formatter: SizeFormatter) -> LevelParser:
 
 
 @pytest.fixture
-def details_model_filler(size_calculator: SizeCalculator, size_formatter: SizeFormatter) -> DetailsModelFiller:
-    return DetailsModelFiller(size_calculator, size_formatter)
+def details_model_filler(size_calculator: SizeCalculator, size_formatter: SizeFormatter,
+                         media_cache: MediaCache) -> DetailsModelFiller:
+    return DetailsModelFiller(size_calculator, size_formatter, media_cache)
 
 
 @pytest.fixture

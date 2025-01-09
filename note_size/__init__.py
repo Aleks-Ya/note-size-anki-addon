@@ -98,7 +98,7 @@ def __initialize(col: Collection):
     config_ui: ConfigUi = ConfigUi(
         config, config_loader, logs, cache_initializer, desktop_services, level_parser, url_manager, deck_browser,
         settings)
-    details_model_filler: DetailsModelFiller = DetailsModelFiller(size_calculator, size_formatter)
+    details_model_filler: DetailsModelFiller = DetailsModelFiller(size_calculator, size_formatter, media_cache)
     details_dialog: DetailsDialog = DetailsDialog(
         size_calculator, size_formatter, file_type_helper, details_model_filler, config_ui, config, settings)
     editor_button_js: EditorButtonJs = EditorButtonJs(editor_button_formatter)
