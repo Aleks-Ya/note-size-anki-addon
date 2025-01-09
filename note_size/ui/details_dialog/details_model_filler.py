@@ -75,12 +75,15 @@ class DetailsModelFiller:
         return f"Size of {files_number_str} files (including {missing_files_number_str} missing files): {size}"
 
     def __files_notes_size(self, note_ids: Sequence[NoteId]) -> str:
-        files_number: int = len(self.__size_calculator.get_notes_files(note_ids, use_cache=True))
-        files_number_str: str = NumberFormatter.with_thousands_separator(files_number)
+        files: set[MediaFile] = self.__size_calculator.get_notes_files(note_ids, use_cache=True)
+        files_number_str: str = NumberFormatter.with_thousands_separator(len(files))
         size_bytes: SizeBytes = self.__size_calculator.get_notes_size(note_ids, SizeType.FILES, use_cache=True)
         size_str: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
         note_number_str: str = NumberFormatter.with_thousands_separator(len(note_ids))
-        return f"Size of {files_number_str} files in {note_number_str} notes: {size_str}"
+        missing_files_number: int = self.__media_cache.get_missing_files_number(files, use_cache=True)
+        missing_files_number_str: str = NumberFormatter.with_thousands_separator(missing_files_number)
+        return (f"Size of {files_number_str} files (including {missing_files_number_str} missing files)  "
+                f"in {note_number_str} notes: {size_str}")
 
     def __file_sizes(self, note: Note) -> dict[MediaFile, FileSize]:
         return self.__size_calculator.calculate_note_file_sizes(note, use_cache=False)
