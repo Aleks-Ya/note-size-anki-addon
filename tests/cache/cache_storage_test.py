@@ -19,7 +19,7 @@ from note_size.config.config import Config
 from note_size.config.settings import Settings
 from note_size.types import SizeType, FileType
 from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
-from tests.data import Data, FileNames
+from tests.data import Data, FileNames, MediaFiles
 
 
 def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Collection, item_id_cache: ItemIdCache,
@@ -37,7 +37,7 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Colle
     size_calculator.get_note_files(card1.nid, use_cache=True)
     size_calculator.get_note_files(card2.nid, use_cache=True)
 
-    file_type_helper.get_file_type(FileNames.image, use_cache=True)
+    file_type_helper.get_file_type(MediaFiles.image, use_cache=True)
 
     size_str_cache.get_note_size_str(card1.nid, SizeType.TOTAL, use_cache=True)
     size_str_cache.get_note_size_str(card2.nid, SizeType.TEXTS, use_cache=True)

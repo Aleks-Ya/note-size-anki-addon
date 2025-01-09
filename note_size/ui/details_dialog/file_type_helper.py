@@ -5,7 +5,7 @@ from logging import Logger
 from typing import Any
 
 from ...cache.cache import Cache
-from ...types import FileType
+from ...types import FileType, MediaFile
 
 log: Logger = logging.getLogger(__name__)
 
@@ -21,16 +21,16 @@ class FileTypeHelper(Cache):
 
     def __init__(self) -> None:
         super().__init__()
-        self.__cache: dict[str, FileType] = {}
+        self.__cache: dict[MediaFile, FileType] = {}
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def get_file_type(self, filename: str, use_cache: bool = True) -> FileType:
+    def get_file_type(self, media_file: MediaFile, use_cache: bool = True) -> FileType:
         with self._lock:
-            if use_cache and filename in self.__cache:
-                return self.__cache[filename]
+            if use_cache and media_file in self.__cache:
+                return self.__cache[media_file]
             else:
-                file_type: FileType = FileTypeHelper.__determine_file_type(filename)
-                self.__cache[filename] = file_type
+                file_type: FileType = FileTypeHelper.__determine_file_type(media_file)
+                self.__cache[media_file] = file_type
                 return file_type
 
     def invalidate_cache(self) -> None:
@@ -50,10 +50,10 @@ class FileTypeHelper(Cache):
             return len(self.__cache)
 
     @staticmethod
-    def __determine_file_type(filename: str) -> FileType:
-        full_mime_type: str = mimetypes.guess_type(filename)[0]
+    def __determine_file_type(media_file: MediaFile) -> FileType:
+        full_mime_type: str = mimetypes.guess_type(media_file)[0]
         if not full_mime_type:
-            extension: str = os.path.splitext(filename)[1]
+            extension: str = os.path.splitext(media_file)[1]
             if extension in FileTypeHelper.__exclusions:
                 return FileTypeHelper.__exclusions[extension]
             return FileType.OTHER

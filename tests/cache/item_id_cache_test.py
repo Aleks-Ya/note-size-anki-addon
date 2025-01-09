@@ -60,7 +60,7 @@ def test_evict_note(col: Collection, td: Data, item_id_cache: ItemIdCache):
     assert item_id_cache.as_dict_list() == [{card1.id: card1.nid, card2.id: card2.nid}]
 
     item_id_cache.evict_note(card1.nid)
-    assert item_id_cache.get_cache_size() == 1
+    wait_until(lambda: item_id_cache.get_cache_size() == 1)
     assert item_id_cache.as_dict_list() == [{card2.id: card2.nid}]
 
 

@@ -26,6 +26,8 @@ class MediaFiles:
     picture: MediaFile = MediaFile(FileNames.picture)
     sound: MediaFile = MediaFile(FileNames.sound)
     animation: MediaFile = MediaFile(FileNames.animation)
+    image: MediaFile = MediaFile(FileNames.image)
+    video: MediaFile = MediaFile(FileNames.video)
 
 
 class FileContents:
@@ -43,6 +45,7 @@ class DefaultFields:
         f'Files ∑￡: <img src="{MediaFiles.picture}"> <img src="{MediaFiles.animation}">')
     front_field_content_2: FieldContent = FieldContent('The field on the front card ∑￡')
     back_field_content_2: FieldContent = FieldContent('Another field on the back card ∆¥')
+
 
 class Data:
 
