@@ -51,6 +51,7 @@ class CollectionSizeFormatter:
             note_number_str: str = NumberFormatter.with_thousands_separator(note_count)
             used_notes_numbers_str: str = NumberFormatter.with_thousands_separator(used_files.used_notes_numbers)
             used_files_number_str: str = NumberFormatter.with_thousands_separator(used_files.used_files_number)
+            existing_files_number_str: str = NumberFormatter.with_thousands_separator(used_files.exist_files_number)
             missing_files_number_str: str = NumberFormatter.with_thousands_separator(used_files.missing_files_number)
             unused_files_size_str: str = NumberFormatter.with_thousands_separator(unused_files_number)
             trash_files_number_str: str = NumberFormatter.with_thousands_separator(trash_files_number)
@@ -66,6 +67,7 @@ class CollectionSizeFormatter:
             note_number_str: str = self.__sand_clock
             used_notes_numbers_str: str = self.__sand_clock
             used_files_number_str: str = self.__sand_clock
+            existing_files_number_str: str = self.__sand_clock
             missing_files_number_str: str = self.__sand_clock
             unused_files_size_str: str = self.__sand_clock
             trash_files_number_str: str = self.__sand_clock
@@ -74,8 +76,9 @@ class CollectionSizeFormatter:
         soup: BeautifulSoup = BeautifulSoup()
         div: Tag = soup.new_tag('div')
         collection_title: str = f'Size of {note_number_str} notes in file "{self.__collection_file_path}"'
-        media_title: str = f'Size of {used_files_number_str} media files (including {missing_files_number_str} ' \
-                           f'missing files) used in {used_notes_numbers_str} notes (not include Unused and Trash)\n' \
+        media_title: str = f'Size of {used_files_number_str} media files ' \
+                           f'({existing_files_number_str} existing and {missing_files_number_str} missing) ' \
+                           f'used in {used_notes_numbers_str} notes (not include Unused and Trash)\n' \
                            f'Folder "{self.__media_folder_path}"'
         unused_title: str = f'Size of {unused_files_size_str} ' \
                             f'media files not used in any notes (can be moved to Trash)'

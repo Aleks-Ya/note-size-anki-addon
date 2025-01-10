@@ -19,7 +19,7 @@ def test_show_note_without_files(details_dialog: DetailsDialog, td: Data):
     details_dialog.show_note(note_without_file)
     assert path(details_dialog).label(0).get().text() == 'Total note size: 70 B'
     assert path(details_dialog).label(1).get().text() == 'Texts size: 70 B'
-    assert path(details_dialog).label(2).get().text() == 'Size of 0 files (including 0 missing files): 0 B'
+    assert path(details_dialog).label(2).get().text() == 'Size of 0 files (0 existing and 0 missing): 0 B'
     files_table: FilesTable = path(details_dialog).table().get()
     assert files_table.rowCount() == 0
     assert files_table.isHidden()
@@ -28,7 +28,7 @@ def test_show_note_without_files(details_dialog: DetailsDialog, td: Data):
     details_dialog.show_note(note_with_file)
     assert path(details_dialog).label(0).get().text() == 'Total note size: 143 B'
     assert path(details_dialog).label(1).get().text() == 'Texts size: 122 B'
-    assert path(details_dialog).label(2).get().text() == 'Size of 3 files (including 0 missing files): 21 B'
+    assert path(details_dialog).label(2).get().text() == 'Size of 3 files (3 existing and 0 missing): 21 B'
     files_table: FilesTable = path(details_dialog).table().get()
     assert files_table.rowCount() == 3
     assert not files_table.isHidden()
@@ -36,7 +36,7 @@ def test_show_note_without_files(details_dialog: DetailsDialog, td: Data):
     details_dialog.show_note(note_without_file)
     assert path(details_dialog).label(0).get().text() == 'Total note size: 70 B'
     assert path(details_dialog).label(1).get().text() == 'Texts size: 70 B'
-    assert path(details_dialog).label(2).get().text() == 'Size of 0 files (including 0 missing files): 0 B'
+    assert path(details_dialog).label(2).get().text() == 'Size of 0 files (0 existing and 0 missing): 0 B'
     files_table: FilesTable = path(details_dialog).table().get()
     assert files_table.rowCount() == 0
     assert files_table.isHidden()

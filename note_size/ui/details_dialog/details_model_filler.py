@@ -70,9 +70,11 @@ class DetailsModelFiller:
         size: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
         files: set[MediaFile] = self.__size_calculator.calculate_note_files(note, use_cache=False)
         files_number_str: str = NumberFormatter.with_thousands_separator(len(files))
-        missing_files_number: int = self.__media_cache.get_missing_files_number(files, use_cache=True)
+        exist_files_number, missing_files_number = self.__media_cache.get_missing_files_number(files, use_cache=True)
+        existing_files_number_str: str = NumberFormatter.with_thousands_separator(exist_files_number)
         missing_files_number_str: str = NumberFormatter.with_thousands_separator(missing_files_number)
-        return f"Size of {files_number_str} files (including {missing_files_number_str} missing files): {size}"
+        return (f"Size of {files_number_str} files "
+                f"({existing_files_number_str} existing and {missing_files_number_str} missing): {size}")
 
     def __files_notes_size(self, note_ids: Sequence[NoteId]) -> str:
         files: set[MediaFile] = self.__size_calculator.get_notes_files(note_ids, use_cache=True)
@@ -80,9 +82,11 @@ class DetailsModelFiller:
         size_bytes: SizeBytes = self.__size_calculator.get_notes_size(note_ids, SizeType.FILES, use_cache=True)
         size_str: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
         note_number_str: str = NumberFormatter.with_thousands_separator(len(note_ids))
-        missing_files_number: int = self.__media_cache.get_missing_files_number(files, use_cache=True)
+        exist_files_number, missing_files_number = self.__media_cache.get_missing_files_number(files, use_cache=True)
+        existing_files_number_str: str = NumberFormatter.with_thousands_separator(exist_files_number)
         missing_files_number_str: str = NumberFormatter.with_thousands_separator(missing_files_number)
-        return (f"Size of {files_number_str} files (including {missing_files_number_str} missing files)  "
+        return (f"Size of {files_number_str} files "
+                f"({existing_files_number_str} existing and {missing_files_number_str} missing) "
                 f"in {note_number_str} notes: {size_str}")
 
     def __file_sizes(self, note: Note) -> dict[MediaFile, FileSize]:

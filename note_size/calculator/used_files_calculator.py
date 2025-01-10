@@ -12,10 +12,11 @@ log: Logger = logging.getLogger(__name__)
 
 
 class UsedFiles:
-    def __init__(self, used_files_size: SizeBytes, used_files_number: FilesNumber, missing_files_number: FilesNumber,
-                 used_notes_numbers: NotesNumber) -> None:
+    def __init__(self, used_files_size: SizeBytes, used_files_number: FilesNumber, exist_files_number: FilesNumber,
+                 missing_files_number: FilesNumber, used_notes_numbers: NotesNumber) -> None:
         self.used_files_size: SizeBytes = used_files_size
         self.used_files_number: FilesNumber = used_files_number
+        self.exist_files_number: FilesNumber = exist_files_number
         self.missing_files_number: FilesNumber = missing_files_number
         self.used_notes_numbers: NotesNumber = used_notes_numbers
 
@@ -34,6 +35,7 @@ class UsedFilesCalculator:
     def get_used_files_size(self, use_cache: bool) -> UsedFiles:
         note_ids: list[NoteId] = self.__col.db.list("select id from notes")
         files: set[MediaFile] = self.__size_calculator.get_notes_files(note_ids, use_cache)
-        missing_files_number: FilesNumber = self.__media_cache.get_missing_files_number(files, use_cache)
+        exist_files_number, missing_files_number = self.__media_cache.get_missing_files_number(files, use_cache)
         files_size: SizeBytes = self.__size_calculator.calculate_size_of_files(files, use_cache)
-        return UsedFiles(files_size, FilesNumber(len(files)), missing_files_number, NotesNumber(len(note_ids)))
+        return UsedFiles(files_size, FilesNumber(len(files)), exist_files_number, missing_files_number,
+                         NotesNumber(len(note_ids)))
