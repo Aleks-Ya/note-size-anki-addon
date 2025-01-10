@@ -34,7 +34,7 @@ class BrowserButtonManager(ConfigListener):
 
     def create_browser_button(self, browser: Browser) -> BrowserButton:
         self.__button = BrowserButton(self.__col, self.__item_id_cache, self.__size_str_cache, self.__details_dialog,
-                                      browser, self.__progress_manager)
+                                      browser, self.__progress_manager, self.__config)
         return self.__button
 
     def get_current_button(self) -> BrowserButton:

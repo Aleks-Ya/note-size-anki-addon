@@ -18,6 +18,7 @@
   },
   "Size Button": {
     "Enabled": true,
+    "Size Precision": 1,
     "Color": {
       "Enabled": true,
       "Levels": [

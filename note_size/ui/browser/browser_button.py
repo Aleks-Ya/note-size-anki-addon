@@ -15,7 +15,8 @@ from ..details_dialog.details_dialog import DetailsDialog
 from ..details_dialog.show_details_dialog_op import ShowDetailsDialogOp
 from ...cache.item_id_cache import ItemIdCache
 from ...cache.size_str_cache import SizeStrCache
-from ...types import SizeType, SizeStr
+from ...config.config import Config
+from ...types import SizeType, SizeStr, SizePrecision
 
 log: Logger = logging.getLogger(__name__)
 
@@ -23,7 +24,8 @@ log: Logger = logging.getLogger(__name__)
 class BrowserButton(QPushButton):
 
     def __init__(self, col: Collection, item_id_cache: ItemIdCache, size_str_cache: SizeStrCache,
-                 details_dialog: DetailsDialog, browser: Browser, progress_manager: ProgressManager) -> None:
+                 details_dialog: DetailsDialog, browser: Browser, progress_manager: ProgressManager,
+                 config: Config) -> None:
         super().__init__()
         self.__col: Collection = col
         self.__item_id_cache: ItemIdCache = item_id_cache
@@ -31,6 +33,7 @@ class BrowserButton(QPushButton):
         self.__details_dialog: DetailsDialog = details_dialog
         self.__browser: Browser = browser
         self.__progress_manager: ProgressManager = progress_manager
+        self.__config: Config = config
         self.__current_item_ids: Sequence[ItemId] = []
         # noinspection PyUnresolvedReferences
         self.setStyleSheet("""
@@ -54,7 +57,9 @@ class BrowserButton(QPushButton):
             self.__show_cards_size(card_ids)
 
     def __show_notes_size(self, note_ids: Sequence[NoteId]) -> None:
-        size: SizeStr = self.__size_str_cache.get_notes_size_str(note_ids, SizeType.TOTAL, use_cache=True)
+        size_precision: SizePrecision = self.__config.get_size_button_size_precision()
+        size: SizeStr = self.__size_str_cache.get_notes_size_str(note_ids, SizeType.TOTAL, use_cache=True,
+                                                                 precision=size_precision)
         self.setText(size)
         note_ids_number: str = NumberFormatter.with_thousands_separator(len(note_ids))
         tooltip: str = (f"Size of {note_ids_number} notes\n"
@@ -65,7 +70,9 @@ class BrowserButton(QPushButton):
 
     def __show_cards_size(self, card_ids: Sequence[CardId]) -> None:
         note_ids: Sequence[NoteId] = self.__item_ids_to_note_ids(card_ids)
-        size: SizeStr = self.__size_str_cache.get_notes_size_str(note_ids, SizeType.TOTAL, use_cache=True)
+        size_precision: SizePrecision = self.__config.get_size_button_size_precision()
+        size: SizeStr = self.__size_str_cache.get_notes_size_str(note_ids, SizeType.TOTAL, use_cache=True,
+                                                                 precision=size_precision)
         self.setText(size)
         note_ids_number: str = NumberFormatter.with_thousands_separator(len(note_ids))
         card_ids_number: str = NumberFormatter.with_thousands_separator(len(card_ids))

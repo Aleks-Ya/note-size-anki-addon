@@ -7,7 +7,7 @@ from .editor_button_label import EditorButtonLabel
 from ....cache.size_str_cache import SizeStrCache
 from ....config.config import Config
 from ....config.level_parser import Level, LevelParser
-from ....types import SizeStr, SizeBytes, SizeType
+from ....types import SizeStr, SizeBytes, SizeType, SizePrecision
 from ....calculator.size_calculator import SizeCalculator
 from ....calculator.size_formatter import SizeFormatter
 
@@ -26,7 +26,8 @@ class EditorButtonFormatter:
 
     def get_zero_size_label(self) -> EditorButtonLabel:
         size_bytes: SizeBytes = SizeBytes(0)
-        size: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
+        size_precision: SizePrecision = self.__config.get_size_button_size_precision()
+        size: SizeStr = self.__size_formatter.bytes_to_str(size_bytes, precision=size_precision)
         color: str = self.__get_color(size_bytes)
         label: EditorButtonLabel = EditorButtonLabel(f"{size}", color)
         log.debug(f"Zero size label was created: {label}")
@@ -34,7 +35,8 @@ class EditorButtonFormatter:
 
     def get_add_mode_label(self, note: Note) -> EditorButtonLabel:
         size_bytes: SizeBytes = self.__size_calculator.calculate_note_size(note, SizeType.TOTAL, use_cache=False)
-        size_str: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
+        size_precision: SizePrecision = self.__config.get_size_button_size_precision()
+        size_str: SizeStr = self.__size_formatter.bytes_to_str(size_bytes, precision=size_precision)
         color: str = self.__get_color(size_bytes)
         label: EditorButtonLabel = EditorButtonLabel(f"{size_str}", color)
         log.debug(f"Add mode label created for NoteId {note.id}: {label}")
@@ -42,7 +44,9 @@ class EditorButtonFormatter:
 
     def get_edit_mode_label(self, note_id: NoteId) -> EditorButtonLabel:
         size_bytes: SizeBytes = self.__size_calculator.get_note_size(note_id, SizeType.TOTAL, use_cache=False)
-        size_str: SizeStr = self.__size_str_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False)
+        size_precision: SizePrecision = self.__config.get_size_button_size_precision()
+        size_str: SizeStr = self.__size_str_cache.get_note_size_str(
+            note_id, SizeType.TOTAL, use_cache=False, precision=size_precision)
         color: str = self.__get_color(size_bytes)
         label: EditorButtonLabel = EditorButtonLabel(f"{size_str}", color)
         log.debug(f"Edit mode label created for NoteId {note_id}: {label}")

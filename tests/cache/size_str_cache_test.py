@@ -6,7 +6,7 @@ from anki.notes import NoteId, Note
 
 from note_size.cache.size_str_cache import SizeStrCache
 from note_size.calculator.size_calculator import SizeCalculator
-from note_size.types import SizeBytes, SizeStr, SizeType, MediaFile
+from note_size.types import SizeBytes, SizeStr, SizeType, MediaFile, SizePrecision
 from tests.conftest import size_calculator
 from tests.data import Data, DefaultFields, MediaFiles, FileContents
 
@@ -69,14 +69,17 @@ def test_evict_note(td: Data, size_str_cache: SizeStrCache):
         size_str_cache.get_note_size_str(note1.id, size_type, use_cache=True)
         size_str_cache.get_note_size_str(note2.id, size_type, use_cache=True)
     assert size_str_cache.get_cache_size() == 6
-    assert size_str_cache.as_dict_list() == [{SizeType.TOTAL: {note1.id: '143 B', note2.id: '70 B'},
-                                              SizeType.TEXTS: {note1.id: '122 B', note2.id: '70 B'},
-                                              SizeType.FILES: {note1.id: '21 B', note2.id: '0 B'}}]
+    assert size_str_cache.as_dict_list() == [{SizeType.TOTAL: {note1.id: {SizePrecision(1): '143 B'},
+                                                               note2.id: {SizePrecision(1): '70 B'}},
+                                              SizeType.TEXTS: {note1.id: {SizePrecision(1): '122 B'},
+                                                               note2.id: {SizePrecision(1): '70 B'}},
+                                              SizeType.FILES: {note1.id: {SizePrecision(1): '21 B'},
+                                                               note2.id: {SizePrecision(1): '0 B'}}}]
     size_str_cache.evict_note(note1.id)
     assert size_str_cache.get_cache_size() == 3
-    assert size_str_cache.as_dict_list() == [{SizeType.TOTAL: {note2.id: '70 B'},
-                                              SizeType.TEXTS: {note2.id: '70 B'},
-                                              SizeType.FILES: {note2.id: '0 B'}}]
+    assert size_str_cache.as_dict_list() == [{SizeType.TOTAL: {note2.id: {SizePrecision(1): '70 B'}},
+                                              SizeType.TEXTS: {note2.id: {SizePrecision(1): '70 B'}},
+                                              SizeType.FILES: {note2.id: {SizePrecision(1): '0 B'}}}]
 
 
 def test_absent_note(size_str_cache: SizeStrCache):

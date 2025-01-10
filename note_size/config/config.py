@@ -24,11 +24,12 @@ class Config:
     __key_2_deck_browser_size_precision: str = 'Size Precision'
     __key_2_logger_level: str = 'Logger Level'
     __key_2_size_button_enabled: str = 'Enabled'
+    __key_2_size_button_size_precision: str = 'Size Precision'
     __key_2_color: str = 'Color'
     __key_2_browser_show_found_notes_size: str = 'Show Found Notes Size'
     __key_2_profiler_enabled: str = 'Enabled'
-    __key_3_color_enabled: str = 'Enabled'
-    __key_3_levels: str = 'Levels'
+    __key_3_size_button_color_enabled: str = 'Enabled'
+    __key_3_size_button_levels: str = 'Levels'
 
     def __init__(self, config: dict[str, Any]):
         self.__config: dict[str, Any] = config
@@ -103,17 +104,23 @@ class Config:
     def set_size_button_enabled(self, size_button_enabled: bool) -> None:
         self.__set(size_button_enabled, self.__key_1_size_button, self.__key_2_size_button_enabled)
 
+    def get_size_button_size_precision(self) -> SizePrecision:
+        return self.__config[self.__key_1_size_button][self.__key_2_size_button_size_precision]
+
+    def set_size_button_size_precision(self, size_precision: SizePrecision) -> None:
+        self.__set(size_precision, self.__key_1_size_button, self.__key_2_size_button_size_precision)
+
     def get_size_button_color_enabled(self) -> bool:
-        return self.__config[self.__key_1_size_button][self.__key_2_color][self.__key_3_color_enabled]
+        return self.__config[self.__key_1_size_button][self.__key_2_color][self.__key_3_size_button_color_enabled]
 
     def set_size_button_color_enabled(self, color_enabled: bool) -> None:
-        self.__set(color_enabled, self.__key_1_size_button, self.__key_2_color, self.__key_3_color_enabled)
+        self.__set(color_enabled, self.__key_1_size_button, self.__key_2_color, self.__key_3_size_button_color_enabled)
 
     def get_size_button_color_levels(self) -> list[LevelDict]:
-        return self.__config[self.__key_1_size_button][self.__key_2_color][self.__key_3_levels]
+        return self.__config[self.__key_1_size_button][self.__key_2_color][self.__key_3_size_button_levels]
 
     def set_size_button_color_levels(self, color_levels: list[dict[str, str]]) -> None:
-        self.__set(color_levels, self.__key_1_size_button, self.__key_2_color, self.__key_3_levels)
+        self.__set(color_levels, self.__key_1_size_button, self.__key_2_color, self.__key_3_size_button_levels)
 
     def get_profiler_enabled(self) -> bool:
         return self.__config[self.__key_1_profiler][self.__key_2_profiler_enabled]

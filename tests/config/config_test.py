@@ -24,12 +24,13 @@ def test_setters(td: Data):
         'Logging': {'Logger Level': 'DEBUG'},
         'Profiler': {'Enabled': False},
         'Size Button': {
+            'Enabled': True,
+            'Size Precision': 1,
             "Color": {
                 "Enabled": True,
                 "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
                            {"Color": "Orange", "Max Size": "1 MB"},
-                           {"Color": "LightCoral", "Max Size": None}]},
-            'Enabled': True}}
+                           {"Color": "LightCoral", "Max Size": None}]}}}
 
     exp_color_levels: list[dict[str, str]] = [{"Color": "Green", "Max Size": "50 KB"},
                                               {"Color": "Yellow", "Max Size": "2 MB"},
@@ -41,6 +42,7 @@ def test_setters(td: Data):
     config.set_browser_show_found_notes_size(False)
     config.set_log_level('INFO')
     config.set_size_button_enabled(False)
+    config.set_size_button_size_precision(SizePrecision(3))
     config.set_size_button_color_enabled(False)
     config.set_profiler_enabled(True)
     config.set_size_button_color_levels(exp_color_levels)
@@ -54,10 +56,11 @@ def test_setters(td: Data):
         'Logging': {'Logger Level': 'INFO'},
         'Profiler': {'Enabled': True},
         'Size Button': {
+            'Enabled': False,
+            'Size Precision': 3,
             "Color": {
                 "Enabled": False,
-                "Levels": exp_color_levels},
-            'Enabled': False}}
+                "Levels": exp_color_levels}}}
 
     assert config.get_cache_warmup_enabled() == False
     assert config.get_store_cache_in_file_enabled() == False
@@ -66,6 +69,7 @@ def test_setters(td: Data):
     assert config.get_browser_show_found_notes_size() == False
     assert config.get_log_level() == 'INFO'
     assert config.get_size_button_enabled() == False
+    assert config.get_size_button_size_precision() == SizePrecision(3)
     assert config.get_size_button_color_enabled() == False
     assert config.get_profiler_enabled() == True
     assert config.get_size_button_color_levels() == exp_color_levels

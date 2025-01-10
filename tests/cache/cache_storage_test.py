@@ -79,9 +79,9 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Colle
                                                 SizeBytes(70): {SizePrecision(1): '70 B'},
                                                 SizeBytes(143): {SizePrecision(1): '143 B'}}]
     assert file_type_helper_2.as_dict_list() == [{MediaFiles.image: FileType.IMAGE}]
-    assert size_str_cache_2.as_dict_list() == [{SizeType.TOTAL: {card1.nid: '143 B'},
-                                                SizeType.TEXTS: {card2.nid: '70 B'},
-                                                SizeType.FILES: {card2.nid: '0 B'}}]
+    assert size_str_cache_2.as_dict_list() == [{SizeType.TOTAL: {card1.nid: {SizePrecision(1): '143 B'}},
+                                                SizeType.TEXTS: {card2.nid: {SizePrecision(1): '70 B'}},
+                                                SizeType.FILES: {card2.nid: {SizePrecision(1): '0 B'}}}]
 
     col.remove_notes([card1.nid, card2.nid])
 

@@ -28,12 +28,13 @@ def test_default_values(config_loader: ConfigLoader, module_dir: Path):
         'Logging': {'Logger Level': 'DEBUG'},
         'Profiler': {'Enabled': False},
         'Size Button': {
+            'Enabled': True,
+            'Size Precision': 1,
             "Color": {
                 "Enabled": True,
                 "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
                            {"Color": "Orange", "Max Size": "1 MB"},
-                           {"Color": "LightCoral", "Max Size": None}]},
-            'Enabled': True}}
+                           {"Color": "LightCoral", "Max Size": None}]}}}
 
 
 def test_actual_values_all(config_loader: ConfigLoader, module_dir: Path):
@@ -47,12 +48,13 @@ def test_actual_values_all(config_loader: ConfigLoader, module_dir: Path):
         'Logging': {'Logger Level': 'DEBUG'},
         'Profiler': {'Enabled': False},
         'Size Button': {
+            'Enabled': True,
+            'Size Precision': 1,
             "Color": {
                 "Enabled": True,
                 "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
                            {"Color": "Orange", "Max Size": "1 MB"},
-                           {"Color": "LightCoral", "Max Size": None}]},
-            'Enabled': True}}
+                           {"Color": "LightCoral", "Max Size": None}]}}}
     __write_meta_json_config(meta_json_config, module_dir)
     config: Config = config_loader.load_config()
     assert meta_json_config == config.get_as_dict()
@@ -71,12 +73,13 @@ def test_actual_values_partial(module_dir: Path, config_loader: ConfigLoader):
         'Logging': {'Logger Level': 'DEBUG'},
         'Profiler': {'Enabled': False},
         'Size Button': {
+            'Enabled': True,
+            'Size Precision': 1,
             "Color": {
                 "Enabled": True,
                 "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
                            {"Color": "Orange", "Max Size": "1 MB"},
-                           {"Color": "LightCoral", "Max Size": None}]},
-            'Enabled': True}}
+                           {"Color": "LightCoral", "Max Size": None}]}}}
 
 
 def test_delete_unused_properties(module_dir: Path, config_loader: ConfigLoader):
@@ -84,6 +87,8 @@ def test_delete_unused_properties(module_dir: Path, config_loader: ConfigLoader)
         'Logging': {'Logger Level': 'DEBUG'},
         'Profiler': {'Enabled': False},
         'Size Button': {
+            'Enabled': True,
+            'Size Precision': 1,
             "Color": {
                 "Enabled": True,
                 "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
@@ -102,12 +107,13 @@ def test_delete_unused_properties(module_dir: Path, config_loader: ConfigLoader)
         'Logging': {'Logger Level': 'DEBUG'},
         'Profiler': {'Enabled': False},
         'Size Button': {
+            'Enabled': True,
+            'Size Precision': 1,
             "Color": {
                 "Enabled": True,
                 "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
                            {"Color": "Orange", "Max Size": "1 MB"},
-                           {"Color": "LightCoral", "Max Size": None}]},
-            'Enabled': True}}
+                           {"Color": "LightCoral", "Max Size": None}]}}}
 
 
 def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLoader, module_name: str,
@@ -118,12 +124,13 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
         'Logging': {'Logger Level': 'DEBUG'},
         'Profiler': {'Enabled': False},
         'Size Button': {
+            'Enabled': True,
+            'Size Precision': 1,
             "Color": {
                 "Enabled": True,
                 "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
                            {"Color": "Orange", "Max Size": "1 MB"},
-                           {"Color": "LightCoral", "Max Size": None}]},
-            'Enabled': True},
+                           {"Color": "LightCoral", "Max Size": None}]}},
         'Unused Top': {'Property 1': 'Value 1'}
     }, module_dir)
     config_origin: Optional[dict[str, Any]] = addon_manager.getConfig(module_name)
@@ -137,12 +144,13 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
         'Logging': {'Logger Level': 'DEBUG'},
         'Profiler': {'Enabled': False},
         'Size Button': {
+            'Enabled': True,
+            'Size Precision': 1,
             "Color": {
                 "Enabled": True,
                 "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
                            {"Color": "Orange", "Max Size": "1 MB"},
-                           {"Color": "LightCoral", "Max Size": None}]},
-            'Enabled': True},
+                           {"Color": "LightCoral", "Max Size": None}]}},
         'Unused Top': {'Property 1': 'Value 1'}}
     config: Config = config_loader.load_config()
     assert config.get_as_dict() == {
@@ -155,12 +163,13 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
         'Logging': {'Logger Level': 'DEBUG'},
         'Profiler': {'Enabled': False},
         'Size Button': {
+            'Enabled': True,
+            'Size Precision': 1,
             "Color": {
                 "Enabled": True,
                 "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
                            {"Color": "Orange", "Max Size": "1 MB"},
-                           {"Color": "LightCoral", "Max Size": None}]},
-            'Enabled': True}}
+                           {"Color": "LightCoral", "Max Size": None}]}}}
     config_saved: Optional[dict[str, Any]] = addon_manager.getConfig(module_name)
     assert config_saved == {
         'Browser': {'Show Found Notes Size': True},
@@ -172,12 +181,13 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
         'Logging': {'Logger Level': 'DEBUG'},
         'Profiler': {'Enabled': False},
         'Size Button': {
+            'Enabled': True,
+            'Size Precision': 1,
             "Color": {
                 "Enabled": True,
                 "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
                            {"Color": "Orange", "Max Size": "1 MB"},
-                           {"Color": "LightCoral", "Max Size": None}]},
-            'Enabled': True}}
+                           {"Color": "LightCoral", "Max Size": None}]}}}
 
 
 def test_write_config(config_loader: ConfigLoader, module_dir: Path) -> None:
@@ -192,12 +202,13 @@ def test_write_config(config_loader: ConfigLoader, module_dir: Path) -> None:
         'Logging': {'Logger Level': 'DEBUG'},
         'Profiler': {'Enabled': False},
         'Size Button': {
+            'Enabled': True,
+            'Size Precision': 1,
             "Color": {
                 "Enabled": True,
                 "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
                            {"Color": "Orange", "Max Size": "1 MB"},
-                           {"Color": "LightCoral", "Max Size": None}]},
-            'Enabled': True}}
+                           {"Color": "LightCoral", "Max Size": None}]}}}
     config.set_cache_warmup_enabled(False)
     config.set_deck_browser_show_collection_size(False)
     config.set_deck_browser_size_precision(SizePrecision(2))
@@ -219,12 +230,13 @@ def test_write_config(config_loader: ConfigLoader, module_dir: Path) -> None:
         'Logging': {'Logger Level': 'INFO'},
         'Profiler': {'Enabled': False},
         'Size Button': {
+            'Enabled': False,
+            'Size Precision': 1,
             "Color": {
                 "Enabled": False,
                 "Levels": [{"Color": "Green", "Max Size": "50 KB"},
                            {"Color": "Yellow", "Max Size": "2 MB"},
-                           {"Color": "Red", "Max Size": "100 GB"}]},
-            'Enabled': False}}
+                           {"Color": "Red", "Max Size": "100 GB"}]}}}
 
 
 def __write_meta_json_config(meta_json_config, module_dir: Path) -> None:
