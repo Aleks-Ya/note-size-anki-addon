@@ -7,7 +7,8 @@
     "Store Cache In File Enabled": true
   },
   "Deck Browser": {
-    "Show Collection Size": true
+    "Show Collection Size": true,
+    "Size Precision": 0
   },
   "Logging": {
     "Logger Level": "DEBUG"

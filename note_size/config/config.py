@@ -6,6 +6,7 @@ from typing import Any, Optional
 
 from .config_listener import ConfigListener
 from ..config.level_parser import LevelDict
+from ..types import SizePrecision
 
 log: Logger = logging.getLogger(__name__)
 
@@ -19,7 +20,8 @@ class Config:
     __key_1_profiler: str = 'Profiler'
     __key_2_warmup_enabled: str = 'Warmup Enabled'
     __key_2_store_cache_in_file_enabled: str = 'Store Cache In File Enabled'
-    __key_2_show_collection_size: str = 'Show Collection Size'
+    __key_2_deck_browser_show_collection_size: str = 'Show Collection Size'
+    __key_2_deck_browser_size_precision: str = 'Size Precision'
     __key_2_logger_level: str = 'Logger Level'
     __key_2_size_button_enabled: str = 'Enabled'
     __key_2_color: str = 'Color'
@@ -72,10 +74,16 @@ class Config:
         self.__set(store_cache_in_file_enabled, self.__key_1_cache, self.__key_2_store_cache_in_file_enabled)
 
     def get_deck_browser_show_collection_size(self) -> bool:
-        return self.__config[self.__key_1_deck_browser][self.__key_2_show_collection_size]
+        return self.__config[self.__key_1_deck_browser][self.__key_2_deck_browser_show_collection_size]
 
     def set_deck_browser_show_collection_size(self, show_collection_size: bool) -> None:
-        self.__set(show_collection_size, self.__key_1_deck_browser, self.__key_2_show_collection_size)
+        self.__set(show_collection_size, self.__key_1_deck_browser, self.__key_2_deck_browser_show_collection_size)
+
+    def get_deck_browser_size_precision(self) -> SizePrecision:
+        return self.__config[self.__key_1_deck_browser][self.__key_2_deck_browser_size_precision]
+
+    def set_deck_browser_size_precision(self, size_precision: SizePrecision) -> None:
+        self.__set(size_precision, self.__key_1_deck_browser, self.__key_2_deck_browser_size_precision)
 
     def get_browser_show_found_notes_size(self) -> bool:
         return self.__config[self.__key_1_browser][self.__key_2_browser_show_found_notes_size]

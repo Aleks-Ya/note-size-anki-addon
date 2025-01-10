@@ -7,6 +7,7 @@ from aqt.addons import AddonManager
 
 from note_size.config.config import Config
 from note_size.config.config_loader import ConfigLoader
+from note_size.types import SizePrecision
 
 
 def test_empty_addon_dir(config_loader: ConfigLoader, module_dir: Path) -> None:
@@ -22,7 +23,8 @@ def test_default_values(config_loader: ConfigLoader, module_dir: Path):
         'Cache': {
             'Store Cache In File Enabled': True,
             'Warmup Enabled': True},
-        'Deck Browser': {'Show Collection Size': True},
+        'Deck Browser': {'Show Collection Size': True,
+                         'Size Precision': 0},
         'Logging': {'Logger Level': 'DEBUG'},
         'Profiler': {'Enabled': False},
         'Size Button': {
@@ -40,7 +42,8 @@ def test_actual_values_all(config_loader: ConfigLoader, module_dir: Path):
         'Cache': {
             'Store Cache In File Enabled': True,
             'Warmup Enabled': False},
-        'Deck Browser': {'Show Collection Size': True},
+        'Deck Browser': {'Show Collection Size': True,
+                         'Size Precision': 0},
         'Logging': {'Logger Level': 'DEBUG'},
         'Profiler': {'Enabled': False},
         'Size Button': {
@@ -63,7 +66,8 @@ def test_actual_values_partial(module_dir: Path, config_loader: ConfigLoader):
         'Cache': {
             'Store Cache In File Enabled': True,
             'Warmup Enabled': True},
-        'Deck Browser': {'Show Collection Size': True},
+        'Deck Browser': {'Show Collection Size': True,
+                         'Size Precision': 0},
         'Logging': {'Logger Level': 'DEBUG'},
         'Profiler': {'Enabled': False},
         'Size Button': {
@@ -93,7 +97,8 @@ def test_delete_unused_properties(module_dir: Path, config_loader: ConfigLoader)
         'Cache': {
             'Store Cache In File Enabled': True,
             'Warmup Enabled': True},
-        'Deck Browser': {'Show Collection Size': True},
+        'Deck Browser': {'Show Collection Size': True,
+                         'Size Precision': 0},
         'Logging': {'Logger Level': 'DEBUG'},
         'Profiler': {'Enabled': False},
         'Size Button': {
@@ -108,7 +113,8 @@ def test_delete_unused_properties(module_dir: Path, config_loader: ConfigLoader)
 def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLoader, module_name: str,
                             module_dir: Path):
     __write_meta_json_config({
-        'Deck Browser': {'Show Collection Size': True},
+        'Deck Browser': {'Show Collection Size': True,
+                         'Size Precision': 0},
         'Logging': {'Logger Level': 'DEBUG'},
         'Profiler': {'Enabled': False},
         'Size Button': {
@@ -126,7 +132,8 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
         'Cache': {
             'Store Cache In File Enabled': True,
             'Warmup Enabled': True},
-        'Deck Browser': {'Show Collection Size': True},
+        'Deck Browser': {'Show Collection Size': True,
+                         'Size Precision': 0},
         'Logging': {'Logger Level': 'DEBUG'},
         'Profiler': {'Enabled': False},
         'Size Button': {
@@ -143,7 +150,8 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
         'Cache': {
             'Store Cache In File Enabled': True,
             'Warmup Enabled': True},
-        'Deck Browser': {'Show Collection Size': True},
+        'Deck Browser': {'Show Collection Size': True,
+                         'Size Precision': 0},
         'Logging': {'Logger Level': 'DEBUG'},
         'Profiler': {'Enabled': False},
         'Size Button': {
@@ -159,7 +167,8 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
         'Cache': {
             'Store Cache In File Enabled': True,
             'Warmup Enabled': True},
-        'Deck Browser': {'Show Collection Size': True},
+        'Deck Browser': {'Show Collection Size': True,
+                         'Size Precision': 0},
         'Logging': {'Logger Level': 'DEBUG'},
         'Profiler': {'Enabled': False},
         'Size Button': {
@@ -178,7 +187,8 @@ def test_write_config(config_loader: ConfigLoader, module_dir: Path) -> None:
         'Cache': {
             'Store Cache In File Enabled': True,
             'Warmup Enabled': True},
-        'Deck Browser': {'Show Collection Size': True},
+        'Deck Browser': {'Show Collection Size': True,
+                         'Size Precision': 0},
         'Logging': {'Logger Level': 'DEBUG'},
         'Profiler': {'Enabled': False},
         'Size Button': {
@@ -190,6 +200,7 @@ def test_write_config(config_loader: ConfigLoader, module_dir: Path) -> None:
             'Enabled': True}}
     config.set_cache_warmup_enabled(False)
     config.set_deck_browser_show_collection_size(False)
+    config.set_deck_browser_size_precision(SizePrecision(2))
     config.set_log_level('INFO')
     config.set_size_button_enabled(False)
     config.set_size_button_color_enabled(False)
@@ -203,7 +214,8 @@ def test_write_config(config_loader: ConfigLoader, module_dir: Path) -> None:
         'Cache': {
             'Store Cache In File Enabled': True,
             'Warmup Enabled': False},
-        'Deck Browser': {'Show Collection Size': False},
+        'Deck Browser': {'Show Collection Size': False,
+                         'Size Precision': 2},
         'Logging': {'Logger Level': 'INFO'},
         'Profiler': {'Enabled': False},
         'Size Button': {

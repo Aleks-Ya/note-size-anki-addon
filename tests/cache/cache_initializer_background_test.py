@@ -13,7 +13,7 @@ from note_size.cache.media_cache import MediaCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.calculator.size_formatter import SizeFormatter
 from note_size.config.config import Config
-from note_size.types import FileType, SizeType, FileSize, SizeBytes
+from note_size.types import FileType, SizeType, FileSize, SizeBytes, SizePrecision
 from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
 from tests.conftest import cache_manager
 from tests.data import Data, MediaFiles
@@ -64,7 +64,11 @@ def test_initialize_caches(td: Data, col: Collection, cache_manager: CacheManage
                                                            MediaFiles.picture: FileSize(SizeBytes(7)),
                                                            MediaFiles.sound: FileSize(SizeBytes(5))},
                                                card2.nid: {}}]
-    assert size_formatter.as_dict_list() == [{0: '0 B', 21: '21 B', 71: '71 B', 123: '123 B', 144: '144 B'}]
+    assert size_formatter.as_dict_list() == [{SizeBytes(0): {SizePrecision(1): '0 B'},
+                                              SizeBytes(21): {SizePrecision(1): '21 B'},
+                                              SizeBytes(71): {SizePrecision(1): '71 B'},
+                                              SizeBytes(123): {SizePrecision(1): '123 B'},
+                                              SizeBytes(144): {SizePrecision(1): '144 B'}}]
     assert file_type_helper.as_dict_list() == [{MediaFiles.animation: FileType.IMAGE,
                                                 MediaFiles.picture: FileType.IMAGE,
                                                 MediaFiles.sound: FileType.AUDIO}]

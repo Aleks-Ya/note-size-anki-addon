@@ -93,7 +93,7 @@ def __initialize(col: Collection):
                                                            task_manager, progress_manager, config)
     used_files_calculator: UsedFilesCalculator = UsedFilesCalculator(col, size_calculator, media_cache)
     collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(
-        col, item_id_cache, media_cache, trash, size_formatter, used_files_calculator, settings)
+        col, item_id_cache, media_cache, trash, size_formatter, used_files_calculator, config, settings)
     desktop_services: QDesktopServices = QDesktopServices()
     url_manager: UrlManager = UrlManager()
     config_ui: ConfigUi = ConfigUi(

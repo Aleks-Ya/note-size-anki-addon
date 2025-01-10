@@ -13,8 +13,9 @@ from ..common.number_formatter import NumberFormatter
 from ...cache.item_id_cache import ItemIdCache
 from ...cache.media_cache import MediaCache
 from ...calculator.used_files_calculator import UsedFilesCalculator, UsedFiles
+from ...config.config import Config
 from ...config.settings import Settings
-from ...types import SizeBytes, FilesNumber
+from ...types import SizeBytes, FilesNumber, SizePrecision
 from ...calculator.size_formatter import SizeFormatter
 
 log: Logger = logging.getLogger(__name__)
@@ -25,13 +26,15 @@ class CollectionSizeFormatter:
     __sand_clock: str = "⏳"
 
     def __init__(self, col: Collection, item_id_cache: ItemIdCache, media_cache: MediaCache, trash: Trash,
-                 size_formatter: SizeFormatter, used_files_calculator: UsedFilesCalculator, settings: Settings):
+                 size_formatter: SizeFormatter, used_files_calculator: UsedFilesCalculator, config: Config,
+                 settings: Settings):
         self.__col: Collection = col
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__media_cache: MediaCache = media_cache
         self.__trash: Trash = trash
         self.__size_formatter: SizeFormatter = size_formatter
         self.__used_files_calculator: UsedFilesCalculator = used_files_calculator
+        self.__config: Config = config
         self.__collection_file_path: Path = Path(col.path)
         self.__media_folder_path: Path = Path(col.media.dir())
         self.__web_dir: str = os.path.join("_addons", settings.module_name, "ui", "web")
@@ -119,8 +122,9 @@ class CollectionSizeFormatter:
         outer_span.string = f"{name}: "
         if size is not None:
             separator: str = " "
-            size_split: list[str] = self.__size_formatter.bytes_to_str(size, precision=0,
-                                                                       unit_separator=separator).split(separator)
+            size_precision: SizePrecision = self.__config.get_deck_browser_size_precision()
+            size_split: list[str] = self.__size_formatter.bytes_to_str(
+                size, precision=size_precision, unit_separator=separator).split(separator)
             number: str = size_split[0]
             unit: str = size_split[1]
             number_span: Tag = soup.new_tag('span', attrs={"style": CollectionSizeFormatter.__code_style})

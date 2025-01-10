@@ -3,7 +3,7 @@ from logging import Logger
 from typing import Any
 
 from ..cache.cache import Cache
-from ..types import SizeStr, SizeBytes
+from ..types import SizeStr, SizeBytes, SizePrecision
 
 log: Logger = logging.getLogger(__name__)
 
@@ -12,17 +12,19 @@ class SizeFormatter(Cache):
 
     def __init__(self) -> None:
         super().__init__()
-        self.__bytes_to_str_cache: dict[SizeBytes, SizeStr] = {}
+        self.__bytes_to_str_cache: dict[SizeBytes, dict[SizePrecision, SizeStr]] = {}
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def bytes_to_str(self, size: SizeBytes, use_cache: bool = True, precision: int = 1,
+    def bytes_to_str(self, size: SizeBytes, use_cache: bool = True, precision: SizePrecision = SizePrecision(1),
                      unit_separator: str = " ") -> SizeStr:
         with self._lock:
-            if use_cache and size in self.__bytes_to_str_cache:
-                return self.__bytes_to_str_cache[size]
+            if use_cache and size in self.__bytes_to_str_cache and precision in self.__bytes_to_str_cache[size]:
+                return self.__bytes_to_str_cache[size][precision]
             else:
                 size_str: SizeStr = self.__bytes_to_str(size, precision, unit_separator)
-                self.__bytes_to_str_cache[size] = size_str
+                if size not in self.__bytes_to_str_cache:
+                    self.__bytes_to_str_cache[size] = {}
+                self.__bytes_to_str_cache[size][precision] = size_str
                 return size_str
 
     @staticmethod
@@ -57,7 +59,7 @@ class SizeFormatter(Cache):
             return len(self.__bytes_to_str_cache)
 
     @staticmethod
-    def __bytes_to_str(size: SizeBytes, precision: int = 1, unit_separator: str = " ") -> SizeStr:
+    def __bytes_to_str(size: SizeBytes, precision: SizePrecision = 1, unit_separator: str = " ") -> SizeStr:
         divisor: int = 1024
         units: tuple[str, str, str] = 'B', 'KB', 'MB'
         final_unit: str = 'GB'

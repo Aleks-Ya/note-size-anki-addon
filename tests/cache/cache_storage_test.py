@@ -18,7 +18,7 @@ from note_size.calculator.size_formatter import SizeFormatter
 from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
 from note_size.config.config import Config
 from note_size.config.settings import Settings
-from note_size.types import SizeType, FileType, FileSize, SizeBytes
+from note_size.types import SizeType, FileType, FileSize, SizeBytes, SizePrecision
 from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
 from tests.data import Data, MediaFiles
 
@@ -75,7 +75,9 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Colle
                                                              MediaFiles.picture: FileSize(SizeBytes(7)),
                                                              MediaFiles.sound: FileSize(SizeBytes(5))},
                                                  card2.nid: {}}]
-    assert size_formatter_2.as_dict_list() == [{0: '0 B', 70: '70 B', 143: '143 B'}]
+    assert size_formatter_2.as_dict_list() == [{SizeBytes(0): {SizePrecision(1): '0 B'},
+                                                SizeBytes(70): {SizePrecision(1): '70 B'},
+                                                SizeBytes(143): {SizePrecision(1): '143 B'}}]
     assert file_type_helper_2.as_dict_list() == [{MediaFiles.image: FileType.IMAGE}]
     assert size_str_cache_2.as_dict_list() == [{SizeType.TOTAL: {card1.nid: '143 B'},
                                                 SizeType.TEXTS: {card2.nid: '70 B'},
