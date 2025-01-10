@@ -10,7 +10,7 @@ from note_size.config.settings import Settings
 from note_size.types import SizeType, SizePrecision
 from tests import wait_until
 from tests.conftest import cache_manager
-from tests.data import Data, MediaFiles
+from tests.data import Data, MediaFiles, Precisions
 
 update_progress_history: list[str] = []
 
@@ -110,4 +110,4 @@ def __fill_cache(cache_manager: CacheManager, td: Data) -> None:
     cache_manager.get_size_calculator().get_note_size(card.nid, SizeType.TOTAL, use_cache=True)
     cache_manager.get_file_type_helper().get_file_type(MediaFiles.image, use_cache=True)
     cache_manager.get_size_str_cache().get_note_size_str(card.nid, SizeType.TOTAL, use_cache=True,
-                                                         precision=SizePrecision(1))
+                                                         precision=Precisions.one)

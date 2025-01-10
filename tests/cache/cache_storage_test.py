@@ -20,7 +20,7 @@ from note_size.config.config import Config
 from note_size.config.settings import Settings
 from note_size.types import SizeType, FileType, FileSize, SizeBytes, SizePrecision
 from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
-from tests.data import Data, MediaFiles
+from tests.data import Data, MediaFiles, Precisions
 
 
 def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Collection, item_id_cache: ItemIdCache,
@@ -40,9 +40,9 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Colle
 
     file_type_helper.get_file_type(MediaFiles.image, use_cache=True)
 
-    size_str_cache.get_note_size_str(card1.nid, SizeType.TOTAL, use_cache=True, precision=SizePrecision(1))
-    size_str_cache.get_note_size_str(card2.nid, SizeType.TEXTS, use_cache=True, precision=SizePrecision(1))
-    size_str_cache.get_note_size_str(card2.nid, SizeType.FILES, use_cache=True, precision=SizePrecision(1))
+    size_str_cache.get_note_size_str(card1.nid, SizeType.TOTAL, use_cache=True, precision=Precisions.one)
+    size_str_cache.get_note_size_str(card2.nid, SizeType.TEXTS, use_cache=True, precision=Precisions.one)
+    size_str_cache.get_note_size_str(card2.nid, SizeType.FILES, use_cache=True, precision=Precisions.one)
 
     cache_storage.save_caches_to_file(
         [media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, size_str_cache,
@@ -75,13 +75,13 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Colle
                                                              MediaFiles.picture: FileSize(SizeBytes(7)),
                                                              MediaFiles.sound: FileSize(SizeBytes(5))},
                                                  card2.nid: {}}]
-    assert size_formatter_2.as_dict_list() == [{SizeBytes(0): {SizePrecision(1): '0 B'},
-                                                SizeBytes(70): {SizePrecision(1): '70 B'},
-                                                SizeBytes(143): {SizePrecision(1): '143 B'}}]
+    assert size_formatter_2.as_dict_list() == [{SizeBytes(0): {Precisions.one: '0 B'},
+                                                SizeBytes(70): {Precisions.one: '70 B'},
+                                                SizeBytes(143): {Precisions.one: '143 B'}}]
     assert file_type_helper_2.as_dict_list() == [{MediaFiles.image: FileType.IMAGE}]
-    assert size_str_cache_2.as_dict_list() == [{SizeType.TOTAL: {card1.nid: {SizePrecision(1): '143 B'}},
-                                                SizeType.TEXTS: {card2.nid: {SizePrecision(1): '70 B'}},
-                                                SizeType.FILES: {card2.nid: {SizePrecision(1): '0 B'}}}]
+    assert size_str_cache_2.as_dict_list() == [{SizeType.TOTAL: {card1.nid: {Precisions.one: '143 B'}},
+                                                SizeType.TEXTS: {card2.nid: {Precisions.one: '70 B'}},
+                                                SizeType.FILES: {card2.nid: {Precisions.one: '0 B'}}}]
 
     col.remove_notes([card1.nid, card2.nid])
 

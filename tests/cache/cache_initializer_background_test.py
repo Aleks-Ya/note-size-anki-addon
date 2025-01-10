@@ -13,10 +13,10 @@ from note_size.cache.media_cache import MediaCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.calculator.size_formatter import SizeFormatter
 from note_size.config.config import Config
-from note_size.types import FileType, SizeType, FileSize, SizeBytes, SizePrecision
+from note_size.types import FileType, SizeType, FileSize, SizeBytes
 from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
 from tests.conftest import cache_manager
-from tests.data import Data, MediaFiles
+from tests.data import Data, MediaFiles, Precisions
 
 update_progress_history: list[str] = []
 
@@ -64,11 +64,11 @@ def test_initialize_caches(td: Data, col: Collection, cache_manager: CacheManage
                                                            MediaFiles.picture: FileSize(SizeBytes(7)),
                                                            MediaFiles.sound: FileSize(SizeBytes(5))},
                                                card2.nid: {}}]
-    assert size_formatter.as_dict_list() == [{SizeBytes(0): {SizePrecision(0): '0 B', SizePrecision(1): '0 B'},
-                                              SizeBytes(21): {SizePrecision(0): '21 B', SizePrecision(1): '21 B'},
-                                              SizeBytes(71): {SizePrecision(0): '71 B', SizePrecision(1): '71 B'},
-                                              SizeBytes(123): {SizePrecision(0): '123 B', SizePrecision(1): '123 B'},
-                                              SizeBytes(144): {SizePrecision(0): '144 B', SizePrecision(1): '144 B'}}]
+    assert size_formatter.as_dict_list() == [{SizeBytes(0): {Precisions.zero: '0 B', Precisions.one: '0 B'},
+                                              SizeBytes(21): {Precisions.zero: '21 B', Precisions.one: '21 B'},
+                                              SizeBytes(71): {Precisions.zero: '71 B', Precisions.one: '71 B'},
+                                              SizeBytes(123): {Precisions.zero: '123 B', Precisions.one: '123 B'},
+                                              SizeBytes(144): {Precisions.zero: '144 B', Precisions.one: '144 B'}}]
     assert file_type_helper.as_dict_list() == [{MediaFiles.animation: FileType.IMAGE,
                                                 MediaFiles.picture: FileType.IMAGE,
                                                 MediaFiles.sound: FileType.AUDIO}]

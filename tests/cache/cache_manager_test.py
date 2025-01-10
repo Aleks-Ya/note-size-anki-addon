@@ -9,11 +9,11 @@ from note_size.cache.size_str_cache import SizeStrCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.calculator.size_formatter import SizeFormatter
 from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
-from note_size.types import SizeType, SizeBytes, SizePrecision
+from note_size.types import SizeType, SizeBytes
 from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
 from tests import wait_until
 from tests.conftest import item_id_cache
-from tests.data import Data, MediaFiles
+from tests.data import Data, MediaFiles, Precisions
 
 
 def test_get_caches(cache_manager: CacheManager, media_cache: MediaCache, item_id_cache: ItemIdCache,
@@ -126,9 +126,9 @@ def __use_all_caches(cache_manager: CacheManager, td: Data) -> Card:
     card: Card = td.create_card_with_files()
     cache_manager.get_item_id_cache().get_note_id_by_card_id(card.id)
     cache_manager.get_size_str_cache().get_note_size_str(card.nid, SizeType.TOTAL, use_cache=True,
-                                                         precision=SizePrecision(1))
+                                                         precision=Precisions.one)
     cache_manager.get_file_type_helper().get_file_type(MediaFiles.picture, use_cache=True)
     cache_manager.get_size_calculator().get_note_file_sizes(card.nid, use_cache=True)
-    cache_manager.get_size_formatter().bytes_to_str(SizeBytes(123), use_cache=True, precision=SizePrecision(1))
+    cache_manager.get_size_formatter().bytes_to_str(SizeBytes(123), use_cache=True, precision=Precisions.one)
     cache_manager.get_updated_files_calculator().get_notes_having_updated_files()
     return card

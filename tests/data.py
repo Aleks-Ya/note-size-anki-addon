@@ -9,7 +9,7 @@ from anki.notes import Note
 from aqt import gui_hooks
 
 from note_size.config.config import Config
-from note_size.types import MediaFile, FieldName, FieldContent, FileContent
+from note_size.types import MediaFile, FieldName, FieldContent, FileContent, SizePrecision
 
 
 class MediaFiles:
@@ -37,6 +37,11 @@ class DefaultFields:
         f'Files ∑￡: <img src="{MediaFiles.picture}"> <img src="{MediaFiles.animation}">')
     front_field_content_2: FieldContent = FieldContent('The field on the front card ∑￡')
     back_field_content_2: FieldContent = FieldContent('Another field on the back card ∆¥')
+
+
+class Precisions:
+    zero: SizePrecision = SizePrecision(0)
+    one: SizePrecision = SizePrecision(1)
 
 
 class Data:
