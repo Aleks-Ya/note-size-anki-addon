@@ -1,6 +1,7 @@
 {
   "Browser": {
-    "Show Found Notes Size": true
+    "Show Found Notes Size": true,
+    "Size Precision": 1
   },
   "Cache": {
     "Warmup Enabled": true,

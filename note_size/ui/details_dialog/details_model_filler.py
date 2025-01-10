@@ -10,17 +10,20 @@ from ..common.number_formatter import NumberFormatter
 from ...cache.media_cache import MediaCache
 from ...calculator.size_calculator import SizeCalculator
 from ...calculator.size_formatter import SizeFormatter
-from ...types import SizeStr, SizeBytes, MediaFile, SizeType, FileSize
+from ...config.config import Config
+from ...types import SizeStr, SizeBytes, MediaFile, SizeType, FileSize, SizePrecision
 
 log: Logger = logging.getLogger(__name__)
 
 
 class DetailsModelFiller:
 
-    def __init__(self, size_calculator: SizeCalculator, size_formatter: SizeFormatter, media_cache: MediaCache):
+    def __init__(self, size_calculator: SizeCalculator, size_formatter: SizeFormatter, media_cache: MediaCache,
+                 config: Config):
         self.__size_calculator: SizeCalculator = size_calculator
         self.__size_formatter: SizeFormatter = size_formatter
         self.__media_cache: MediaCache = media_cache
+        self.__config: Config = config
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def prepare_note_model(self, note: Note) -> DetailsModel:
@@ -45,29 +48,34 @@ class DetailsModelFiller:
 
     def __total_note_size(self, note: Note) -> str:
         size_bytes: SizeBytes = self.__size_calculator.calculate_note_size(note, SizeType.TOTAL, use_cache=False)
-        size: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
+        size_precision: SizePrecision = self.__config.get_browser_size_precision()
+        size: SizeStr = self.__size_formatter.bytes_to_str(size_bytes, precision=size_precision)
         return f"Total note size: {size}"
 
     def __total_notes_size(self, note_ids: Sequence[NoteId]) -> str:
         size_bytes: SizeBytes = self.__size_calculator.get_notes_size(note_ids, SizeType.TOTAL, use_cache=True)
-        size: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
+        size_precision: SizePrecision = self.__config.get_browser_size_precision()
+        size: SizeStr = self.__size_formatter.bytes_to_str(size_bytes, precision=size_precision)
         note_number_str: str = NumberFormatter.with_thousands_separator(len(note_ids))
         return f"Total size of {note_number_str} notes: {size}"
 
     def __texts_note_size(self, note: Note) -> str:
         size_bytes: SizeBytes = self.__size_calculator.calculate_note_size(note, SizeType.TEXTS, use_cache=False)
-        size: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
+        size_precision: SizePrecision = self.__config.get_browser_size_precision()
+        size: SizeStr = self.__size_formatter.bytes_to_str(size_bytes, precision=size_precision)
         return f"Texts size: {size}"
 
     def __texts_notes_size(self, note_ids: Sequence[NoteId]) -> str:
         size_bytes: SizeBytes = self.__size_calculator.get_notes_size(note_ids, SizeType.TEXTS, use_cache=True)
-        size_str: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
+        size_precision: SizePrecision = self.__config.get_browser_size_precision()
+        size_str: SizeStr = self.__size_formatter.bytes_to_str(size_bytes, precision=size_precision)
         note_number_str: str = NumberFormatter.with_thousands_separator(len(note_ids))
         return f"Texts size of {note_number_str} notes: {size_str}"
 
     def __files_note_size(self, note: Note) -> str:
         size_bytes: SizeBytes = self.__size_calculator.calculate_note_size(note, SizeType.FILES, use_cache=False)
-        size: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
+        size_precision: SizePrecision = self.__config.get_browser_size_precision()
+        size: SizeStr = self.__size_formatter.bytes_to_str(size_bytes, precision=size_precision)
         files: set[MediaFile] = self.__size_calculator.calculate_note_files(note, use_cache=False)
         files_number_str: str = NumberFormatter.with_thousands_separator(len(files))
         exist_files_number, missing_files_number = self.__media_cache.get_missing_files_number(files, use_cache=True)
@@ -80,7 +88,8 @@ class DetailsModelFiller:
         files: set[MediaFile] = self.__size_calculator.get_notes_files(note_ids, use_cache=True)
         files_number_str: str = NumberFormatter.with_thousands_separator(len(files))
         size_bytes: SizeBytes = self.__size_calculator.get_notes_size(note_ids, SizeType.FILES, use_cache=True)
-        size_str: SizeStr = self.__size_formatter.bytes_to_str(size_bytes)
+        size_precision: SizePrecision = self.__config.get_browser_size_precision()
+        size_str: SizeStr = self.__size_formatter.bytes_to_str(size_bytes, precision=size_precision)
         note_number_str: str = NumberFormatter.with_thousands_separator(len(note_ids))
         exist_files_number, missing_files_number = self.__media_cache.get_missing_files_number(files, use_cache=True)
         existing_files_number_str: str = NumberFormatter.with_thousands_separator(exist_files_number)

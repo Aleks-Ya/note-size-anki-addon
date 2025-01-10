@@ -73,7 +73,7 @@ def __initialize(col: Collection):
     item_id_cache: ItemIdCache = ItemIdCache(col)
     item_id_sorter: ItemIdSorter = ItemIdSorter(item_id_cache, size_calculator)
     size_str_cache: SizeStrCache = SizeStrCache(col, size_calculator, size_formatter)
-    column_hooks: ColumnHooks = ColumnHooks(item_id_cache, size_str_cache, item_id_sorter)
+    column_hooks: ColumnHooks = ColumnHooks(item_id_cache, size_str_cache, item_id_sorter, config)
     column_hooks.setup_hooks()
     level_parser: LevelParser = LevelParser(size_formatter)
     editor_button_formatter: EditorButtonFormatter = EditorButtonFormatter(
@@ -99,7 +99,8 @@ def __initialize(col: Collection):
     config_ui: ConfigUi = ConfigUi(
         config, config_loader, logs, cache_initializer, desktop_services, level_parser, url_manager, deck_browser,
         settings)
-    details_model_filler: DetailsModelFiller = DetailsModelFiller(size_calculator, size_formatter, media_cache)
+    details_model_filler: DetailsModelFiller = DetailsModelFiller(size_calculator, size_formatter, media_cache,
+                                                                  config)
     details_dialog: DetailsDialog = DetailsDialog(
         size_calculator, size_formatter, file_type_helper, details_model_filler, config_ui, config, settings)
     editor_button_js: EditorButtonJs = EditorButtonJs(editor_button_formatter)

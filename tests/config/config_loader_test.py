@@ -19,10 +19,10 @@ def test_empty_addon_dir(config_loader: ConfigLoader, module_dir: Path) -> None:
 def test_default_values(config_loader: ConfigLoader, module_dir: Path):
     config: Config = config_loader.load_config()
     assert config.get_as_dict() == {
-        'Browser': {'Show Found Notes Size': True},
-        'Cache': {
-            'Store Cache In File Enabled': True,
-            'Warmup Enabled': True},
+        'Browser': {'Show Found Notes Size': True,
+                    'Size Precision': 1},
+        'Cache': {'Store Cache In File Enabled': True,
+                  'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True,
                          'Size Precision': 0},
         'Logging': {'Logger Level': 'DEBUG'},
@@ -39,10 +39,10 @@ def test_default_values(config_loader: ConfigLoader, module_dir: Path):
 
 def test_actual_values_all(config_loader: ConfigLoader, module_dir: Path):
     meta_json_config: dict[str, Any] = {
-        'Browser': {'Show Found Notes Size': True},
-        'Cache': {
-            'Store Cache In File Enabled': True,
-            'Warmup Enabled': False},
+        'Browser': {'Show Found Notes Size': True,
+                    'Size Precision': 1},
+        'Cache': {'Store Cache In File Enabled': True,
+                  'Warmup Enabled': False},
         'Deck Browser': {'Show Collection Size': True,
                          'Size Precision': 0},
         'Logging': {'Logger Level': 'DEBUG'},
@@ -64,10 +64,10 @@ def test_actual_values_partial(module_dir: Path, config_loader: ConfigLoader):
     __write_meta_json_config({'Size Button': {'Cache': {'Warmup Enabled': False}}}, module_dir)
     config: Config = config_loader.load_config()
     assert config.get_as_dict() == {
-        'Browser': {'Show Found Notes Size': True},
-        'Cache': {
-            'Store Cache In File Enabled': True,
-            'Warmup Enabled': True},
+        'Browser': {'Show Found Notes Size': True,
+                    'Size Precision': 1},
+        'Cache': {'Store Cache In File Enabled': True,
+                  'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True,
                          'Size Precision': 0},
         'Logging': {'Logger Level': 'DEBUG'},
@@ -98,10 +98,10 @@ def test_delete_unused_properties(module_dir: Path, config_loader: ConfigLoader)
     }, module_dir)
     config: Config = config_loader.load_config()
     assert config.get_as_dict() == {
-        'Browser': {'Show Found Notes Size': True},
-        'Cache': {
-            'Store Cache In File Enabled': True,
-            'Warmup Enabled': True},
+        'Browser': {'Show Found Notes Size': True,
+                    'Size Precision': 1},
+        'Cache': {'Store Cache In File Enabled': True,
+                  'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True,
                          'Size Precision': 0},
         'Logging': {'Logger Level': 'DEBUG'},
@@ -135,10 +135,10 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
     }, module_dir)
     config_origin: Optional[dict[str, Any]] = addon_manager.getConfig(module_name)
     assert config_origin == {
-        'Browser': {'Show Found Notes Size': True},
-        'Cache': {
-            'Store Cache In File Enabled': True,
-            'Warmup Enabled': True},
+        'Browser': {'Show Found Notes Size': True,
+                    'Size Precision': 1},
+        'Cache': {'Store Cache In File Enabled': True,
+                  'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True,
                          'Size Precision': 0},
         'Logging': {'Logger Level': 'DEBUG'},
@@ -154,10 +154,10 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
         'Unused Top': {'Property 1': 'Value 1'}}
     config: Config = config_loader.load_config()
     assert config.get_as_dict() == {
-        'Browser': {'Show Found Notes Size': True},
-        'Cache': {
-            'Store Cache In File Enabled': True,
-            'Warmup Enabled': True},
+        'Browser': {'Show Found Notes Size': True,
+                    'Size Precision': 1},
+        'Cache': {'Store Cache In File Enabled': True,
+                  'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True,
                          'Size Precision': 0},
         'Logging': {'Logger Level': 'DEBUG'},
@@ -172,10 +172,10 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
                            {"Color": "LightCoral", "Max Size": None}]}}}
     config_saved: Optional[dict[str, Any]] = addon_manager.getConfig(module_name)
     assert config_saved == {
-        'Browser': {'Show Found Notes Size': True},
-        'Cache': {
-            'Store Cache In File Enabled': True,
-            'Warmup Enabled': True},
+        'Browser': {'Show Found Notes Size': True,
+                    'Size Precision': 1},
+        'Cache': {'Store Cache In File Enabled': True,
+                  'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True,
                          'Size Precision': 0},
         'Logging': {'Logger Level': 'DEBUG'},
@@ -193,10 +193,10 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
 def test_write_config(config_loader: ConfigLoader, module_dir: Path) -> None:
     config: Config = config_loader.load_config()
     assert config.get_as_dict() == {
-        'Browser': {'Show Found Notes Size': True},
-        'Cache': {
-            'Store Cache In File Enabled': True,
-            'Warmup Enabled': True},
+        'Browser': {'Show Found Notes Size': True,
+                    'Size Precision': 1},
+        'Cache': {'Store Cache In File Enabled': True,
+                  'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True,
                          'Size Precision': 0},
         'Logging': {'Logger Level': 'DEBUG'},
@@ -221,10 +221,10 @@ def test_write_config(config_loader: ConfigLoader, module_dir: Path) -> None:
     config_loader.write_config(config)
     act_config: Config = config_loader.load_config()
     assert act_config.get_as_dict() == {
-        'Browser': {'Show Found Notes Size': True},
-        'Cache': {
-            'Store Cache In File Enabled': True,
-            'Warmup Enabled': False},
+        'Browser': {'Show Found Notes Size': True,
+                    'Size Precision': 1},
+        'Cache': {'Store Cache In File Enabled': True,
+                  'Warmup Enabled': False},
         'Deck Browser': {'Show Collection Size': False,
                          'Size Precision': 2},
         'Logging': {'Logger Level': 'INFO'},

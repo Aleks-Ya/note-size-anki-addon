@@ -15,10 +15,10 @@ class CountConfigListener(ConfigListener):
 def test_setters(td: Data):
     config: Config = td.read_config()
     assert config.get_as_dict() == {
-        'Browser': {'Show Found Notes Size': True},
-        'Cache': {
-            'Store Cache In File Enabled': True,
-            'Warmup Enabled': True},
+        'Browser': {'Show Found Notes Size': True,
+                    'Size Precision': 1},
+        'Cache': {'Store Cache In File Enabled': True,
+                  'Warmup Enabled': True},
         'Deck Browser': {'Show Collection Size': True,
                          'Size Precision': 0},
         'Logging': {'Logger Level': 'DEBUG'},
@@ -40,6 +40,7 @@ def test_setters(td: Data):
     config.set_deck_browser_show_collection_size(False)
     config.set_deck_browser_size_precision(SizePrecision(2))
     config.set_browser_show_found_notes_size(False)
+    config.set_browser_size_precision(SizePrecision(4))
     config.set_log_level('INFO')
     config.set_size_button_enabled(False)
     config.set_size_button_size_precision(SizePrecision(3))
@@ -47,10 +48,10 @@ def test_setters(td: Data):
     config.set_profiler_enabled(True)
     config.set_size_button_color_levels(exp_color_levels)
     assert config.get_as_dict() == {
-        'Browser': {'Show Found Notes Size': False},
-        'Cache': {
-            'Store Cache In File Enabled': False,
-            'Warmup Enabled': False},
+        'Browser': {'Show Found Notes Size': False,
+                    'Size Precision': 4},
+        'Cache': {'Store Cache In File Enabled': False,
+                  'Warmup Enabled': False},
         'Deck Browser': {'Show Collection Size': False,
                          'Size Precision': 2},
         'Logging': {'Logger Level': 'INFO'},
@@ -67,6 +68,7 @@ def test_setters(td: Data):
     assert config.get_deck_browser_show_collection_size() == False
     assert config.get_deck_browser_size_precision() == SizePrecision(2)
     assert config.get_browser_show_found_notes_size() == False
+    assert config.get_browser_size_precision() == SizePrecision(4)
     assert config.get_log_level() == 'INFO'
     assert config.get_size_button_enabled() == False
     assert config.get_size_button_size_precision() == SizePrecision(3)

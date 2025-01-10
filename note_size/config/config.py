@@ -27,6 +27,7 @@ class Config:
     __key_2_size_button_size_precision: str = 'Size Precision'
     __key_2_color: str = 'Color'
     __key_2_browser_show_found_notes_size: str = 'Show Found Notes Size'
+    __key_2_browser_size_precision: str = 'Size Precision'
     __key_2_profiler_enabled: str = 'Enabled'
     __key_3_size_button_color_enabled: str = 'Enabled'
     __key_3_size_button_levels: str = 'Levels'
@@ -91,6 +92,12 @@ class Config:
 
     def set_browser_show_found_notes_size(self, show_found_notes_size_size: bool) -> None:
         self.__set(show_found_notes_size_size, self.__key_1_browser, self.__key_2_browser_show_found_notes_size)
+
+    def get_browser_size_precision(self) -> SizePrecision:
+        return self.__config[self.__key_1_browser][self.__key_2_browser_size_precision]
+
+    def set_browser_size_precision(self, size_precision: SizePrecision) -> None:
+        self.__set(size_precision, self.__key_1_browser, self.__key_2_browser_size_precision)
 
     def get_log_level(self) -> str:
         return self.__config[self.__key_1_logging][self.__key_2_logger_level]
