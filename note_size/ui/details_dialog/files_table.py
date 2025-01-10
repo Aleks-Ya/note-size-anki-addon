@@ -95,7 +95,7 @@ class FilesTable(QTableWidget):
             filename_item.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
 
             size_precision: SizePrecision = self.__config.get_browser_size_precision()
-            size_str: SizeStr = self.__size_formatter.bytes_to_str(file_size.size, precision=size_precision)
+            size_str: SizeStr = self.__size_formatter.bytes_to_str(file_size.size, size_precision)
             size_item: SizeTableWidgetItem = SizeTableWidgetItem(media_file, file_size, size_str)
 
             self.__items_dict[row_index] = {}

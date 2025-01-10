@@ -123,7 +123,7 @@ class CollectionSizeFormatter:
         if size is not None:
             separator: str = " "
             size_precision: SizePrecision = self.__config.get_deck_browser_size_precision()
-            size_split: list[str] = self.__size_formatter.bytes_to_str(size, precision=size_precision,
+            size_split: list[str] = self.__size_formatter.bytes_to_str(size, size_precision,
                                                                        unit_separator=separator).split(separator)
             number: str = size_split[0]
             unit: str = size_split[1]

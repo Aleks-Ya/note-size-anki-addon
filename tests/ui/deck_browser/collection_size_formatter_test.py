@@ -11,7 +11,7 @@ from note_size.calculator.size_formatter import SizeFormatter
 from note_size.ui.deck_browser.collection_size_formatter import CollectionSizeFormatter
 from note_size.ui.deck_browser.trash import Trash
 from note_size.types import MediaFile, SizeBytes
-from tests.data import Data
+from tests.data import Data, Precisions
 
 web_path: str = os.path.join("_addons", "1188705668", "ui", "web")
 info_png_path: str = os.path.join(web_path, "info.png")
@@ -162,5 +162,6 @@ def test_empty_unused_and_trash(col: Collection, td: Data, collection_size_forma
 @pytest.mark.performance
 def test_bytes_to_str_performance(size_formatter: SizeFormatter):
     size_bytes: SizeBytes = SizeBytes(123_456_789)
-    execution_time: float = timeit.timeit(lambda: size_formatter.bytes_to_str(size_bytes), number=500_000)
+    execution_time: float = timeit.timeit(lambda: size_formatter.bytes_to_str(size_bytes, Precisions.one),
+                                          number=500_000)
     assert execution_time <= 1

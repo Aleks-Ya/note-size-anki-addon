@@ -52,7 +52,7 @@ class LevelParser:
                 penultimate_max_size_bytes: SizeBytes = SizeFormatter.str_to_bytes(penultimate_max_size_str)
                 new_previous_level_size_bytes: SizeBytes = SizeBytes(penultimate_max_size_bytes * 2)
                 new_previous_level_size_str: SizeStr = self.__size_formatter.bytes_to_str(
-                    new_previous_level_size_bytes, precision=SizePrecision(0))
+                    new_previous_level_size_bytes, SizePrecision(0))
                 previous_level[self.__max_size_key] = new_previous_level_size_str
             else:
                 previous_level[self.__max_size_key] = "100 KB"

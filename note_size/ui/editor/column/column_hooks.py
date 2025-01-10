@@ -92,8 +92,7 @@ class ColumnHooks:
             column_index: int = columns.index(column_key)
             cell: Cell = row.cells[column_index]
             size_precision: SizePrecision = self.__config.get_browser_size_precision()
-            cell.text = self.__size_str_cache.get_note_size_str(note_id, size_type, use_cache=True,
-                                                                precision=size_precision)
+            cell.text = self.__size_str_cache.get_note_size_str(note_id, size_type, size_precision, use_cache=True)
 
     @staticmethod
     def __on_browser_will_search(context: SearchContext) -> None:
