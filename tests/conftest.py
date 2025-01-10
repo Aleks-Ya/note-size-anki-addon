@@ -150,8 +150,13 @@ def item_id_cache(col: Collection) -> ItemIdCache:
 
 
 @pytest.fixture
-def cache_storage(settings: Settings) -> CacheStorage:
-    return CacheStorage(settings)
+def current_cache_version() -> int:
+    return 5
+
+
+@pytest.fixture
+def cache_storage(current_cache_version: int, settings: Settings) -> CacheStorage:
+    return CacheStorage(current_cache_version, settings)
 
 
 @pytest.fixture

@@ -79,7 +79,8 @@ def __initialize(col: Collection):
     editor_button_formatter: EditorButtonFormatter = EditorButtonFormatter(
         size_str_cache, size_calculator, size_formatter, level_parser, config)
     trash: Trash = Trash(col)
-    cache_storage: CacheStorage = CacheStorage(settings)
+    current_cache_version: int = 1
+    cache_storage: CacheStorage = CacheStorage(current_cache_version, settings)
     file_type_helper: FileTypeHelper = FileTypeHelper()
     updated_files_calculator: UpdatedFilesCalculator = UpdatedFilesCalculator(col, size_calculator, media_cache)
     cache_manager: CacheManager = CacheManager(

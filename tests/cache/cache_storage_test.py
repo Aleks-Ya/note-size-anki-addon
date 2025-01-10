@@ -8,6 +8,7 @@ from typing import Any
 from anki.cards import Card
 from anki.collection import Collection
 
+from note_size.cache.cache import Cache
 from note_size.cache.cache_storage import CacheStorage
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
@@ -138,3 +139,13 @@ def test_read_partially_invalid_cache_file(cache_storage: CacheStorage, td: Data
     assert "Cannot deserialize cache file:" in caplog.text
     assert item_id_cache_2.as_dict_list() == [{}]
     assert not os.path.exists(cache_file)
+
+
+def test_ignore_cache_of_old_version(current_cache_version: int, cache_storage: CacheStorage, media_cache: MediaCache,
+                                     item_id_cache: ItemIdCache, settings: Settings):
+    caches: list[Cache] = [media_cache, item_id_cache]
+    old_cache_version: int = current_cache_version - 1
+    old_cache_storage: CacheStorage = CacheStorage(old_cache_version, settings)
+    old_cache_storage.save_caches_to_file(caches)
+    read_success: bool = cache_storage.read_caches_from_file(caches)
+    assert not read_success
