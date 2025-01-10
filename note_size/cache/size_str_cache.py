@@ -25,13 +25,12 @@ class SizeStrCache(Cache):
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def get_notes_size_str(self, note_ids: Sequence[NoteId], size_type: SizeType, use_cache: bool,
-                           precision: SizePrecision = SizePrecision(1)) -> SizeStr:
+                           precision: SizePrecision) -> SizeStr:
         with self._lock:
             size: SizeBytes = self.__size_calculator.get_notes_size(note_ids, size_type, use_cache)
             return self.__size_formatter.bytes_to_str(size, precision=precision)
 
-    def get_note_size_str(self, note_id: NoteId, size_type: SizeType, use_cache: bool,
-                          precision: SizePrecision = SizePrecision(1)) -> SizeStr:
+    def get_note_size_str(self, note_id: NoteId, size_type: SizeType, use_cache: bool, precision: SizePrecision) -> SizeStr:
         with self._lock:
             cache: dict[NoteId, dict[SizePrecision, SizeStr]] = self.__size_str_caches[size_type]
             if use_cache and note_id in cache and precision in cache[note_id]:

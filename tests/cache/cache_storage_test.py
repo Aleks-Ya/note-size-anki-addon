@@ -40,9 +40,9 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Colle
 
     file_type_helper.get_file_type(MediaFiles.image, use_cache=True)
 
-    size_str_cache.get_note_size_str(card1.nid, SizeType.TOTAL, use_cache=True)
-    size_str_cache.get_note_size_str(card2.nid, SizeType.TEXTS, use_cache=True)
-    size_str_cache.get_note_size_str(card2.nid, SizeType.FILES, use_cache=True)
+    size_str_cache.get_note_size_str(card1.nid, SizeType.TOTAL, use_cache=True, precision=SizePrecision(1))
+    size_str_cache.get_note_size_str(card2.nid, SizeType.TEXTS, use_cache=True, precision=SizePrecision(1))
+    size_str_cache.get_note_size_str(card2.nid, SizeType.FILES, use_cache=True, precision=SizePrecision(1))
 
     cache_storage.save_caches_to_file(
         [media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, size_str_cache,

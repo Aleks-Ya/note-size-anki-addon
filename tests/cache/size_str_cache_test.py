@@ -46,15 +46,18 @@ def test_get_note_size_bytes_performance(td: Data, size_str_cache: SizeStrCache,
 def test_get_note_size_str(td: Data, size_str_cache: SizeStrCache):
     note: Note = td.create_note_with_files()
     note_id: NoteId = note.id
-    act_size_1: SizeStr = size_str_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False)
+    act_size_1: SizeStr = size_str_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False,
+                                                           precision=SizePrecision(1))
     assert act_size_1 == "143 B"
 
     Data.update_front_field(note, 'updated')
 
-    size_cached: SizeStr = size_str_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=True)
+    size_cached: SizeStr = size_str_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=True,
+                                                            precision=SizePrecision(1))
     assert size_cached == "143 B"
 
-    size_uncached: SizeStr = size_str_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False)
+    size_uncached: SizeStr = size_str_cache.get_note_size_str(note_id, SizeType.TOTAL, use_cache=False,
+                                                              precision=SizePrecision(1))
     assert size_uncached == "86 B"
 
 
@@ -66,8 +69,8 @@ def test_evict_note(td: Data, size_str_cache: SizeStrCache):
     note1: Note = td.create_note_with_files()
     note2: Note = td.create_note_without_files()
     for size_type in SizeType:
-        size_str_cache.get_note_size_str(note1.id, size_type, use_cache=True)
-        size_str_cache.get_note_size_str(note2.id, size_type, use_cache=True)
+        size_str_cache.get_note_size_str(note1.id, size_type, use_cache=True, precision=SizePrecision(1))
+        size_str_cache.get_note_size_str(note2.id, size_type, use_cache=True, precision=SizePrecision(1))
     assert size_str_cache.get_cache_size() == 6
     assert size_str_cache.as_dict_list() == [{SizeType.TOTAL: {note1.id: {SizePrecision(1): '143 B'},
                                                                note2.id: {SizePrecision(1): '70 B'}},
@@ -84,7 +87,7 @@ def test_evict_note(td: Data, size_str_cache: SizeStrCache):
 
 def test_absent_note(size_str_cache: SizeStrCache):
     with pytest.raises(NotFoundError):
-        size_str_cache.get_note_size_str(NoteId(123), SizeType.TOTAL, use_cache=True)
+        size_str_cache.get_note_size_str(NoteId(123), SizeType.TOTAL, use_cache=True, precision=SizePrecision(1))
 
 
 def test_get_note_files(td: Data, size_str_cache: SizeStrCache, size_calculator: SizeCalculator):
@@ -124,10 +127,10 @@ def test_initialized(size_str_cache: SizeStrCache):
 def test_get_cache_size(td: Data, size_str_cache: SizeStrCache):
     assert size_str_cache.get_cache_size() == 0
     note1: Note = td.create_note_with_files()
-    size_str_cache.get_note_size_str(note1.id, SizeType.TOTAL, use_cache=True)
+    size_str_cache.get_note_size_str(note1.id, SizeType.TOTAL, use_cache=True, precision=SizePrecision(1))
     assert size_str_cache.get_cache_size() == 1
     note2: Note = td.create_note_without_files()
-    size_str_cache.get_note_size_str(note2.id, SizeType.TEXTS, use_cache=True)
+    size_str_cache.get_note_size_str(note2.id, SizeType.TEXTS, use_cache=True, precision=SizePrecision(1))
     assert size_str_cache.get_cache_size() == 2
     size_str_cache.evict_note(note1.id)
     assert size_str_cache.get_cache_size() == 1

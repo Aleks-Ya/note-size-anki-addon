@@ -15,7 +15,7 @@ class SizeFormatter(Cache):
         self.__bytes_to_str_cache: dict[SizeBytes, dict[SizePrecision, SizeStr]] = {}
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def bytes_to_str(self, size: SizeBytes, use_cache: bool = True, precision: SizePrecision = SizePrecision(1),
+    def bytes_to_str(self, size: SizeBytes, precision: SizePrecision, use_cache: bool = True,
                      unit_separator: str = " ") -> SizeStr:
         with self._lock:
             if use_cache and size in self.__bytes_to_str_cache and precision in self.__bytes_to_str_cache[size]:
@@ -59,7 +59,7 @@ class SizeFormatter(Cache):
             return len(self.__bytes_to_str_cache)
 
     @staticmethod
-    def __bytes_to_str(size: SizeBytes, precision: SizePrecision = 1, unit_separator: str = " ") -> SizeStr:
+    def __bytes_to_str(size: SizeBytes, precision: SizePrecision, unit_separator: str = " ") -> SizeStr:
         divisor: int = 1024
         units: tuple[str, str, str] = 'B', 'KB', 'MB'
         final_unit: str = 'GB'

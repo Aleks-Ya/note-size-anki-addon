@@ -13,7 +13,7 @@ from .item_id_cache import ItemIdCache
 from .size_str_cache import SizeStrCache
 from ..calculator.size_calculator import SizeCalculator
 from ..config.config import Config
-from ..types import SizeType, MediaFile
+from ..types import SizeType, MediaFile, SizePrecision
 from ..ui.common.number_formatter import NumberFormatter
 from ..ui.details_dialog.file_type_helper import FileTypeHelper
 
@@ -63,7 +63,15 @@ class CacheInitializerBackground:
             self.__update_progress("Caching note sizes", processed_notes, note_number)
             size_calculator.initialize_note_in_caches(note_id, note_type_id, fields)
             for size_type in SizeType:
-                size_str_cache.get_note_size_str(note_id, size_type, use_cache=True)
+                deck_browser_size_precision: SizePrecision = self.__config.get_deck_browser_size_precision()
+                browser_size_precision: SizePrecision = self.__config.get_browser_size_precision()
+                editor_size_precision: SizePrecision = self.__config.get_size_button_size_precision()
+                size_str_cache.get_note_size_str(
+                    note_id, size_type, precision=deck_browser_size_precision, use_cache=True)
+                size_str_cache.get_note_size_str(
+                    note_id, size_type, precision=browser_size_precision, use_cache=True)
+                size_str_cache.get_note_size_str(
+                    note_id, size_type, precision=editor_size_precision, use_cache=True)
                 note_files: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
                 for note_file in note_files:
                     file_type_helper.get_file_type(note_file, use_cache=True)

@@ -64,11 +64,11 @@ def test_initialize_caches(td: Data, col: Collection, cache_manager: CacheManage
                                                            MediaFiles.picture: FileSize(SizeBytes(7)),
                                                            MediaFiles.sound: FileSize(SizeBytes(5))},
                                                card2.nid: {}}]
-    assert size_formatter.as_dict_list() == [{SizeBytes(0): {SizePrecision(1): '0 B'},
-                                              SizeBytes(21): {SizePrecision(1): '21 B'},
-                                              SizeBytes(71): {SizePrecision(1): '71 B'},
-                                              SizeBytes(123): {SizePrecision(1): '123 B'},
-                                              SizeBytes(144): {SizePrecision(1): '144 B'}}]
+    assert size_formatter.as_dict_list() == [{SizeBytes(0): {SizePrecision(0): '0 B', SizePrecision(1): '0 B'},
+                                              SizeBytes(21): {SizePrecision(0): '21 B', SizePrecision(1): '21 B'},
+                                              SizeBytes(71): {SizePrecision(0): '71 B', SizePrecision(1): '71 B'},
+                                              SizeBytes(123): {SizePrecision(0): '123 B', SizePrecision(1): '123 B'},
+                                              SizeBytes(144): {SizePrecision(0): '144 B', SizePrecision(1): '144 B'}}]
     assert file_type_helper.as_dict_list() == [{MediaFiles.animation: FileType.IMAGE,
                                                 MediaFiles.picture: FileType.IMAGE,
                                                 MediaFiles.sound: FileType.AUDIO}]
