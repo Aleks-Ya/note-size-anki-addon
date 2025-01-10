@@ -12,7 +12,7 @@ from .trash import Trash
 from ..common.number_formatter import NumberFormatter
 from ...cache.item_id_cache import ItemIdCache
 from ...cache.media_cache import MediaCache
-from ...calculator.used_files_calculator import UsedFilesCalculator
+from ...calculator.used_files_calculator import UsedFilesCalculator, UsedFiles
 from ...config.settings import Settings
 from ...types import SizeBytes, FilesNumber
 from ...calculator.size_formatter import SizeFormatter
@@ -42,19 +42,20 @@ class CollectionSizeFormatter:
         if self.__item_id_cache.is_initialized():
             log.debug("Use actual collection sizes")
             collection_size: SizeBytes = SizeBytes(self.__collection_file_path.stat().st_size)
-            used_files_size, used_files_number, missing_files_number, used_notes_numbers \
-                = self.__used_files_calculator.get_used_files_size(use_cache=True)
+            used_files: UsedFiles = self.__used_files_calculator.get_used_files_size(use_cache=True)
+            used_files_size: SizeBytes = used_files.used_files_size
             unused_files_size, unused_files_number = self.__media_cache.get_unused_files_size(use_cache=True)
             trash_dir_size: SizeBytes = self.__trash.get_trash_dir_size()
             trash_files_number: FilesNumber = self.__trash.get_trash_files_number()
             note_count: int = self.__col.note_count()
             note_number_str: str = NumberFormatter.with_thousands_separator(note_count)
-            used_notes_numbers_str: str = NumberFormatter.with_thousands_separator(used_notes_numbers)
-            used_files_number_str: str = NumberFormatter.with_thousands_separator(used_files_number)
-            missing_files_number_str: str = NumberFormatter.with_thousands_separator(missing_files_number)
+            used_notes_numbers_str: str = NumberFormatter.with_thousands_separator(used_files.used_notes_numbers)
+            used_files_number_str: str = NumberFormatter.with_thousands_separator(used_files.used_files_number)
+            missing_files_number_str: str = NumberFormatter.with_thousands_separator(used_files.missing_files_number)
             unused_files_size_str: str = NumberFormatter.with_thousands_separator(unused_files_number)
             trash_files_number_str: str = NumberFormatter.with_thousands_separator(trash_files_number)
-            total_size: SizeBytes = SizeBytes(collection_size + used_files_size + unused_files_size + trash_dir_size)
+            total_size: SizeBytes = SizeBytes(
+                collection_size + used_files.used_files_size + unused_files_size + trash_dir_size)
         else:
             log.debug("Use sand clocks instead of actual collection sizes")
             collection_size: Optional[SizeBytes] = None
