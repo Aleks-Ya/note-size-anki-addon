@@ -1,4 +1,4 @@
 class NumberFormatter:
     @staticmethod
-    def with_thousands_separator(number: int) -> str:
+    def with_thousands_separator(number: float) -> str:
         return f"{number:,}".replace(',', ' ')
