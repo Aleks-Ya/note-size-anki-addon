@@ -21,13 +21,11 @@ class Config:
     __key_2_warmup_enabled: str = 'Warmup Enabled'
     __key_2_store_cache_in_file_enabled: str = 'Store Cache In File Enabled'
     __key_2_deck_browser_show_collection_size: str = 'Show Collection Size'
-    __key_2_deck_browser_size_precision: str = 'Size Precision'
+    __key_2_size_precision: str = 'Size Precision'
     __key_2_logger_level: str = 'Logger Level'
     __key_2_size_button_enabled: str = 'Enabled'
-    __key_2_size_button_size_precision: str = 'Size Precision'
     __key_2_color: str = 'Color'
     __key_2_browser_show_found_notes_size: str = 'Show Found Notes Size'
-    __key_2_browser_size_precision: str = 'Size Precision'
     __key_2_profiler_enabled: str = 'Enabled'
     __key_3_size_button_color_enabled: str = 'Enabled'
     __key_3_size_button_levels: str = 'Levels'
@@ -82,10 +80,10 @@ class Config:
         self.__set(show_collection_size, self.__key_1_deck_browser, self.__key_2_deck_browser_show_collection_size)
 
     def get_deck_browser_size_precision(self) -> SizePrecision:
-        return self.__config[self.__key_1_deck_browser][self.__key_2_deck_browser_size_precision]
+        return self.__config[self.__key_1_deck_browser][self.__key_2_size_precision]
 
     def set_deck_browser_size_precision(self, size_precision: SizePrecision) -> None:
-        self.__set(size_precision, self.__key_1_deck_browser, self.__key_2_deck_browser_size_precision)
+        self.__set(size_precision, self.__key_1_deck_browser, self.__key_2_size_precision)
 
     def get_browser_show_found_notes_size(self) -> bool:
         return self.__config[self.__key_1_browser][self.__key_2_browser_show_found_notes_size]
@@ -94,10 +92,10 @@ class Config:
         self.__set(show_found_notes_size_size, self.__key_1_browser, self.__key_2_browser_show_found_notes_size)
 
     def get_browser_size_precision(self) -> SizePrecision:
-        return self.__config[self.__key_1_browser][self.__key_2_browser_size_precision]
+        return self.__config[self.__key_1_browser][self.__key_2_size_precision]
 
     def set_browser_size_precision(self, size_precision: SizePrecision) -> None:
-        self.__set(size_precision, self.__key_1_browser, self.__key_2_browser_size_precision)
+        self.__set(size_precision, self.__key_1_browser, self.__key_2_size_precision)
 
     def get_log_level(self) -> str:
         return self.__config[self.__key_1_logging][self.__key_2_logger_level]
@@ -112,10 +110,10 @@ class Config:
         self.__set(size_button_enabled, self.__key_1_size_button, self.__key_2_size_button_enabled)
 
     def get_size_button_size_precision(self) -> SizePrecision:
-        return self.__config[self.__key_1_size_button][self.__key_2_size_button_size_precision]
+        return self.__config[self.__key_1_size_button][self.__key_2_size_precision]
 
     def set_size_button_size_precision(self, size_precision: SizePrecision) -> None:
-        self.__set(size_precision, self.__key_1_size_button, self.__key_2_size_button_size_precision)
+        self.__set(size_precision, self.__key_1_size_button, self.__key_2_size_precision)
 
     def get_size_button_color_enabled(self) -> bool:
         return self.__config[self.__key_1_size_button][self.__key_2_color][self.__key_3_size_button_color_enabled]
