@@ -9,7 +9,7 @@ from aqt.browser import Column, Cell, SearchContext
 from aqt.browser import ItemId, CellRow
 
 from .item_id_sorter import ItemIdSorter
-from ...common.browser_helper import BrowserHelper
+from ....ui.common.browser_helper import BrowserHelper
 from ....cache.item_id_cache import ItemIdCache
 from ....cache.size_str_cache import SizeStrCache
 from ....config.config import Config

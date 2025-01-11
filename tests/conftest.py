@@ -47,7 +47,7 @@ from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
 from note_size.ui.editor.button.editor_button_creator import EditorButtonCreator
 from note_size.ui.editor.button.editor_button_formatter import EditorButtonFormatter
 from note_size.ui.editor.button.editor_button_js import EditorButtonJs
-from note_size.ui.editor.column.item_id_sorter import ItemIdSorter
+from note_size.ui.browser.column.item_id_sorter import ItemIdSorter
 from tests.data import Data
 
 

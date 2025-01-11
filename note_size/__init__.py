@@ -42,8 +42,8 @@ def __initialize(col: Collection):
     from .ui.details_dialog.file_type_helper import FileTypeHelper
     from .ui.editor.button.editor_button_formatter import EditorButtonFormatter
     from .ui.editor.button.editor_button_hooks import EditorButtonHooks
-    from .ui.editor.column.column_hooks import ColumnHooks
-    from .ui.editor.column.item_id_sorter import ItemIdSorter
+    from .ui.browser.column.column_hooks import ColumnHooks
+    from .ui.browser.column.item_id_sorter import ItemIdSorter
     from .ui.editor.button.editor_button_js import EditorButtonJs
     from .ui.editor.button.editor_button_creator import EditorButtonCreator
     from .ui.browser.button.browser_hooks import BrowserHooks

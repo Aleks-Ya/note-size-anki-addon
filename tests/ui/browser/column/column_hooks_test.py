@@ -10,8 +10,8 @@ from mock.mock import MagicMock
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.size_str_cache import SizeStrCache
 from note_size.config.config import Config
-from note_size.ui.editor.column.column_hooks import ColumnHooks
-from note_size.ui.editor.column.item_id_sorter import ItemIdSorter
+from note_size.ui.browser.column.column_hooks import ColumnHooks
+from note_size.ui.browser.column.item_id_sorter import ItemIdSorter
 from tests.data import Data
 
 
