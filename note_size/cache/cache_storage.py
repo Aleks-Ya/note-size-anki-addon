@@ -27,8 +27,9 @@ class CacheStorage:
                 log.info(f"Saving cache file: {self.__cache_file}")
                 dict_of_caches: dict[str, list[dict]] = {cache.cache_id(): cache.as_dict_list() for cache in caches}
                 dict_of_caches[self.cache_metadata_key] = [{self.version_key: self.__current_cache_version}]
-                # noinspection PyTypeChecker
-                pickle.dump(dict_of_caches, self.__cache_file.open("wb"))
+                with self.__cache_file.open("wb") as io:
+                    # noinspection PyTypeChecker
+                    pickle.dump(dict_of_caches, io)
                 log.info(f"Caches were saved to file: {self.__cache_file}")
             except Exception:
                 log.warning(f"Cannot save cache file: {self.__cache_file}", exc_info=True)
