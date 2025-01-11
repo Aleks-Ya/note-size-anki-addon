@@ -1,6 +1,10 @@
 # Changelog for "Note Size" Anki addon
 
-## [v2.6.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.6.0) - 2025-01-09
+## [v2.6.1](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.6.0) - 2025-01-13
+
+1. __[FEATURE]__ Replace "Size Precision" configuration property with "Significant Digits" (JSON only)
+
+## [v2.6.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.6.0) - 2025-01-11
 
 1. __[FEATURE]__ Display missing media files
 2. __[FEATURE]__ Show number of notes in used Media tooltip
