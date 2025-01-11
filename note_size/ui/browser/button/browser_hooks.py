@@ -7,7 +7,7 @@ from aqt.browser import Browser, SearchContext
 
 from .browser_button import BrowserButton
 from .browser_button_manager import BrowserButtonManager
-from ...config.config import Config
+from ....config.config import Config
 
 log: Logger = logging.getLogger(__name__)
 

@@ -46,9 +46,9 @@ def __initialize(col: Collection):
     from .ui.editor.column.item_id_sorter import ItemIdSorter
     from .ui.editor.button.editor_button_js import EditorButtonJs
     from .ui.editor.button.editor_button_creator import EditorButtonCreator
-    from .ui.browser.browser_hooks import BrowserHooks
-    from .ui.browser.browser_button import BrowserButton
-    from .ui.browser.browser_button_manager import BrowserButtonManager
+    from .ui.browser.button.browser_hooks import BrowserHooks
+    from .ui.browser.button.browser_button import BrowserButton
+    from .ui.browser.button.browser_button_manager import BrowserButtonManager
 
     module_dir: Path = Path(__file__).parent
     module_name: str = module_dir.stem

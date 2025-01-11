@@ -4,8 +4,8 @@ from anki.notes import Note
 from aqt.browser import Browser, ItemId
 from mock.mock import MagicMock
 
-from note_size.ui.browser.browser_button import BrowserButton
-from note_size.ui.browser.browser_button_manager import BrowserButtonManager
+from note_size.ui.browser.button.browser_button import BrowserButton
+from note_size.ui.browser.button.browser_button_manager import BrowserButtonManager
 from tests.data import Data
 
 

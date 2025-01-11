@@ -9,14 +9,14 @@ from aqt.browser import Browser, ItemId
 from aqt.progress import ProgressManager
 from aqt.qt import QPushButton
 
-from ..common.browser_helper import BrowserHelper
-from ..common.number_formatter import NumberFormatter
-from ..details_dialog.details_dialog import DetailsDialog
-from ..details_dialog.show_details_dialog_op import ShowDetailsDialogOp
-from ...cache.item_id_cache import ItemIdCache
-from ...cache.size_str_cache import SizeStrCache
-from ...config.config import Config
-from ...types import SizeType, SizeStr, SizePrecision
+from ....ui.common.browser_helper import BrowserHelper
+from ....ui.common.number_formatter import NumberFormatter
+from ....ui.details_dialog.details_dialog import DetailsDialog
+from ....ui.details_dialog.show_details_dialog_op import ShowDetailsDialogOp
+from ....cache.item_id_cache import ItemIdCache
+from ....cache.size_str_cache import SizeStrCache
+from ....config.config import Config
+from ....types import SizeType, SizeStr, SizePrecision
 
 log: Logger = logging.getLogger(__name__)
 

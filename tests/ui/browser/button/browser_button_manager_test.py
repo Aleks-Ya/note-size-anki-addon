@@ -1,8 +1,8 @@
 from aqt.browser import Browser
 
 from note_size.config.config import Config
-from note_size.ui.browser.browser_button import BrowserButton
-from note_size.ui.browser.browser_button_manager import BrowserButtonManager
+from note_size.ui.browser.button.browser_button import BrowserButton
+from note_size.ui.browser.button.browser_button_manager import BrowserButtonManager
 
 
 def test_create_browser_button(browser_button_manager: BrowserButtonManager, browser: Browser):

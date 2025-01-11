@@ -2,8 +2,8 @@ import pytest
 from aqt import gui_hooks
 
 from note_size.config.config import Config
-from note_size.ui.browser.browser_button_manager import BrowserButtonManager
-from note_size.ui.browser.browser_hooks import BrowserHooks
+from note_size.ui.browser.button.browser_button_manager import BrowserButtonManager
+from note_size.ui.browser.button.browser_hooks import BrowserHooks
 
 
 @pytest.fixture
