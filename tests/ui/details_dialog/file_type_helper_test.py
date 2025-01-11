@@ -37,6 +37,7 @@ def test_get_file_type(file_type_helper: FileTypeHelper):
     assert file_type_helper.get_file_type(MediaFile("other.css")) == FileType.OTHER
     assert file_type_helper.get_file_type(MediaFile("other.Default")) == FileType.OTHER
     assert file_type_helper.get_file_type(MediaFile("other.js")) == FileType.OTHER
+    assert file_type_helper.get_file_type(MediaFile(".png")) == FileType.OTHER
 
 
 @pytest.mark.performance
