@@ -5,7 +5,7 @@ from anki.notes import Note
 from pytestqt.qtbot import QtBot
 
 from note_size.ui.details_dialog.details_dialog import DetailsDialog
-from note_size.types import MediaFile
+from note_size.common.types import MediaFile
 from tests.data import Data
 
 

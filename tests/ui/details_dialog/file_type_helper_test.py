@@ -2,7 +2,7 @@ import timeit
 
 import pytest
 
-from note_size.types import FileType, MediaFile
+from note_size.common.types import FileType, MediaFile
 from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
 from tests.data import MediaFiles
 

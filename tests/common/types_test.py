@@ -1,4 +1,4 @@
-from note_size.types import FileSize, SizeBytes
+from note_size.common.types import FileSize, SizeBytes
 
 
 def test_file_size_equals():

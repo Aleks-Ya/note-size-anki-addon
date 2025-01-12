@@ -6,7 +6,7 @@ from typing import Any, Optional
 
 from .config_listener import ConfigListener
 from ..config.level_parser import LevelDict
-from ..types import SizePrecision
+from ..common.types import SizePrecision
 
 log: Logger = logging.getLogger(__name__)
 

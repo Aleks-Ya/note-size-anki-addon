@@ -8,7 +8,7 @@ from anki.notes import NoteId, Note
 
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.calculator.size_calculator import SizeCalculator
-from note_size.types import SizeBytes, SizeType, MediaFile
+from note_size.common.types import SizeBytes, SizeType, MediaFile
 from tests import wait_until, wait_until_exception
 from tests.conftest import size_calculator
 from tests.data import Data, DefaultFields, MediaFiles, FileContents

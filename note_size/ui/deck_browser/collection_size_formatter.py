@@ -15,7 +15,7 @@ from ...cache.media_cache import MediaCache
 from ...calculator.used_files_calculator import UsedFilesCalculator, UsedFiles
 from ...config.config import Config
 from ...config.settings import Settings
-from ...types import SizeBytes, FilesNumber, SizePrecision
+from ...common.types import SizeBytes, FilesNumber, SizePrecision
 from ...calculator.size_formatter import SizeFormatter
 
 log: Logger = logging.getLogger(__name__)

@@ -1,6 +1,6 @@
 from anki.notes import Note
 
-from note_size.types import SizeBytes, FileSize
+from note_size.common.types import SizeBytes, FileSize
 from note_size.ui.details_dialog.details_model import DetailsModel
 from note_size.ui.details_dialog.details_model_filler import DetailsModelFiller
 from tests.data import Data, MediaFiles

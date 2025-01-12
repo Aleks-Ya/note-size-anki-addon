@@ -3,7 +3,7 @@ from logging import Logger
 
 from aqt.qt import Qt, QTableWidgetItem, QIcon
 
-from ...types import FileType
+from ...common.types import FileType
 
 log: Logger = logging.getLogger(__name__)
 

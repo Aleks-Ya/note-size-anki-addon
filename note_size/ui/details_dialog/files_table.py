@@ -10,7 +10,7 @@ from .size_table_widget_item import SizeTableWidgetItem
 from ...calculator.size_formatter import SizeFormatter
 from ...config.config import Config
 from ...config.settings import Settings
-from ...types import MediaFile, SizeStr, FileType, FileSize, SizePrecision
+from ...common.types import MediaFile, SizeStr, FileType, FileSize, SizePrecision
 
 log: Logger = logging.getLogger(__name__)
 

@@ -8,7 +8,7 @@ from aqt.browser import ItemId
 
 from ....cache.item_id_cache import ItemIdCache
 from ....calculator.size_calculator import SizeCalculator
-from ....types import SizeBytes, SizeType
+from ....common.types import SizeBytes, SizeType
 
 log: Logger = logging.getLogger(__name__)
 

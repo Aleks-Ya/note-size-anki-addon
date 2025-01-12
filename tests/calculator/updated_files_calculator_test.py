@@ -2,7 +2,7 @@ from anki.notes import Note, NoteId
 
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
-from note_size.types import FileContent
+from note_size.common.types import FileContent
 from tests.data import Data, DefaultFields, MediaFiles, FileContents
 
 

@@ -7,7 +7,7 @@ from anki.notes import NoteId
 
 from ..cache.cache import Cache
 from ..cache.media_cache import MediaCache
-from ..types import MediaFile
+from ..common.types import MediaFile
 from ..calculator.size_calculator import SizeCalculator
 
 log: Logger = logging.getLogger(__name__)

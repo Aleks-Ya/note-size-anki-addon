@@ -7,7 +7,7 @@ from .editor_button_label import EditorButtonLabel
 from ....cache.size_str_cache import SizeStrCache
 from ....config.config import Config
 from ....config.level_parser import Level, LevelParser
-from ....types import SizeStr, SizeBytes, SizeType, SizePrecision
+from ....common.types import SizeStr, SizeBytes, SizeType, SizePrecision
 from ....calculator.size_calculator import SizeCalculator
 from ....calculator.size_formatter import SizeFormatter
 

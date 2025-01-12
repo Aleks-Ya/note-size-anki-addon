@@ -3,7 +3,7 @@ from logging import Logger
 from typing import Any
 
 from ..cache.cache import Cache
-from ..types import SizeStr, SizeBytes, SizePrecision
+from ..common.types import SizeStr, SizeBytes, SizePrecision
 
 log: Logger = logging.getLogger(__name__)
 

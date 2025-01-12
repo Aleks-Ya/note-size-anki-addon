@@ -4,7 +4,7 @@ from logging import Logger
 from typing import Optional, NewType
 
 from ..calculator.size_formatter import SizeFormatter
-from ..types import SizeStr, SizeBytes, SizePrecision
+from ..common.types import SizeStr, SizeBytes, SizePrecision
 
 log: Logger = logging.getLogger(__name__)
 

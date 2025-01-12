@@ -9,7 +9,7 @@ from note_size.cache.size_str_cache import SizeStrCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.calculator.size_formatter import SizeFormatter
 from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
-from note_size.types import SizeType, SizeBytes
+from note_size.common.types import SizeType, SizeBytes
 from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
 from tests import wait_until
 from tests.conftest import item_id_cache

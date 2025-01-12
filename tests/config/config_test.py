@@ -1,6 +1,6 @@
 from note_size.config.config import Config
 from note_size.config.config_listener import ConfigListener
-from note_size.types import SizePrecision
+from note_size.common.types import SizePrecision
 from tests.data import Data
 
 

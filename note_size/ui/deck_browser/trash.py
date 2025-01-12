@@ -4,7 +4,7 @@ from pathlib import Path
 
 from anki.collection import Collection
 
-from ...types import FilesNumber, SizeBytes
+from ...common.types import FilesNumber, SizeBytes
 
 log: Logger = logging.getLogger(__name__)
 

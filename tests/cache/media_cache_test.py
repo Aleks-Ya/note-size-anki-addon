@@ -4,7 +4,7 @@ import pytest
 from anki.notes import Note
 
 from note_size.cache.media_cache import MediaCache
-from note_size.types import SizeBytes, FilesNumber, MediaFile, FileSize
+from note_size.common.types import SizeBytes, FilesNumber, MediaFile, FileSize
 from tests.data import Data, MediaFiles, FileContents
 
 

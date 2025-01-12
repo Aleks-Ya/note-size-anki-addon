@@ -11,7 +11,7 @@ from ...cache.media_cache import MediaCache
 from ...calculator.size_calculator import SizeCalculator
 from ...calculator.size_formatter import SizeFormatter
 from ...config.config import Config
-from ...types import SizeStr, SizeBytes, MediaFile, SizeType, FileSize, SizePrecision
+from ...common.types import SizeStr, SizeBytes, MediaFile, SizeType, FileSize, SizePrecision
 
 log: Logger = logging.getLogger(__name__)
 

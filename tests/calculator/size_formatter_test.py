@@ -3,7 +3,7 @@ import timeit
 import pytest
 
 from note_size.calculator.size_formatter import SizeFormatter
-from note_size.types import SizeBytes, SizeStr
+from note_size.common.types import SizeBytes, SizeStr
 from tests.data import Precisions
 
 

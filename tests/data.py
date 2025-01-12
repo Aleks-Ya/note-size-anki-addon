@@ -9,7 +9,7 @@ from anki.notes import Note
 from aqt import gui_hooks
 
 from note_size.config.config import Config
-from note_size.types import MediaFile, FieldName, FieldContent, FileContent, SizePrecision
+from note_size.common.types import MediaFile, FieldName, FieldContent, FileContent, SizePrecision
 
 
 class MediaFiles:

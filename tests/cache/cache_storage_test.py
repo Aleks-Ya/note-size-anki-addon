@@ -18,7 +18,7 @@ from note_size.calculator.size_formatter import SizeFormatter
 from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
 from note_size.config.config import Config
 from note_size.config.settings import Settings
-from note_size.types import SizeType, FileType, FileSize, SizeBytes, SizePrecision
+from note_size.common.types import SizeType, FileType, FileSize, SizeBytes
 from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
 from tests.data import Data, MediaFiles, Precisions
 

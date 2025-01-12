@@ -8,7 +8,7 @@ from anki.notes import NoteId
 from .cache import Cache
 from ..calculator.size_calculator import SizeCalculator
 from ..calculator.size_formatter import SizeFormatter
-from ..types import SizeStr, SizeBytes, SizeType, SizePrecision
+from ..common.types import SizeStr, SizeBytes, SizeType, SizePrecision
 
 log: Logger = logging.getLogger(__name__)
 

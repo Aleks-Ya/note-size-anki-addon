@@ -13,7 +13,7 @@ from ....ui.common.browser_helper import BrowserHelper
 from ....cache.item_id_cache import ItemIdCache
 from ....cache.size_str_cache import SizeStrCache
 from ....config.config import Config
-from ....types import SizeType, SizePrecision
+from ....common.types import SizeType, SizePrecision
 
 log: Logger = logging.getLogger(__name__)
 

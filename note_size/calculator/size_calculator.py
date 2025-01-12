@@ -9,7 +9,7 @@ from anki.notes import Note, NoteId
 from .note_helper import NoteHelper
 from ..cache.cache import Cache
 from ..cache.media_cache import MediaCache
-from ..types import SizeBytes, MediaFile, SizeType, FileSize
+from ..common.types import SizeBytes, MediaFile, SizeType, FileSize
 
 log: Logger = logging.getLogger(__name__)
 

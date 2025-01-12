@@ -9,7 +9,7 @@ from note_size.calculator.size_calculator import SizeCalculator
 from note_size.config.level_parser import LevelParser
 from note_size.ui.editor.button.editor_button_formatter import EditorButtonFormatter
 from note_size.ui.editor.button.editor_button_label import EditorButtonLabel
-from note_size.types import SizeBytes, SizeType
+from note_size.common.types import SizeBytes, SizeType
 from tests.data import Data
 
 

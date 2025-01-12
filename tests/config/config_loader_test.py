@@ -7,7 +7,7 @@ from aqt.addons import AddonManager
 
 from note_size.config.config import Config
 from note_size.config.config_loader import ConfigLoader
-from note_size.types import SizePrecision
+from note_size.common.types import SizePrecision
 
 
 def test_empty_addon_dir(config_loader: ConfigLoader, module_dir: Path) -> None:

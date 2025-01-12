@@ -7,7 +7,7 @@ from note_size.cache.cache_manager import CacheManager
 from note_size.cache.cache_storage import CacheStorage
 from note_size.config.config import Config
 from note_size.config.settings import Settings
-from note_size.types import SizeType
+from note_size.common.types import SizeType
 from tests import wait_until
 from tests.conftest import cache_manager
 from tests.data import Data, MediaFiles, Precisions

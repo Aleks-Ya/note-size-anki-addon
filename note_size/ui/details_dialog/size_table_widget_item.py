@@ -3,7 +3,7 @@ from logging import Logger
 
 from aqt.qt import Qt, QTableWidgetItem
 
-from ...types import SizeStr, FileSize, MediaFile
+from ...common.types import SizeStr, FileSize, MediaFile
 
 log: Logger = logging.getLogger(__name__)
 

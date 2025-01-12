@@ -4,7 +4,7 @@ from anki.notes import Note
 from aqt.browser import ItemId
 
 from note_size.ui.browser.column.item_id_sorter import ItemIdSorter
-from note_size.types import SizeType
+from note_size.common.types import SizeType
 from tests.data import Data
 
 
