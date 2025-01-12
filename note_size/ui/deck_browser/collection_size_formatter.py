@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup, Tag
 
 from .js_actions import JsActions
 from .trash import Trash
-from ..common.number_formatter import NumberFormatter
+from ...common.number_formatter import NumberFormatter
 from ...cache.item_id_cache import ItemIdCache
 from ...cache.media_cache import MediaCache
 from ...calculator.used_files_calculator import UsedFilesCalculator, UsedFiles

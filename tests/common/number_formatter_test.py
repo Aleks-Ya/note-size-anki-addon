@@ -1,4 +1,4 @@
-from note_size.ui.common.number_formatter import NumberFormatter
+from note_size.common.number_formatter import NumberFormatter
 
 
 def test_with_thousand_separator():

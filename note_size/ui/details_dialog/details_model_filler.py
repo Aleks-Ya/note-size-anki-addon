@@ -6,7 +6,7 @@ from typing import Sequence
 from anki.notes import Note, NoteId
 
 from .details_model import DetailsModel
-from ..common.number_formatter import NumberFormatter
+from ...common.number_formatter import NumberFormatter
 from ...cache.media_cache import MediaCache
 from ...calculator.size_calculator import SizeCalculator
 from ...calculator.size_formatter import SizeFormatter

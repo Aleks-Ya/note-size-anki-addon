@@ -13,8 +13,8 @@ from .item_id_cache import ItemIdCache
 from .size_str_cache import SizeStrCache
 from ..calculator.size_calculator import SizeCalculator
 from ..config.config import Config
-from ..types import SizeType, MediaFile, SizePrecision
-from ..ui.common.number_formatter import NumberFormatter
+from note_size.common.types import SizeType, MediaFile, SizePrecision
+from ..common.number_formatter import NumberFormatter
 from ..ui.details_dialog.file_type_helper import FileTypeHelper
 
 log: Logger = logging.getLogger(__name__)

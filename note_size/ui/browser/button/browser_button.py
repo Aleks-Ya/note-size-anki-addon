@@ -10,7 +10,7 @@ from aqt.progress import ProgressManager
 from aqt.qt import QPushButton
 
 from ....ui.common.browser_helper import BrowserHelper
-from ....ui.common.number_formatter import NumberFormatter
+from ....common.number_formatter import NumberFormatter
 from ....ui.details_dialog.details_dialog import DetailsDialog
 from ....ui.details_dialog.show_details_dialog_op import ShowDetailsDialogOp
 from ....cache.item_id_cache import ItemIdCache
