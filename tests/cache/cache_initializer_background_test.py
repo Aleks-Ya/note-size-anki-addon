@@ -16,7 +16,7 @@ from note_size.config.config import Config
 from note_size.common.types import FileType, SizeType, FileSize, SizeBytes
 from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
 from tests.conftest import cache_manager
-from tests.data import Data, MediaFiles, Precisions
+from tests.data import Data, MediaFiles, Digits
 
 update_progress_history: list[str] = []
 
@@ -64,11 +64,11 @@ def test_initialize_caches(td: Data, col: Collection, cache_manager: CacheManage
                                                            MediaFiles.picture: FileSize(SizeBytes(7)),
                                                            MediaFiles.sound: FileSize(SizeBytes(5))},
                                                card2.nid: {}}]
-    assert size_formatter.as_dict_list() == [{SizeBytes(0): {Precisions.zero: '0 B', Precisions.one: '0 B'},
-                                              SizeBytes(21): {Precisions.zero: '21 B', Precisions.one: '21 B'},
-                                              SizeBytes(71): {Precisions.zero: '71 B', Precisions.one: '71 B'},
-                                              SizeBytes(123): {Precisions.zero: '123 B', Precisions.one: '123 B'},
-                                              SizeBytes(144): {Precisions.zero: '144 B', Precisions.one: '144 B'}}]
+    assert size_formatter.as_dict_list() == [{SizeBytes(0): {Digits.two: '0 B'},
+                                              SizeBytes(21): {Digits.two: '21 B'},
+                                              SizeBytes(71): {Digits.two: '71 B'},
+                                              SizeBytes(123): {Digits.two: '123 B'},
+                                              SizeBytes(144): {Digits.two: '144 B'}}]
     assert file_type_helper.as_dict_list() == [{MediaFiles.animation: FileType.IMAGE,
                                                 MediaFiles.picture: FileType.IMAGE,
                                                 MediaFiles.sound: FileType.AUDIO}]

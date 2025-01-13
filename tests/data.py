@@ -9,7 +9,7 @@ from anki.notes import Note
 from aqt import gui_hooks
 
 from note_size.config.config import Config
-from note_size.common.types import MediaFile, FieldName, FieldContent, FileContent, SizePrecision
+from note_size.common.types import MediaFile, FieldName, FieldContent, FileContent, SignificantDigits
 
 
 class MediaFiles:
@@ -39,10 +39,11 @@ class DefaultFields:
     back_field_content_2: FieldContent = FieldContent('Another field on the back card ∆¥')
 
 
-class Precisions:
-    zero: SizePrecision = SizePrecision(0)
-    one: SizePrecision = SizePrecision(1)
-    three: SizePrecision = SizePrecision(3)
+class Digits:
+    zero: SignificantDigits = SignificantDigits(0)
+    one: SignificantDigits = SignificantDigits(1)
+    two: SignificantDigits = SignificantDigits(2)
+    three: SignificantDigits = SignificantDigits(3)
 
 
 class Data:

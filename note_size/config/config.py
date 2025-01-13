@@ -6,7 +6,7 @@ from typing import Any, Optional
 
 from .config_listener import ConfigListener
 from ..config.level_parser import LevelDict
-from ..common.types import SizePrecision
+from ..common.types import SignificantDigits
 
 log: Logger = logging.getLogger(__name__)
 
@@ -21,7 +21,7 @@ class Config:
     __key_2_warmup_enabled: str = 'Warmup Enabled'
     __key_2_store_cache_in_file_enabled: str = 'Store Cache In File Enabled'
     __key_2_deck_browser_show_collection_size: str = 'Show Collection Size'
-    __key_2_size_precision: str = 'Size Precision'
+    __key_2_significant_digits: str = 'Significant Digits'
     __key_2_logger_level: str = 'Logger Level'
     __key_2_size_button_enabled: str = 'Enabled'
     __key_2_color: str = 'Color'
@@ -79,11 +79,11 @@ class Config:
     def set_deck_browser_show_collection_size(self, show_collection_size: bool) -> None:
         self.__set(show_collection_size, self.__key_1_deck_browser, self.__key_2_deck_browser_show_collection_size)
 
-    def get_deck_browser_size_precision(self) -> SizePrecision:
-        return self.__config[self.__key_1_deck_browser][self.__key_2_size_precision]
+    def get_deck_browser_significant_digits(self) -> SignificantDigits:
+        return self.__config[self.__key_1_deck_browser][self.__key_2_significant_digits]
 
-    def set_deck_browser_size_precision(self, size_precision: SizePrecision) -> None:
-        self.__set(size_precision, self.__key_1_deck_browser, self.__key_2_size_precision)
+    def set_deck_browser_significant_digits(self, significant_digits: SignificantDigits) -> None:
+        self.__set(significant_digits, self.__key_1_deck_browser, self.__key_2_significant_digits)
 
     def get_browser_show_found_notes_size(self) -> bool:
         return self.__config[self.__key_1_browser][self.__key_2_browser_show_found_notes_size]
@@ -91,11 +91,11 @@ class Config:
     def set_browser_show_found_notes_size(self, show_found_notes_size_size: bool) -> None:
         self.__set(show_found_notes_size_size, self.__key_1_browser, self.__key_2_browser_show_found_notes_size)
 
-    def get_browser_size_precision(self) -> SizePrecision:
-        return self.__config[self.__key_1_browser][self.__key_2_size_precision]
+    def get_browser_significant_digits(self) -> SignificantDigits:
+        return self.__config[self.__key_1_browser][self.__key_2_significant_digits]
 
-    def set_browser_size_precision(self, size_precision: SizePrecision) -> None:
-        self.__set(size_precision, self.__key_1_browser, self.__key_2_size_precision)
+    def set_browser_significant_digits(self, significant_digits: SignificantDigits) -> None:
+        self.__set(significant_digits, self.__key_1_browser, self.__key_2_significant_digits)
 
     def get_log_level(self) -> str:
         return self.__config[self.__key_1_logging][self.__key_2_logger_level]
@@ -109,11 +109,11 @@ class Config:
     def set_size_button_enabled(self, size_button_enabled: bool) -> None:
         self.__set(size_button_enabled, self.__key_1_size_button, self.__key_2_size_button_enabled)
 
-    def get_size_button_size_precision(self) -> SizePrecision:
-        return self.__config[self.__key_1_size_button][self.__key_2_size_precision]
+    def get_size_button_significant_digits(self) -> SignificantDigits:
+        return self.__config[self.__key_1_size_button][self.__key_2_significant_digits]
 
-    def set_size_button_size_precision(self, size_precision: SizePrecision) -> None:
-        self.__set(size_precision, self.__key_1_size_button, self.__key_2_size_precision)
+    def set_size_button_significant_digits(self, significant_digits: SignificantDigits) -> None:
+        self.__set(significant_digits, self.__key_1_size_button, self.__key_2_significant_digits)
 
     def get_size_button_color_enabled(self) -> bool:
         return self.__config[self.__key_1_size_button][self.__key_2_color][self.__key_3_size_button_color_enabled]

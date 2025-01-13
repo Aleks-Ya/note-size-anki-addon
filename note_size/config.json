@@ -1,7 +1,7 @@
 {
   "Browser": {
     "Show Found Notes Size": true,
-    "Size Precision": 1
+    "Significant Digits": 2
   },
   "Cache": {
     "Warmup Enabled": true,
@@ -9,7 +9,7 @@
   },
   "Deck Browser": {
     "Show Collection Size": true,
-    "Size Precision": 0
+    "Significant Digits": 2
   },
   "Logging": {
     "Logger Level": "DEBUG"
@@ -19,7 +19,7 @@
   },
   "Size Button": {
     "Enabled": true,
-    "Size Precision": 1,
+    "Significant Digits": 2,
     "Color": {
       "Enabled": true,
       "Levels": [

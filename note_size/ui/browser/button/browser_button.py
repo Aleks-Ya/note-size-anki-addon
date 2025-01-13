@@ -16,7 +16,7 @@ from ....ui.details_dialog.show_details_dialog_op import ShowDetailsDialogOp
 from ....cache.item_id_cache import ItemIdCache
 from ....cache.size_str_cache import SizeStrCache
 from ....config.config import Config
-from ....common.types import SizeType, SizeStr, SizePrecision
+from ....common.types import SizeType, SizeStr, SignificantDigits
 
 log: Logger = logging.getLogger(__name__)
 
@@ -57,8 +57,8 @@ class BrowserButton(QPushButton):
             self.__show_cards_size(card_ids)
 
     def __show_notes_size(self, note_ids: Sequence[NoteId]) -> None:
-        size_precision: SizePrecision = self.__config.get_size_button_size_precision()
-        size: SizeStr = self.__size_str_cache.get_notes_size_str(note_ids, SizeType.TOTAL, size_precision,
+        significant_digits: SignificantDigits = self.__config.get_size_button_significant_digits()
+        size: SizeStr = self.__size_str_cache.get_notes_size_str(note_ids, SizeType.TOTAL, significant_digits,
                                                                  use_cache=True)
         self.setText(size)
         note_ids_number: str = NumberFormatter.with_thousands_separator(len(note_ids))
@@ -70,8 +70,8 @@ class BrowserButton(QPushButton):
 
     def __show_cards_size(self, card_ids: Sequence[CardId]) -> None:
         note_ids: Sequence[NoteId] = self.__item_ids_to_note_ids(card_ids)
-        size_precision: SizePrecision = self.__config.get_size_button_size_precision()
-        size: SizeStr = self.__size_str_cache.get_notes_size_str(note_ids, SizeType.TOTAL, size_precision,
+        significant_digits: SignificantDigits = self.__config.get_size_button_significant_digits()
+        size: SizeStr = self.__size_str_cache.get_notes_size_str(note_ids, SizeType.TOTAL, significant_digits,
                                                                  use_cache=True)
         self.setText(size)
         note_ids_number: str = NumberFormatter.with_thousands_separator(len(note_ids))

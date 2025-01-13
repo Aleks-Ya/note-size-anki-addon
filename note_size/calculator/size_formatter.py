@@ -3,7 +3,7 @@ from logging import Logger
 from typing import Any
 
 from ..cache.cache import Cache
-from ..common.types import SizeStr, SizeBytes, SizePrecision
+from ..common.types import SizeStr, SizeBytes, SignificantDigits
 
 log: Logger = logging.getLogger(__name__)
 
@@ -12,19 +12,20 @@ class SizeFormatter(Cache):
 
     def __init__(self) -> None:
         super().__init__()
-        self.__bytes_to_str_cache: dict[SizeBytes, dict[SizePrecision, SizeStr]] = {}
+        self.__bytes_to_str_cache: dict[SizeBytes, dict[SignificantDigits, SizeStr]] = {}
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def bytes_to_str(self, size: SizeBytes, precision: SizePrecision, use_cache: bool = True,
+    def bytes_to_str(self, size: SizeBytes, significant_digits: SignificantDigits, use_cache: bool = True,
                      unit_separator: str = " ") -> SizeStr:
         with self._lock:
-            if use_cache and size in self.__bytes_to_str_cache and precision in self.__bytes_to_str_cache[size]:
-                return self.__bytes_to_str_cache[size][precision]
+            if use_cache and size in self.__bytes_to_str_cache and significant_digits in self.__bytes_to_str_cache[
+                size]:
+                return self.__bytes_to_str_cache[size][significant_digits]
             else:
-                size_str: SizeStr = self.__bytes_to_str(size, precision, unit_separator)
+                size_str: SizeStr = self.__bytes_to_str(size, significant_digits, unit_separator)
                 if size not in self.__bytes_to_str_cache:
                     self.__bytes_to_str_cache[size] = {}
-                self.__bytes_to_str_cache[size][precision] = size_str
+                self.__bytes_to_str_cache[size][significant_digits] = size_str
                 return size_str
 
     @staticmethod
@@ -59,16 +60,15 @@ class SizeFormatter(Cache):
             return len(self.__bytes_to_str_cache)
 
     @staticmethod
-    def __bytes_to_str(size: SizeBytes, precision: SizePrecision, unit_separator: str = " ") -> SizeStr:
+    def __bytes_to_str(size: SizeBytes, significant_digits: SignificantDigits, unit_separator: str = " ") -> SizeStr:
         divisor: int = 1024
-        units: tuple[str, str, str] = 'B', 'KB', 'MB'
-        final_unit: str = 'GB'
-        num: float = float(size)
-        for unit in units:
-            if abs(num) < divisor:
-                if unit == 'B':
-                    return SizeStr(f'{num:0.0f}{unit_separator}{unit}')
-                else:
-                    return SizeStr(f'{num:0.{precision}f}{unit_separator}{unit}')
+        byte_unit: str = 'B'
+        units: list[str] = [byte_unit, 'KB', 'MB', 'GB']
+        num: float = size
+        unit_index: int = 0
+        while num >= divisor and unit_index < len(units) - 1:
             num /= divisor
-        return SizeStr(f'{num:0.{precision}f}{unit_separator}{final_unit}')
+            unit_index += 1
+        unit: str = units[unit_index]
+        precision: int = max(0, significant_digits - len(str(int(num)))) if unit != byte_unit else 0
+        return SizeStr(f"{num:.{precision}f}{unit_separator}{unit}")

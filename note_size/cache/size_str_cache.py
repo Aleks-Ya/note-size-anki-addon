@@ -8,7 +8,7 @@ from anki.notes import NoteId
 from .cache import Cache
 from ..calculator.size_calculator import SizeCalculator
 from ..calculator.size_formatter import SizeFormatter
-from ..common.types import SizeStr, SizeBytes, SizeType, SizePrecision
+from ..common.types import SizeStr, SizeBytes, SizeType, SignificantDigits
 
 log: Logger = logging.getLogger(__name__)
 
@@ -20,28 +20,28 @@ class SizeStrCache(Cache):
         self.__col: Collection = col
         self.__size_calculator: SizeCalculator = size_calculator
         self.__size_formatter: SizeFormatter = size_formatter
-        self.__size_str_caches: dict[SizeType, dict[NoteId, dict[SizePrecision, SizeStr]]] = {}
+        self.__size_str_caches: dict[SizeType, dict[NoteId, dict[SignificantDigits, SizeStr]]] = {}
         self.invalidate_cache()
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def get_notes_size_str(self, note_ids: Sequence[NoteId], size_type: SizeType, precision: SizePrecision,
+    def get_notes_size_str(self, note_ids: Sequence[NoteId], size_type: SizeType, significant_digits: SignificantDigits,
                            use_cache: bool, ) -> SizeStr:
         with self._lock:
             size: SizeBytes = self.__size_calculator.get_notes_size(note_ids, size_type, use_cache)
-            return self.__size_formatter.bytes_to_str(size, precision)
+            return self.__size_formatter.bytes_to_str(size, significant_digits)
 
-    def get_note_size_str(self, note_id: NoteId, size_type: SizeType, precision: SizePrecision,
+    def get_note_size_str(self, note_id: NoteId, size_type: SizeType, significant_digits: SignificantDigits,
                           use_cache: bool) -> SizeStr:
         with self._lock:
-            cache: dict[NoteId, dict[SizePrecision, SizeStr]] = self.__size_str_caches[size_type]
-            if use_cache and note_id in cache and precision in cache[note_id]:
-                return cache[note_id][precision]
+            cache: dict[NoteId, dict[SignificantDigits, SizeStr]] = self.__size_str_caches[size_type]
+            if use_cache and note_id in cache and significant_digits in cache[note_id]:
+                return cache[note_id][significant_digits]
             else:
                 size: SizeBytes = self.__size_calculator.get_note_size(note_id, size_type, use_cache)
                 if note_id not in cache:
                     cache[note_id] = {}
-                cache[note_id][precision] = self.__size_formatter.bytes_to_str(size, precision)
-                return cache[note_id][precision]
+                cache[note_id][significant_digits] = self.__size_formatter.bytes_to_str(size, significant_digits)
+                return cache[note_id][significant_digits]
 
     def evict_note(self, note_id: NoteId) -> None:
         with self._lock:

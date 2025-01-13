@@ -13,7 +13,7 @@ from ....ui.common.browser_helper import BrowserHelper
 from ....cache.item_id_cache import ItemIdCache
 from ....cache.size_str_cache import SizeStrCache
 from ....config.config import Config
-from ....common.types import SizeType, SizePrecision
+from ....common.types import SizeType, SignificantDigits
 
 log: Logger = logging.getLogger(__name__)
 
@@ -91,8 +91,8 @@ class ColumnHooks:
         if column_key in columns:
             column_index: int = columns.index(column_key)
             cell: Cell = row.cells[column_index]
-            size_precision: SizePrecision = self.__config.get_browser_size_precision()
-            cell.text = self.__size_str_cache.get_note_size_str(note_id, size_type, size_precision, use_cache=True)
+            significant_digits: SignificantDigits = self.__config.get_browser_significant_digits()
+            cell.text = self.__size_str_cache.get_note_size_str(note_id, size_type, significant_digits, use_cache=True)
 
     @staticmethod
     def __on_browser_will_search(context: SearchContext) -> None:

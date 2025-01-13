@@ -15,7 +15,7 @@ from ...cache.media_cache import MediaCache
 from ...calculator.used_files_calculator import UsedFilesCalculator, UsedFiles
 from ...config.config import Config
 from ...config.settings import Settings
-from ...common.types import SizeBytes, FilesNumber, SizePrecision
+from ...common.types import SizeBytes, FilesNumber, SignificantDigits
 from ...calculator.size_formatter import SizeFormatter
 
 log: Logger = logging.getLogger(__name__)
@@ -122,8 +122,8 @@ class CollectionSizeFormatter:
         outer_span.string = f"{name}: "
         if size is not None:
             separator: str = " "
-            size_precision: SizePrecision = self.__config.get_deck_browser_size_precision()
-            size_split: list[str] = self.__size_formatter.bytes_to_str(size, size_precision,
+            significant_digits: SignificantDigits = self.__config.get_deck_browser_significant_digits()
+            size_split: list[str] = self.__size_formatter.bytes_to_str(size, significant_digits,
                                                                        unit_separator=separator).split(separator)
             number: str = size_split[0]
             unit: str = size_split[1]

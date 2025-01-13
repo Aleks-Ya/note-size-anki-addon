@@ -11,7 +11,7 @@ from note_size.calculator.size_formatter import SizeFormatter
 from note_size.ui.deck_browser.collection_size_formatter import CollectionSizeFormatter
 from note_size.ui.deck_browser.trash import Trash
 from note_size.common.types import MediaFile, SizeBytes
-from tests.data import Data, Precisions
+from tests.data import Data, Digits
 
 web_path: str = os.path.join("_addons", "1188705668", "ui", "web")
 info_png_path: str = os.path.join(web_path, "info.png")
@@ -31,7 +31,7 @@ def test_format_note_detailed_text(col: Collection, td: Data, collection_size_fo
     <div>
         <span style='margin-right: 0.5em;' title='Size of 2 notes in file "{col.path}"'>
             Collection:&nbsp;
-            <span style='font-family:Consolas,monospace;display: inline-block;'>4</span>&nbsp;&nbsp;&nbsp;
+            <span style='font-family:Consolas,monospace;display: inline-block;'>4.0</span>&nbsp;&nbsp;&nbsp;
             <span style="font-family:Consolas,monospace;display: inline-block;">KB</span>
         </span>
         <span style='margin-right: 0.5em;' 
@@ -59,7 +59,7 @@ def test_format_note_detailed_text(col: Collection, td: Data, collection_size_fo
          </span>
         <span style='margin-right: 0.5em;' title='Total size of collection, media files, unused files and trash files'>
             Total:&nbsp;
-            <span style='font-family:Consolas,monospace;display: inline-block;'>4</span>
+            <span style='font-family:Consolas,monospace;display: inline-block;'>4.0</span>
             <span style="font-family:Consolas,monospace;display: inline-block;">KB</span>
         </span>
         <img height="12" onclick="pycmd('open-config-action')" 
@@ -119,7 +119,7 @@ def test_empty_unused_and_trash(col: Collection, td: Data, collection_size_forma
     <div>
         <span style='margin-right: 0.5em;' title='Size of 2 notes in file "{col.path}"'>
             Collection:&nbsp;
-            <span style='font-family:Consolas,monospace;display: inline-block;'>4</span>&nbsp;&nbsp;&nbsp;
+            <span style='font-family:Consolas,monospace;display: inline-block;'>4.0</span>&nbsp;&nbsp;&nbsp;
             <span style="font-family:Consolas,monospace;display: inline-block;">KB</span>
         </span>
         <span style='margin-right: 0.5em;' 
@@ -147,7 +147,7 @@ def test_empty_unused_and_trash(col: Collection, td: Data, collection_size_forma
          </span>
         <span style='margin-right: 0.5em;' title='Total size of collection, media files, unused files and trash files'>
             Total:&nbsp;
-            <span style='font-family:Consolas,monospace;display: inline-block;'>4</span>
+            <span style='font-family:Consolas,monospace;display: inline-block;'>4.0</span>
             <span style="font-family:Consolas,monospace;display: inline-block;">KB</span>
         </span>
         <img height="12" onclick="pycmd('open-config-action')" 
@@ -162,6 +162,6 @@ def test_empty_unused_and_trash(col: Collection, td: Data, collection_size_forma
 @pytest.mark.performance
 def test_bytes_to_str_performance(size_formatter: SizeFormatter):
     size_bytes: SizeBytes = SizeBytes(123_456_789)
-    execution_time: float = timeit.timeit(lambda: size_formatter.bytes_to_str(size_bytes, Precisions.one),
+    execution_time: float = timeit.timeit(lambda: size_formatter.bytes_to_str(size_bytes, Digits.one),
                                           number=500_000)
     assert execution_time <= 1
