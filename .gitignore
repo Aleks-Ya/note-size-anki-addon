@@ -10,3 +10,6 @@ meta.json
 .coverage
 coverage.xml
 .scannerwork
+*.c
+*.so
+*.o
