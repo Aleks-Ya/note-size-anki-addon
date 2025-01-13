@@ -1,6 +1,10 @@
 # Changelog for "Note Size" Anki addon
 
-## [v2.6.1](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.6.0) - 2025-01-13
+## [v2.7.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.7.0) - 2025-01-15
+
+1. __[MISC]__ Execute unit-tests on MacOS
+
+## [v2.6.1](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.6.1) - 2025-01-13
 
 1. __[FEATURE]__ Replace "Size Precision" configuration property with "Significant Digits" (JSON only)
 
