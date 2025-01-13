@@ -3,27 +3,57 @@ import timeit
 import pytest
 
 from note_size.calculator.size_formatter import SizeFormatter
-from note_size.common.types import SizeBytes, SizeStr
+from note_size.common.types import SizeBytes, SizeStr, SizePrecision
 from tests.data import Precisions
 
 
-def test_bytes_to_str(size_formatter: SizeFormatter):
-    assert size_formatter.bytes_to_str(SizeBytes(0), Precisions.one) == SizeStr("0 B")
-    assert size_formatter.bytes_to_str(SizeBytes(456), Precisions.one) == SizeStr("456 B")
-    assert size_formatter.bytes_to_str(SizeBytes(1_456), Precisions.one) == SizeStr("1.4 KB")
-    assert size_formatter.bytes_to_str(SizeBytes(1_600_456), Precisions.one) == SizeStr("1.5 MB")
-    assert size_formatter.bytes_to_str(SizeBytes(1_784_600_456), Precisions.one) == SizeStr("1.7 GB")
-    assert size_formatter.bytes_to_str(SizeBytes(1_746_784_600_456), Precisions.one) == SizeStr("1626.8 GB")
+@pytest.mark.parametrize("size_bytes,precision,size_str", [
+    (5, Precisions.zero, '5 B'),
+    (5, Precisions.one, '5 B'),
+    (5, Precisions.three, '5 B'),
+    (20, Precisions.zero, '20 B'),
+    (20, Precisions.one, '20 B'),
+    (20, Precisions.three, '20 B'),
+    (456, Precisions.zero, '456 B'),
+    (456, Precisions.one, '456 B'),
+    (456, Precisions.three, '456 B'),
+
+    (1024, Precisions.zero, '1 KB'),
+    (1024, Precisions.one, '1.0 KB'),
+    (1024, Precisions.three, '1.000 KB'),
+    (45_654, Precisions.zero, '45 KB'),
+    (45_654, Precisions.one, '44.6 KB'),
+    (45_654, Precisions.three, '44.584 KB'),
+    (987_654, Precisions.zero, '965 KB'),
+    (987_654, Precisions.one, '964.5 KB'),
+    (987_654, Precisions.three, '964.506 KB'),
+
+    (1_234_567, Precisions.zero, '1 MB'),
+    (1_234_567, Precisions.one, '1.2 MB'),
+    (1_234_567, Precisions.three, '1.177 MB'),
+
+    (1_123_234_567, Precisions.zero, '1 GB'),
+    (1_123_234_567, Precisions.one, '1.0 GB'),
+    (1_123_234_567, Precisions.three, '1.046 GB'),
+    (1_567_123_234_567, Precisions.zero, '1459 GB'),
+    (1_567_123_234_567, Precisions.one, '1459.5 GB'),
+    (1_567_123_234_567, Precisions.three, '1459.497 GB'),
+])
+def test_bytes_to_str(size_formatter: SizeFormatter, size_bytes: int, precision: SizePrecision, size_str: str):
+    assert size_formatter.bytes_to_str(SizeBytes(size_bytes), precision) == SizeStr(size_str)
 
 
-def test_str_to_bytes(size_formatter: SizeFormatter):
-    assert size_formatter.str_to_bytes(SizeStr("0 B")) == SizeBytes(0)
-    assert size_formatter.str_to_bytes(SizeStr("456 B")) == SizeBytes(456)
-    assert size_formatter.str_to_bytes(SizeStr("456B")) == SizeBytes(456)
-    assert size_formatter.str_to_bytes(SizeStr("1.4 KB")) == SizeBytes(1_433)
-    assert size_formatter.str_to_bytes(SizeStr("1.4KB")) == SizeBytes(1_433)
-    assert size_formatter.str_to_bytes(SizeStr("1.5 MB")) == SizeBytes(1_572_864)
-    assert size_formatter.str_to_bytes(SizeStr("1626.8 GB")) == SizeBytes(1_746_763_199_283)
+@pytest.mark.parametrize("size_str,size_bytes", [
+    ("0 B", 0),
+    ("456 B", 456),
+    ("456B", 456),
+    ("1.4 KB", 1_433),
+    ("1.4KB", 1_433),
+    ("1.5 MB", 1_572_864),
+    ("1626.8 GB", 1_746_763_199_283),
+])
+def test_str_to_bytes(size_formatter: SizeFormatter, size_str: str, size_bytes: int):
+    assert size_formatter.str_to_bytes(SizeStr(size_str)) == SizeBytes(size_bytes)
 
 
 @pytest.mark.performance

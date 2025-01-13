@@ -42,6 +42,7 @@ class DefaultFields:
 class Precisions:
     zero: SizePrecision = SizePrecision(0)
     one: SizePrecision = SizePrecision(1)
+    three: SizePrecision = SizePrecision(3)
 
 
 class Data:
