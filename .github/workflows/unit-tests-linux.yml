@@ -1,4 +1,4 @@
-name: Execute unit-tests
+name: Unit-tests (Linux)
 
 on:
   push:
@@ -17,13 +17,13 @@ jobs:
         with:
           fetch-depth: 0
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
           python-version: "3.9"
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libegl1 xvfb libxkbcommon-x11-0 libnss3 libxcomposite1 libxdamage1 libxrandr-dev libxtst6 libxi6 libasound2
+          sudo apt-get install -y libegl1 xvfb libxkbcommon-x11-0 libnss3 libxcomposite1 libxdamage1 libxrandr-dev libxtst6 libxi6
           pip install --root-user-action=ignore --upgrade pip tox
       - name: Tox
         run: tox
