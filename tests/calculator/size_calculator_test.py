@@ -32,6 +32,12 @@ def test_calculate_note_size_text_unicode(size_calculator: SizeCalculator, td: D
     assert size == SizeBytes(15)
 
 
+def test_calculate_note_size_non_ascii_character(size_calculator: SizeCalculator, td: Data):
+    note: Note = td.create_note_with_given_fields('A\u2068B\u2069C', '')
+    size: SizeBytes = size_calculator.calculate_note_size(note, SizeType.TEXTS, use_cache=False)
+    assert size == SizeBytes(9)
+
+
 @pytest.mark.performance
 def test_calculate_note_size_text_performance(size_calculator: SizeCalculator, note: Note):
     execution_time: float = timeit.timeit(
