@@ -7,7 +7,6 @@ from subprocess import CompletedProcess
 
 import setuptools
 from setuptools import Command
-from git import TagReference, Repo, Commit
 
 
 def _read_long_description():
@@ -88,6 +87,7 @@ class MakeDistributionCommand(Command):
 
     @staticmethod
     def __generate_manifest(dest_subdir: Path):
+        from git import TagReference, Repo, Commit
         repo: Repo = Repo(".", search_parent_directories=True)
         version: str = f"v{_version}"
         tag: TagReference = repo.tag(version)
