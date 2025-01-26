@@ -72,7 +72,7 @@ Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
 
 ## Build
 
-1. Build ZIP: `python setup.py dist` (includes unit-tests)
+1. Build ZIP: `./build_dist.sh` (includes unit-tests)
 2. Output: `./dist/note-size-X.X-X.zip`
 
 ## Execute GitHub Actions locally
@@ -100,7 +100,7 @@ Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
     1. Major: `bump-my-version bump major -v`
     2. Minor: `bump-my-version bump minor -v`
     3. Patch: `bump-my-version bump patch -v`
-5. Build ZIP: `python setup.py dist`
+5. Build ZIP: `./build_dist.sh`
 6. Upload ZIP to the Addon page: https://ankiweb.net/shared/info/1188705668
 7. Push Git branch and tags: `git push --follow-tags`
 8. Create a GitHub release from tag: https://github.com/Aleks-Ya/note-size-anki-addon/releases
