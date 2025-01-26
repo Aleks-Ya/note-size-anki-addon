@@ -58,7 +58,7 @@ class MakeDistributionCommand(Command):
     def __run_integration_tests():
         print("Running integration tests...")
         result: CompletedProcess[str] = subprocess.run(
-            ['pytest', '-m', 'integration'], capture_output=True, text=True)
+            ['tox', '-e', 'integration'], capture_output=True, text=True)
         if result.returncode != 0:
             print(result.stderr)
             print(result.stdout)

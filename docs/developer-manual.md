@@ -44,7 +44,8 @@ Run automated tests:
 
 1. Prerequisites: [Setup Python virtual environment](#setup-python-virtual-environment)
 2. Activate virtual environment: `pyenv activate note-size-anki-addon`
-3. Run unit-tests: `tox`
+3. Run unit tests: `tox`
+4. Run integration tests: `tox -e integration`
 
 Run all tests except performance tests: `pytest -m "not performance"`
 
