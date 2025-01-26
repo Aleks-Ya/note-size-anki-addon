@@ -1,3 +1,5 @@
+set -e
+
 if [ "$(ls -A docs)" ]; then
    rm -r docs/*
 fi
