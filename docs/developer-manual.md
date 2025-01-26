@@ -84,14 +84,14 @@ Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
 
 1. Install: `pip install md-toc`
 2. Edit documentation in `docs-template` folder
-3. Update documentation: `./docs_render.sh`
+3. Update documentation: `./render_docs.sh`
 4. Output docs: `docs` folder
 5. Commit `docs` folder
 
 ## Release
 
 1. Update `CHANGELOG.md` manually
-2. Update documentation: `./docs_render.sh`
+2. Update documentation: `./render_docs.sh`
 3. CI:
     1. Push: `git push`
     2. Check GitHub actions: https://github.com/Aleks-Ya/note-size-anki-addon/actions
