@@ -118,7 +118,6 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Aleks-Ya/note-size-anki-addon",
     packages=list(),
-    test_suite="tests",
     cmdclass={
         'dist': MakeDistributionCommand,
     },
