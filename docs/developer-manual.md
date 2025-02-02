@@ -24,9 +24,7 @@
 1. Install Tox:
     1. Install PIPX: `pip install pipx`
     2. Install Tox: `pipx install tox`
-2. Install PyEnv:
-    1. Install PyEnv: `brew install pyenv`
-    2. Install VirtualEnv: `brew install pyenv-virtualenv`
+2. Install PyEnv: `brew install pyenv pyenv-virtualenv`
 3. Create virtual environment:
     1. `pyenv install 3.9.18`
     2. `pyenv virtualenv 3.9.18 note-size-anki-addon`
