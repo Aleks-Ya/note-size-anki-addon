@@ -1,0 +1,6 @@
+mock
+pytest
+pytest-sugar
+pytest-cov
+pytest-qt
+PyQtPath

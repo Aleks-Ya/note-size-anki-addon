@@ -4,7 +4,7 @@ import pytest
 from anki.collection import BrowserColumns
 from anki.notes import Note
 from aqt import gui_hooks
-from aqt.browser import Column, ItemId, CellRow, Cell, SearchContext
+from aqt.browser import Column, ItemId, CellRow, SearchContext
 from mock.mock import MagicMock
 
 from note_size.cache.item_id_cache import ItemIdCache
@@ -92,12 +92,13 @@ def test_modify_row(td: Data, column_hooks: ColumnHooks):
     row: CellRow = CellRow.generic(4, init_text)
     columns: Sequence[str] = ["English", "note-size-total", "note-size-texts", "note-size-files"]
     gui_hooks.browser_did_fetch_row(item_id, is_note, row, columns)
-    assert row.cells == (
-        Cell(init_text, False),
-        Cell("143 B", False),
-        Cell("122 B", False),
-        Cell("21 B", False)
-    )
+    cells: list[str] = [f"{cell.text} - {cell.is_rtl}" for cell in row.cells]
+    assert cells == [
+        "init text - False",
+        "143 B - False",
+        "122 B - False",
+        "21 B - False"
+    ]
 
 
 def test_sort_rows_by_column(td: Data, column_hooks: ColumnHooks):

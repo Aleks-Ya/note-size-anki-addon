@@ -17,7 +17,7 @@
     2. `pyenv virtualenv 3.9.18 note-size-anki-addon`
 4. Install Anki packages
     1. Activate virtual environment: `pyenv activate note-size-anki-addon`
-    2. Install packages: `pip install -r requirements.txt`
+    2. Install packages: `pip install -U pip -r requirements/anki-qt6-current.txt -r requirements/dev.txt -r requirements/tests.txt`
 
 ## Logs
 

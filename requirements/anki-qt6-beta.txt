@@ -1,0 +1,14 @@
+# Anki Qt6 25.01
+
+anki==25.1rc1
+aqt==25.1rc1
+
+# https://github.com/ankitects/anki/blob/25.01beta1/python/requirements.qt6_lin.in
+pyqt6==6.8.0
+pyqt6-qt6==6.8.1
+pyqt6-webengine==6.8.0
+pyqt6-webengine-qt6==6.8.1
+pyqt6_sip==13.9.1
+
+beautifulsoup4==4.12.3
+requests==2.32.3

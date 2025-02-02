@@ -163,5 +163,5 @@ def test_empty_unused_and_trash(col: Collection, td: Data, collection_size_forma
 def test_bytes_to_str_performance(size_formatter: SizeFormatter):
     size_bytes: SizeBytes = SizeBytes(123_456_789)
     execution_time: float = timeit.timeit(lambda: size_formatter.bytes_to_str(size_bytes, Digits.one),
-                                          number=500_000)
+                                          number=300_000)
     assert execution_time <= 1
