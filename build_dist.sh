@@ -1,5 +1,5 @@
 set -e
 
-python setup.py dist
+python build_dist.py
 
 echo Done

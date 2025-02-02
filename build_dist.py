@@ -5,41 +5,25 @@ import subprocess
 from pathlib import Path
 from subprocess import CompletedProcess
 
-import setuptools
-from setuptools import Command
-
-
-def _read_long_description():
-    with open("README.md", "r") as f:
-        return f.read()
-
-
 _version = "2.6.1"
 _author = "Alexey Yablokov"
 
 
-class MakeDistributionCommand(Command):
-    user_options = []
-    project_dir: Path
-    build_dir: Path
+class DistributionBuilder:
 
-    def initialize_options(self):
+    def __init__(self):
         self.project_dir: Path = Path(__file__).parent
         self.build_dir: Path = Path(self.project_dir, 'dist')
         if self.build_dir.exists():
             shutil.rmtree(self.build_dir)
 
-    def finalize_options(self):
-        # Nothing to finalize
-        pass
-
-    def run(self):
+    def build(self) -> None:
         self.__run_unit_tests()
         self.__run_integration_tests()
         self.__package_zip()
 
     @staticmethod
-    def __run_unit_tests():
+    def __run_unit_tests() -> None:
         print("Running unit tests...")
         result: CompletedProcess[str] = subprocess.run(['tox'], capture_output=True, text=True)
         if result.returncode != 0:
@@ -48,21 +32,23 @@ class MakeDistributionCommand(Command):
             raise SystemExit(result.returncode)
 
     @staticmethod
-    def __run_integration_tests():
+    def __run_integration_tests() -> None:
         print("Running integration tests...")
         result: CompletedProcess[str] = subprocess.run(
             ['tox', '-e', 'integration'], capture_output=True, text=True)
-        if result.returncode != 0:
+        if result.returncode == 5:
+            print("No integration tests found")
+        elif result.returncode != 0:
             print(result.stderr)
             print(result.stdout)
             raise SystemExit(result.returncode)
 
-    def __package_zip(self):
+    def __package_zip(self) -> None:
         print("Packaging...")
-        note_size_dir: str = 'note_size'
-        note_size_package_dir: Path = Path(self.project_dir, note_size_dir)
-        dest_subdir: Path = Path(self.build_dir, note_size_dir)
-        shutil.copytree(note_size_package_dir, dest_subdir,
+        addon_dir: str = 'note_size'
+        addon_package_dir: Path = Path(self.project_dir, addon_dir)
+        dest_subdir: Path = Path(self.build_dir, addon_dir)
+        shutil.copytree(addon_package_dir, dest_subdir,
                         ignore=shutil.ignore_patterns("*.log", "__pycache__", "meta.json"))
         self.__generate_manifest(dest_subdir)
         self.__copy_file_to_build("LICENSE", dest_subdir)
@@ -74,13 +60,13 @@ class MakeDistributionCommand(Command):
         os.rename(actual_output_zip, renamed_output_zip)
         print(f'Output ZIP: {renamed_output_zip}')
 
-    def __copy_file_to_build(self, filename: str, dest_subdir):
+    def __copy_file_to_build(self, filename: str, dest_subdir) -> None:
         src: Path = Path(self.project_dir, filename)
         dest: Path = Path(dest_subdir, filename)
         shutil.copyfile(src, dest)
 
     @staticmethod
-    def __generate_manifest(dest_subdir: Path):
+    def __generate_manifest(dest_subdir: Path) -> None:
         from git import TagReference, Repo, Commit
         repo: Repo = Repo(".", search_parent_directories=True)
         version: str = f"v{_version}"
@@ -103,16 +89,5 @@ class MakeDistributionCommand(Command):
             json.dump(draft, fp, indent=2)
 
 
-setuptools.setup(
-    name="note_size_anki_addon",
-    version=_version,
-    author=_author,
-    description="Note Size Anki addon",
-    long_description=_read_long_description(),
-    long_description_content_type="text/markdown",
-    url="https://github.com/Aleks-Ya/note-size-anki-addon",
-    packages=list(),
-    cmdclass={
-        'dist': MakeDistributionCommand,
-    },
-)
+dist_builder: DistributionBuilder = DistributionBuilder()
+dist_builder.build()

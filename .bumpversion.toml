@@ -18,6 +18,3 @@ commit_args = ""
 
 [[tool.bumpversion.files]]
 filename = "note_size/version.txt"
-
-[[tool.bumpversion.files]]
-filename = "setup.py"
