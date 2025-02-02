@@ -35,7 +35,7 @@ class DistributionBuilder:
     def __run_integration_tests() -> None:
         print("Running integration tests...")
         result: CompletedProcess[str] = subprocess.run(
-            ['tox', '-e', 'integration'], capture_output=True, text=True)
+            ['tox', '--', 'tests', '-m', 'integration'], capture_output=True, text=True)
         if result.returncode == 5:
             print("No integration tests found")
         elif result.returncode != 0:
