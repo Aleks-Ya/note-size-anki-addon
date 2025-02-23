@@ -23,7 +23,7 @@ class Logs:
 
     def __configure_logging(self) -> Logger:
         logger: Logger = logging.getLogger(__name__.split(".")[0])
-        handler: FileHandler = FileHandler(self.__log_file)
+        handler: FileHandler = FileHandler(self.__log_file, encoding="utf-8", errors="replace")
         level: int = logging.DEBUG
         handler.setLevel(level)
         formatter: Formatter = Formatter('%(asctime)s %(levelname)s %(name)s %(funcName)s %(threadName)s %(message)s')
