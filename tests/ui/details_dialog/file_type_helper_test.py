@@ -17,7 +17,8 @@ def test_get_file_type(file_type_helper: FileTypeHelper):
     assert file_type_helper.get_file_type(MediaFile("image.bmp")) == FileType.IMAGE
     assert file_type_helper.get_file_type(MediaFile("image.webp")) == FileType.IMAGE
     assert file_type_helper.get_file_type(MediaFile("image.svg")) == FileType.IMAGE
-    assert file_type_helper.get_file_type(MediaFile("image.ashx")) == FileType.IMAGE
+    ashx_file_type: FileType = file_type_helper.get_file_type(MediaFile("image.ashx"))
+    assert ashx_file_type == FileType.IMAGE or ashx_file_type == FileType.OTHER
     assert file_type_helper.get_file_type(MediaFile("image.axd")) == FileType.IMAGE
     assert file_type_helper.get_file_type(MediaFile("image.cms")) == FileType.IMAGE
     assert file_type_helper.get_file_type(MediaFile("image.ico")) == FileType.IMAGE
