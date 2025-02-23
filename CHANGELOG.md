@@ -1,8 +1,10 @@
 # Changelog for "Note Size" Anki addon
 
-## [v2.7.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.7.0) - 2025-01-15
+## [v2.7.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.7.0) - 2025-02-23
 
-1. __[MISC]__ Execute unit-tests on MacOS
+1. __[BUG]__ Fix encoding error when logging on macOS
+2. __[MISC]__ Update dependencies to Anki 25.02
+3. __[MISC]__ Execute unit-tests on Linux, Windows, and macOS
 
 ## [v2.6.1](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.6.1) - 2025-01-13
 
