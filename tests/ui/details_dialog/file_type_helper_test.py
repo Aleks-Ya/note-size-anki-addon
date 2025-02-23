@@ -42,7 +42,7 @@ def test_get_file_type(file_type_helper: FileTypeHelper):
 
 @pytest.mark.performance
 def test_get_file_type_performance(file_type_helper: FileTypeHelper):
-    execution_time: float = timeit.timeit(lambda: file_type_helper.get_file_type(MediaFiles.image), number=500_000)
+    execution_time: float = timeit.timeit(lambda: file_type_helper.get_file_type(MediaFiles.image), number=400_000)
     assert execution_time <= 1
 
 

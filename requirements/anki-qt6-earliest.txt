@@ -1,5 +1,6 @@
-# Anki Qt6 24.6.3
+# The earliest supported Anki version (24.6.3)
 
+# https://pypi.org/project/anki/#history
 anki==24.6.3
 aqt==24.6.3
 
@@ -10,5 +11,6 @@ pyqt6-webengine==6.6.0
 pyqt6-webengine-qt6==6.6.2
 pyqt6_sip==13.6.0
 
+# https://github.com/ankitects/anki/blob/24.06.3/python/requirements.anki.in
 beautifulsoup4==4.12.3
-requests==2.32.2
+requests[socks]==2.32.2
