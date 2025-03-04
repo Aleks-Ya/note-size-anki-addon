@@ -317,10 +317,9 @@ def editor_button_creator(editor_button_formatter: EditorButtonFormatter,
 
 
 @pytest.fixture
-def browser_button_manager(col: Collection, item_id_cache: ItemIdCache, size_str_cache: SizeStrCache,
-                           details_dialog: DetailsDialog, progress_manager: ProgressManager,
-                           config: Config) -> BrowserButtonManager:
-    return BrowserButtonManager(col, item_id_cache, size_str_cache, details_dialog, progress_manager, config)
+def browser_button_manager(item_id_cache: ItemIdCache, size_str_cache: SizeStrCache, details_dialog: DetailsDialog,
+                           progress_manager: ProgressManager, config: Config) -> BrowserButtonManager:
+    return BrowserButtonManager(item_id_cache, size_str_cache, details_dialog, progress_manager, config)
 
 
 @pytest.fixture
@@ -337,8 +336,8 @@ def cache_manager(media_cache: MediaCache, item_id_cache: ItemIdCache, size_calc
 
 
 @pytest.fixture
-def size_str_cache(col: Collection, size_calculator: SizeCalculator, size_formatter: SizeFormatter) -> SizeStrCache:
-    return SizeStrCache(col, size_calculator, size_formatter)
+def size_str_cache(size_calculator: SizeCalculator, size_formatter: SizeFormatter) -> SizeStrCache:
+    return SizeStrCache(size_calculator, size_formatter)
 
 
 @pytest.fixture

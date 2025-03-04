@@ -72,7 +72,7 @@ def __initialize(col: Collection):
     size_formatter: SizeFormatter = SizeFormatter()
     item_id_cache: ItemIdCache = ItemIdCache(col)
     item_id_sorter: ItemIdSorter = ItemIdSorter(item_id_cache, size_calculator)
-    size_str_cache: SizeStrCache = SizeStrCache(col, size_calculator, size_formatter)
+    size_str_cache: SizeStrCache = SizeStrCache(size_calculator, size_formatter)
     column_hooks: ColumnHooks = ColumnHooks(item_id_cache, size_str_cache, item_id_sorter, config)
     column_hooks.setup_hooks()
     level_parser: LevelParser = LevelParser(size_formatter)
@@ -115,7 +115,7 @@ def __initialize(col: Collection):
     config_hooks: ConfigHooks = ConfigHooks(config_ui, desktop_services, url_manager)
     config_hooks.setup_hooks()
     browser_button_manager: BrowserButtonManager = BrowserButtonManager(
-        col, item_id_cache, size_str_cache, details_dialog, progress_manager, config)
+        item_id_cache, size_str_cache, details_dialog, progress_manager, config)
     browser_hooks: BrowserHooks = BrowserHooks(browser_button_manager, config)
     browser_hooks.setup_hooks()
 

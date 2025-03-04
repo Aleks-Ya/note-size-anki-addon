@@ -53,7 +53,7 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Colle
     size_calculator_2: SizeCalculator = SizeCalculator(col, media_cache_2)
     size_formatter_2: SizeFormatter = SizeFormatter()
     file_type_helper_2: FileTypeHelper = FileTypeHelper()
-    size_str_cache_2: SizeStrCache = SizeStrCache(col, size_calculator_2, size_formatter_2)
+    size_str_cache_2: SizeStrCache = SizeStrCache(size_calculator_2, size_formatter_2)
     updated_files_calculator_2: UpdatedFilesCalculator = UpdatedFilesCalculator(col, size_calculator_2, media_cache_2)
     assert item_id_cache_2.as_dict_list() == [{}]
     read_success: bool = cache_storage.read_caches_from_file(

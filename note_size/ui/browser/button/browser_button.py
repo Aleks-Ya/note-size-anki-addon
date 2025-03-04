@@ -3,7 +3,6 @@ from logging import Logger
 from typing import Sequence
 
 from anki.cards import CardId
-from anki.collection import Collection
 from anki.notes import NoteId
 from aqt.browser import Browser, ItemId
 from aqt.progress import ProgressManager
@@ -23,11 +22,9 @@ log: Logger = logging.getLogger(__name__)
 
 class BrowserButton(QPushButton):
 
-    def __init__(self, col: Collection, item_id_cache: ItemIdCache, size_str_cache: SizeStrCache,
-                 details_dialog: DetailsDialog, browser: Browser, progress_manager: ProgressManager,
-                 config: Config) -> None:
+    def __init__(self, item_id_cache: ItemIdCache, size_str_cache: SizeStrCache, details_dialog: DetailsDialog,
+                 browser: Browser, progress_manager: ProgressManager, config: Config) -> None:
         super().__init__()
-        self.__col: Collection = col
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__size_str_cache: SizeStrCache = size_str_cache
         self.__details_dialog: DetailsDialog = details_dialog

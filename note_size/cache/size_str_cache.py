@@ -2,7 +2,6 @@ import logging
 from logging import Logger
 from typing import Sequence, Any
 
-from anki.collection import Collection
 from anki.notes import NoteId
 
 from .cache import Cache
@@ -15,9 +14,8 @@ log: Logger = logging.getLogger(__name__)
 
 class SizeStrCache(Cache):
 
-    def __init__(self, col: Collection, size_calculator: SizeCalculator, size_formatter: SizeFormatter) -> None:
+    def __init__(self, size_calculator: SizeCalculator, size_formatter: SizeFormatter) -> None:
         super().__init__()
-        self.__col: Collection = col
         self.__size_calculator: SizeCalculator = size_calculator
         self.__size_formatter: SizeFormatter = size_formatter
         self.__size_str_caches: dict[SizeType, dict[NoteId, dict[SignificantDigits, SizeStr]]] = {}

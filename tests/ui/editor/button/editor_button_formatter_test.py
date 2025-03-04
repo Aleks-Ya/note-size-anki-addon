@@ -46,7 +46,7 @@ def test_disabled_color(col: Collection, td: Data, size_formatter: SizeFormatter
     config: Config = td.read_config_updated({'Size Button': {'Color': {'Enabled': False}}})
     media_cache: MediaCache = MediaCache(col, config)
     size_calculator: SizeCalculator = SizeCalculator(col, media_cache)
-    size_str_cache: SizeStrCache = SizeStrCache(col, size_calculator, size_formatter)
+    size_str_cache: SizeStrCache = SizeStrCache(size_calculator, size_formatter)
     editor_button_formatter: EditorButtonFormatter = EditorButtonFormatter(
         size_str_cache, size_calculator, size_formatter, level_parser, config)
     assert editor_button_formatter.get_zero_size_label() == EditorButtonLabel("0 B", "")
