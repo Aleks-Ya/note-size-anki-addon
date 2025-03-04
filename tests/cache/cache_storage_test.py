@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Any
 
 from anki.cards import Card
-from anki.collection import Collection
 
 from note_size.cache.cache import Cache
 from note_size.cache.cache_storage import CacheStorage
@@ -16,6 +15,7 @@ from note_size.cache.size_str_cache import SizeStrCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.calculator.size_formatter import SizeFormatter
 from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
+from note_size.common.collection_holder import CollectionHolder
 from note_size.config.config import Config
 from note_size.config.settings import Settings
 from note_size.common.types import SizeType, FileType, FileSize, SizeBytes
@@ -23,11 +23,11 @@ from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
 from tests.data import Data, MediaFiles, Digits
 
 
-def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Collection, item_id_cache: ItemIdCache,
-                               size_calculator: SizeCalculator, size_formatter: SizeFormatter,
-                               file_type_helper: FileTypeHelper, size_str_cache: SizeStrCache,
-                               updated_files_calculator: UpdatedFilesCalculator, config: Config, settings: Settings,
-                               media_cache: MediaCache):
+def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, collection_holder: CollectionHolder,
+                               item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
+                               size_formatter: SizeFormatter, file_type_helper: FileTypeHelper,
+                               size_str_cache: SizeStrCache, updated_files_calculator: UpdatedFilesCalculator,
+                               config: Config, settings: Settings, media_cache: MediaCache):
     card1: Card = td.create_card_with_files()
     card2: Card = td.create_card_without_files()
     item_id_cache.get_note_id_by_card_id(card1.id)
@@ -48,13 +48,14 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Colle
         [media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, size_str_cache,
          updated_files_calculator])
 
-    media_cache_2: MediaCache = MediaCache(col, config)
-    item_id_cache_2: ItemIdCache = ItemIdCache(col)
-    size_calculator_2: SizeCalculator = SizeCalculator(col, media_cache_2)
+    media_cache_2: MediaCache = MediaCache(collection_holder, config)
+    item_id_cache_2: ItemIdCache = ItemIdCache(collection_holder)
+    size_calculator_2: SizeCalculator = SizeCalculator(collection_holder, media_cache_2)
     size_formatter_2: SizeFormatter = SizeFormatter()
     file_type_helper_2: FileTypeHelper = FileTypeHelper()
     size_str_cache_2: SizeStrCache = SizeStrCache(size_calculator_2, size_formatter_2)
-    updated_files_calculator_2: UpdatedFilesCalculator = UpdatedFilesCalculator(col, size_calculator_2, media_cache_2)
+    updated_files_calculator_2: UpdatedFilesCalculator = UpdatedFilesCalculator(collection_holder, size_calculator_2,
+                                                                                media_cache_2)
     assert item_id_cache_2.as_dict_list() == [{}]
     read_success: bool = cache_storage.read_caches_from_file(
         [media_cache_2, item_id_cache_2, size_calculator_2, size_formatter_2, file_type_helper_2, size_str_cache_2,
@@ -83,7 +84,7 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, col: Colle
                                                 SizeType.TEXTS: {card2.nid: {Digits.one: '70 B'}},
                                                 SizeType.FILES: {card2.nid: {Digits.one: '0 B'}}}]
 
-    col.remove_notes([card1.nid, card2.nid])
+    collection_holder.col().remove_notes([card1.nid, card2.nid])
 
 
 def test_write_cache_file_error(cache_storage: CacheStorage, item_id_cache: ItemIdCache, settings: Settings, caplog):
@@ -118,7 +119,7 @@ def test_read_absent_cache_file(cache_storage: CacheStorage, item_id_cache: Item
     assert not settings.cache_file.exists()
 
 
-def test_read_partially_invalid_cache_file(cache_storage: CacheStorage, td: Data, col: Collection,
+def test_read_partially_invalid_cache_file(cache_storage: CacheStorage, td: Data, collection_holder: CollectionHolder,
                                            item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
                                            config: Config, settings: Settings, media_cache: MediaCache, caplog):
     card1: Card = td.create_card_with_files()
@@ -133,7 +134,7 @@ def test_read_partially_invalid_cache_file(cache_storage: CacheStorage, td: Data
     pickle.dump(partially_invalid_cache, cache_file.open("wb"))
     assert os.path.exists(cache_file)
 
-    item_id_cache_2: ItemIdCache = ItemIdCache(col)
+    item_id_cache_2: ItemIdCache = ItemIdCache(collection_holder)
     assert item_id_cache_2.as_dict_list() == [{}]
     with caplog.at_level(logging.WARNING):
         read_success: bool = cache_storage.read_caches_from_file([item_id_cache_2])

@@ -2,11 +2,11 @@ import logging
 from logging import Logger
 from typing import Any
 
-from anki.collection import Collection
 from anki.notes import NoteId
 
 from ..cache.cache import Cache
 from ..cache.media_cache import MediaCache
+from ..common.collection_holder import CollectionHolder
 from ..common.types import MediaFile
 from ..calculator.size_calculator import SizeCalculator
 
@@ -15,9 +15,10 @@ log: Logger = logging.getLogger(__name__)
 
 class UpdatedFilesCalculator(Cache):
 
-    def __init__(self, col: Collection, size_calculator: SizeCalculator, media_cache: MediaCache) -> None:
+    def __init__(self, collection_holder: CollectionHolder, size_calculator: SizeCalculator,
+                 media_cache: MediaCache) -> None:
         super().__init__()
-        self.__col: Collection = col
+        self.__collection_holder: CollectionHolder = collection_holder
         self.__size_calculator: SizeCalculator = size_calculator
         self.__file_note_ids_cache: dict[MediaFile, set[NoteId]] = {}
         self.__media_cache: MediaCache = media_cache
@@ -65,7 +66,7 @@ class UpdatedFilesCalculator(Cache):
             if use_cache and file in self.__file_note_ids_cache:
                 return self.__file_note_ids_cache[file]
             else:
-                for note_id in self.__col.db.list("select id from notes"):
+                for note_id in self.__collection_holder.col().db.list("select id from notes"):
                     files: set[MediaFile] = self.__size_calculator.get_note_files(note_id, use_cache)
                     for note_file in files:
                         if note_file in self.__file_note_ids_cache:

@@ -4,10 +4,10 @@ from logging import Logger
 from pathlib import Path
 from typing import Any
 
-from anki.collection import Collection
 from anki.media_pb2 import CheckMediaResponse
 
 from .cache import Cache
+from ..common.collection_holder import CollectionHolder
 from ..config.config import Config
 from ..common.types import MediaFile, SizeBytes, FilesNumber, FileSize
 
@@ -16,11 +16,11 @@ log: Logger = logging.getLogger(__name__)
 
 class MediaCache(Cache):
 
-    def __init__(self, col: Collection, config: Config) -> None:
+    def __init__(self, collection_holder: CollectionHolder, config: Config) -> None:
         super().__init__()
         self.__config: Config = config
-        self.__col: Collection = col
-        self.__media_dir: Path = Path(col.media.dir())
+        self.__collection_holder: CollectionHolder = collection_holder
+        self.__media_dir: Path = Path(self.__collection_holder.col().media.dir())
         self.__file_sizes_cache: dict[MediaFile, FileSize] = {}
         log.debug(f"{self.__class__.__name__} was instantiated")
 
@@ -54,7 +54,7 @@ class MediaCache(Cache):
     def get_unused_files_size(self, use_cache: bool) -> (FileSize, FilesNumber):
         with self._lock:
             log.debug("Calculating unused files size...")
-            check_result: CheckMediaResponse = self.__col.media.check()
+            check_result: CheckMediaResponse = self.__collection_holder.col().media.check()
             unused_files: list[str] = list(check_result.unused)
             total_size: SizeBytes = SizeBytes(0)
             for unused_file in unused_files:

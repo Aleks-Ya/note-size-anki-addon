@@ -2,8 +2,7 @@ import logging
 from logging import Logger
 from pathlib import Path
 
-from anki.collection import Collection
-
+from ...common.collection_holder import CollectionHolder
 from ...common.types import FilesNumber, SizeBytes
 
 log: Logger = logging.getLogger(__name__)
@@ -11,8 +10,8 @@ log: Logger = logging.getLogger(__name__)
 
 class Trash:
 
-    def __init__(self, col: Collection):
-        self.__trash_dir: Path = Path(col.media.dir()).parent.joinpath("media.trash")
+    def __init__(self, collection_holder: CollectionHolder):
+        self.__trash_dir: Path = Path(collection_holder.col().media.dir()).parent.joinpath("media.trash")
         log.info(f"Trash dir: {self.__trash_dir}")
         log.debug(f"{self.__class__.__name__} was instantiated")
 

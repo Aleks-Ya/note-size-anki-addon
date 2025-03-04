@@ -1,10 +1,10 @@
 import logging
 from logging import Logger
 
-from anki.collection import Collection
 from anki.notes import NoteId
 
 from ..cache.media_cache import MediaCache
+from ..common.collection_holder import CollectionHolder
 from ..common.types import SizeBytes, MediaFile, FilesNumber, NotesNumber
 from ..calculator.size_calculator import SizeCalculator
 
@@ -26,14 +26,15 @@ class UsedFiles:
 
 class UsedFilesCalculator:
 
-    def __init__(self, col: Collection, size_calculator: SizeCalculator, media_cache: MediaCache) -> None:
-        self.__col: Collection = col
+    def __init__(self, collection_holder: CollectionHolder, size_calculator: SizeCalculator,
+                 media_cache: MediaCache) -> None:
+        self.__collection_holder: CollectionHolder = collection_holder
         self.__size_calculator: SizeCalculator = size_calculator
         self.__media_cache: MediaCache = media_cache
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def get_used_files_size(self, use_cache: bool) -> UsedFiles:
-        note_ids: list[NoteId] = self.__col.db.list("select id from notes")
+        note_ids: list[NoteId] = self.__collection_holder.col().db.list("select id from notes")
         files: set[MediaFile] = self.__size_calculator.get_notes_files(note_ids, use_cache)
         exist_files_number, missing_files_number = self.__media_cache.get_missing_files_number(files, use_cache)
         files_size: SizeBytes = self.__size_calculator.calculate_size_of_files(files, use_cache)

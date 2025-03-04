@@ -2,12 +2,12 @@ from pathlib import Path
 from typing import Any
 
 from anki.cards import Card
-from anki.collection import Collection
 from anki.decks import DeckId
 from anki.models import NoteType
 from anki.notes import Note
 from aqt import gui_hooks
 
+from note_size.common.collection_holder import CollectionHolder
 from note_size.config.config import Config
 from note_size.common.types import MediaFile, FieldName, FieldContent, FileContent, SignificantDigits
 
@@ -48,10 +48,10 @@ class Digits:
 
 class Data:
 
-    def __init__(self, col: Collection, module_dir: Path):
-        self.col: Collection = col
-        self.note_type: NoteType = self.col.models.by_name('Basic')
-        self.deck_id: DeckId = self.col.decks.get_current_id()
+    def __init__(self, collection_holder: CollectionHolder, module_dir: Path):
+        self.__collection_holder: CollectionHolder = collection_holder
+        self.note_type: NoteType = self.__collection_holder.col().models.by_name('Basic')
+        self.deck_id: DeckId = self.__collection_holder.col().decks.get_current_id()
         self.config_json: Path = module_dir.joinpath("config.json")
 
     def create_note_with_files(self) -> Note:
@@ -73,11 +73,11 @@ class Data:
                                       new_note: bool = False) -> Note:
         front_field_content: FieldContent = FieldContent(front_field_content)
         back_field_content: FieldContent = FieldContent(back_field_content)
-        note: Note = self.col.new_note(self.note_type)
+        note: Note = self.__collection_holder.col().new_note(self.note_type)
         note[DefaultFields.front_field_name] = front_field_content
         note[DefaultFields.back_field_name] = back_field_content
         if not new_note:
-            self.col.add_note(note, self.deck_id)
+            self.__collection_holder.col().add_note(note, self.deck_id)
         gui_hooks.add_cards_did_add_note(note)
         return note
 
@@ -87,17 +87,17 @@ class Data:
                                                   new_note)
 
     def create_note_with_given_files(self, fields: dict[FieldName, dict[MediaFile, FileContent]]) -> Note:
-        note: Note = self.col.new_note(self.note_type)
+        note: Note = self.__collection_holder.col().new_note(self.note_type)
         field_contents: dict[FieldName, FieldContent] = {field_name: self.__add_files_to_field(field_files)
                                                          for field_name, field_files in fields.items()}
         for field_name, field_content in field_contents.items():
             note[field_name] = field_content
-        self.col.add_note(note, self.deck_id)
+        self.__collection_holder.col().add_note(note, self.deck_id)
         gui_hooks.add_cards_did_add_note(note)
         return note
 
     def write_file(self, media_file: MediaFile, file_content: str) -> None:
-        full_path: Path = Path(self.col.media.dir()).joinpath(media_file)
+        full_path: Path = Path(self.__collection_holder.col().media.dir()).joinpath(media_file)
         full_path.write_text(file_content)
 
     @staticmethod
@@ -135,6 +135,6 @@ class Data:
     def __add_files_to_field(self, files: dict[MediaFile, FileContent]) -> FieldContent:
         field_content: FieldContent = FieldContent("Files ∑￡:")
         for media_file, file_content in files.items():
-            media_file: MediaFile = self.col.media.write_data(media_file, file_content.encode())
+            media_file: MediaFile = self.__collection_holder.col().media.write_data(media_file, file_content.encode())
             field_content += f' <img src="{media_file}">'
         return field_content

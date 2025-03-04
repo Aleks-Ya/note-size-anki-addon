@@ -3,19 +3,19 @@ from logging import Logger
 from typing import Sequence, Any
 
 from anki.cards import CardId, Card
-from anki.collection import Collection
 from anki.notes import NoteId
 
 from .cache import Cache
+from ..common.collection_holder import CollectionHolder
 
 log: Logger = logging.getLogger(__name__)
 
 
 class ItemIdCache(Cache):
 
-    def __init__(self, col: Collection) -> None:
+    def __init__(self, collection_holder: CollectionHolder) -> None:
         super().__init__()
-        self.__col: Collection = col
+        self.__collection_holder: CollectionHolder = collection_holder
         self.__id_cache: dict[CardId, NoteId] = {}
         self.invalidate_cache()
         log.debug(f"{self.__class__.__name__} was instantiated")
@@ -23,14 +23,14 @@ class ItemIdCache(Cache):
     def initialize_cache(self) -> None:
         log.debug(f"Initializing ItemIdCache: size={len(self.__id_cache)}")
         with self._lock:
-            for cid, nid in self.__col.db.execute("select id, nid from cards"):
+            for cid, nid in self.__collection_holder.col().db.execute("select id, nid from cards"):
                 self.__id_cache[cid] = nid
         log.debug(f"Initialized ItemIdCache: size={len(self.__id_cache)}")
 
     def get_note_id_by_card_id(self, card_id: CardId) -> NoteId:
         with self._lock:
             if card_id not in self.__id_cache:
-                card: Card = self.__col.get_card(card_id)
+                card: Card = self.__collection_holder.col().get_card(card_id)
                 self.__id_cache[card_id] = card.nid
             return self.__id_cache[card_id]
 

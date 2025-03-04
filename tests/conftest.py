@@ -1,7 +1,7 @@
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Callable, Any
+from typing import Callable, Any, Generator
 
 import aqt
 import pytest
@@ -15,6 +15,8 @@ from aqt.taskman import TaskManager
 from aqt.theme import ThemeManager
 from mock.mock import MagicMock
 from pytestqt.qtbot import QtBot
+
+from note_size.common.collection_holder import CollectionHolder
 
 utils.tr = MagicMock()
 from aqt.deckbrowser import DeckBrowser
@@ -78,7 +80,7 @@ def media_trash_dir(profile_dir: Path) -> Path:
 
 
 @pytest.fixture
-def col(profile_manager: ProfileManager) -> Collection:
+def col(profile_manager: ProfileManager) -> Generator[Collection, None, None]:
     collection_file: str = profile_manager.collectionPath()
     col: Collection = Collection(collection_file)
     yield col
@@ -86,8 +88,15 @@ def col(profile_manager: ProfileManager) -> Collection:
 
 
 @pytest.fixture
-def td(col: Collection, module_dir: Path) -> Data:
-    return Data(col, module_dir)
+def collection_holder(col: Collection) -> CollectionHolder:
+    collection_holder: CollectionHolder = CollectionHolder()
+    collection_holder.set_collection(col)
+    return collection_holder
+
+
+@pytest.fixture
+def td(collection_holder: CollectionHolder, module_dir: Path) -> Data:
+    return Data(collection_holder, module_dir)
 
 
 @pytest.fixture
@@ -135,18 +144,18 @@ def config(col: Collection, td: Data) -> Config:
 
 
 @pytest.fixture
-def media_cache(col: Collection, config: Config) -> MediaCache:
-    return MediaCache(col, config)
+def media_cache(collection_holder: CollectionHolder, config: Config) -> MediaCache:
+    return MediaCache(collection_holder, config)
 
 
 @pytest.fixture
-def size_calculator(col: Collection, media_cache: MediaCache) -> SizeCalculator:
-    return SizeCalculator(col, media_cache)
+def size_calculator(collection_holder: CollectionHolder, media_cache: MediaCache) -> SizeCalculator:
+    return SizeCalculator(collection_holder, media_cache)
 
 
 @pytest.fixture
-def item_id_cache(col: Collection) -> ItemIdCache:
-    return ItemIdCache(col)
+def item_id_cache(collection_holder: CollectionHolder) -> ItemIdCache:
+    return ItemIdCache(collection_holder)
 
 
 @pytest.fixture
@@ -193,16 +202,16 @@ def size_formatter() -> SizeFormatter:
 
 
 @pytest.fixture
-def trash(col: Collection) -> Trash:
-    return Trash(col)
+def trash(collection_holder: CollectionHolder) -> Trash:
+    return Trash(collection_holder)
 
 
 @pytest.fixture
-def collection_size_formatter(col: Collection, item_id_cache: ItemIdCache, media_cache: MediaCache,
+def collection_size_formatter(collection_holder: CollectionHolder, item_id_cache: ItemIdCache, media_cache: MediaCache,
                               size_formatter: SizeFormatter, used_files_calculator: UsedFilesCalculator, trash: Trash,
                               config: Config, settings: Settings) -> CollectionSizeFormatter:
     return CollectionSizeFormatter(
-        col, item_id_cache, media_cache, trash, size_formatter, used_files_calculator, config, settings)
+        collection_holder, item_id_cache, media_cache, trash, size_formatter, used_files_calculator, config, settings)
 
 
 @pytest.fixture
@@ -341,15 +350,15 @@ def size_str_cache(size_calculator: SizeCalculator, size_formatter: SizeFormatte
 
 
 @pytest.fixture
-def used_files_calculator(col: Collection, size_calculator: SizeCalculator,
+def used_files_calculator(collection_holder: CollectionHolder, size_calculator: SizeCalculator,
                           media_cache: MediaCache) -> UsedFilesCalculator:
-    return UsedFilesCalculator(col, size_calculator, media_cache)
+    return UsedFilesCalculator(collection_holder, size_calculator, media_cache)
 
 
 @pytest.fixture
-def updated_files_calculator(col: Collection, size_calculator: SizeCalculator,
+def updated_files_calculator(collection_holder: CollectionHolder, size_calculator: SizeCalculator,
                              media_cache: MediaCache) -> UpdatedFilesCalculator:
-    return UpdatedFilesCalculator(col, size_calculator, media_cache)
+    return UpdatedFilesCalculator(collection_holder, size_calculator, media_cache)
 
 
 @pytest.fixture

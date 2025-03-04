@@ -4,11 +4,11 @@ from logging import Logger
 from pathlib import Path
 from typing import Optional
 
-from anki.collection import Collection
 from bs4 import BeautifulSoup, Tag
 
 from .js_actions import JsActions
 from .trash import Trash
+from ...common.collection_holder import CollectionHolder
 from ...common.number_formatter import NumberFormatter
 from ...cache.item_id_cache import ItemIdCache
 from ...cache.media_cache import MediaCache
@@ -25,18 +25,18 @@ class CollectionSizeFormatter:
     __code_style: str = "font-family:Consolas,monospace;display: inline-block;"
     __sand_clock: str = "⏳"
 
-    def __init__(self, col: Collection, item_id_cache: ItemIdCache, media_cache: MediaCache, trash: Trash,
-                 size_formatter: SizeFormatter, used_files_calculator: UsedFilesCalculator, config: Config,
-                 settings: Settings):
-        self.__col: Collection = col
+    def __init__(self, collection_holder: CollectionHolder, item_id_cache: ItemIdCache, media_cache: MediaCache,
+                 trash: Trash, size_formatter: SizeFormatter, used_files_calculator: UsedFilesCalculator,
+                 config: Config, settings: Settings):
+        self.__collection_holder: CollectionHolder = collection_holder
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__media_cache: MediaCache = media_cache
         self.__trash: Trash = trash
         self.__size_formatter: SizeFormatter = size_formatter
         self.__used_files_calculator: UsedFilesCalculator = used_files_calculator
         self.__config: Config = config
-        self.__collection_file_path: Path = Path(col.path)
-        self.__media_folder_path: Path = Path(col.media.dir())
+        self.__collection_file_path: Path = Path(self.__collection_holder.col().path)
+        self.__media_folder_path: Path = Path(self.__collection_holder.col().media.dir())
         self.__web_dir: str = os.path.join("_addons", settings.module_name, "ui", "web")
         log.debug(f"{self.__class__.__name__} was instantiated")
 
@@ -50,7 +50,7 @@ class CollectionSizeFormatter:
             unused_files_size, unused_files_number = self.__media_cache.get_unused_files_size(use_cache=True)
             trash_dir_size: SizeBytes = self.__trash.get_trash_dir_size()
             trash_files_number: FilesNumber = self.__trash.get_trash_files_number()
-            note_count: int = self.__col.note_count()
+            note_count: int = self.__collection_holder.col().note_count()
             note_number_str: str = NumberFormatter.with_thousands_separator(note_count)
             used_notes_numbers_str: str = NumberFormatter.with_thousands_separator(used_files.used_notes_numbers)
             used_files_number_str: str = NumberFormatter.with_thousands_separator(used_files.used_files_number)

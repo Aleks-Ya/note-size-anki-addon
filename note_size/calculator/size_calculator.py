@@ -2,13 +2,13 @@ import logging
 from logging import Logger
 from typing import Any, Sequence
 
-from anki.collection import Collection
 from anki.models import NotetypeId
 from anki.notes import Note, NoteId
 
 from .note_helper import NoteHelper
 from ..cache.cache import Cache
 from ..cache.media_cache import MediaCache
+from ..common.collection_holder import CollectionHolder
 from ..common.types import SizeBytes, MediaFile, SizeType, FileSize
 
 log: Logger = logging.getLogger(__name__)
@@ -22,9 +22,9 @@ class _Caches:
 
 class SizeCalculator(Cache):
 
-    def __init__(self, col: Collection, media_cache: MediaCache):
+    def __init__(self, collection_holder: CollectionHolder, media_cache: MediaCache):
         super().__init__()
-        self.__col: Collection = col
+        self.__collection_holder: CollectionHolder = collection_holder
         self.__caches: _Caches = _Caches()
         self.__media_cache: MediaCache = media_cache
         self.invalidate_cache()
@@ -54,7 +54,7 @@ class SizeCalculator(Cache):
             if NoteHelper.is_note_id_saved(note_id) and use_cache and note_id in cache:
                 return cache[note_id]
             else:
-                note: Note = self.__col.get_note(note_id)
+                note: Note = self.__collection_holder.col().get_note(note_id)
                 return self.calculate_note_size(note, size_type, use_cache)
 
     def calculate_note_file_sizes(self, note: Note, use_cache: bool) -> dict[MediaFile, FileSize]:
@@ -74,7 +74,7 @@ class SizeCalculator(Cache):
             if NoteHelper.is_note_id_saved(note_id) and use_cache and note_id in cache:
                 return cache[note_id]
             else:
-                note: Note = self.__col.get_note(note_id)
+                note: Note = self.__collection_holder.col().get_note(note_id)
                 return self.calculate_note_file_sizes(note, use_cache)
 
     def calculate_note_files(self, note: Note, use_cache: bool) -> set[MediaFile]:
@@ -109,7 +109,7 @@ class SizeCalculator(Cache):
             if NoteHelper.is_note_id_saved(note_id) and use_cache and note_id in cache:
                 return cache[note_id]
             else:
-                note: Note = self.__col.get_note(note_id)
+                note: Note = self.__collection_holder.col().get_note(note_id)
                 return self.calculate_note_files(note, use_cache)
 
     def calculate_size_of_files(self, files: set[MediaFile], use_cache: bool) -> SizeBytes:
@@ -181,7 +181,7 @@ class SizeCalculator(Cache):
             return size
 
     def __parse_files_from_field(self, note_type_id: NotetypeId, field_content) -> list[MediaFile]:
-        return self.__col.media.files_in_str(note_type_id, field_content)
+        return self.__collection_holder.col().media.files_in_str(note_type_id, field_content)
 
     def __calculate_note_file_sizes(self, files: set[MediaFile], use_cache=True) -> dict[MediaFile, FileSize]:
         file_sizes: dict[MediaFile, FileSize] = dict[MediaFile, FileSize]()

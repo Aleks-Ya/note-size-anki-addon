@@ -3,6 +3,7 @@ from anki.notes import Note
 
 from note_size.cache.size_str_cache import SizeStrCache
 from note_size.calculator.size_formatter import SizeFormatter
+from note_size.common.collection_holder import CollectionHolder
 from note_size.config.config import Config
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.size_calculator import SizeCalculator
@@ -42,10 +43,11 @@ def test_get_edit_mode_label_no_cache(col: Collection, td: Data, editor_button_f
     assert editor_button_formatter.get_edit_mode_label(note.id) == EditorButtonLabel("86 B", "PaleGreen")
 
 
-def test_disabled_color(col: Collection, td: Data, size_formatter: SizeFormatter, level_parser: LevelParser):
+def test_disabled_color(collection_holder: CollectionHolder, td: Data, size_formatter: SizeFormatter,
+                        level_parser: LevelParser):
     config: Config = td.read_config_updated({'Size Button': {'Color': {'Enabled': False}}})
-    media_cache: MediaCache = MediaCache(col, config)
-    size_calculator: SizeCalculator = SizeCalculator(col, media_cache)
+    media_cache: MediaCache = MediaCache(collection_holder, config)
+    size_calculator: SizeCalculator = SizeCalculator(collection_holder, media_cache)
     size_str_cache: SizeStrCache = SizeStrCache(size_calculator, size_formatter)
     editor_button_formatter: EditorButtonFormatter = EditorButtonFormatter(
         size_str_cache, size_calculator, size_formatter, level_parser, config)

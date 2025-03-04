@@ -4,6 +4,7 @@ from pathlib import Path
 from anki.collection import Collection
 from aqt import gui_hooks
 
+from .common.collection_holder import CollectionHolder
 from .profiler.profiler import Profiler
 
 profiler: Profiler
@@ -50,6 +51,9 @@ def __initialize(col: Collection):
     from .ui.browser.button.browser_button import BrowserButton
     from .ui.browser.button.browser_button_manager import BrowserButtonManager
 
+    collection_holder: CollectionHolder = CollectionHolder()
+    collection_holder.set_collection(col)
+
     module_dir: Path = Path(__file__).parent
     module_name: str = module_dir.stem
     mw.addonManager.setWebExports(module_name, r"ui/web/.*(css|js|png)")
@@ -67,10 +71,10 @@ def __initialize(col: Collection):
     log_level: str = config.get_log_level()
     log.info(f"Set log level from Config: {log_level}")
     logs.set_level(log_level)
-    media_cache: MediaCache = MediaCache(col, config)
-    size_calculator: SizeCalculator = SizeCalculator(col, media_cache)
+    media_cache: MediaCache = MediaCache(collection_holder, config)
+    size_calculator: SizeCalculator = SizeCalculator(collection_holder, media_cache)
     size_formatter: SizeFormatter = SizeFormatter()
-    item_id_cache: ItemIdCache = ItemIdCache(col)
+    item_id_cache: ItemIdCache = ItemIdCache(collection_holder)
     item_id_sorter: ItemIdSorter = ItemIdSorter(item_id_cache, size_calculator)
     size_str_cache: SizeStrCache = SizeStrCache(size_calculator, size_formatter)
     column_hooks: ColumnHooks = ColumnHooks(item_id_cache, size_str_cache, item_id_sorter, config)
@@ -78,11 +82,12 @@ def __initialize(col: Collection):
     level_parser: LevelParser = LevelParser(size_formatter)
     editor_button_formatter: EditorButtonFormatter = EditorButtonFormatter(
         size_str_cache, size_calculator, size_formatter, level_parser, config)
-    trash: Trash = Trash(col)
+    trash: Trash = Trash(collection_holder)
     current_cache_version: int = 1
     cache_storage: CacheStorage = CacheStorage(current_cache_version, settings)
     file_type_helper: FileTypeHelper = FileTypeHelper()
-    updated_files_calculator: UpdatedFilesCalculator = UpdatedFilesCalculator(col, size_calculator, media_cache)
+    updated_files_calculator: UpdatedFilesCalculator = UpdatedFilesCalculator(collection_holder, size_calculator,
+                                                                              media_cache)
     cache_manager: CacheManager = CacheManager(
         media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, size_str_cache,
         updated_files_calculator)
@@ -91,9 +96,9 @@ def __initialize(col: Collection):
     task_manager: TaskManager = mw.taskman
     cache_initializer: CacheInitializer = CacheInitializer(mw, cache_manager, cache_storage, deck_browser,
                                                            task_manager, progress_manager, config)
-    used_files_calculator: UsedFilesCalculator = UsedFilesCalculator(col, size_calculator, media_cache)
+    used_files_calculator: UsedFilesCalculator = UsedFilesCalculator(collection_holder, size_calculator, media_cache)
     collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(
-        col, item_id_cache, media_cache, trash, size_formatter, used_files_calculator, config, settings)
+        collection_holder, item_id_cache, media_cache, trash, size_formatter, used_files_calculator, config, settings)
     desktop_services: QDesktopServices = QDesktopServices()
     url_manager: UrlManager = UrlManager()
     config_ui: ConfigUi = ConfigUi(
