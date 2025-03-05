@@ -1,3 +1,5 @@
+from typing import Generator
+
 import pytest
 from aqt import gui_hooks, QDesktopServices
 
@@ -7,7 +9,8 @@ from note_size.ui.config.config_ui import ConfigUi
 
 
 @pytest.fixture
-def config_hooks(config_ui: ConfigUi, desktop_services: QDesktopServices, url_manager: UrlManager) -> ConfigHooks:
+def config_hooks(config_ui: ConfigUi, desktop_services: QDesktopServices,
+                 url_manager: UrlManager) -> Generator[ConfigHooks, None, None]:
     config_hooks: ConfigHooks = ConfigHooks(config_ui, desktop_services, url_manager)
     yield config_hooks
     config_hooks.remove_hooks()

@@ -1,3 +1,5 @@
+from typing import Generator
+
 import pytest
 from anki.collection import Collection
 from anki import hooks
@@ -18,8 +20,8 @@ from tests.data import Data, MediaFiles
 
 @pytest.fixture
 def cache_hooks(cache_manager: CacheManager, cache_initializer: CacheInitializer,
-                updated_files_calculator: UpdatedFilesCalculator) -> CacheHooks:
-    cache_hooks = CacheHooks(cache_manager, cache_initializer, updated_files_calculator)
+                updated_files_calculator: UpdatedFilesCalculator) -> Generator[CacheHooks, None, None]:
+    cache_hooks: CacheHooks = CacheHooks(cache_manager, cache_initializer, updated_files_calculator)
     yield cache_hooks
     cache_hooks.remove_hooks()
 

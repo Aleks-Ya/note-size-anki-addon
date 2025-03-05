@@ -1,3 +1,5 @@
+from typing import Generator
+
 import pytest
 from aqt import gui_hooks
 
@@ -7,7 +9,7 @@ from note_size.ui.browser.button.browser_hooks import BrowserHooks
 
 
 @pytest.fixture
-def browser_hooks(browser_button_manager: BrowserButtonManager, config: Config) -> BrowserHooks:
+def browser_hooks(browser_button_manager: BrowserButtonManager, config: Config) -> Generator[BrowserHooks, None, None]:
     browser_hooks: BrowserHooks = BrowserHooks(browser_button_manager, config)
     yield browser_hooks
     browser_hooks.remove_hooks()

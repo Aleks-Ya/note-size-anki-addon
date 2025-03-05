@@ -1,3 +1,5 @@
+from typing import Generator
+
 import pytest
 from aqt import gui_hooks
 
@@ -10,10 +12,9 @@ from note_size.ui.editor.button.editor_button_js import EditorButtonJs
 
 @pytest.fixture
 def editor_button_hooks(editor_button_creator: EditorButtonCreator, editor_button_js: EditorButtonJs,
-                        settings: Settings,
-                        config: Config) -> EditorButtonHooks:
-    editor_button_hooks: EditorButtonHooks = EditorButtonHooks(editor_button_creator, editor_button_js, settings,
-                                                               config)
+                        settings: Settings, config: Config) -> Generator[EditorButtonHooks, None, None]:
+    editor_button_hooks: EditorButtonHooks = EditorButtonHooks(
+        editor_button_creator, editor_button_js, settings, config)
     yield editor_button_hooks
     editor_button_hooks.remove_hooks()
 

@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Sequence, Generator
 
 import pytest
 from anki.collection import BrowserColumns
@@ -17,7 +17,7 @@ from tests.data import Data
 
 @pytest.fixture
 def column_hooks(item_id_cache: ItemIdCache, size_str_cache: SizeStrCache, item_id_sorter: ItemIdSorter,
-                 config: Config) -> ColumnHooks:
+                 config: Config) -> Generator[ColumnHooks, None, None]:
     column_hooks: ColumnHooks = ColumnHooks(item_id_cache, size_str_cache, item_id_sorter, config)
     yield column_hooks
     column_hooks.remove_hooks()

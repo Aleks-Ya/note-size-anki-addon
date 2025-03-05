@@ -122,11 +122,13 @@ class SizeCalculator(Cache):
                 texts_size: SizeBytes = self.get_notes_size(note_ids, SizeType.TEXTS, use_cache)
                 files_size: SizeBytes = self.get_notes_size(note_ids, SizeType.FILES, use_cache)
                 return SizeBytes(texts_size + files_size)
-            if size_type == SizeType.TEXTS:
+            elif size_type == SizeType.TEXTS:
                 return SizeBytes(sum([self.get_note_size(note_id, SizeType.TEXTS, use_cache) for note_id in note_ids]))
-            if size_type == SizeType.FILES:
+            elif size_type == SizeType.FILES:
                 files: set[MediaFile] = self.get_notes_files(note_ids, use_cache)
                 return self.calculate_size_of_files(files, use_cache)
+            else:
+                raise ValueError(f"Size type is not supported: {size_type}")
 
     def get_notes_file_sizes(self, note_ids: Sequence[NoteId], use_cache: bool) -> dict[MediaFile, FileSize]:
         with self._lock:

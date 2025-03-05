@@ -115,20 +115,20 @@ class ColorLayout(QVBoxLayout):
                 item.setBackground(color)
 
     def __on_cell_changed(self, _: int, __: int) -> None:
-        color_levels: list[dict[str, str]] = self.__table_to_color_levels()
+        color_levels: list[LevelDict] = self.__table_to_color_levels()
         self.__model.size_button_color_levels = color_levels
         self.refresh_from_model()
 
-    def __table_to_color_levels(self) -> list[dict[str, str]]:
-        color_levels: list[dict[str, str]] = []
+    def __table_to_color_levels(self) -> list[LevelDict]:
+        color_levels: list[LevelDict] = []
         for row in range(self.__table.rowCount()):
             color_item: Optional[QTableWidgetItem] = self.__table.item(row, self.__color_column)
             min_size_item: Optional[QTableWidgetItem] = self.__table.item(row, self.__min_size_column)
             max_size_item: Optional[QTableWidgetItem] = self.__table.item(row, self.__max_size_column)
-            level: dict[str, str] = {
+            level: LevelDict = LevelDict({
                 self.__color_key: color_item.background().color().name() if color_item else None,
                 self.__min_size_key: min_size_item.text() if min_size_item else None,
-                self.__max_size_key: max_size_item.text() if max_size_item and max_size_item.text() != "∞" else None}
+                self.__max_size_key: max_size_item.text() if max_size_item and max_size_item.text() != "∞" else None})
             color_levels.append(level)
         return color_levels
 
