@@ -1,0 +1,74 @@
+@startuml
+'https://plantuml.com/deployment-diagram
+
+'skinparam linetype ortho
+left to right direction
+
+package note_size {
+    agent CollectionHolder
+    agent ProfileHook
+    agent CacheHooks
+    agent ConfigHooks
+    agent BrowserHooks
+    agent ColumnHooks
+    agent DeckBrowserHooks
+    agent EditorButtonHooks
+}
+
+package gui_hooks {
+    action collection_did_load
+    action profile_did_open
+    action profile_will_close
+    action add_cards_did_add_note
+    action media_sync_did_start_or_stop
+    action main_window_did_init
+    action browser_will_show
+    action browser_did_search
+    action browser_did_fetch_columns
+    action browser_did_fetch_row
+    action browser_will_search
+    action deck_browser_will_render_content
+    action webview_did_receive_js_message
+    action editor_did_init
+    action editor_did_init_buttons
+    action editor_did_load_note
+    action editor_did_unfocus_field
+    action editor_did_fire_typing_timer
+    action webview_will_set_content
+    action focus_did_change
+
+    collection_did_load --> CollectionHolder
+    profile_did_open --> ProfileHook
+    profile_did_open --> CacheHooks
+    profile_will_close --> ProfileHook
+    profile_will_close --> CacheHooks
+    add_cards_did_add_note --> CacheHooks
+    media_sync_did_start_or_stop --> CacheHooks
+    main_window_did_init --> ConfigHooks
+    browser_will_show --> ConfigHooks
+    browser_will_show --> BrowserHooks
+    browser_did_search --> BrowserHooks
+    browser_did_search --> ColumnHooks
+    browser_did_fetch_columns --> ColumnHooks
+    browser_did_fetch_row --> ColumnHooks
+    browser_will_search --> ColumnHooks
+    deck_browser_will_render_content --> DeckBrowserHooks
+    webview_did_receive_js_message --> DeckBrowserHooks
+    editor_did_init --> EditorButtonHooks
+    editor_did_init_buttons --> EditorButtonHooks
+    editor_did_load_note --> EditorButtonHooks
+    editor_did_unfocus_field --> EditorButtonHooks
+    editor_did_fire_typing_timer --> EditorButtonHooks
+    webview_will_set_content --> EditorButtonHooks
+    focus_did_change --> EditorButtonHooks
+}
+
+package hooks {
+    action notes_will_be_deleted
+    action note_will_flush
+
+    notes_will_be_deleted --> CacheHooks
+    note_will_flush --> CacheHooks
+}
+
+@enduml
