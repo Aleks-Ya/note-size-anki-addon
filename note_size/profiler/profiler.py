@@ -16,14 +16,13 @@ class Profiler:
     def __init__(self, config: Config, settings: Settings) -> None:
         self.__config: Config = config
         self.__profile: Profile = Profile()
-        self.__cache_file: Path = settings.cache_file
-        self.__profiler_report_dir: Path = settings.logs_folder.joinpath("profiler_reports")
-        log.debug(f"Profiler reports dir: {self.__profiler_report_dir}")
-        self.__profiler_report_dir.mkdir(parents=True, exist_ok=True)
+        profiler_report_dir: Path = settings.logs_folder.joinpath("profiler_reports")
+        log.debug(f"Profiler reports dir: {profiler_report_dir}")
+        profiler_report_dir.mkdir(parents=True, exist_ok=True)
         date: str = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        self.__file_by_cumulative_time: Path = self.__profiler_report_dir.joinpath(f"{date}_cumulative_time.txt")
-        self.__file_by_call_number: Path = self.__profiler_report_dir.joinpath(f"{date}_call_number.txt")
-        self.__file_by_internal_time: Path = self.__profiler_report_dir.joinpath(f"{date}_internal_time.txt")
+        self.__file_by_cumulative_time: Path = profiler_report_dir.joinpath(f"{date}_cumulative_time.txt")
+        self.__file_by_call_number: Path = profiler_report_dir.joinpath(f"{date}_call_number.txt")
+        self.__file_by_internal_time: Path = profiler_report_dir.joinpath(f"{date}_internal_time.txt")
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def start_profiling(self) -> None:
