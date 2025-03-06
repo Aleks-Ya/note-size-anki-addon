@@ -18,6 +18,7 @@ class ProfileHook:
         from aqt.deckbrowser import DeckBrowser
         from aqt.progress import ProgressManager
         from aqt.taskman import TaskManager
+        from aqt import ProfileManager
 
         from ..config.config import Config
         from ..config.config_loader import ConfigLoader
@@ -53,16 +54,18 @@ class ProfileHook:
         from ..ui.browser.button.browser_hooks import BrowserHooks
         from ..ui.browser.button.browser_button_manager import BrowserButtonManager
 
+        profile_manager: ProfileManager = mw.pm
         if self.__initialized:
             log: Logger = logging.getLogger(__name__)
-            log.info(f"Switched to profile: '{mw.pm.name}'")
+            log.info(f"Switched to profile: '{profile_manager.name}'")
             return
         self.__initialized = True
 
         module_dir: Path = Path(__file__).parent.parent
         module_name: str = module_dir.stem
         mw.addonManager.setWebExports(module_name, r"ui/web/.*(css|js|png)")
-        settings: Settings = Settings(module_dir, module_name, mw.addonManager.logs_folder(module_name))
+        settings: Settings = Settings(module_dir, module_name, mw.addonManager.logs_folder(module_name),
+                                      profile_manager)
         logs: Logs = Logs(settings)
         log: Logger = logs.root_logger()
         log.info(f"NoteSize addon version: {settings.module_dir.joinpath('version.txt').read_text()}")

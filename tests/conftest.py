@@ -134,8 +134,8 @@ def module_dir(addons_dir: Path, module_name: str, project_dir: Path) -> Path:
 
 
 @pytest.fixture
-def settings(module_dir: Path, module_name: str, logs_dir: Path) -> Settings:
-    return Settings(module_dir, module_name, logs_dir)
+def settings(module_dir: Path, module_name: str, logs_dir: Path, profile_manager: ProfileManager) -> Settings:
+    return Settings(module_dir, module_name, logs_dir, profile_manager)
 
 
 @pytest.fixture
