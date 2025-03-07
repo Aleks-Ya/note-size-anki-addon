@@ -28,7 +28,7 @@ def test_initialize_caches_from_file(cache_initializer: CacheInitializer, td: Da
     __fill_cache(cache_manager, td)
     assert cache_manager.get_cache_size() == 12
 
-    cache_file: Path = settings.cache_file
+    cache_file: Path = settings.get_cache_file()
     assert not cache_file.exists()
     cache_storage.save_caches_to_file(cache_manager.get_caches())
     assert cache_file.exists()
@@ -53,7 +53,7 @@ def test_save_cache_to_file_enabled(cache_initializer: CacheInitializer, td: Dat
     assert cache_manager.get_caches_initialized()
     assert cache_manager.get_cache_size() == 12
 
-    cache_file: Path = settings.cache_file
+    cache_file: Path = settings.get_cache_file()
     assert not cache_file.exists()
     cache_initializer.save_cache_to_file()
     assert cache_file.exists()
@@ -65,7 +65,7 @@ def test_save_cache_to_file_disabled(cache_initializer: CacheInitializer, td: Da
     __fill_cache(cache_manager, td)
     assert cache_manager.get_cache_size() == 12
 
-    cache_file: Path = settings.cache_file
+    cache_file: Path = settings.get_cache_file()
     assert not cache_file.exists()
     cache_initializer.save_cache_to_file()
     assert not cache_file.exists()
@@ -79,7 +79,7 @@ def test_save_cache_to_file_not_initialized(cache_initializer: CacheInitializer,
     cache_manager.get_item_id_cache().set_initialized(False)
     assert cache_manager.get_cache_size() == 12
 
-    cache_file: Path = settings.cache_file
+    cache_file: Path = settings.get_cache_file()
     assert not cache_file.exists()
     cache_initializer.save_cache_to_file()
     assert not cache_file.exists()
@@ -87,7 +87,7 @@ def test_save_cache_to_file_not_initialized(cache_initializer: CacheInitializer,
 
 def test_save_cache_to_file_delete_existing(cache_initializer: CacheInitializer, td: Data, cache_manager: CacheManager,
                                             settings: Settings, config: Config):
-    cache_file: Path = settings.cache_file
+    cache_file: Path = settings.get_cache_file()
     __fill_cache(cache_manager, td)
     cache_manager.set_caches_initialized(True)
 

@@ -88,15 +88,16 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, collection
 
 
 def test_write_cache_file_error(cache_storage: CacheStorage, item_id_cache: ItemIdCache, settings: Settings, caplog):
-    shutil.rmtree(settings.cache_file.parent)
+    cache_file: Path = settings.get_cache_file()
+    shutil.rmtree(cache_file.parent)
     with caplog.at_level(logging.WARNING):
         cache_storage.save_caches_to_file([item_id_cache])
-    assert not settings.cache_file.exists()
+    assert not cache_file.exists()
     assert "Cannot save cache file:" in caplog.text
 
 
 def test_read_invalid_cache_file(cache_storage: CacheStorage, item_id_cache: ItemIdCache, settings: Settings, caplog):
-    cache_file: Path = settings.cache_file
+    cache_file: Path = settings.get_cache_file()
     cache_file.write_bytes(b'invalid cache content')
     assert os.path.exists(cache_file)
     assert item_id_cache.as_dict_list() == [{}]
@@ -109,14 +110,15 @@ def test_read_invalid_cache_file(cache_storage: CacheStorage, item_id_cache: Ite
 
 
 def test_read_absent_cache_file(cache_storage: CacheStorage, item_id_cache: ItemIdCache, settings: Settings, caplog):
-    assert not settings.cache_file.exists()
+    cache_file: Path = settings.get_cache_file()
+    assert not cache_file.exists()
     assert item_id_cache.as_dict_list() == [{}]
     with caplog.at_level(logging.INFO):
         read_success: bool = cache_storage.read_caches_from_file([item_id_cache])
     assert not read_success
     assert item_id_cache.as_dict_list() == [{}]
     assert "Skip reading absent cache file:" in caplog.text
-    assert not settings.cache_file.exists()
+    assert not cache_file.exists()
 
 
 def test_read_partially_invalid_cache_file(cache_storage: CacheStorage, td: Data, collection_holder: CollectionHolder,
@@ -129,7 +131,7 @@ def test_read_partially_invalid_cache_file(cache_storage: CacheStorage, td: Data
     partially_invalid_cache: list[dict[str, Any]] = item_id_cache.as_dict_list()
     del partially_invalid_cache[0]
 
-    cache_file: Path = settings.cache_file
+    cache_file: Path = settings.get_cache_file()
     # noinspection PyTypeChecker
     pickle.dump(partially_invalid_cache, cache_file.open("wb"))
     assert os.path.exists(cache_file)
