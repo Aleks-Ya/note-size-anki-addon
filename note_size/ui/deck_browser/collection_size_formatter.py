@@ -35,16 +35,15 @@ class CollectionSizeFormatter:
         self.__size_formatter: SizeFormatter = size_formatter
         self.__used_files_calculator: UsedFilesCalculator = used_files_calculator
         self.__config: Config = config
-        self.__collection_file_path: Path = Path(self.__collection_holder.col().path)
-        self.__media_folder_path: Path = Path(self.__collection_holder.col().media.dir())
         self.__web_dir: str = os.path.join("_addons", settings.module_name, "ui", "web")
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def format_collection_size_html(self) -> str:
         log.debug("Preparing data for formatting collection size has started")
+        collection_file_path: Path = Path(self.__collection_holder.col().path)
         if self.__item_id_cache.is_initialized():
             log.debug("Use actual collection sizes")
-            collection_size: SizeBytes = SizeBytes(self.__collection_file_path.stat().st_size)
+            collection_size: SizeBytes = SizeBytes(collection_file_path.stat().st_size)
             used_files: UsedFiles = self.__used_files_calculator.get_used_files_size(use_cache=True)
             used_files_size: SizeBytes = used_files.used_files_size
             unused_files_size, unused_files_number = self.__media_cache.get_unused_files_size(use_cache=True)
@@ -78,11 +77,11 @@ class CollectionSizeFormatter:
         trash_dir_path: Path = self.__trash.get_trash_dir_path()
         soup: BeautifulSoup = BeautifulSoup()
         div: Tag = soup.new_tag('div')
-        collection_title: str = f'Size of {note_number_str} notes in file "{self.__collection_file_path}"'
+        collection_title: str = f'Size of {note_number_str} notes in file "{collection_file_path}"'
         media_title: str = f'Size of {used_files_number_str} media files ' \
                            f'({existing_files_number_str} existing and {missing_files_number_str} missing) ' \
                            f'used in {used_notes_numbers_str} notes (not include Unused and Trash)\n' \
-                           f'Folder "{self.__media_folder_path}"'
+                           f'Folder "{self.__collection_holder.media_dir()}"'
         unused_title: str = f'Size of {unused_files_size_str} ' \
                             f'media files not used in any notes (can be moved to Trash)'
         trash_title: str = f'Size of {trash_files_number_str} media files in the Trash (can be emptied)\n' \

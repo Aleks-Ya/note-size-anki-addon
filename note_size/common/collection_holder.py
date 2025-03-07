@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Optional
 
 from anki.collection import Collection
@@ -12,3 +13,6 @@ class CollectionHolder:
 
     def col(self) -> Collection:
         return self.__col
+
+    def media_dir(self) -> Path:
+        return Path(self.col().media.dir())

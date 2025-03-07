@@ -20,14 +20,13 @@ class MediaCache(Cache):
         super().__init__()
         self.__config: Config = config
         self.__collection_holder: CollectionHolder = collection_holder
-        self.__media_dir: Path = Path(self.__collection_holder.col().media.dir())
         self.__file_sizes_cache: dict[MediaFile, FileSize] = {}
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def get_file_size(self, media_file: MediaFile, use_cache: bool) -> FileSize:
         with self._lock:
             if not use_cache or media_file not in self.__file_sizes_cache:
-                full_path: Path = self.__media_dir.joinpath(media_file)
+                full_path: Path = self.__collection_holder.media_dir().joinpath(media_file)
                 if os.path.exists(full_path):
                     new_size: FileSize = FileSize(SizeBytes(os.path.getsize(full_path)), exists=True)
                 else:
@@ -68,7 +67,7 @@ class MediaCache(Cache):
     def get_updated_files(self) -> set[MediaFile]:
         with self._lock:
             updated_files: set[MediaFile] = set()
-            for file in self.__media_dir.iterdir():
+            for file in self.__collection_holder.media_dir().iterdir():
                 if file.is_file():
                     media_file: MediaFile = MediaFile(file.name)
                     cached_file_size: FileSize = self.get_file_size(media_file, use_cache=True)
