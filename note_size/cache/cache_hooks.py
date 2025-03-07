@@ -27,7 +27,7 @@ class CacheHooks:
         self.__hook_notes_will_be_deleted: Callable[[Collection, Sequence[NoteId]], None] = self.__notes_will_be_deleted
         self.__hook_media_sync_did_start_or_stop: Callable[[bool], None] = self.__media_sync_did_start_or_stop
         self.__hook_note_will_flush: Callable[[Note], None] = self.__on_note_will_flush
-        self.__hook_profile_did_open: Callable[[], None] = self.__initialize_cache_on_startup
+        self.__hook_profile_did_open: Callable[[], None] = self.__initialize_cache_on_profile_opening
         self.__hook_profile_will_close: Callable[[], None] = self.__save_cache_to_file
         log.debug(f"{self.__class__.__name__} was instantiated")
 
@@ -49,7 +49,9 @@ class CacheHooks:
         gui_hooks.profile_will_close.remove(self.__hook_profile_will_close)
         log.info(f"{self.__class__.__name__} was removed")
 
-    def __initialize_cache_on_startup(self) -> None:
+    def __initialize_cache_on_profile_opening(self) -> None:
+        self.__cache_manager.invalidate_caches()
+        self.__cache_manager.set_caches_initialized(False)
         self.__cache_initializer.warmup_caches()
 
     def __save_cache_to_file(self) -> None:
