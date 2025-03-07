@@ -30,7 +30,8 @@
     2. `pyenv virtualenv 3.9.18 note-size-anki-addon`
 4. Install Anki packages
     1. Activate virtual environment: `pyenv activate note-size-anki-addon`
-    2. Install packages: `pip install -U pip -r requirements/anki-qt6-current.txt -r requirements/dev.txt -r requirements/tests.txt`
+    2. Install packages:
+       `pip install -U pip -r requirements/anki-qt6-current.txt -r requirements/dev.txt -r requirements/tests.txt`
 
 ## Logs
 
@@ -101,6 +102,8 @@ Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
     2. Minor: `bump-my-version bump minor -v`
     3. Patch: `bump-my-version bump patch -v`
 5. Build ZIP: `./build_dist.sh`
+    1. Install and test on the earliest Anki version (Qt5)
+    2. Install and test on the current Anki version (Qt6)
 6. Upload ZIP to the Addon page: https://ankiweb.net/shared/info/1188705668
 7. Push Git branch and tags: `git push --follow-tags`
 8. Create a GitHub release from tag: https://github.com/Aleks-Ya/note-size-anki-addon/releases

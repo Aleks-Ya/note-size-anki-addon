@@ -1,5 +1,9 @@
 # Changelog for "Note Size" Anki addon
 
+## [v2.8.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.8.0) - 2025-03-07
+
+1. __[BUG]__ Error on switching profile
+
 ## [v2.7.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.7.0) - 2025-02-23
 
 1. __[BUG]__ Fix encoding error when logging on macOS
