@@ -82,3 +82,6 @@ class ConfigHooks:
         root_menu.addAction(configuration_action)
         root_menu.addMenu(info_menu)
         return root_menu
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

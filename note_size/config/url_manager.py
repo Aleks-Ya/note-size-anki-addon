@@ -56,3 +56,6 @@ class UrlManager:
 
     def get_all_urls(self) -> dict[UrlType, URL]:
         return {url_type: self.get_url(url_type) for url_type in UrlType}
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

@@ -190,3 +190,6 @@ class SizeCalculator(Cache):
         for media_file in files:
             file_sizes[media_file] = self.__media_cache.get_file_size(media_file, use_cache)
         return file_sizes
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

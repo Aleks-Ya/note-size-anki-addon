@@ -102,3 +102,6 @@ class CacheInitializerBackground:
             max_value_str: str = NumberFormatter.with_thousands_separator(max_value)
             full_label: str = f"{label}: {value_str} of {max_value_str}" if max_value else label
             self.__update_progress_callback(full_label, value, max_value)
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

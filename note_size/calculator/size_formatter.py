@@ -72,3 +72,6 @@ class SizeFormatter(Cache):
         unit: str = units[unit_index]
         precision: int = max(0, significant_digits - len(str(int(num)))) if unit != byte_unit else 0
         return SizeStr(f"{num:.{precision}f}{unit_separator}{unit}")
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

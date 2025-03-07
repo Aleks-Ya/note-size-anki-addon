@@ -75,3 +75,6 @@ class CacheManager:
 
     def get_updated_files_calculator(self) -> UpdatedFilesCalculator:
         return self.__updated_files_calculator
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

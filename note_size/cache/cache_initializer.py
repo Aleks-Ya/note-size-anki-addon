@@ -55,3 +55,6 @@ class CacheInitializer:
             self.__task_manager, self.__progress_manager, self.__cache_storage, self.__cache_manager,
             self.__deck_browser, parent, show_success_info, self.__config)
         cache_initializer_op.initialize_cache_in_background()
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

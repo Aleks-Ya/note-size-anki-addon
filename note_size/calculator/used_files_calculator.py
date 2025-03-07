@@ -40,3 +40,6 @@ class UsedFilesCalculator:
         files_size: SizeBytes = self.__size_calculator.calculate_size_of_files(files, use_cache)
         return UsedFiles(files_size, FilesNumber(len(files)), exist_files_number, missing_files_number,
                          NotesNumber(len(note_ids)))
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

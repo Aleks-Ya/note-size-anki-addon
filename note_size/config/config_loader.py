@@ -32,3 +32,6 @@ class ConfigLoader:
 
     def write_config(self, config: Config) -> None:
         self.__addon_manager.writeConfig(self.__module_name, config.get_as_dict())
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

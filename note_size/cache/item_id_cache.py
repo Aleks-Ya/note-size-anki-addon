@@ -60,3 +60,6 @@ class ItemIdCache(Cache):
     def get_cache_size(self) -> int:
         with self._lock:
             return len(self.__id_cache.keys())
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

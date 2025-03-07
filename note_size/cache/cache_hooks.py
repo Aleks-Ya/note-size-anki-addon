@@ -77,3 +77,6 @@ class CacheHooks:
             for note_id in note_ids:
                 self.__cache_manager.evict_note(note_id)
             log.debug(f"Refreshing notes having updated files finished: refreshed {len(note_ids)} notes")
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

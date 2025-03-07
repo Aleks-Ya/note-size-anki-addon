@@ -66,3 +66,6 @@ class SizeStrCache(Cache):
             for cache in self.__size_str_caches.values():
                 size += len(cache.keys())
             return size
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

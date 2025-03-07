@@ -74,3 +74,6 @@ class UpdatedFilesCalculator(Cache):
                         else:
                             self.__file_note_ids_cache[note_file] = {note_id}
             return self.__file_note_ids_cache[file]
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

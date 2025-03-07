@@ -89,3 +89,6 @@ class LevelParser:
         min_size_str: SizeStr = min_size_opt if min_size_opt else '0 B'
         max_size_str: SizeStr = max_size_opt if max_size_opt else '∞'
         return Level(color, min_size_bytes, max_size_bytes, min_size_str, max_size_str)
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

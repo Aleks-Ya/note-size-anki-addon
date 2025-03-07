@@ -61,3 +61,6 @@ class Profiler:
             file.parent.mkdir(parents=True)
         with open(file, 'w') as f:
             Stats(profile, stream=f).sort_stats(sort_key).print_stats()
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")

@@ -69,3 +69,6 @@ class CacheStorage:
         for cache in caches:
             cache.invalidate_cache()
         self.delete_cache_file()
+
+    def __del__(self):
+        log.debug(f"{self.__class__.__name__} was deleted")
