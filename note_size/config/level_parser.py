@@ -31,13 +31,14 @@ class Level:
             self.max_size_str == other.max_size_str
 
 
-LevelDict = NewType("LevelDict", dict[str, Optional[ColorName]])
+LevelParserKey = NewType("LevelParserKey", str)
+LevelDict = NewType("LevelDict", dict[LevelParserKey, Optional[ColorName]])
 
 
 class LevelParser:
-    __color_key: str = 'Color'
-    __min_size_key: str = 'Min Size'
-    __max_size_key: str = 'Max Size'
+    color_key: LevelParserKey = 'Color'
+    __min_size_key: LevelParserKey = 'Min Size'
+    __max_size_key: LevelParserKey = 'Max Size'
 
     def __init__(self, size_formatter: SizeFormatter) -> None:
         self.__size_formatter: SizeFormatter = size_formatter
@@ -57,7 +58,7 @@ class LevelParser:
             else:
                 previous_level[self.__max_size_key] = "100 KB"
         new_level: LevelDict = LevelDict({
-            self.__color_key: ColorName("Yellow"),
+            self.color_key: ColorName("Yellow"),
             self.__max_size_key: None
         })
         levels.append(new_level)
@@ -80,7 +81,7 @@ class LevelParser:
         return level_list
 
     def __parse_level(self, level: LevelDict) -> Level:
-        color: ColorName = level.get(self.__color_key)
+        color: ColorName = level.get(self.color_key)
         min_size_opt: Optional[SizeStr] = SizeStr(level.get(self.__min_size_key))
         max_size_opt: Optional[SizeStr] = SizeStr(level.get(self.__max_size_key))
         min_size_bytes: SizeBytes = SizeFormatter.str_to_bytes(min_size_opt) if min_size_opt else 0
