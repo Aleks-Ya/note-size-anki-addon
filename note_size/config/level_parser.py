@@ -80,7 +80,7 @@ class LevelParser:
         return level_list
 
     def __parse_level(self, level: LevelDict) -> Level:
-        color: ColorName = level.get("Color")
+        color: ColorName = level.get(self.__color_key)
         min_size_opt: Optional[SizeStr] = SizeStr(level.get(self.__min_size_key))
         max_size_opt: Optional[SizeStr] = SizeStr(level.get(self.__max_size_key))
         min_size_bytes: SizeBytes = SizeFormatter.str_to_bytes(min_size_opt) if min_size_opt else 0
