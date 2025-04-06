@@ -1,20 +1,22 @@
 import logging
 from logging import Logger
 
+from ....common.types import ColorName
+
 log: Logger = logging.getLogger(__name__)
 
 
 class EditorButtonLabel:
 
-    def __init__(self, text: str, background_color: str) -> None:
+    def __init__(self, text: str, background_color: ColorName) -> None:
         self.__text: str = text
-        self.__background_color: str = background_color
+        self.__background_color: ColorName = background_color
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def get_text(self) -> str:
         return self.__text
 
-    def get_background_color(self) -> str:
+    def get_background_color(self) -> ColorName:
         return self.__background_color
 
     def __eq__(self, other) -> bool:

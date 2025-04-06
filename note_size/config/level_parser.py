@@ -4,15 +4,15 @@ from logging import Logger
 from typing import Optional, NewType
 
 from ..calculator.size_formatter import SizeFormatter
-from ..common.types import SizeStr, SizeBytes, SignificantDigits
+from ..common.types import SizeStr, SizeBytes, SignificantDigits, ColorName
 
 log: Logger = logging.getLogger(__name__)
 
 
 class Level:
-    def __init__(self, color: str, min_size_bytes: SizeBytes, max_size_bytes: SizeBytes,
+    def __init__(self, color: ColorName, min_size_bytes: SizeBytes, max_size_bytes: SizeBytes,
                  min_size_str: SizeStr, max_size_str: SizeStr) -> None:
-        self.color: str = color
+        self.color: ColorName = color
         self.min_size_bytes: SizeBytes = min_size_bytes
         self.max_size_bytes: SizeBytes = max_size_bytes
         self.min_size_str: SizeStr = min_size_str
@@ -31,7 +31,7 @@ class Level:
             self.max_size_str == other.max_size_str
 
 
-LevelDict = NewType("LevelDict", dict[str, Optional[str]])
+LevelDict = NewType("LevelDict", dict[str, Optional[ColorName]])
 
 
 class LevelParser:
@@ -57,7 +57,7 @@ class LevelParser:
             else:
                 previous_level[self.__max_size_key] = "100 KB"
         new_level: LevelDict = LevelDict({
-            self.__color_key: "Yellow",
+            self.__color_key: ColorName("Yellow"),
             self.__max_size_key: None
         })
         levels.append(new_level)
@@ -80,7 +80,7 @@ class LevelParser:
         return level_list
 
     def __parse_level(self, level: LevelDict) -> Level:
-        color: str = level.get("Color")
+        color: ColorName = level.get("Color")
         min_size_opt: Optional[SizeStr] = SizeStr(level.get(self.__min_size_key))
         max_size_opt: Optional[SizeStr] = SizeStr(level.get(self.__max_size_key))
         min_size_bytes: SizeBytes = SizeFormatter.str_to_bytes(min_size_opt) if min_size_opt else 0

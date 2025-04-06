@@ -7,7 +7,7 @@ from .editor_button_label import EditorButtonLabel
 from ....cache.size_str_cache import SizeStrCache
 from ....config.config import Config
 from ....config.level_parser import Level, LevelParser
-from ....common.types import SizeStr, SizeBytes, SizeType, SignificantDigits
+from ....common.types import SizeStr, SizeBytes, SizeType, SignificantDigits, ColorName
 from ....calculator.size_calculator import SizeCalculator
 from ....calculator.size_formatter import SizeFormatter
 
@@ -28,7 +28,7 @@ class EditorButtonFormatter:
         size_bytes: SizeBytes = SizeBytes(0)
         significant_digits: SignificantDigits = self.__config.get_size_button_significant_digits()
         size: SizeStr = self.__size_formatter.bytes_to_str(size_bytes, significant_digits)
-        color: str = self.__get_color(size_bytes)
+        color: ColorName = self.__get_color(size_bytes)
         label: EditorButtonLabel = EditorButtonLabel(f"{size}", color)
         log.debug(f"Zero size label was created: {label}")
         return label
@@ -37,7 +37,7 @@ class EditorButtonFormatter:
         size_bytes: SizeBytes = self.__size_calculator.calculate_note_size(note, SizeType.TOTAL, use_cache=False)
         significant_digits: SignificantDigits = self.__config.get_size_button_significant_digits()
         size_str: SizeStr = self.__size_formatter.bytes_to_str(size_bytes, significant_digits)
-        color: str = self.__get_color(size_bytes)
+        color: ColorName = self.__get_color(size_bytes)
         label: EditorButtonLabel = EditorButtonLabel(f"{size_str}", color)
         log.debug(f"Add mode label created for NoteId {note.id}: {label}")
         return label
@@ -47,18 +47,18 @@ class EditorButtonFormatter:
         significant_digits: SignificantDigits = self.__config.get_size_button_significant_digits()
         size_str: SizeStr = self.__size_str_cache.get_note_size_str(
             note_id, SizeType.TOTAL, significant_digits, use_cache=False)
-        color: str = self.__get_color(size_bytes)
+        color: ColorName = self.__get_color(size_bytes)
         label: EditorButtonLabel = EditorButtonLabel(f"{size_str}", color)
         log.debug(f"Edit mode label created for NoteId {note_id}: {label}")
         return label
 
-    def __get_color(self, size: SizeBytes) -> str:
+    def __get_color(self, size: SizeBytes) -> ColorName:
         if self.__config.get_size_button_color_enabled():
             color_levels: list[Level] = self.__level_parser.parse_levels(self.__config.get_size_button_color_levels())
             for level in color_levels:
                 if level.min_size_bytes <= size < level.max_size_bytes:
                     return level.color
-        return ""
+        return ColorName("")
 
     def __del__(self):
         log.debug(f"{self.__class__.__name__} was deleted")

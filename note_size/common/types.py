@@ -11,6 +11,7 @@ ShortFilename = NewType("ShortFilename", str)
 FieldName = NewType("FieldName", str)
 FieldContent = NewType("FieldContent", str)
 FileContent = NewType("FileContent", str)
+ColorName = NewType("ColorName", str)
 
 
 class FileType(Enum):

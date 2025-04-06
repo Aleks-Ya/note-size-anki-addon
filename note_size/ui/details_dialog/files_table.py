@@ -13,7 +13,7 @@ from ..theme.theme_listener import ThemeListener
 from ...calculator.size_formatter import SizeFormatter
 from ...config.config import Config
 from ...config.settings import Settings
-from ...common.types import MediaFile, SizeStr, FileType, FileSize, SignificantDigits
+from ...common.types import MediaFile, SizeStr, FileType, FileSize, SignificantDigits, ColorName
 
 log: Logger = logging.getLogger(__name__)
 
@@ -130,7 +130,7 @@ class FilesTable(QTableWidget, ThemeListener):
 
     def on_theme_changed(self, theme_manager: ThemeManager) -> None:
         log.debug("On theme changed")
-        border_color: str = theme_manager.var(colors.BORDER_SUBTLE)
+        border_color: ColorName = ColorName(theme_manager.var(colors.BORDER_SUBTLE))
         # noinspection PyUnresolvedReferences
         self.setStyleSheet(f"""
         QTableCornerButton::section {{
