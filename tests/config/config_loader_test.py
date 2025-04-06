@@ -8,6 +8,8 @@ from aqt.addons import AddonManager
 from note_size.config.config import Config
 from note_size.config.config_loader import ConfigLoader
 from note_size.common.types import SignificantDigits
+from note_size.config.level_parser import LevelDict
+from tests.data import Colors
 
 
 def test_empty_addon_dir(config_loader: ConfigLoader, module_dir: Path) -> None:
@@ -217,9 +219,9 @@ def test_write_config(config_loader: ConfigLoader, module_dir: Path) -> None:
     config.set_size_button_enabled(False)
     config.set_size_button_color_enabled(False)
     config.set_size_button_significant_digits(SignificantDigits(5))
-    config.set_size_button_color_levels([{"Color": "Green", "Max Size": "50 KB"},
-                                         {"Color": "Yellow", "Max Size": "2 MB"},
-                                         {"Color": "Red", "Max Size": "100 GB"}])
+    config.set_size_button_color_levels([LevelDict({"Color": Colors.green, "Max Size": "50 KB"}),
+                                         LevelDict({"Color": Colors.yellow, "Max Size": "2 MB"}),
+                                         LevelDict({"Color": Colors.red, "Max Size": "100 GB"})])
     config_loader.write_config(config)
     act_config: Config = config_loader.load_config()
     assert act_config.get_as_dict() == {

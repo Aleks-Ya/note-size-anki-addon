@@ -1,7 +1,8 @@
 from note_size.config.config import Config
 from note_size.config.config_listener import ConfigListener
 from note_size.common.types import SignificantDigits
-from tests.data import Data
+from note_size.config.level_parser import LevelDict
+from tests.data import Data, Colors
 
 
 class CountConfigListener(ConfigListener):
@@ -32,9 +33,9 @@ def test_setters(td: Data):
                            {"Color": "Orange", "Max Size": "1 MB"},
                            {"Color": "LightCoral", "Max Size": None}]}}}
 
-    exp_color_levels: list[dict[str, str]] = [{"Color": "Green", "Max Size": "50 KB"},
-                                              {"Color": "Yellow", "Max Size": "2 MB"},
-                                              {"Color": "Red", "Max Size": "100 GB"}]
+    exp_color_levels: list[LevelDict] = [LevelDict({"Color": Colors.green, "Max Size": "50 KB"}),
+                                         LevelDict({"Color": Colors.yellow, "Max Size": "2 MB"}),
+                                         LevelDict({"Color": Colors.red, "Max Size": "100 GB"})]
     config.set_cache_warmup_enabled(False)
     config.set_store_cache_in_file_enabled(False)
     config.set_deck_browser_show_collection_size(False)

@@ -51,6 +51,8 @@ class Colors:
     orange: ColorName = ColorName("Orange")
     light_coral: ColorName = ColorName("LightCoral")
     yellow: ColorName = ColorName("Yellow")
+    red: ColorName = ColorName("Red")
+    green: ColorName = ColorName("Green")
 
 
 class Data:

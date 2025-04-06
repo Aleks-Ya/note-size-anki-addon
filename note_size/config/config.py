@@ -124,7 +124,7 @@ class Config:
     def get_size_button_color_levels(self) -> list[LevelDict]:
         return self.__config[self.__key_1_size_button][self.__key_2_color][self.__key_3_size_button_levels]
 
-    def set_size_button_color_levels(self, color_levels: list[dict[str, str]]) -> None:
+    def set_size_button_color_levels(self, color_levels: list[LevelDict]) -> None:
         self.__set(color_levels, self.__key_1_size_button, self.__key_2_color, self.__key_3_size_button_levels)
 
     def get_profiler_enabled(self) -> bool:
