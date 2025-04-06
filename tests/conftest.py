@@ -44,6 +44,7 @@ from note_size.ui.config.ui_model import UiModel
 from note_size.ui.deck_browser.collection_size_formatter import CollectionSizeFormatter
 from note_size.ui.deck_browser.trash import Trash
 from note_size.ui.deck_browser.deck_browser_js import DeckBrowserJs
+from note_size.ui.deck_browser.deck_browser_updater import DeckBrowserUpdater
 from note_size.ui.details_dialog.details_dialog import DetailsDialog
 from note_size.ui.details_dialog.details_model_filler import DetailsModelFiller
 from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
@@ -205,6 +206,11 @@ def size_formatter() -> SizeFormatter:
 @pytest.fixture
 def deck_browser_js(config: Config, config_ui: ConfigUi) -> DeckBrowserJs:
     return DeckBrowserJs(config, config_ui)
+
+
+@pytest.fixture
+def deck_browser_updater(collection_size_formatter: CollectionSizeFormatter, config: Config) -> DeckBrowserUpdater:
+    return DeckBrowserUpdater(collection_size_formatter, config)
 
 
 @pytest.fixture

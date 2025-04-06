@@ -39,6 +39,7 @@ class ProfileHook:
         from ..cache.cache_manager import CacheManager
         from ..cache.size_str_cache import SizeStrCache
         from .deck_browser.deck_browser_js import DeckBrowserJs
+        from .deck_browser.deck_browser_updater import DeckBrowserUpdater
         from ..log.logs import Logs
         from ..ui.config.config_ui import ConfigUi
         from ..ui.deck_browser.collection_size_formatter import CollectionSizeFormatter
@@ -127,7 +128,8 @@ class ProfileHook:
             editor_button_creator, editor_button_js, settings, config)
         editor_button_hooks.setup_hooks()
         deck_browser_js: DeckBrowserJs = DeckBrowserJs(config, config_ui)
-        deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter, deck_browser_js, config)
+        deck_browser_updater: DeckBrowserUpdater = DeckBrowserUpdater(collection_size_formatter, config)
+        deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(deck_browser_updater, deck_browser_js)
         deck_browser_hooks.setup_hooks()
         cache_hooks: CacheHooks = CacheHooks(cache_manager, cache_initializer, updated_files_calculator)
         cache_hooks.setup_hooks()
