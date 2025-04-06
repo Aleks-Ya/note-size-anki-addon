@@ -10,21 +10,24 @@ log: Logger = logging.getLogger(__name__)
 
 
 class Level:
-    def __init__(self, color: ColorName, min_size_bytes: SizeBytes, max_size_bytes: SizeBytes,
-                 min_size_str: SizeStr, max_size_str: SizeStr) -> None:
-        self.color: ColorName = color
+    def __init__(self, light_theme_color: Optional[ColorName], dark_theme_color: Optional[ColorName],
+                 min_size_bytes: SizeBytes, max_size_bytes: SizeBytes, min_size_str: SizeStr,
+                 max_size_str: SizeStr) -> None:
+        self.light_theme_color: ColorName = light_theme_color
+        self.dark_theme_color: ColorName = dark_theme_color
         self.min_size_bytes: SizeBytes = min_size_bytes
         self.max_size_bytes: SizeBytes = max_size_bytes
         self.min_size_str: SizeStr = min_size_str
         self.max_size_str: SizeStr = max_size_str
 
     def __repr__(self) -> str:
-        return (f"Level: {self.color}, {self.min_size_bytes}, {self.max_size_bytes}, "
-                f"{self.min_size_str}, {self.max_size_str}")
+        return (f"Level: {self.light_theme_color},{self.dark_theme_color}, {self.min_size_bytes}, "
+                f"{self.max_size_bytes}, {self.min_size_str}, {self.max_size_str}")
 
     def __eq__(self, other) -> bool:
         return isinstance(other, Level) and \
-            self.color == other.color and \
+            self.light_theme_color == other.light_theme_color and \
+            self.dark_theme_color == other.dark_theme_color and \
             self.min_size_bytes == other.min_size_bytes and \
             self.max_size_bytes == other.max_size_bytes and \
             self.min_size_str == other.min_size_str and \
@@ -36,7 +39,8 @@ LevelDict = NewType("LevelDict", dict[LevelParserKey, Optional[ColorName]])
 
 
 class LevelParser:
-    color_key: LevelParserKey = 'Color'
+    light_theme_color_key: LevelParserKey = 'Light Theme Color'
+    dark_theme_color_key: LevelParserKey = 'Dark Theme Color'
     __min_size_key: LevelParserKey = 'Min Size'
     __max_size_key: LevelParserKey = 'Max Size'
 
@@ -58,7 +62,8 @@ class LevelParser:
             else:
                 previous_level[self.__max_size_key] = "100 KB"
         new_level: LevelDict = LevelDict({
-            self.color_key: ColorName("Yellow"),
+            self.light_theme_color_key: ColorName("Yellow"),
+            self.dark_theme_color_key: ColorName("LightYellow"),
             self.__max_size_key: None
         })
         levels.append(new_level)
@@ -81,7 +86,8 @@ class LevelParser:
         return level_list
 
     def __parse_level(self, level: LevelDict) -> Level:
-        color: ColorName = level.get(self.color_key)
+        light_theme_color: Optional[ColorName] = level.get(self.light_theme_color_key)
+        dark_theme_color: Optional[ColorName] = level.get(self.dark_theme_color_key)
         min_size_opt: Optional[SizeStr] = SizeStr(level.get(self.__min_size_key))
         max_size_opt: Optional[SizeStr] = SizeStr(level.get(self.__max_size_key))
         min_size_bytes: SizeBytes = SizeFormatter.str_to_bytes(min_size_opt) if min_size_opt else 0
@@ -89,7 +95,7 @@ class LevelParser:
             else sys.maxsize
         min_size_str: SizeStr = min_size_opt if min_size_opt else '0 B'
         max_size_str: SizeStr = max_size_opt if max_size_opt else '∞'
-        return Level(color, min_size_bytes, max_size_bytes, min_size_str, max_size_str)
+        return Level(light_theme_color, dark_theme_color, min_size_bytes, max_size_bytes, min_size_str, max_size_str)
 
     def __del__(self):
         log.debug(f"{self.__class__.__name__} was deleted")

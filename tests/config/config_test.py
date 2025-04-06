@@ -29,13 +29,14 @@ def test_setters(td: Data):
             'Significant Digits': 2,
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
-                           {"Color": "Orange", "Max Size": "1 MB"},
-                           {"Color": "LightCoral", "Max Size": None}]}}}
+                "Levels": [{"Light Theme Color": "PaleGreen", "Dark Theme Color": "OliveDrab", "Max Size": "100 KB"},
+                           {"Light Theme Color": "Orange", "Dark Theme Color": "SandyBrown", "Max Size": "1 MB"},
+                           {"Light Theme Color": "LightCoral", "Dark Theme Color": "Maroon", "Max Size": None}]}}}
 
-    exp_color_levels: list[LevelDict] = [LevelDict({LevelParser.color_key: Colors.green, "Max Size": "50 KB"}),
-                                         LevelDict({LevelParser.color_key: Colors.yellow, "Max Size": "2 MB"}),
-                                         LevelDict({LevelParser.color_key: Colors.red, "Max Size": "100 GB"})]
+    exp_color_levels: list[LevelDict] = [
+        LevelDict({LevelParser.light_theme_color_key: Colors.green, "Max Size": "50 KB"}),
+        LevelDict({LevelParser.light_theme_color_key: Colors.yellow, "Max Size": "2 MB"}),
+        LevelDict({LevelParser.light_theme_color_key: Colors.red, "Max Size": "100 GB"})]
     config.set_cache_warmup_enabled(False)
     config.set_store_cache_in_file_enabled(False)
     config.set_deck_browser_show_collection_size(False)

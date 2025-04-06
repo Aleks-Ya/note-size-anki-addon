@@ -126,7 +126,8 @@ class ColorLayout(QVBoxLayout):
             min_size_item: Optional[QTableWidgetItem] = self.__table.item(row, self.__min_size_column)
             max_size_item: Optional[QTableWidgetItem] = self.__table.item(row, self.__max_size_column)
             level: LevelDict = LevelDict({
-                self.__color_key: color_item.background().color().name() if color_item else None,
+                LevelParser.light_theme_color_key: color_item.background().color().name() if color_item else None,
+                LevelParser.dark_theme_color_key: "",
                 self.__min_size_key: min_size_item.text() if min_size_item else None,
                 self.__max_size_key: max_size_item.text() if max_size_item and max_size_item.text() != "∞" else None})
             color_levels.append(level)
@@ -137,7 +138,7 @@ class ColorLayout(QVBoxLayout):
         self.__table.setRowCount(len(levels))
         levels_parsed: list[Level] = self.__level_parser.parse_levels(levels)
         for row, level in enumerate(levels_parsed):
-            color: QColor = QColor(level.color)
+            color: QColor = QColor(level.light_theme_color)
             color_item: QTableWidgetItem = QTableWidgetItem("")
             color_item.setBackground(color)
             min_size_item: QTableWidgetItem = QTableWidgetItem(level.min_size_str)

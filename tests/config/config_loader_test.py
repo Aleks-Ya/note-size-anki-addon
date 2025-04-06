@@ -34,9 +34,9 @@ def test_default_values(config_loader: ConfigLoader, module_dir: Path):
             'Significant Digits': 2,
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
-                           {"Color": "Orange", "Max Size": "1 MB"},
-                           {"Color": "LightCoral", "Max Size": None}]}}}
+                "Levels": [{"Light Theme Color": "PaleGreen", "Dark Theme Color": "OliveDrab", "Max Size": "100 KB"},
+                           {"Light Theme Color": "Orange", "Dark Theme Color": "SandyBrown", "Max Size": "1 MB"},
+                           {"Light Theme Color": "LightCoral", "Dark Theme Color": "Maroon", "Max Size": None}]}}}
 
 
 def test_actual_values_all(config_loader: ConfigLoader, module_dir: Path):
@@ -54,9 +54,9 @@ def test_actual_values_all(config_loader: ConfigLoader, module_dir: Path):
             'Significant Digits': 2,
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
-                           {"Color": "Orange", "Max Size": "1 MB"},
-                           {"Color": "LightCoral", "Max Size": None}]}}}
+                "Levels": [{"Light Theme Color": "PaleGreen", "Max Size": "100 KB"},
+                           {"Light Theme Color": "Orange", "Max Size": "1 MB"},
+                           {"Light Theme Color": "LightCoral", "Max Size": None}]}}}
     __write_meta_json_config(meta_json_config, module_dir)
     config: Config = config_loader.load_config()
     assert meta_json_config == config.get_as_dict()
@@ -79,9 +79,9 @@ def test_actual_values_partial(module_dir: Path, config_loader: ConfigLoader):
             'Significant Digits': 2,
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
-                           {"Color": "Orange", "Max Size": "1 MB"},
-                           {"Color": "LightCoral", "Max Size": None}]}}}
+                "Levels": [{"Light Theme Color": "PaleGreen", "Dark Theme Color": "OliveDrab", "Max Size": "100 KB"},
+                           {"Light Theme Color": "Orange", "Dark Theme Color": "SandyBrown", "Max Size": "1 MB"},
+                           {"Light Theme Color": "LightCoral", "Dark Theme Color": "Maroon", "Max Size": None}]}}}
 
 
 def test_delete_unused_properties(module_dir: Path, config_loader: ConfigLoader):
@@ -93,9 +93,9 @@ def test_delete_unused_properties(module_dir: Path, config_loader: ConfigLoader)
             'Significant Digits': 1,
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
-                           {"Color": "Orange", "Max Size": "1 MB"},
-                           {"Color": "LightCoral", "Max Size": None}]}, },
+                "Levels": [{"Light Theme Color": "PaleGreen", "Max Size": "100 KB"},
+                           {"Light Theme Color": "Orange", "Max Size": "1 MB"},
+                           {"Light Theme Color": "LightCoral", "Max Size": None}]}, },
         'Unused Top': {'Property 1': 'Value 1'}
     }, module_dir)
     config: Config = config_loader.load_config()
@@ -113,9 +113,9 @@ def test_delete_unused_properties(module_dir: Path, config_loader: ConfigLoader)
             'Significant Digits': 1,
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
-                           {"Color": "Orange", "Max Size": "1 MB"},
-                           {"Color": "LightCoral", "Max Size": None}]}}}
+                "Levels": [{"Light Theme Color": "PaleGreen", "Max Size": "100 KB"},
+                           {"Light Theme Color": "Orange", "Max Size": "1 MB"},
+                           {"Light Theme Color": "LightCoral", "Max Size": None}]}}}
 
 
 def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLoader, module_name: str,
@@ -130,9 +130,9 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
             'Significant Digits': 1,
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
-                           {"Color": "Orange", "Max Size": "1 MB"},
-                           {"Color": "LightCoral", "Max Size": None}]}},
+                "Levels": [{"Light Theme Color": "PaleGreen", "Max Size": "100 KB"},
+                           {"Light Theme Color": "Orange", "Max Size": "1 MB"},
+                           {"Light Theme Color": "LightCoral", "Max Size": None}]}},
         'Unused Top': {'Property 1': 'Value 1'}
     }, module_dir)
     config_origin: Optional[dict[str, Any]] = addon_manager.getConfig(module_name)
@@ -150,9 +150,9 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
             'Significant Digits': 1,
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
-                           {"Color": "Orange", "Max Size": "1 MB"},
-                           {"Color": "LightCoral", "Max Size": None}]}},
+                "Levels": [{"Light Theme Color": "PaleGreen", "Max Size": "100 KB"},
+                           {"Light Theme Color": "Orange", "Max Size": "1 MB"},
+                           {"Light Theme Color": "LightCoral", "Max Size": None}]}},
         'Unused Top': {'Property 1': 'Value 1'}}
     config: Config = config_loader.load_config()
     assert config.get_as_dict() == {
@@ -169,9 +169,9 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
             'Significant Digits': 1,
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
-                           {"Color": "Orange", "Max Size": "1 MB"},
-                           {"Color": "LightCoral", "Max Size": None}]}}}
+                "Levels": [{"Light Theme Color": "PaleGreen", "Max Size": "100 KB"},
+                           {"Light Theme Color": "Orange", "Max Size": "1 MB"},
+                           {"Light Theme Color": "LightCoral", "Max Size": None}]}}}
     config_saved: Optional[dict[str, Any]] = addon_manager.getConfig(module_name)
     assert config_saved == {
         'Browser': {'Show Found Notes Size': True,
@@ -187,9 +187,9 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
             'Significant Digits': 1,
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
-                           {"Color": "Orange", "Max Size": "1 MB"},
-                           {"Color": "LightCoral", "Max Size": None}]}}}
+                "Levels": [{"Light Theme Color": "PaleGreen", "Max Size": "100 KB"},
+                           {"Light Theme Color": "Orange", "Max Size": "1 MB"},
+                           {"Light Theme Color": "LightCoral", "Max Size": None}]}}}
 
 
 def test_write_config(config_loader: ConfigLoader, module_dir: Path) -> None:
@@ -208,9 +208,9 @@ def test_write_config(config_loader: ConfigLoader, module_dir: Path) -> None:
             'Significant Digits': 2,
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Color": "PaleGreen", "Max Size": "100 KB"},
-                           {"Color": "Orange", "Max Size": "1 MB"},
-                           {"Color": "LightCoral", "Max Size": None}]}}}
+                "Levels": [{"Light Theme Color": "PaleGreen", "Dark Theme Color": "OliveDrab", "Max Size": "100 KB"},
+                           {"Light Theme Color": "Orange", "Dark Theme Color": "SandyBrown", "Max Size": "1 MB"},
+                           {"Light Theme Color": "LightCoral", "Dark Theme Color": "Maroon", "Max Size": None}]}}}
     config.set_cache_warmup_enabled(False)
     config.set_deck_browser_show_collection_size(False)
     config.set_deck_browser_significant_digits(SignificantDigits(2))
@@ -219,9 +219,10 @@ def test_write_config(config_loader: ConfigLoader, module_dir: Path) -> None:
     config.set_size_button_enabled(False)
     config.set_size_button_color_enabled(False)
     config.set_size_button_significant_digits(SignificantDigits(5))
-    config.set_size_button_color_levels([LevelDict({LevelParser.color_key: Colors.green, "Max Size": "50 KB"}),
-                                         LevelDict({LevelParser.color_key: Colors.yellow, "Max Size": "2 MB"}),
-                                         LevelDict({LevelParser.color_key: Colors.red, "Max Size": "100 GB"})])
+    config.set_size_button_color_levels(
+        [LevelDict({LevelParser.light_theme_color_key: Colors.green, "Max Size": "50 KB"}),
+         LevelDict({LevelParser.light_theme_color_key: Colors.yellow, "Max Size": "2 MB"}),
+         LevelDict({LevelParser.light_theme_color_key: Colors.red, "Max Size": "100 GB"})])
     config_loader.write_config(config)
     act_config: Config = config_loader.load_config()
     assert act_config.get_as_dict() == {
@@ -238,9 +239,9 @@ def test_write_config(config_loader: ConfigLoader, module_dir: Path) -> None:
             'Significant Digits': 5,
             "Color": {
                 "Enabled": False,
-                "Levels": [{"Color": "Green", "Max Size": "50 KB"},
-                           {"Color": "Yellow", "Max Size": "2 MB"},
-                           {"Color": "Red", "Max Size": "100 GB"}]}}}
+                "Levels": [{"Light Theme Color": "Green", "Max Size": "50 KB"},
+                           {"Light Theme Color": "Yellow", "Max Size": "2 MB"},
+                           {"Light Theme Color": "Red", "Max Size": "100 GB"}]}}}
 
 
 def __write_meta_json_config(meta_json_config, module_dir: Path) -> None:

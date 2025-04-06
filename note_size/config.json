@@ -24,16 +24,19 @@
       "Enabled": true,
       "Levels": [
         {
-          "Color": "PaleGreen",
-          "Max Size": "100 KB"
+          "Max Size": "100 KB",
+          "Light Theme Color": "PaleGreen",
+          "Dark Theme Color": "OliveDrab"
         },
         {
-          "Color": "Orange",
-          "Max Size": "1 MB"
+          "Max Size": "1 MB",
+          "Light Theme Color": "Orange",
+          "Dark Theme Color": "SandyBrown"
         },
         {
-          "Color": "LightCoral",
-          "Max Size": null
+          "Max Size": null,
+          "Light Theme Color": "LightCoral",
+          "Dark Theme Color": "Maroon"
         }
       ]
     }

@@ -57,7 +57,7 @@ class EditorButtonFormatter:
             color_levels: list[Level] = self.__level_parser.parse_levels(self.__config.get_size_button_color_levels())
             for level in color_levels:
                 if level.min_size_bytes <= size < level.max_size_bytes:
-                    return level.color
+                    return level.light_theme_color
         return ColorName("")
 
     def __del__(self):
