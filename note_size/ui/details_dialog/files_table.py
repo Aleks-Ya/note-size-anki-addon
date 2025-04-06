@@ -7,6 +7,7 @@ from aqt.qt import QTableWidget, Qt, QTableWidgetItem, QIcon, QHeaderView
 from .file_type_helper import FileTypeHelper
 from .icon_table_widget_item import IconTableWidgetItem
 from .size_table_widget_item import SizeTableWidgetItem
+from ..theme.theme_listener import ThemeListener
 from ...calculator.size_formatter import SizeFormatter
 from ...config.config import Config
 from ...config.settings import Settings
@@ -15,7 +16,7 @@ from ...common.types import MediaFile, SizeStr, FileType, FileSize, SignificantD
 log: Logger = logging.getLogger(__name__)
 
 
-class FilesTable(QTableWidget):
+class FilesTable(QTableWidget, ThemeListener):
     __icon_column: int = 0
     __filename_column: int = 1
     __size_column: int = 2
@@ -49,7 +50,7 @@ class FilesTable(QTableWidget):
         self.__vertical_header: QHeaderView = self.verticalHeader()
         self.__vertical_header.setDefaultAlignment(Qt.AlignmentFlag.AlignCenter)
         self.__vertical_header.setSectionResizeMode(QHeaderView.ResizeMode.Fixed)
-        self.__set_style_sheets()
+        self.on_theme_changed()
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def prepare_items(self, file_sizes: dict[MediaFile, FileSize]) -> None:
@@ -131,7 +132,8 @@ class FilesTable(QTableWidget):
         icon_item: IconTableWidgetItem = IconTableWidgetItem(icon, file_type)
         return icon_item
 
-    def __set_style_sheets(self) -> None:
+    def on_theme_changed(self) -> None:
+        log.debug("On theme changed")
         # noinspection PyUnresolvedReferences
         self.setStyleSheet("""
         QTableCornerButton::section {

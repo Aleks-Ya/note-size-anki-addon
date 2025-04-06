@@ -10,6 +10,7 @@ from aqt.qt import QDialog, QLabel, QIcon, QGridLayout, QPushButton, QFont, QSiz
 from .details_model import DetailsModel
 from .details_model_filler import DetailsModelFiller
 from .files_table import FilesTable
+from ..theme.theme_listener import ThemeListener
 from ...calculator.size_calculator import SizeCalculator
 from ...calculator.size_formatter import SizeFormatter
 from ...config.config import Config
@@ -20,7 +21,7 @@ from .file_type_helper import FileTypeHelper
 log: Logger = logging.getLogger(__name__)
 
 
-class DetailsDialog(QDialog):
+class DetailsDialog(QDialog, ThemeListener):
     __total_size_row: int = 0
     __texts_size_row: int = 1
     __files_size_row: int = 2
@@ -89,6 +90,10 @@ class DetailsDialog(QDialog):
         end_time: datetime = datetime.now()
         duration_sec: int = round((end_time - start_time).total_seconds())
         log.info(f"Showing notes finished: duration_sec={duration_sec}")
+
+    def on_theme_changed(self):
+        log.debug("Theme did changed")
+        self.__files_table.on_theme_changed()
 
     def __close(self):
         self.__files_table.clear_rows()

@@ -53,6 +53,7 @@ class ProfileHook:
         from ..ui.editor.button.editor_button_creator import EditorButtonCreator
         from ..ui.browser.button.browser_hooks import BrowserHooks
         from ..ui.browser.button.browser_button_manager import BrowserButtonManager
+        from ..ui.theme.theme_hooks import ThemeHooks
 
         profile_manager: ProfileManager = mw.pm
         if self.__initialized:
@@ -133,6 +134,8 @@ class ProfileHook:
             item_id_cache, size_str_cache, details_dialog, progress_manager, config)
         browser_hooks: BrowserHooks = BrowserHooks(browser_button_manager, config)
         browser_hooks.setup_hooks()
+        theme_hooks: ThemeHooks = ThemeHooks(details_dialog)
+        theme_hooks.setup_hooks()
 
     def shutdown(self):
         self.__profiler.stop_profiling()
