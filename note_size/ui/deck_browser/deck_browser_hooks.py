@@ -2,26 +2,24 @@ import logging
 from logging import Logger
 from typing import Callable, Any
 
-from aqt import gui_hooks, mw
-from aqt.mediacheck import check_media_db
+from aqt import gui_hooks
 
 from .collection_size_formatter import CollectionSizeFormatter
-from .js_actions import JsActions
+from .deck_browser_js import DeckBrowserJs
 from ...config.config import Config
-from ...ui.config.config_ui import ConfigUi
 
 log: Logger = logging.getLogger(__name__)
 
 
 class DeckBrowserHooks:
 
-    def __init__(self, collection_size_formatter: CollectionSizeFormatter, config: Config, config_ui: ConfigUi):
+    def __init__(self, collection_size_formatter: CollectionSizeFormatter, deck_browser_js: DeckBrowserJs,
+                 config: Config):
         self.__config: Config = config
         self.__collection_size_formatter: CollectionSizeFormatter = collection_size_formatter
-        self.__config_ui: ConfigUi = config_ui
         self.__hook_deck_browser_will_render_content: Callable[[Any, Any], None] = self.__on_browser_will_render_content
         self.__hook_webview_did_receive_js_message: Callable[
-            [tuple[bool, Any], str, Any], tuple[bool, Any]] = self.__on_js_message
+            [tuple[bool, Any], str, Any], tuple[bool, Any]] = deck_browser_js.on_js_message
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def setup_hooks(self) -> None:
@@ -43,15 +41,6 @@ class DeckBrowserHooks:
             log.debug(f"DeckBrowserContent stats (edited): {content.stats}")
         else:
             log.debug("Showing collection size in DeckBrowser is disabled")
-
-    def __on_js_message(self, handled: tuple[bool, Any], message: str, _: Any) -> tuple[bool, Any]:
-        if message == JsActions.open_config_action:
-            self.__config_ui.show_configuration_dialog()
-            return True, None
-        if message == JsActions.open_check_media_action:
-            check_media_db(mw)
-            return True, None
-        return handled
 
     def __del__(self):
         log.debug(f"{self.__class__.__name__} was deleted")

@@ -4,15 +4,15 @@ import pytest
 from aqt import gui_hooks
 
 from note_size.config.config import Config
-from note_size.ui.config.config_ui import ConfigUi
 from note_size.ui.deck_browser.collection_size_formatter import CollectionSizeFormatter
 from note_size.ui.deck_browser.deck_browser_hooks import DeckBrowserHooks
+from note_size.ui.deck_browser.deck_browser_js import DeckBrowserJs
 
 
 @pytest.fixture
 def deck_browser_hooks(config: Config, collection_size_formatter: CollectionSizeFormatter,
-                       config_ui: ConfigUi) -> Generator[DeckBrowserHooks, None, None]:
-    deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter, config, config_ui)
+                       deck_browser_js: DeckBrowserJs) -> Generator[DeckBrowserHooks, None, None]:
+    deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(collection_size_formatter, deck_browser_js, config)
     yield deck_browser_hooks
     deck_browser_hooks.remove_hooks()
 

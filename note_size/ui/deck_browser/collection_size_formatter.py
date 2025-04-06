@@ -7,7 +7,7 @@ from typing import Optional
 from aqt.theme import ThemeManager
 from bs4 import BeautifulSoup, Tag
 
-from .js_actions import JsActions
+from .deck_browser_js import DeckBrowserJs
 from .trash import Trash
 from ...common.collection_holder import CollectionHolder
 from ...common.number_formatter import NumberFormatter
@@ -110,7 +110,7 @@ class CollectionSizeFormatter:
             "title": 'Click to show details',
             "src": os.path.join(self.__web_dir, icon_file),
             "height": "12",
-            "onclick": f"pycmd('{JsActions.open_check_media_action}')",
+            "onclick": f"pycmd('{DeckBrowserJs.open_check_media_action}')",
             "style": "margin-right: 0.2em;"
         })
         return details_icon
@@ -124,7 +124,7 @@ class CollectionSizeFormatter:
             "title": 'Open Configuration',
             "src": os.path.join(self.__web_dir, icon_file),
             "height": "12",
-            "onclick": f"pycmd('{JsActions.open_config_action}')"
+            "onclick": f"pycmd('{DeckBrowserJs.open_config_action}')"
         })
         return config_icon
 
