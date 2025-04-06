@@ -9,7 +9,7 @@ from aqt import gui_hooks
 
 from note_size.common.collection_holder import CollectionHolder
 from note_size.config.config import Config
-from note_size.common.types import MediaFile, FieldName, FieldContent, FileContent, SignificantDigits
+from note_size.common.types import MediaFile, FieldName, FieldContent, FileContent, SignificantDigits, ColorName
 
 
 class MediaFiles:
@@ -44,6 +44,13 @@ class Digits:
     one: SignificantDigits = SignificantDigits(1)
     two: SignificantDigits = SignificantDigits(2)
     three: SignificantDigits = SignificantDigits(3)
+
+
+class Colors:
+    pale_green: ColorName = ColorName("PaleGreen")
+    orange: ColorName = ColorName("Orange")
+    light_coral: ColorName = ColorName("LightCoral")
+    yellow: ColorName = ColorName("Yellow")
 
 
 class Data:
