@@ -108,16 +108,16 @@ class ProfileHook:
                                                                task_manager, progress_manager, config)
         used_files_calculator: UsedFilesCalculator = UsedFilesCalculator(self.__collection_holder, size_calculator,
                                                                          media_cache)
+        theme_manager: ThemeManager = theme.theme_manager
         collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(
-            self.__collection_holder, item_id_cache, media_cache, trash, size_formatter, used_files_calculator, config,
-            settings)
+            self.__collection_holder, item_id_cache, media_cache, trash, size_formatter, used_files_calculator,
+            theme_manager, config, settings)
         desktop_services: QDesktopServices = QDesktopServices()
         url_manager: UrlManager = UrlManager()
         config_ui: ConfigUi = ConfigUi(config, config_loader, logs, cache_initializer, desktop_services, level_parser,
                                        url_manager, deck_browser, settings)
         details_model_filler: DetailsModelFiller = DetailsModelFiller(
             size_calculator, size_formatter, media_cache, config)
-        theme_manager: ThemeManager = theme.theme_manager
         details_dialog: DetailsDialog = DetailsDialog(size_calculator, size_formatter, file_type_helper,
                                                       details_model_filler, theme_manager, config_ui, config, settings)
         editor_button_js: EditorButtonJs = EditorButtonJs(editor_button_formatter)

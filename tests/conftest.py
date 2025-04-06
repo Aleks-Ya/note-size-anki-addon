@@ -209,9 +209,10 @@ def trash(collection_holder: CollectionHolder) -> Trash:
 @pytest.fixture
 def collection_size_formatter(collection_holder: CollectionHolder, item_id_cache: ItemIdCache, media_cache: MediaCache,
                               size_formatter: SizeFormatter, used_files_calculator: UsedFilesCalculator, trash: Trash,
-                              config: Config, settings: Settings) -> CollectionSizeFormatter:
-    return CollectionSizeFormatter(
-        collection_holder, item_id_cache, media_cache, trash, size_formatter, used_files_calculator, config, settings)
+                              theme_manager: ThemeManager, config: Config,
+                              settings: Settings) -> CollectionSizeFormatter:
+    return CollectionSizeFormatter(collection_holder, item_id_cache, media_cache, trash, size_formatter,
+                                   used_files_calculator, theme_manager, config, settings)
 
 
 @pytest.fixture

@@ -4,6 +4,7 @@ from logging import Logger
 from pathlib import Path
 from typing import Optional
 
+from aqt.theme import ThemeManager
 from bs4 import BeautifulSoup, Tag
 
 from .js_actions import JsActions
@@ -27,13 +28,14 @@ class CollectionSizeFormatter:
 
     def __init__(self, collection_holder: CollectionHolder, item_id_cache: ItemIdCache, media_cache: MediaCache,
                  trash: Trash, size_formatter: SizeFormatter, used_files_calculator: UsedFilesCalculator,
-                 config: Config, settings: Settings):
+                 theme_manager: ThemeManager, config: Config, settings: Settings):
         self.__collection_holder: CollectionHolder = collection_holder
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__media_cache: MediaCache = media_cache
         self.__trash: Trash = trash
         self.__size_formatter: SizeFormatter = size_formatter
         self.__used_files_calculator: UsedFilesCalculator = used_files_calculator
+        self.__theme_manager: ThemeManager = theme_manager
         self.__config: Config = config
         self.__web_dir: str = os.path.join("_addons", settings.module_name, "ui", "web")
         log.debug(f"{self.__class__.__name__} was instantiated")
@@ -89,31 +91,42 @@ class CollectionSizeFormatter:
         total_title: str = 'Total size of collection, media files, unused files and trash files'
         div.append(self.__span(soup, "Collection", collection_size, collection_title))
         div.append(self.__span(soup, "Media", used_files_size, media_title))
-        div.append(self.__span(soup, "Unused", unused_files_size, unused_title, self.__details_icon(soup)))
-        div.append(self.__span(soup, "Trash", trash_dir_size, trash_title, self.__details_icon(soup)))
+        div.append(self.__span(soup, "Unused", unused_files_size, unused_title, self.__check_media_icon_tag(soup)))
+        div.append(self.__span(soup, "Trash", trash_dir_size, trash_title, self.__check_media_icon_tag(soup)))
         div.append(self.__span(soup, "Total", total_size, total_title))
-        config_icon: Tag = soup.new_tag('img', attrs={
-            "title": 'Open Configuration',
-            "src": os.path.join(self.__web_dir, "setting.png"),
-            "height": "12",
-            "onclick": f"pycmd('{JsActions.open_config_action}')"
-        })
-        div.append(config_icon)
+        div.append(self.__configuration_icon_tag(soup))
 
         soup.append(div)
         html: str = str(soup)
         log.debug("Formatting collection size finished")
         return html
 
-    def __details_icon(self, soup: BeautifulSoup) -> Tag:
+    def __check_media_icon_tag(self, soup: BeautifulSoup) -> Tag:
+        if self.__theme_manager.night_mode:
+            icon_file: str = "info_white.png"
+        else:
+            icon_file: str = "info_black.png"
         details_icon: Tag = soup.new_tag('img', attrs={
             "title": 'Click to show details',
-            "src": os.path.join(self.__web_dir, "info.png"),
+            "src": os.path.join(self.__web_dir, icon_file),
             "height": "12",
             "onclick": f"pycmd('{JsActions.open_check_media_action}')",
             "style": "margin-right: 0.2em;"
         })
         return details_icon
+
+    def __configuration_icon_tag(self, soup: BeautifulSoup) -> Tag:
+        if self.__theme_manager.night_mode:
+            icon_file: str = "setting_white.png"
+        else:
+            icon_file: str = "setting_black.png"
+        config_icon: Tag = soup.new_tag('img', attrs={
+            "title": 'Open Configuration',
+            "src": os.path.join(self.__web_dir, icon_file),
+            "height": "12",
+            "onclick": f"pycmd('{JsActions.open_config_action}')"
+        })
+        return config_icon
 
     def __span(self, soup: BeautifulSoup, name: str, size: Optional[SizeBytes], title: str, icon: Tag = None) -> Tag:
         log.debug(f"Create span for: name={name}, size={size}")

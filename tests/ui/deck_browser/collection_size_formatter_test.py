@@ -14,8 +14,8 @@ from note_size.common.types import MediaFile, SizeBytes
 from tests.data import Data, Digits
 
 web_path: str = os.path.join("_addons", "1188705668", "ui", "web")
-info_png_path: str = os.path.join(web_path, "info.png")
-settings_png_path: str = os.path.join(web_path, "setting.png")
+info_png_path: str = os.path.join(web_path, "info_black.png")
+settings_png_path: str = os.path.join(web_path, "setting_black.png")
 
 
 def test_format_note_detailed_text(col: Collection, td: Data, collection_size_formatter: CollectionSizeFormatter,

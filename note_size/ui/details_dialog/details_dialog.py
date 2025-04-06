@@ -39,7 +39,7 @@ class DetailsDialog(QDialog, ThemeListener):
         self.__details_model_filler: DetailsModelFiller = details_model_filler
         # noinspection PyUnresolvedReferences
         self.setWindowTitle('"Note Size" addon')
-        configuration_button: ConfigurationButton = ConfigurationButton(config_ui, settings)
+        self.__configuration_button: ConfigurationButton = ConfigurationButton(theme_manager, config_ui, settings)
         self.__total_size_label: QLabel = self.__total_size_label()
         self.__texts_size_label: QLabel = QLabel()
         self.__files_size_label: QLabel = QLabel()
@@ -53,7 +53,7 @@ class DetailsDialog(QDialog, ThemeListener):
 
         layout.addWidget(self.__total_size_label, self.__total_size_row, 0)
         # noinspection PyArgumentList
-        layout.addWidget(configuration_button, self.__total_size_row, 1, alignment=Qt.AlignmentFlag.AlignRight)
+        layout.addWidget(self.__configuration_button, self.__total_size_row, 1, alignment=Qt.AlignmentFlag.AlignRight)
         layout.addWidget(self.__texts_size_label, self.__texts_size_row, 0)
         layout.addWidget(self.__files_size_label, self.__files_size_row, 0)
         layout.addWidget(self.__files_table, self.__files_table_row, 0, 1, 2)
@@ -93,6 +93,7 @@ class DetailsDialog(QDialog, ThemeListener):
 
     def on_theme_changed(self, theme_manager: ThemeManager):
         log.debug("Theme did changed")
+        self.__configuration_button.on_theme_changed(theme_manager)
         self.__files_table.on_theme_changed(theme_manager)
 
     def __close(self):
