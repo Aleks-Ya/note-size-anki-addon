@@ -49,7 +49,7 @@ package NoteSizeAddon {
             class EditorButtonFormatter
         }
         class BrowserButton
-        class CollectionSizeFormatter
+        class DeckBrowserFormatter
         together {
             class ColumnHooks
             class ItemIdSorter
@@ -90,9 +90,9 @@ EditorButtonFormatter --> SizeStrCache
 EditorButtonFormatter --> SizeCalculator #orange
 EditorButtonFormatter --> SizeFormatter #brown
 
-CollectionSizeFormatter --> ItemIdCache #red
-CollectionSizeFormatter --> MediaCache #green
-CollectionSizeFormatter --> SizeFormatter #brown
+DeckBrowserFormatter --> ItemIdCache #red
+DeckBrowserFormatter --> MediaCache #green
+DeckBrowserFormatter --> SizeFormatter #brown
 
 SizeCalculator --> Collection
 SizeCalculator --> MediaCache #green

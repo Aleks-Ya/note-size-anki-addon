@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.calculator.size_formatter import SizeFormatter
-from note_size.ui.deck_browser.collection_size_formatter import CollectionSizeFormatter
+from note_size.ui.deck_browser.deck_browser_formatter import DeckBrowserFormatter
 from note_size.ui.deck_browser.trash import Trash
 from note_size.common.types import MediaFile, SizeBytes
 from tests.data import Data, Digits
@@ -18,7 +18,7 @@ info_png_path: str = os.path.join(web_path, "info_black.png")
 settings_png_path: str = os.path.join(web_path, "setting_black.png")
 
 
-def test_format_note_detailed_text(col: Collection, td: Data, collection_size_formatter: CollectionSizeFormatter,
+def test_format_note_detailed_text(col: Collection, td: Data, deck_browser_formatter: DeckBrowserFormatter,
                                    item_id_cache: ItemIdCache, media_trash_dir: Path, trash: Trash):
     item_id_cache.set_initialized(True)
     td.write_file(MediaFile("unused_file.jpg"), "unused content")
@@ -67,11 +67,11 @@ def test_format_note_detailed_text(col: Collection, td: Data, collection_size_fo
     </div>
     """
     exp_soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
-    act_soup: BeautifulSoup = BeautifulSoup(collection_size_formatter.format_collection_size_html(), 'html.parser')
+    act_soup: BeautifulSoup = BeautifulSoup(deck_browser_formatter.format_collection_size_html(), 'html.parser')
     assert act_soup.prettify() == exp_soup.prettify()
 
 
-def test_item_id_cache_not_initialized(col: Collection, td: Data, collection_size_formatter: CollectionSizeFormatter,
+def test_item_id_cache_not_initialized(col: Collection, td: Data, deck_browser_formatter: DeckBrowserFormatter,
                                        item_id_cache: ItemIdCache, media_trash_dir: Path):
     item_id_cache.set_initialized(False)
     td.write_file(MediaFile("unused_file.jpg"), "abc")
@@ -106,11 +106,11 @@ def test_item_id_cache_not_initialized(col: Collection, td: Data, collection_siz
     </div>
     """
     exp: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
-    act: BeautifulSoup = BeautifulSoup(collection_size_formatter.format_collection_size_html(), 'html.parser')
+    act: BeautifulSoup = BeautifulSoup(deck_browser_formatter.format_collection_size_html(), 'html.parser')
     assert exp.prettify() == act.prettify()
 
 
-def test_empty_unused_and_trash(col: Collection, td: Data, collection_size_formatter: CollectionSizeFormatter,
+def test_empty_unused_and_trash(col: Collection, td: Data, deck_browser_formatter: DeckBrowserFormatter,
                                 item_id_cache: ItemIdCache, media_trash_dir: Path, trash: Trash):
     item_id_cache.set_initialized(True)
     td.create_note_with_files()
@@ -155,7 +155,7 @@ def test_empty_unused_and_trash(col: Collection, td: Data, collection_size_forma
     </div>
     """
     exp_soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
-    act_soup: BeautifulSoup = BeautifulSoup(collection_size_formatter.format_collection_size_html(), 'html.parser')
+    act_soup: BeautifulSoup = BeautifulSoup(deck_browser_formatter.format_collection_size_html(), 'html.parser')
     assert act_soup.prettify() == exp_soup.prettify()
 
 

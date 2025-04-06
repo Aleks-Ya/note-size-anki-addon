@@ -22,7 +22,7 @@ from ...calculator.size_formatter import SizeFormatter
 log: Logger = logging.getLogger(__name__)
 
 
-class CollectionSizeFormatter:
+class DeckBrowserFormatter:
     __code_style: str = "font-family:Consolas,monospace;display: inline-block;"
     __sand_clock: str = "⏳"
 
@@ -139,10 +139,10 @@ class CollectionSizeFormatter:
                                                                        unit_separator=separator).split(separator)
             number: str = size_split[0]
             unit: str = size_split[1]
-            number_span: Tag = soup.new_tag('span', attrs={"style": CollectionSizeFormatter.__code_style})
+            number_span: Tag = soup.new_tag('span', attrs={"style": DeckBrowserFormatter.__code_style})
             outer_span.append(number_span)
             number_span.string = number
-            unit_span: Tag = soup.new_tag('span', attrs={"style": CollectionSizeFormatter.__code_style})
+            unit_span: Tag = soup.new_tag('span', attrs={"style": DeckBrowserFormatter.__code_style})
             unit_span.string = unit
             outer_span.append(" ")
             outer_span.append(unit_span)

@@ -41,7 +41,7 @@ from note_size.ui.browser.button.browser_button_manager import BrowserButtonMana
 from note_size.ui.config.config_ui import ConfigUi
 from note_size.ui.config.model_converter import ModelConverter
 from note_size.ui.config.ui_model import UiModel
-from note_size.ui.deck_browser.collection_size_formatter import CollectionSizeFormatter
+from note_size.ui.deck_browser.deck_browser_formatter import DeckBrowserFormatter
 from note_size.ui.deck_browser.trash import Trash
 from note_size.ui.deck_browser.deck_browser_js import DeckBrowserJs
 from note_size.ui.deck_browser.deck_browser_updater import DeckBrowserUpdater
@@ -209,9 +209,9 @@ def deck_browser_js(config: Config, config_ui: ConfigUi) -> DeckBrowserJs:
 
 
 @pytest.fixture
-def deck_browser_updater(deck_browser: DeckBrowser, collection_size_formatter: CollectionSizeFormatter,
+def deck_browser_updater(deck_browser: DeckBrowser, deck_browser_formatter: DeckBrowserFormatter,
                          config: Config) -> DeckBrowserUpdater:
-    return DeckBrowserUpdater(deck_browser, collection_size_formatter, config)
+    return DeckBrowserUpdater(deck_browser, deck_browser_formatter, config)
 
 
 @pytest.fixture
@@ -220,11 +220,11 @@ def trash(collection_holder: CollectionHolder) -> Trash:
 
 
 @pytest.fixture
-def collection_size_formatter(collection_holder: CollectionHolder, item_id_cache: ItemIdCache, media_cache: MediaCache,
+def deck_browser_formatter(collection_holder: CollectionHolder, item_id_cache: ItemIdCache, media_cache: MediaCache,
                               size_formatter: SizeFormatter, used_files_calculator: UsedFilesCalculator, trash: Trash,
                               theme_manager: ThemeManager, config: Config,
-                              settings: Settings) -> CollectionSizeFormatter:
-    return CollectionSizeFormatter(collection_holder, item_id_cache, media_cache, trash, size_formatter,
+                              settings: Settings) -> DeckBrowserFormatter:
+    return DeckBrowserFormatter(collection_holder, item_id_cache, media_cache, trash, size_formatter,
                                    used_files_calculator, theme_manager, config, settings)
 
 

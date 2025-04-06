@@ -42,7 +42,7 @@ class ProfileHook:
         from .deck_browser.deck_browser_updater import DeckBrowserUpdater
         from ..log.logs import Logs
         from ..ui.config.config_ui import ConfigUi
-        from ..ui.deck_browser.collection_size_formatter import CollectionSizeFormatter
+        from ..ui.deck_browser.deck_browser_formatter import DeckBrowserFormatter
         from ..ui.deck_browser.deck_browser_hooks import DeckBrowserHooks
         from ..ui.deck_browser.trash import Trash
         from ..ui.details_dialog.details_dialog import DetailsDialog
@@ -111,7 +111,7 @@ class ProfileHook:
         used_files_calculator: UsedFilesCalculator = UsedFilesCalculator(self.__collection_holder, size_calculator,
                                                                          media_cache)
         theme_manager: ThemeManager = theme.theme_manager
-        collection_size_formatter: CollectionSizeFormatter = CollectionSizeFormatter(
+        deck_browser_formatter: DeckBrowserFormatter = DeckBrowserFormatter(
             self.__collection_holder, item_id_cache, media_cache, trash, size_formatter, used_files_calculator,
             theme_manager, config, settings)
         desktop_services: QDesktopServices = QDesktopServices()
@@ -128,7 +128,7 @@ class ProfileHook:
             editor_button_creator, editor_button_js, settings, config)
         editor_button_hooks.setup_hooks()
         deck_browser_js: DeckBrowserJs = DeckBrowserJs(config, config_ui)
-        deck_browser_updater: DeckBrowserUpdater = DeckBrowserUpdater(deck_browser, collection_size_formatter, config)
+        deck_browser_updater: DeckBrowserUpdater = DeckBrowserUpdater(deck_browser, deck_browser_formatter, config)
         deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(deck_browser_updater, deck_browser_js)
         deck_browser_hooks.setup_hooks()
         cache_hooks: CacheHooks = CacheHooks(cache_manager, cache_initializer, updated_files_calculator)
