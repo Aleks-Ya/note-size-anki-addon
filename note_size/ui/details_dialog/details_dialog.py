@@ -4,10 +4,10 @@ from logging import Logger
 from typing import Sequence, Optional
 
 from anki.notes import Note, NoteId
-from aqt.qt import QDialog, QLabel, QIcon, QGridLayout, QPushButton, QFont, QSize, QMargins, QDialogButtonBox, Qt, \
-    QWidget
+from aqt.qt import QDialog, QLabel, QGridLayout, QFont, QDialogButtonBox, Qt, QWidget
 from aqt.theme import ThemeManager
 
+from .configuration_button import ConfigurationButton
 from .details_model import DetailsModel
 from .details_model_filler import DetailsModelFiller
 from .files_table import FilesTable
@@ -37,15 +37,13 @@ class DetailsDialog(QDialog, ThemeListener):
         self.__size_formatter: SizeFormatter = size_formatter
         self.__model: DetailsModel = DetailsModel()
         self.__details_model_filler: DetailsModelFiller = details_model_filler
-        self.__config_ui: ConfigUi = config_ui
         # noinspection PyUnresolvedReferences
         self.setWindowTitle('"Note Size" addon')
+        configuration_button: ConfigurationButton = ConfigurationButton(config_ui, settings)
         self.__total_size_label: QLabel = self.__total_size_label()
         self.__texts_size_label: QLabel = QLabel()
         self.__files_size_label: QLabel = QLabel()
         self.__files_table: FilesTable = FilesTable(file_type_helper, size_formatter, theme_manager, config, settings)
-
-        self.__settings_icon: QIcon = QIcon(str(settings.module_dir / "ui" / "web" / "setting.png"))
 
         button_box: QDialogButtonBox = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
         # noinspection PyUnresolvedReferences
@@ -55,7 +53,7 @@ class DetailsDialog(QDialog, ThemeListener):
 
         layout.addWidget(self.__total_size_label, self.__total_size_row, 0)
         # noinspection PyArgumentList
-        layout.addWidget(self.__configuration_button(), self.__total_size_row, 1, alignment=Qt.AlignmentFlag.AlignRight)
+        layout.addWidget(configuration_button, self.__total_size_row, 1, alignment=Qt.AlignmentFlag.AlignRight)
         layout.addWidget(self.__texts_size_label, self.__texts_size_row, 0)
         layout.addWidget(self.__files_size_label, self.__files_size_row, 0)
         layout.addWidget(self.__files_table, self.__files_table_row, 0, 1, 2)
@@ -109,24 +107,6 @@ class DetailsDialog(QDialog, ThemeListener):
         label: QLabel = QLabel()
         label.setFont(font)
         return label
-
-    def __configuration_button(self) -> QPushButton:
-        button: QPushButton = QPushButton()
-        button.setIcon(self.__settings_icon)
-        button.setIconSize(button.sizeHint())
-        button.setFixedSize(self.__settings_icon.actualSize(button.iconSize()))
-        # noinspection PyUnresolvedReferences
-        button.setStyleSheet("border: none;")
-        # noinspection PyUnresolvedReferences
-        button.clicked.connect(self.__on_configuration_button_clicked)
-        margin: int = 1
-        # noinspection PyUnresolvedReferences
-        icon_size: QSize = button.size().shrunkBy(QMargins(margin, margin, margin, margin))
-        button.setIconSize(icon_size)
-        return button
-
-    def __on_configuration_button_clicked(self) -> None:
-        self.__config_ui.show_configuration_dialog()
 
     def __show_model(self, parent: Optional[QWidget]) -> None:
         log.debug(f"Set details dialog parent: {parent}")
