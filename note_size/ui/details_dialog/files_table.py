@@ -39,47 +39,17 @@ class FilesTable(QTableWidget):
         # noinspection PyUnresolvedReferences
         self.setHorizontalHeaderLabels(["", "File", "Size"])
         self.setSizeAdjustPolicy(QTableWidget.SizeAdjustPolicy.AdjustToContents)
-        horizontal_header: QHeaderView = self.horizontalHeader()
-        horizontal_header.setMinimumSectionSize(0)
         self.setWordWrap(False)
         self.setSortingEnabled(True)
-        # noinspection PyUnresolvedReferences
-        self.setStyleSheet("""
-        QTableCornerButton::section {
-            border-top: 1px solid #e4e4e4;
-            border-right: 1px solid #e4e4e4;
-            border-bottom: 1px solid #e4e4e4;
-            background: #fcfcfc;
-            border-top-left-radius: 5px;
-        }
-        """)
-        # noinspection PyUnresolvedReferences
-        horizontal_header.setStyleSheet("""
-        QHeaderView::section:first {
-            padding-right: -4px;
-            border-top-left-radius: 0px;
-        }
-        """)
-        vertical_header: QHeaderView = self.verticalHeader()
-        # noinspection PyUnresolvedReferences
-        vertical_header.setStyleSheet("""
-        QHeaderView::section {
-            padding-right: 0px;
-            border-top: 0px;
-        }
-        QHeaderView::section {
-            border-top-left-radius: 0px;
-            border-top-right-radius: 0px;
-        }
-        QHeaderView::section:first {
-            border-top: 0px
-        }
-        """)
-        vertical_header.setDefaultAlignment(Qt.AlignmentFlag.AlignCenter)
-        vertical_header.setSectionResizeMode(QHeaderView.ResizeMode.Fixed)
-        horizontal_header.setSectionResizeMode(self.__icon_column, QHeaderView.ResizeMode.ResizeToContents)
-        horizontal_header.setSectionResizeMode(self.__filename_column, QHeaderView.ResizeMode.Stretch)
-        horizontal_header.setSectionResizeMode(self.__size_column, QHeaderView.ResizeMode.ResizeToContents)
+        self.__horizontal_header: QHeaderView = self.horizontalHeader()
+        self.__horizontal_header.setMinimumSectionSize(0)
+        self.__horizontal_header.setSectionResizeMode(self.__icon_column, QHeaderView.ResizeMode.ResizeToContents)
+        self.__horizontal_header.setSectionResizeMode(self.__filename_column, QHeaderView.ResizeMode.Stretch)
+        self.__horizontal_header.setSectionResizeMode(self.__size_column, QHeaderView.ResizeMode.ResizeToContents)
+        self.__vertical_header: QHeaderView = self.verticalHeader()
+        self.__vertical_header.setDefaultAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.__vertical_header.setSectionResizeMode(QHeaderView.ResizeMode.Fixed)
+        self.__set_style_sheets()
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def prepare_items(self, file_sizes: dict[MediaFile, FileSize]) -> None:
@@ -160,6 +130,39 @@ class FilesTable(QTableWidget):
         icon: QIcon = self.__icons[file_type]
         icon_item: IconTableWidgetItem = IconTableWidgetItem(icon, file_type)
         return icon_item
+
+    def __set_style_sheets(self) -> None:
+        # noinspection PyUnresolvedReferences
+        self.setStyleSheet("""
+        QTableCornerButton::section {
+            border-top: 1px solid #e4e4e4;
+            border-right: 1px solid #e4e4e4;
+            border-bottom: 1px solid #e4e4e4;
+            background: #fcfcfc;
+            border-top-left-radius: 5px;
+        }
+        """)
+        # noinspection PyUnresolvedReferences
+        self.__horizontal_header.setStyleSheet("""
+        QHeaderView::section:first {
+            padding-right: -4px;
+            border-top-left-radius: 0px;
+        }
+        """)
+        # noinspection PyUnresolvedReferences
+        self.__vertical_header.setStyleSheet("""
+        QHeaderView::section {
+            padding-right: 0px;
+            border-top: 0px;
+        }
+        QHeaderView::section {
+            border-top-left-radius: 0px;
+            border-top-right-radius: 0px;
+        }
+        QHeaderView::section:first {
+            border-top: 0px
+        }
+        """)
 
     def __del__(self):
         log.debug(f"{self.__class__.__name__} was deleted")
