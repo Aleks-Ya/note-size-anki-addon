@@ -14,11 +14,12 @@ class ProfileHook:
         self.__initialized: bool = False
 
     def initialize(self) -> None:
-        from aqt import mw, QDesktopServices
+        from aqt import mw, QDesktopServices, theme
         from aqt.deckbrowser import DeckBrowser
         from aqt.progress import ProgressManager
         from aqt.taskman import TaskManager
         from aqt import ProfileManager
+        from aqt.theme import ThemeManager
 
         from ..config.config import Config
         from ..config.config_loader import ConfigLoader
@@ -112,13 +113,13 @@ class ProfileHook:
             settings)
         desktop_services: QDesktopServices = QDesktopServices()
         url_manager: UrlManager = UrlManager()
-        config_ui: ConfigUi = ConfigUi(
-            config, config_loader, logs, cache_initializer, desktop_services, level_parser, url_manager, deck_browser,
-            settings)
-        details_model_filler: DetailsModelFiller = DetailsModelFiller(size_calculator, size_formatter, media_cache,
-                                                                      config)
-        details_dialog: DetailsDialog = DetailsDialog(
-            size_calculator, size_formatter, file_type_helper, details_model_filler, config_ui, config, settings)
+        config_ui: ConfigUi = ConfigUi(config, config_loader, logs, cache_initializer, desktop_services, level_parser,
+                                       url_manager, deck_browser, settings)
+        details_model_filler: DetailsModelFiller = DetailsModelFiller(
+            size_calculator, size_formatter, media_cache, config)
+        theme_manager: ThemeManager = theme.theme_manager
+        details_dialog: DetailsDialog = DetailsDialog(size_calculator, size_formatter, file_type_helper,
+                                                      details_model_filler, theme_manager, config_ui, config, settings)
         editor_button_js: EditorButtonJs = EditorButtonJs(editor_button_formatter)
         editor_button_creator: EditorButtonCreator = EditorButtonCreator(editor_button_formatter, details_dialog)
         editor_button_hooks: EditorButtonHooks = EditorButtonHooks(

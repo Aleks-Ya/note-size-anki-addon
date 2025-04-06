@@ -2,7 +2,9 @@ import logging
 from logging import Logger
 from pathlib import Path
 
+from aqt import colors, props
 from aqt.qt import QTableWidget, Qt, QTableWidgetItem, QIcon, QHeaderView
+from aqt.theme import ThemeManager
 
 from .file_type_helper import FileTypeHelper
 from .icon_table_widget_item import IconTableWidgetItem
@@ -21,12 +23,13 @@ class FilesTable(QTableWidget, ThemeListener):
     __filename_column: int = 1
     __size_column: int = 2
 
-    def __init__(self, file_type_helper: FileTypeHelper, size_formatter: SizeFormatter, config: Config,
-                 settings: Settings):
+    def __init__(self, file_type_helper: FileTypeHelper, size_formatter: SizeFormatter, theme_manager: ThemeManager,
+                 config: Config, settings: Settings):
         super().__init__(parent=None)
         self.__config: Config = config
         self.__file_type_helper: FileTypeHelper = file_type_helper
         self.__size_formatter: SizeFormatter = size_formatter
+        self.__theme_manager: ThemeManager = theme_manager
         self.__items_dict: dict[int, dict[int, QTableWidgetItem]] = {}
         icons_dir: Path = settings.module_dir / "ui" / "details_dialog" / "icon"
         self.__icons: dict[FileType, QIcon] = {
@@ -134,15 +137,16 @@ class FilesTable(QTableWidget, ThemeListener):
 
     def on_theme_changed(self) -> None:
         log.debug("On theme changed")
+        border_color: str = self.__theme_manager.var(colors.BORDER_SUBTLE)
         # noinspection PyUnresolvedReferences
-        self.setStyleSheet("""
-        QTableCornerButton::section {
-            border-top: 1px solid #e4e4e4;
-            border-right: 1px solid #e4e4e4;
-            border-bottom: 1px solid #e4e4e4;
-            background: #fcfcfc;
-            border-top-left-radius: 5px;
-        }
+        self.setStyleSheet(f"""
+        QTableCornerButton::section {{
+            border-top: 1px solid {border_color};
+            border-right: 1px solid {border_color};
+            border-bottom: 1px solid {border_color};
+            background: {self.__theme_manager.var(colors.BUTTON_BG)};
+            border-top-left-radius: {self.__theme_manager.var(props.BORDER_RADIUS)};
+        }}
         """)
         # noinspection PyUnresolvedReferences
         self.__horizontal_header.setStyleSheet("""

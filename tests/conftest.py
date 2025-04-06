@@ -287,7 +287,7 @@ def details_dialog(qtbot: QtBot, size_calculator: SizeCalculator, size_formatter
                    file_type_helper: FileTypeHelper, details_model_filler: DetailsModelFiller) -> DetailsDialog:
     ModelConverter.apply_config_to_model(ui_model, config)
     details_dialog: DetailsDialog = DetailsDialog(size_calculator, size_formatter, file_type_helper,
-                                                  details_model_filler, config_ui, config, settings)
+                                                  details_model_filler, theme_manager, config_ui, config, settings)
     theme_manager.apply_style()
     qtbot.addWidget(details_dialog)
     return details_dialog

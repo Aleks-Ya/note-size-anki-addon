@@ -6,6 +6,7 @@ from typing import Sequence, Optional
 from anki.notes import Note, NoteId
 from aqt.qt import QDialog, QLabel, QIcon, QGridLayout, QPushButton, QFont, QSize, QMargins, QDialogButtonBox, Qt, \
     QWidget
+from aqt.theme import ThemeManager
 
 from .details_model import DetailsModel
 from .details_model_filler import DetailsModelFiller
@@ -29,7 +30,8 @@ class DetailsDialog(QDialog, ThemeListener):
     __button_box_row: int = 4
 
     def __init__(self, size_calculator: SizeCalculator, size_formatter: SizeFormatter, file_type_helper: FileTypeHelper,
-                 details_model_filler: DetailsModelFiller, config_ui: ConfigUi, config: Config, settings: Settings):
+                 details_model_filler: DetailsModelFiller, theme_manager: ThemeManager, config_ui: ConfigUi,
+                 config: Config, settings: Settings):
         super().__init__(parent=None)
         self.__size_calculator: SizeCalculator = size_calculator
         self.__size_formatter: SizeFormatter = size_formatter
@@ -41,7 +43,7 @@ class DetailsDialog(QDialog, ThemeListener):
         self.__total_size_label: QLabel = self.__total_size_label()
         self.__texts_size_label: QLabel = QLabel()
         self.__files_size_label: QLabel = QLabel()
-        self.__files_table: FilesTable = FilesTable(file_type_helper, size_formatter, config, settings)
+        self.__files_table: FilesTable = FilesTable(file_type_helper, size_formatter, theme_manager, config, settings)
 
         self.__settings_icon: QIcon = QIcon(str(settings.module_dir / "ui" / "web" / "setting.png"))
 
