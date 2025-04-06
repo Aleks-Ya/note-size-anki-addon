@@ -3,6 +3,7 @@ from logging import Logger
 from typing import Callable
 
 from aqt import gui_hooks
+from aqt.theme import ThemeManager
 
 from .theme_listener import ThemeListener
 from ..details_dialog.details_dialog import DetailsDialog
@@ -12,7 +13,8 @@ log: Logger = logging.getLogger(__name__)
 
 class ThemeHooks:
 
-    def __init__(self, details_dialog: DetailsDialog) -> None:
+    def __init__(self, theme_manager: ThemeManager, details_dialog: DetailsDialog) -> None:
+        self.__theme_manager: ThemeManager = theme_manager
         self.__listeners: list[ThemeListener] = [details_dialog]
         self.__hook_theme_did_changed: Callable[[], None] = self.__theme_did_changed
         log.debug(f"{self.__class__.__name__} was instantiated")
@@ -28,4 +30,4 @@ class ThemeHooks:
     def __theme_did_changed(self) -> None:
         log.debug("Theme did changed")
         for listener in self.__listeners:
-            listener.on_theme_changed()
+            listener.on_theme_changed(self.__theme_manager)

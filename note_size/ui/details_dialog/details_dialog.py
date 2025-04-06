@@ -91,9 +91,9 @@ class DetailsDialog(QDialog, ThemeListener):
         duration_sec: int = round((end_time - start_time).total_seconds())
         log.info(f"Showing notes finished: duration_sec={duration_sec}")
 
-    def on_theme_changed(self):
+    def on_theme_changed(self, theme_manager: ThemeManager):
         log.debug("Theme did changed")
-        self.__files_table.on_theme_changed()
+        self.__files_table.on_theme_changed(theme_manager)
 
     def __close(self):
         self.__files_table.clear_rows()

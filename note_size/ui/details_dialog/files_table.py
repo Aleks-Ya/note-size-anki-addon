@@ -29,7 +29,6 @@ class FilesTable(QTableWidget, ThemeListener):
         self.__config: Config = config
         self.__file_type_helper: FileTypeHelper = file_type_helper
         self.__size_formatter: SizeFormatter = size_formatter
-        self.__theme_manager: ThemeManager = theme_manager
         self.__items_dict: dict[int, dict[int, QTableWidgetItem]] = {}
         icons_dir: Path = settings.module_dir / "ui" / "details_dialog" / "icon"
         self.__icons: dict[FileType, QIcon] = {
@@ -53,7 +52,7 @@ class FilesTable(QTableWidget, ThemeListener):
         self.__vertical_header: QHeaderView = self.verticalHeader()
         self.__vertical_header.setDefaultAlignment(Qt.AlignmentFlag.AlignCenter)
         self.__vertical_header.setSectionResizeMode(QHeaderView.ResizeMode.Fixed)
-        self.on_theme_changed()
+        self.on_theme_changed(theme_manager)
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def prepare_items(self, file_sizes: dict[MediaFile, FileSize]) -> None:
@@ -129,23 +128,17 @@ class FilesTable(QTableWidget, ThemeListener):
         self.setRowCount(0)
         self.clearContents()
 
-    def __create_icon_item(self, media_file: MediaFile) -> IconTableWidgetItem:
-        file_type: FileType = self.__file_type_helper.get_file_type(media_file)
-        icon: QIcon = self.__icons[file_type]
-        icon_item: IconTableWidgetItem = IconTableWidgetItem(icon, file_type)
-        return icon_item
-
-    def on_theme_changed(self) -> None:
+    def on_theme_changed(self, theme_manager: ThemeManager) -> None:
         log.debug("On theme changed")
-        border_color: str = self.__theme_manager.var(colors.BORDER_SUBTLE)
+        border_color: str = theme_manager.var(colors.BORDER_SUBTLE)
         # noinspection PyUnresolvedReferences
         self.setStyleSheet(f"""
         QTableCornerButton::section {{
             border-top: 1px solid {border_color};
             border-right: 1px solid {border_color};
             border-bottom: 1px solid {border_color};
-            background: {self.__theme_manager.var(colors.BUTTON_BG)};
-            border-top-left-radius: {self.__theme_manager.var(props.BORDER_RADIUS)};
+            background: {theme_manager.var(colors.BUTTON_BG)};
+            border-top-left-radius: {theme_manager.var(props.BORDER_RADIUS)};
         }}
         """)
         # noinspection PyUnresolvedReferences
@@ -169,6 +162,12 @@ class FilesTable(QTableWidget, ThemeListener):
             border-top: 0px
         }
         """)
+
+    def __create_icon_item(self, media_file: MediaFile) -> IconTableWidgetItem:
+        file_type: FileType = self.__file_type_helper.get_file_type(media_file)
+        icon: QIcon = self.__icons[file_type]
+        icon_item: IconTableWidgetItem = IconTableWidgetItem(icon, file_type)
+        return icon_item
 
     def __del__(self):
         log.debug(f"{self.__class__.__name__} was deleted")
