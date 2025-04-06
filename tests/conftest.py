@@ -209,8 +209,9 @@ def deck_browser_js(config: Config, config_ui: ConfigUi) -> DeckBrowserJs:
 
 
 @pytest.fixture
-def deck_browser_updater(collection_size_formatter: CollectionSizeFormatter, config: Config) -> DeckBrowserUpdater:
-    return DeckBrowserUpdater(collection_size_formatter, config)
+def deck_browser_updater(deck_browser: DeckBrowser, collection_size_formatter: CollectionSizeFormatter,
+                         config: Config) -> DeckBrowserUpdater:
+    return DeckBrowserUpdater(deck_browser, collection_size_formatter, config)
 
 
 @pytest.fixture

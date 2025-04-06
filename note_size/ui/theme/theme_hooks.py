@@ -6,6 +6,7 @@ from aqt import gui_hooks
 from aqt.theme import ThemeManager
 
 from .theme_listener import ThemeListener
+from ..deck_browser.deck_browser_updater import DeckBrowserUpdater
 from ..details_dialog.details_dialog import DetailsDialog
 
 log: Logger = logging.getLogger(__name__)
@@ -13,9 +14,10 @@ log: Logger = logging.getLogger(__name__)
 
 class ThemeHooks:
 
-    def __init__(self, theme_manager: ThemeManager, details_dialog: DetailsDialog) -> None:
+    def __init__(self, theme_manager: ThemeManager, details_dialog: DetailsDialog,
+                 deck_browser_updater: DeckBrowserUpdater) -> None:
         self.__theme_manager: ThemeManager = theme_manager
-        self.__listeners: list[ThemeListener] = [details_dialog]
+        self.__listeners: list[ThemeListener] = [details_dialog, deck_browser_updater]
         self.__hook_theme_did_changed: Callable[[], None] = self.__theme_did_changed
         log.debug(f"{self.__class__.__name__} was instantiated")
 

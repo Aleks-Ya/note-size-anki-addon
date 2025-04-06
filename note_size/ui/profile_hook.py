@@ -128,7 +128,7 @@ class ProfileHook:
             editor_button_creator, editor_button_js, settings, config)
         editor_button_hooks.setup_hooks()
         deck_browser_js: DeckBrowserJs = DeckBrowserJs(config, config_ui)
-        deck_browser_updater: DeckBrowserUpdater = DeckBrowserUpdater(collection_size_formatter, config)
+        deck_browser_updater: DeckBrowserUpdater = DeckBrowserUpdater(deck_browser, collection_size_formatter, config)
         deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(deck_browser_updater, deck_browser_js)
         deck_browser_hooks.setup_hooks()
         cache_hooks: CacheHooks = CacheHooks(cache_manager, cache_initializer, updated_files_calculator)
@@ -139,7 +139,7 @@ class ProfileHook:
             item_id_cache, size_str_cache, details_dialog, progress_manager, config)
         browser_hooks: BrowserHooks = BrowserHooks(browser_button_manager, config)
         browser_hooks.setup_hooks()
-        theme_hooks: ThemeHooks = ThemeHooks(theme_manager, details_dialog)
+        theme_hooks: ThemeHooks = ThemeHooks(theme_manager, details_dialog, deck_browser_updater)
         theme_hooks.setup_hooks()
 
     def shutdown(self):
