@@ -41,8 +41,8 @@ LevelDict = NewType("LevelDict", dict[LevelParserKey, Optional[ColorName]])
 class LevelParser:
     light_theme_color_key: LevelParserKey = 'Light Theme Color'
     dark_theme_color_key: LevelParserKey = 'Dark Theme Color'
-    __min_size_key: LevelParserKey = 'Min Size'
-    __max_size_key: LevelParserKey = 'Max Size'
+    min_size_key: LevelParserKey = 'Min Size'
+    max_size_key: LevelParserKey = 'Max Size'
 
     def __init__(self, size_formatter: SizeFormatter) -> None:
         self.__size_formatter: SizeFormatter = size_formatter
@@ -53,18 +53,18 @@ class LevelParser:
             previous_level: LevelDict = levels[len(levels) - 1]
             if len(levels) > 1:
                 penultimate_level: LevelDict = levels[len(levels) - 2]
-                penultimate_max_size_str: SizeStr = SizeStr(penultimate_level[self.__max_size_key])
+                penultimate_max_size_str: SizeStr = SizeStr(penultimate_level[self.max_size_key])
                 penultimate_max_size_bytes: SizeBytes = SizeFormatter.str_to_bytes(penultimate_max_size_str)
                 new_previous_level_size_bytes: SizeBytes = SizeBytes(penultimate_max_size_bytes * 2)
                 new_previous_level_size_str: SizeStr = self.__size_formatter.bytes_to_str(
                     new_previous_level_size_bytes, SignificantDigits(0))
-                previous_level[self.__max_size_key] = new_previous_level_size_str
+                previous_level[self.max_size_key] = new_previous_level_size_str
             else:
-                previous_level[self.__max_size_key] = "100 KB"
+                previous_level[self.max_size_key] = "100 KB"
         new_level: LevelDict = LevelDict({
             self.light_theme_color_key: ColorName("Yellow"),
             self.dark_theme_color_key: ColorName("LightYellow"),
-            self.__max_size_key: None
+            self.max_size_key: None
         })
         levels.append(new_level)
 
@@ -73,23 +73,23 @@ class LevelParser:
             return
         del levels[level_to_remove]
         last_level: LevelDict = levels[len(levels) - 1]
-        last_level[self.__max_size_key] = None
+        last_level[self.max_size_key] = None
 
     def parse_levels(self, levels: list[LevelDict]) -> list[Level]:
         level_list: list[Level] = []
         for i, level in enumerate(levels):
-            previous_level_max_size: str = levels[i - 1][self.__max_size_key] if i > 0 else None
-            level[self.__min_size_key] = previous_level_max_size
+            previous_level_max_size: str = levels[i - 1][self.max_size_key] if i > 0 else None
+            level[self.min_size_key] = previous_level_max_size
             is_last: bool = i == len(levels) - 1
-            level[self.__max_size_key] = None if is_last else level[self.__max_size_key]
+            level[self.max_size_key] = None if is_last else level[self.max_size_key]
             level_list.append(self.__parse_level(level))
         return level_list
 
     def __parse_level(self, level: LevelDict) -> Level:
         light_theme_color: Optional[ColorName] = level.get(self.light_theme_color_key)
         dark_theme_color: Optional[ColorName] = level.get(self.dark_theme_color_key)
-        min_size_opt: Optional[SizeStr] = SizeStr(level.get(self.__min_size_key))
-        max_size_opt: Optional[SizeStr] = SizeStr(level.get(self.__max_size_key))
+        min_size_opt: Optional[SizeStr] = SizeStr(level.get(self.min_size_key))
+        max_size_opt: Optional[SizeStr] = SizeStr(level.get(self.max_size_key))
         min_size_bytes: SizeBytes = SizeFormatter.str_to_bytes(min_size_opt) if min_size_opt else 0
         max_size_bytes: SizeBytes = SizeFormatter.str_to_bytes(max_size_opt) if max_size_opt \
             else sys.maxsize

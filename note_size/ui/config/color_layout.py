@@ -18,9 +18,6 @@ class ColorLayout(QVBoxLayout):
     __min_size_column: int = 0
     __max_size_column: int = 1
     __color_column: int = 2
-    __color_key: str = 'Color'
-    __min_size_key: str = 'Min Size'
-    __max_size_key: str = 'Max Size'
 
     def __init__(self, model: UiModel, desktop_services: QDesktopServices, level_parser: LevelParser,
                  url_manager: UrlManager, settings: Settings):
@@ -128,8 +125,8 @@ class ColorLayout(QVBoxLayout):
             level: LevelDict = LevelDict({
                 LevelParser.light_theme_color_key: color_item.background().color().name() if color_item else None,
                 LevelParser.dark_theme_color_key: "",
-                self.__min_size_key: min_size_item.text() if min_size_item else None,
-                self.__max_size_key: max_size_item.text() if max_size_item and max_size_item.text() != "∞" else None})
+                LevelParser.min_size_key: min_size_item.text() if min_size_item else None,
+                LevelParser.max_size_key: max_size_item.text() if max_size_item and max_size_item.text() != "∞" else None})
             color_levels.append(level)
         return color_levels
 
