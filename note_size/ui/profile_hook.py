@@ -117,11 +117,11 @@ class ProfileHook:
             theme_manager, config, settings)
         desktop_services: QDesktopServices = QDesktopServices()
         url_manager: UrlManager = UrlManager()
+        theme_listener_registry: ThemeListenerRegistry = ThemeListenerRegistry(theme_manager)
         config_ui: ConfigUi = ConfigUi(config, config_loader, logs, cache_initializer, desktop_services, level_parser,
-                                       url_manager, deck_browser, settings)
+                                       url_manager, deck_browser, theme_listener_registry, settings)
         details_model_filler: DetailsModelFiller = DetailsModelFiller(
             size_calculator, size_formatter, media_cache, config)
-        theme_listener_registry: ThemeListenerRegistry = ThemeListenerRegistry(theme_manager)
         details_dialog: DetailsDialog = DetailsDialog(
             size_calculator, size_formatter, file_type_helper, details_model_filler, theme_listener_registry, config_ui,
             config, settings)

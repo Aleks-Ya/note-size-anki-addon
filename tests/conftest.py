@@ -255,9 +255,10 @@ def desktop_services() -> QDesktopServices:
 @pytest.fixture
 def config_ui(config: Config, config_loader: ConfigLoader, logs: Logs, cache_initializer: CacheInitializer,
               desktop_services: QDesktopServices, level_parser: LevelParser, url_manager: UrlManager,
-              deck_browser: DeckBrowser, settings: Settings) -> ConfigUi:
+              deck_browser: DeckBrowser, theme_listener_registry: ThemeListenerRegistry,
+              settings: Settings) -> ConfigUi:
     return ConfigUi(config, config_loader, logs, cache_initializer, desktop_services, level_parser, url_manager,
-                    deck_browser, settings)
+                    deck_browser, theme_listener_registry, settings)
 
 
 @pytest.fixture

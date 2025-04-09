@@ -4,7 +4,9 @@ from typing import Optional
 
 from aqt.qt import QVBoxLayout, QTableWidget, QPushButton, QColorDialog, Qt, \
     QHBoxLayout, QColor, QTableWidgetItem, QDesktopServices
+from aqt.theme import ThemeManager
 
+from ..theme.theme_listener_registry import ThemeListener, ThemeListenerRegistry
 from ...config.level_parser import Level, LevelParser, LevelDict
 from ...config.settings import Settings
 from ...config.url_manager import UrlType, UrlManager
@@ -14,13 +16,13 @@ from ...ui.config.widgets import GroupVBox, CheckboxWithInfo, InfoButton
 log: Logger = logging.getLogger(__name__)
 
 
-class ColorLayout(QVBoxLayout):
+class ColorLayout(QVBoxLayout, ThemeListener):
     __min_size_column: int = 0
     __max_size_column: int = 1
     __color_column: int = 2
 
     def __init__(self, model: UiModel, desktop_services: QDesktopServices, level_parser: LevelParser,
-                 url_manager: UrlManager, settings: Settings):
+                 url_manager: UrlManager, theme_listener_registry: ThemeListenerRegistry, settings: Settings):
         super().__init__()
         self.__model: UiModel = model
         self.__level_parser: LevelParser = level_parser
@@ -28,11 +30,11 @@ class ColorLayout(QVBoxLayout):
         self.__color_enabled_checkbox: CheckboxWithInfo = CheckboxWithInfo(
             "Enable colors", url, desktop_services, settings)
         self.__color_enabled_checkbox.add_checkbox_listener(self.__on_color_enabled_checkbox_state_changed)
-        headers: list[str] = ["Min Size", "Max Size", "Color"]
+        headers_number: int = 3
         # noinspection PyTypeChecker
-        self.__table: QTableWidget = QTableWidget(0, len(headers))
-        # noinspection PyUnresolvedReferences
-        self.__table.setHorizontalHeaderLabels(headers)
+        self.__table: QTableWidget = QTableWidget(0, headers_number)
+        theme_listener_registry.register(self)
+        theme_listener_registry.call_now(self)
         self.__table.verticalHeader().setVisible(False)
         # noinspection PyUnresolvedReferences
         self.__table.cellClicked.connect(self.__open_color_dialog)
@@ -84,6 +86,13 @@ class ColorLayout(QVBoxLayout):
         self.__group_box.setEnabled(self.__model.size_button_enabled)
         self.__add_button.setEnabled(table_enabled)
         self.__remove_button.setEnabled(table_enabled and len(self.__model.size_button_color_levels) > 1)
+        self.__adjust_table_size()
+
+    def on_theme_changed(self, theme_manager: ThemeManager):
+        color_column_header: str = "Color (dark theme)" if theme_manager.night_mode else "Color (light theme)"
+        headers: list[str] = ["Min Size", "Max Size", color_column_header]
+        # noinspection PyUnresolvedReferences
+        self.__table.setHorizontalHeaderLabels(headers)
         self.__adjust_table_size()
 
     def __on_color_enabled_checkbox_state_changed(self, _: int) -> None:
@@ -162,6 +171,7 @@ class ColorLayout(QVBoxLayout):
         self.__table.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.__table.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.__table.adjustSize()
+        self.__table.resizeColumnsToContents()
         table_width: int = self.__table.verticalHeader().width() + self.__table.horizontalHeader().length() + 1
         table_height: int = self.__table.horizontalHeader().height() + self.__table.verticalHeader().length()
         self.__table.setFixedSize(table_width, table_height)
