@@ -37,18 +37,18 @@ class ConfigDialog(QDialog):
         # noinspection PyUnresolvedReferences
         self.setWindowTitle('"Note Size" addon configuration')
 
-        self.deck_browser_tab: DeckBrowserTab = DeckBrowserTab(self.__model, desktop_services, url_manager, settings)
-        self.browser_tab: BrowserTab = BrowserTab(self.__model, desktop_services, url_manager, settings)
-        self.editor_tab: EditorTab = EditorTab(self.__model, desktop_services, level_parser, url_manager, settings)
-        self.logging_tab: LoggingTab = LoggingTab(self.__model, logs, desktop_services, url_manager, settings)
-        self.cache_tab: CacheTab = CacheTab(self.__model, cache_initializer, desktop_services, url_manager, settings)
+        self.__deck_browser_tab: DeckBrowserTab = DeckBrowserTab(self.__model, desktop_services, url_manager, settings)
+        self.__browser_tab: BrowserTab = BrowserTab(self.__model, desktop_services, url_manager, settings)
+        self.__editor_tab: EditorTab = EditorTab(self.__model, desktop_services, level_parser, url_manager, settings)
+        self.__logging_tab: LoggingTab = LoggingTab(self.__model, logs, desktop_services, url_manager, settings)
+        self.__cache_tab: CacheTab = CacheTab(self.__model, cache_initializer, desktop_services, url_manager, settings)
 
         tab_widget: QTabWidget = QTabWidget(self)
-        tab_widget.addTab(self.deck_browser_tab, DeckBrowserTab.name)
-        tab_widget.addTab(self.browser_tab, BrowserTab.name)
-        tab_widget.addTab(self.editor_tab, EditorTab.name)
-        tab_widget.addTab(self.logging_tab, LoggingTab.name)
-        tab_widget.addTab(self.cache_tab, CacheTab.name)
+        tab_widget.addTab(self.__deck_browser_tab, DeckBrowserTab.name)
+        tab_widget.addTab(self.__browser_tab, BrowserTab.name)
+        tab_widget.addTab(self.__editor_tab, EditorTab.name)
+        tab_widget.addTab(self.__logging_tab, LoggingTab.name)
+        tab_widget.addTab(self.__cache_tab, CacheTab.name)
         tab_widget.adjustSize()
 
         button_box: QDialogButtonBox = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok |
@@ -75,11 +75,11 @@ class ConfigDialog(QDialog):
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def refresh_from_model(self) -> None:
-        self.deck_browser_tab.refresh_from_model()
-        self.browser_tab.refresh_from_model()
-        self.editor_tab.refresh_from_model()
-        self.logging_tab.refresh_from_model()
-        self.cache_tab.refresh_from_model()
+        self.__deck_browser_tab.refresh_from_model()
+        self.__browser_tab.refresh_from_model()
+        self.__editor_tab.refresh_from_model()
+        self.__logging_tab.refresh_from_model()
+        self.__cache_tab.refresh_from_model()
 
     def __accept(self) -> None:
         ModelConverter.apply_model_to_config(self.__model, self.__config)
