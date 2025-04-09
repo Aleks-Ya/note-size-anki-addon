@@ -9,7 +9,6 @@ from aqt.theme import ThemeManager
 from .file_type_helper import FileTypeHelper
 from .icon_table_widget_item import IconTableWidgetItem
 from .size_table_widget_item import SizeTableWidgetItem
-from ..theme.theme_listener_registry import ThemeListener, ThemeListenerRegistry
 from ...calculator.size_formatter import SizeFormatter
 from ...config.config import Config
 from ...config.settings import Settings
@@ -18,14 +17,15 @@ from ...common.types import MediaFile, SizeStr, FileType, FileSize, SignificantD
 log: Logger = logging.getLogger(__name__)
 
 
-class FilesTable(QTableWidget, ThemeListener):
+class FilesTable(QTableWidget):
     __icon_column: int = 0
     __filename_column: int = 1
     __size_column: int = 2
 
     def __init__(self, file_type_helper: FileTypeHelper, size_formatter: SizeFormatter,
-                 theme_listener_registry: ThemeListenerRegistry, config: Config, settings: Settings):
+                 theme_manager: ThemeManager, config: Config, settings: Settings):
         super().__init__(parent=None)
+        self.__theme_manager: ThemeManager = theme_manager
         self.__config: Config = config
         self.__file_type_helper: FileTypeHelper = file_type_helper
         self.__size_formatter: SizeFormatter = size_formatter
@@ -52,8 +52,7 @@ class FilesTable(QTableWidget, ThemeListener):
         self.__vertical_header: QHeaderView = self.verticalHeader()
         self.__vertical_header.setDefaultAlignment(Qt.AlignmentFlag.AlignCenter)
         self.__vertical_header.setSectionResizeMode(QHeaderView.ResizeMode.Fixed)
-        theme_listener_registry.register(self)
-        theme_listener_registry.call_now(self)
+        self.on_theme_changed()
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def prepare_items(self, file_sizes: dict[MediaFile, FileSize]) -> None:
@@ -129,17 +128,17 @@ class FilesTable(QTableWidget, ThemeListener):
         self.setRowCount(0)
         self.clearContents()
 
-    def on_theme_changed(self, theme_manager: ThemeManager) -> None:
+    def on_theme_changed(self) -> None:
         log.debug("On theme changed")
-        border_color: ColorName = ColorName(theme_manager.var(colors.BORDER_SUBTLE))
+        border_color: ColorName = ColorName(self.__theme_manager.var(colors.BORDER_SUBTLE))
         # noinspection PyUnresolvedReferences
         self.setStyleSheet(f"""
         QTableCornerButton::section {{
             border-top: 1px solid {border_color};
             border-right: 1px solid {border_color};
             border-bottom: 1px solid {border_color};
-            background: {theme_manager.var(colors.BUTTON_BG)};
-            border-top-left-radius: {theme_manager.var(props.BORDER_RADIUS)};
+            background: {self.__theme_manager.var(colors.BUTTON_BG)};
+            border-top-left-radius: {self.__theme_manager.var(props.BORDER_RADIUS)};
         }}
         """)
         # noinspection PyUnresolvedReferences

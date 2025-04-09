@@ -5,20 +5,19 @@ from aqt.qt import QPushButton, QMargins, QIcon
 from aqt.theme import ThemeManager
 
 from ..config.config_ui import ConfigUi
-from ..theme.theme_listener_registry import ThemeListener, ThemeListenerRegistry
 from ...config.settings import Settings
 
 log: Logger = logging.getLogger(__name__)
 
 
-class ConfigurationButton(QPushButton, ThemeListener):
-    def __init__(self, theme_listener_registry: ThemeListenerRegistry, config_ui: ConfigUi, settings: Settings):
+class ConfigurationButton(QPushButton):
+    def __init__(self, theme_manager: ThemeManager, config_ui: ConfigUi, settings: Settings):
         super().__init__()
         self.__config_ui: ConfigUi = config_ui
+        self.__theme_manager: ThemeManager = theme_manager
         self.__settings_icon_white: QIcon = QIcon(str(settings.module_dir / "ui" / "web" / "setting_white.png"))
         self.__settings_icon_black: QIcon = QIcon(str(settings.module_dir / "ui" / "web" / "setting_black.png"))
-        theme_listener_registry.register(self)
-        theme_listener_registry.call_now(self)
+        self.on_theme_changed()
         # noinspection PyUnresolvedReferences
         self.setStyleSheet("border: none;")
         # noinspection PyUnresolvedReferences
@@ -29,8 +28,8 @@ class ConfigurationButton(QPushButton, ThemeListener):
         self.setIconSize(icon_size)
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def on_theme_changed(self, theme_manager: ThemeManager):
-        is_night_mode: bool = theme_manager.night_mode
+    def on_theme_changed(self):
+        is_night_mode: bool = self.__theme_manager.night_mode
         log.debug(f"Theme did changed: is_night_mode={is_night_mode}")
         if is_night_mode:
             icon: QIcon = self.__settings_icon_white

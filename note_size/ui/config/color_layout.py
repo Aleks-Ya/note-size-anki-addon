@@ -6,7 +6,6 @@ from aqt.qt import QVBoxLayout, QTableWidget, QPushButton, QColorDialog, Qt, \
     QHBoxLayout, QColor, QTableWidgetItem, QDesktopServices
 from aqt.theme import ThemeManager
 
-from ..theme.theme_listener_registry import ThemeListener, ThemeListenerRegistry
 from ...config.level_parser import Level, LevelParser, LevelDict
 from ...config.settings import Settings
 from ...config.url_manager import UrlType, UrlManager
@@ -16,25 +15,24 @@ from ...ui.config.widgets import GroupVBox, CheckboxWithInfo, InfoButton
 log: Logger = logging.getLogger(__name__)
 
 
-class ColorLayout(QVBoxLayout, ThemeListener):
+class ColorLayout(QVBoxLayout):
     __min_size_column: int = 0
     __max_size_column: int = 1
     __color_column: int = 2
 
     def __init__(self, model: UiModel, desktop_services: QDesktopServices, level_parser: LevelParser,
-                 url_manager: UrlManager, theme_listener_registry: ThemeListenerRegistry, settings: Settings):
+                 url_manager: UrlManager, theme_manager: ThemeManager, settings: Settings):
         super().__init__()
         self.__model: UiModel = model
         self.__level_parser: LevelParser = level_parser
+        self.__theme_manager: ThemeManager = theme_manager
         url: str = url_manager.get_url(UrlType.CONFIGURATION_EDITOR_SIZE_BUTTON_COLOR_ENABLED)
         self.__color_enabled_checkbox: CheckboxWithInfo = CheckboxWithInfo(
             "Enable colors", url, desktop_services, settings)
         self.__color_enabled_checkbox.add_checkbox_listener(self.__on_color_enabled_checkbox_state_changed)
-        headers_number: int = 3
         # noinspection PyTypeChecker
-        self.__table: QTableWidget = QTableWidget(0, headers_number)
-        theme_listener_registry.register(self)
-        theme_listener_registry.call_now(self)
+        self.__table: QTableWidget = QTableWidget(0, len(self.__get_headers()))
+        self.on_theme_changed()
         self.__table.verticalHeader().setVisible(False)
         # noinspection PyUnresolvedReferences
         self.__table.cellClicked.connect(self.__open_color_dialog)
@@ -88,12 +86,16 @@ class ColorLayout(QVBoxLayout, ThemeListener):
         self.__remove_button.setEnabled(table_enabled and len(self.__model.size_button_color_levels) > 1)
         self.__adjust_table_size()
 
-    def on_theme_changed(self, theme_manager: ThemeManager):
-        color_column_header: str = "Color (dark theme)" if theme_manager.night_mode else "Color (light theme)"
-        headers: list[str] = ["Min Size", "Max Size", color_column_header]
+    def on_theme_changed(self):
+        headers: list[str] = self.__get_headers()
         # noinspection PyUnresolvedReferences
         self.__table.setHorizontalHeaderLabels(headers)
         self.__adjust_table_size()
+
+    def __get_headers(self) -> list[str]:
+        color_column_header: str = "Color (dark theme)" if self.__theme_manager.night_mode else "Color (light theme)"
+        headers: list[str] = ["Min Size", "Max Size", color_column_header]
+        return headers
 
     def __on_color_enabled_checkbox_state_changed(self, _: int) -> None:
         self.__model.size_button_color_enabled = self.__color_enabled_checkbox.is_checked()

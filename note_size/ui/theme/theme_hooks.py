@@ -4,15 +4,20 @@ from typing import Callable
 
 from aqt import gui_hooks
 
-from .theme_listener_registry import ThemeListenerRegistry
+from ..config.config_ui import ConfigUi
+from ..deck_browser.deck_browser_updater import DeckBrowserUpdater
+from ..details_dialog.details_dialog import DetailsDialog
 
 log: Logger = logging.getLogger(__name__)
 
 
 class ThemeHooks:
 
-    def __init__(self, theme_listener_registry: ThemeListenerRegistry) -> None:
-        self.__theme_listener_registry: ThemeListenerRegistry = theme_listener_registry
+    def __init__(self, deck_browser_updater: DeckBrowserUpdater, details_dialog: DetailsDialog,
+                 config_ui: ConfigUi) -> None:
+        self.__deck_browser_updater: DeckBrowserUpdater = deck_browser_updater
+        self.__details_dialog: DetailsDialog = details_dialog
+        self.__config_ui: ConfigUi = config_ui
         self.__hook_theme_did_changed: Callable[[], None] = self.__theme_did_changed
         log.debug(f"{self.__class__.__name__} was instantiated")
 
@@ -26,4 +31,6 @@ class ThemeHooks:
 
     def __theme_did_changed(self) -> None:
         log.debug("Theme did changed")
-        self.__theme_listener_registry.on_theme_changed()
+        self.__deck_browser_updater.on_theme_changed()
+        self.__details_dialog.on_theme_changed()
+        self.__config_ui.on_theme_changed()

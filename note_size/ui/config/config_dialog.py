@@ -4,10 +4,10 @@ from typing import Optional, Any
 
 from aqt.deckbrowser import DeckBrowser
 from aqt.qt import QDialog, QVBoxLayout, QDialogButtonBox, QTabWidget, QPushButton, QDesktopServices
+from aqt.theme import ThemeManager
 
 from .browser_tab import BrowserTab
 from .model_converter import ModelConverter
-from ..theme.theme_listener_registry import ThemeListenerRegistry
 from ...cache.cache_initializer import CacheInitializer
 from ...config.config import Config
 from ...config.level_parser import LevelParser
@@ -27,7 +27,7 @@ log: Logger = logging.getLogger(__name__)
 class ConfigDialog(QDialog):
     def __init__(self, config: Config, config_loader: ConfigLoader, model: UiModel, logs: Logs,
                  cache_initializer: CacheInitializer, desktop_services: QDesktopServices, level_parser: LevelParser,
-                 url_manager: UrlManager, deck_browser: DeckBrowser, theme_listener_registry: ThemeListenerRegistry,
+                 url_manager: UrlManager, deck_browser: DeckBrowser, theme_manager: ThemeManager,
                  settings: Settings):
         super().__init__(parent=None)
         self.__config: Config = config
@@ -42,7 +42,7 @@ class ConfigDialog(QDialog):
         self.__deck_browser_tab: DeckBrowserTab = DeckBrowserTab(self.__model, desktop_services, url_manager, settings)
         self.__browser_tab: BrowserTab = BrowserTab(self.__model, desktop_services, url_manager, settings)
         self.__editor_tab: EditorTab = EditorTab(self.__model, desktop_services, level_parser, url_manager,
-                                                 theme_listener_registry, settings)
+                                                 theme_manager, settings)
         self.__logging_tab: LoggingTab = LoggingTab(self.__model, logs, desktop_services, url_manager, settings)
         self.__cache_tab: CacheTab = CacheTab(self.__model, cache_initializer, desktop_services, url_manager, settings)
 
@@ -83,6 +83,9 @@ class ConfigDialog(QDialog):
         self.__editor_tab.refresh_from_model()
         self.__logging_tab.refresh_from_model()
         self.__cache_tab.refresh_from_model()
+
+    def on_theme_changed(self):
+        self.__editor_tab.on_theme_changed()
 
     def __accept(self) -> None:
         ModelConverter.apply_model_to_config(self.__model, self.__config)
