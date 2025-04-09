@@ -17,6 +17,7 @@ from mock.mock import MagicMock
 from pytestqt.qtbot import QtBot
 
 from note_size.common.collection_holder import CollectionHolder
+from note_size.ui.theme.theme_listener_registry import ThemeListenerRegistry
 
 utils.tr = MagicMock()
 from aqt.deckbrowser import DeckBrowser
@@ -211,8 +212,8 @@ def deck_browser_js(config: Config, config_ui: ConfigUi) -> DeckBrowserJs:
 
 @pytest.fixture
 def deck_browser_updater(deck_browser: DeckBrowser, deck_browser_formatter: DeckBrowserFormatter,
-                         config: Config) -> DeckBrowserUpdater:
-    return DeckBrowserUpdater(deck_browser, deck_browser_formatter, config)
+                         theme_listener_registry: ThemeListenerRegistry, config: Config) -> DeckBrowserUpdater:
+    return DeckBrowserUpdater(deck_browser, deck_browser_formatter, theme_listener_registry, config)
 
 
 @pytest.fixture
@@ -299,10 +300,12 @@ def ui_model() -> UiModel:
 @pytest.fixture
 def details_dialog(qtbot: QtBot, size_calculator: SizeCalculator, size_formatter: SizeFormatter, config_ui: ConfigUi,
                    config: Config, settings: Settings, ui_model: UiModel, theme_manager: ThemeManager,
-                   file_type_helper: FileTypeHelper, details_model_filler: DetailsModelFiller) -> DetailsDialog:
+                   theme_listener_registry: ThemeListenerRegistry, file_type_helper: FileTypeHelper,
+                   details_model_filler: DetailsModelFiller) -> DetailsDialog:
     ModelConverter.apply_config_to_model(ui_model, config)
     details_dialog: DetailsDialog = DetailsDialog(size_calculator, size_formatter, file_type_helper,
-                                                  details_model_filler, theme_manager, config_ui, config, settings)
+                                                  details_model_filler, theme_listener_registry, config_ui, config,
+                                                  settings)
     theme_manager.apply_style()
     qtbot.addWidget(details_dialog)
     return details_dialog
@@ -311,6 +314,11 @@ def details_dialog(qtbot: QtBot, size_calculator: SizeCalculator, size_formatter
 @pytest.fixture
 def theme_manager() -> ThemeManager:
     return ThemeManager()
+
+
+@pytest.fixture
+def theme_listener_registry(theme_manager: ThemeManager) -> ThemeListenerRegistry:
+    return ThemeListenerRegistry(theme_manager)
 
 
 @pytest.fixture

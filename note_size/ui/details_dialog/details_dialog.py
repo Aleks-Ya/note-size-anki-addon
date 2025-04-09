@@ -5,13 +5,12 @@ from typing import Sequence, Optional
 
 from anki.notes import Note, NoteId
 from aqt.qt import QDialog, QLabel, QGridLayout, QFont, QDialogButtonBox, Qt, QWidget
-from aqt.theme import ThemeManager
 
 from .configuration_button import ConfigurationButton
 from .details_model import DetailsModel
 from .details_model_filler import DetailsModelFiller
 from .files_table import FilesTable
-from ..theme.theme_listener import ThemeListener
+from ..theme.theme_listener_registry import ThemeListenerRegistry
 from ...calculator.size_calculator import SizeCalculator
 from ...calculator.size_formatter import SizeFormatter
 from ...config.config import Config
@@ -22,7 +21,7 @@ from .file_type_helper import FileTypeHelper
 log: Logger = logging.getLogger(__name__)
 
 
-class DetailsDialog(QDialog, ThemeListener):
+class DetailsDialog(QDialog):
     __total_size_row: int = 0
     __texts_size_row: int = 1
     __files_size_row: int = 2
@@ -30,8 +29,8 @@ class DetailsDialog(QDialog, ThemeListener):
     __button_box_row: int = 4
 
     def __init__(self, size_calculator: SizeCalculator, size_formatter: SizeFormatter, file_type_helper: FileTypeHelper,
-                 details_model_filler: DetailsModelFiller, theme_manager: ThemeManager, config_ui: ConfigUi,
-                 config: Config, settings: Settings):
+                 details_model_filler: DetailsModelFiller, theme_listener_registry: ThemeListenerRegistry,
+                 config_ui: ConfigUi, config: Config, settings: Settings):
         super().__init__(parent=None)
         self.__size_calculator: SizeCalculator = size_calculator
         self.__size_formatter: SizeFormatter = size_formatter
@@ -39,11 +38,13 @@ class DetailsDialog(QDialog, ThemeListener):
         self.__details_model_filler: DetailsModelFiller = details_model_filler
         # noinspection PyUnresolvedReferences
         self.setWindowTitle('"Note Size" addon')
-        self.__configuration_button: ConfigurationButton = ConfigurationButton(theme_manager, config_ui, settings)
+        self.__configuration_button: ConfigurationButton = ConfigurationButton(theme_listener_registry, config_ui,
+                                                                               settings)
         self.__total_size_label: QLabel = self.__total_size_label()
         self.__texts_size_label: QLabel = QLabel()
         self.__files_size_label: QLabel = QLabel()
-        self.__files_table: FilesTable = FilesTable(file_type_helper, size_formatter, theme_manager, config, settings)
+        self.__files_table: FilesTable = FilesTable(file_type_helper, size_formatter, theme_listener_registry, config,
+                                                    settings)
 
         button_box: QDialogButtonBox = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
         # noinspection PyUnresolvedReferences
@@ -90,11 +91,6 @@ class DetailsDialog(QDialog, ThemeListener):
         end_time: datetime = datetime.now()
         duration_sec: int = round((end_time - start_time).total_seconds())
         log.info(f"Showing notes finished: duration_sec={duration_sec}")
-
-    def on_theme_changed(self, theme_manager: ThemeManager):
-        log.debug("Theme did changed")
-        self.__configuration_button.on_theme_changed(theme_manager)
-        self.__files_table.on_theme_changed(theme_manager)
 
     def __close(self):
         self.__files_table.clear_rows()

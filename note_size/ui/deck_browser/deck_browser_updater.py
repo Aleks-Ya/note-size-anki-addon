@@ -5,17 +5,19 @@ from aqt.deckbrowser import DeckBrowser
 from aqt.theme import ThemeManager
 
 from .deck_browser_formatter import DeckBrowserFormatter
-from ..theme.theme_listener import ThemeListener
+from ..theme.theme_listener_registry import ThemeListener, ThemeListenerRegistry
 from ...config.config import Config
 
 log: Logger = logging.getLogger(__name__)
 
 
 class DeckBrowserUpdater(ThemeListener):
-    def __init__(self, deck_browser: DeckBrowser, deck_browser_formatter: DeckBrowserFormatter, config: Config):
+    def __init__(self, deck_browser: DeckBrowser, deck_browser_formatter: DeckBrowserFormatter,
+                 theme_listener_registry: ThemeListenerRegistry, config: Config):
         self.__deck_browser_formatter: DeckBrowserFormatter = deck_browser_formatter
         self.__deck_browser: DeckBrowser = deck_browser
         self.__config: Config = config
+        theme_listener_registry.register(self)
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     # noinspection PyUnresolvedReferences

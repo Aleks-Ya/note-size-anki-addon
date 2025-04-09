@@ -9,7 +9,7 @@ from aqt.theme import ThemeManager
 from .file_type_helper import FileTypeHelper
 from .icon_table_widget_item import IconTableWidgetItem
 from .size_table_widget_item import SizeTableWidgetItem
-from ..theme.theme_listener import ThemeListener
+from ..theme.theme_listener_registry import ThemeListener, ThemeListenerRegistry
 from ...calculator.size_formatter import SizeFormatter
 from ...config.config import Config
 from ...config.settings import Settings
@@ -23,8 +23,8 @@ class FilesTable(QTableWidget, ThemeListener):
     __filename_column: int = 1
     __size_column: int = 2
 
-    def __init__(self, file_type_helper: FileTypeHelper, size_formatter: SizeFormatter, theme_manager: ThemeManager,
-                 config: Config, settings: Settings):
+    def __init__(self, file_type_helper: FileTypeHelper, size_formatter: SizeFormatter,
+                 theme_listener_registry: ThemeListenerRegistry, config: Config, settings: Settings):
         super().__init__(parent=None)
         self.__config: Config = config
         self.__file_type_helper: FileTypeHelper = file_type_helper
@@ -52,7 +52,8 @@ class FilesTable(QTableWidget, ThemeListener):
         self.__vertical_header: QHeaderView = self.verticalHeader()
         self.__vertical_header.setDefaultAlignment(Qt.AlignmentFlag.AlignCenter)
         self.__vertical_header.setSectionResizeMode(QHeaderView.ResizeMode.Fixed)
-        self.on_theme_changed(theme_manager)
+        theme_listener_registry.register(self)
+        theme_listener_registry.call_now(self)
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def prepare_items(self, file_sizes: dict[MediaFile, FileSize]) -> None:

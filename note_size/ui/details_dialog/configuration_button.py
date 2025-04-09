@@ -5,19 +5,20 @@ from aqt.qt import QPushButton, QMargins, QIcon
 from aqt.theme import ThemeManager
 
 from ..config.config_ui import ConfigUi
-from ..theme.theme_listener import ThemeListener
+from ..theme.theme_listener_registry import ThemeListener, ThemeListenerRegistry
 from ...config.settings import Settings
 
 log: Logger = logging.getLogger(__name__)
 
 
 class ConfigurationButton(QPushButton, ThemeListener):
-    def __init__(self, theme_manager: ThemeManager, config_ui: ConfigUi, settings: Settings):
+    def __init__(self, theme_listener_registry: ThemeListenerRegistry, config_ui: ConfigUi, settings: Settings):
         super().__init__()
         self.__config_ui: ConfigUi = config_ui
         self.__settings_icon_white: QIcon = QIcon(str(settings.module_dir / "ui" / "web" / "setting_white.png"))
         self.__settings_icon_black: QIcon = QIcon(str(settings.module_dir / "ui" / "web" / "setting_black.png"))
-        self.on_theme_changed(theme_manager)
+        theme_listener_registry.register(self)
+        theme_listener_registry.call_now(self)
         # noinspection PyUnresolvedReferences
         self.setStyleSheet("border: none;")
         # noinspection PyUnresolvedReferences
