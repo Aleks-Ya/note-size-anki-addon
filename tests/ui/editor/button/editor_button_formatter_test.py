@@ -1,5 +1,6 @@
 from anki.collection import Collection
 from anki.notes import Note
+from aqt.theme import ThemeManager
 
 from note_size.cache.size_str_cache import SizeStrCache
 from note_size.calculator.size_formatter import SizeFormatter
@@ -44,13 +45,13 @@ def test_get_edit_mode_label_no_cache(col: Collection, td: Data, editor_button_f
 
 
 def test_disabled_color(collection_holder: CollectionHolder, td: Data, size_formatter: SizeFormatter,
-                        level_parser: LevelParser):
+                        level_parser: LevelParser, theme_manager: ThemeManager):
     config: Config = td.read_config_updated({'Size Button': {'Color': {'Enabled': False}}})
     media_cache: MediaCache = MediaCache(collection_holder, config)
     size_calculator: SizeCalculator = SizeCalculator(collection_holder, media_cache)
     size_str_cache: SizeStrCache = SizeStrCache(size_calculator, size_formatter)
     editor_button_formatter: EditorButtonFormatter = EditorButtonFormatter(
-        size_str_cache, size_calculator, size_formatter, level_parser, config)
+        size_str_cache, size_calculator, size_formatter, level_parser, theme_manager, config)
     assert editor_button_formatter.get_zero_size_label() == EditorButtonLabel("0 B", ColorName(""))
     note: Note = td.create_note_with_files()
     assert editor_button_formatter.get_add_mode_label(note) == EditorButtonLabel("143 B", ColorName(""))

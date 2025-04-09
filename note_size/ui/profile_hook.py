@@ -91,8 +91,9 @@ class ProfileHook:
         column_hooks: ColumnHooks = ColumnHooks(item_id_cache, size_str_cache, item_id_sorter, config)
         column_hooks.setup_hooks()
         level_parser: LevelParser = LevelParser(size_formatter)
+        theme_manager: ThemeManager = theme.theme_manager
         editor_button_formatter: EditorButtonFormatter = EditorButtonFormatter(
-            size_str_cache, size_calculator, size_formatter, level_parser, config)
+            size_str_cache, size_calculator, size_formatter, level_parser, theme_manager, config)
         trash: Trash = Trash(self.__collection_holder)
         current_cache_version: int = 1
         cache_storage: CacheStorage = CacheStorage(current_cache_version, settings)
@@ -110,7 +111,6 @@ class ProfileHook:
                                                                task_manager, progress_manager, config)
         used_files_calculator: UsedFilesCalculator = UsedFilesCalculator(self.__collection_holder, size_calculator,
                                                                          media_cache)
-        theme_manager: ThemeManager = theme.theme_manager
         deck_browser_formatter: DeckBrowserFormatter = DeckBrowserFormatter(
             self.__collection_holder, item_id_cache, media_cache, trash, size_formatter, used_files_calculator,
             theme_manager, config, settings)

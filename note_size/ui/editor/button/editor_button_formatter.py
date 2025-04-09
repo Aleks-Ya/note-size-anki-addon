@@ -2,6 +2,7 @@ import logging
 from logging import Logger
 
 from anki.notes import NoteId, Note
+from aqt.theme import ThemeManager
 
 from .editor_button_label import EditorButtonLabel
 from ....cache.size_str_cache import SizeStrCache
@@ -16,12 +17,13 @@ log: Logger = logging.getLogger(__name__)
 
 class EditorButtonFormatter:
     def __init__(self, size_str_cache: SizeStrCache, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
-                 level_parser: LevelParser, config: Config) -> None:
-        self.__config: Config = config
+                 level_parser: LevelParser, theme_manager: ThemeManager, config: Config) -> None:
         self.__size_str_cache: SizeStrCache = size_str_cache
         self.__size_calculator: SizeCalculator = size_calculator
         self.__size_formatter: SizeFormatter = size_formatter
         self.__level_parser: LevelParser = level_parser
+        self.__theme_manager: ThemeManager = theme_manager
+        self.__config: Config = config
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def get_zero_size_label(self) -> EditorButtonLabel:
@@ -57,7 +59,8 @@ class EditorButtonFormatter:
             color_levels: list[Level] = self.__level_parser.parse_levels(self.__config.get_size_button_color_levels())
             for level in color_levels:
                 if level.min_size_bytes <= size < level.max_size_bytes:
-                    return level.light_theme_color
+                    is_dark_color_theme: bool = self.__theme_manager.night_mode
+                    return level.dark_theme_color if is_dark_color_theme else level.light_theme_color
         return ColorName("")
 
     def __del__(self):

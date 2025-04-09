@@ -194,8 +194,9 @@ def item_id_sorter(item_id_cache: ItemIdCache, size_calculator: SizeCalculator) 
 
 @pytest.fixture
 def editor_button_formatter(config: Config, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
-                            size_str_cache: SizeStrCache, level_parser: LevelParser) -> EditorButtonFormatter:
-    return EditorButtonFormatter(size_str_cache, size_calculator, size_formatter, level_parser, config)
+                            size_str_cache: SizeStrCache, level_parser: LevelParser,
+                            theme_manager: ThemeManager) -> EditorButtonFormatter:
+    return EditorButtonFormatter(size_str_cache, size_calculator, size_formatter, level_parser, theme_manager, config)
 
 
 @pytest.fixture
@@ -221,11 +222,11 @@ def trash(collection_holder: CollectionHolder) -> Trash:
 
 @pytest.fixture
 def deck_browser_formatter(collection_holder: CollectionHolder, item_id_cache: ItemIdCache, media_cache: MediaCache,
-                              size_formatter: SizeFormatter, used_files_calculator: UsedFilesCalculator, trash: Trash,
-                              theme_manager: ThemeManager, config: Config,
-                              settings: Settings) -> DeckBrowserFormatter:
+                           size_formatter: SizeFormatter, used_files_calculator: UsedFilesCalculator, trash: Trash,
+                           theme_manager: ThemeManager, config: Config,
+                           settings: Settings) -> DeckBrowserFormatter:
     return DeckBrowserFormatter(collection_holder, item_id_cache, media_cache, trash, size_formatter,
-                                   used_files_calculator, theme_manager, config, settings)
+                                used_files_calculator, theme_manager, config, settings)
 
 
 @pytest.fixture
