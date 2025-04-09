@@ -39,9 +39,6 @@ class EditorTab(QWidget):
         self.__size_button_enabled.set_checked(self.__model.size_button_enabled)
         self.__color_layout.refresh_from_model()
 
-    def on_theme_changed(self):
-        self.__color_layout.on_theme_changed()
-
     def __on_size_button_enabled(self, _: int):
         self.__model.size_button_enabled = self.__size_button_enabled.is_checked()
         self.__color_layout.refresh_from_model()

@@ -73,7 +73,7 @@ class ConfigDialog(QDialog):
         layout.addWidget(button_box)
 
         self.setLayout(layout)
-        self.setMinimumWidth(500)
+        self.setMinimumWidth(600)
         self.adjustSize()
         log.debug(f"{self.__class__.__name__} was instantiated")
 
@@ -83,9 +83,6 @@ class ConfigDialog(QDialog):
         self.__editor_tab.refresh_from_model()
         self.__logging_tab.refresh_from_model()
         self.__cache_tab.refresh_from_model()
-
-    def on_theme_changed(self):
-        self.__editor_tab.on_theme_changed()
 
     def __accept(self) -> None:
         ModelConverter.apply_model_to_config(self.__model, self.__config)

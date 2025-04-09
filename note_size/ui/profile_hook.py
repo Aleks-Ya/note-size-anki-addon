@@ -140,7 +140,7 @@ class ProfileHook:
             item_id_cache, size_str_cache, details_dialog, progress_manager, config)
         browser_hooks: BrowserHooks = BrowserHooks(browser_button_manager, config)
         browser_hooks.setup_hooks()
-        theme_hooks: ThemeHooks = ThemeHooks(deck_browser_updater, details_dialog, config_ui)
+        theme_hooks: ThemeHooks = ThemeHooks(deck_browser_updater, details_dialog)
         theme_hooks.setup_hooks()
 
     def shutdown(self):

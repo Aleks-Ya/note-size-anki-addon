@@ -29,8 +29,8 @@ def test_setters(td: Data):
             'Significant Digits': 2,
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Light Theme Color": "PaleGreen", "Dark Theme Color": "OliveDrab", "Max Size": "100 KB"},
-                           {"Light Theme Color": "Orange", "Dark Theme Color": "SandyBrown", "Max Size": "1 MB"},
+                "Levels": [{"Light Theme Color": "PaleGreen", "Dark Theme Color": "DarkGreen", "Max Size": "100 KB"},
+                           {"Light Theme Color": "Orange", "Dark Theme Color": "SaddleBrown", "Max Size": "1 MB"},
                            {"Light Theme Color": "LightCoral", "Dark Theme Color": "Maroon", "Max Size": None}]}}}
 
     exp_color_levels: list[LevelDict] = [

@@ -34,8 +34,8 @@ def test_default_values(config_loader: ConfigLoader, module_dir: Path):
             'Significant Digits': 2,
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Light Theme Color": "PaleGreen", "Dark Theme Color": "OliveDrab", "Max Size": "100 KB"},
-                           {"Light Theme Color": "Orange", "Dark Theme Color": "SandyBrown", "Max Size": "1 MB"},
+                "Levels": [{"Light Theme Color": "PaleGreen", "Dark Theme Color": "DarkGreen", "Max Size": "100 KB"},
+                           {"Light Theme Color": "Orange", "Dark Theme Color": "SaddleBrown", "Max Size": "1 MB"},
                            {"Light Theme Color": "LightCoral", "Dark Theme Color": "Maroon", "Max Size": None}]}}}
 
 
@@ -79,8 +79,8 @@ def test_actual_values_partial(module_dir: Path, config_loader: ConfigLoader):
             'Significant Digits': 2,
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Light Theme Color": "PaleGreen", "Dark Theme Color": "OliveDrab", "Max Size": "100 KB"},
-                           {"Light Theme Color": "Orange", "Dark Theme Color": "SandyBrown", "Max Size": "1 MB"},
+                "Levels": [{"Light Theme Color": "PaleGreen", "Dark Theme Color": "DarkGreen", "Max Size": "100 KB"},
+                           {"Light Theme Color": "Orange", "Dark Theme Color": "SaddleBrown", "Max Size": "1 MB"},
                            {"Light Theme Color": "LightCoral", "Dark Theme Color": "Maroon", "Max Size": None}]}}}
 
 
@@ -208,8 +208,8 @@ def test_write_config(config_loader: ConfigLoader, module_dir: Path) -> None:
             'Significant Digits': 2,
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Light Theme Color": "PaleGreen", "Dark Theme Color": "OliveDrab", "Max Size": "100 KB"},
-                           {"Light Theme Color": "Orange", "Dark Theme Color": "SandyBrown", "Max Size": "1 MB"},
+                "Levels": [{"Light Theme Color": "PaleGreen", "Dark Theme Color": "DarkGreen", "Max Size": "100 KB"},
+                           {"Light Theme Color": "Orange", "Dark Theme Color": "SaddleBrown", "Max Size": "1 MB"},
                            {"Light Theme Color": "LightCoral", "Dark Theme Color": "Maroon", "Max Size": None}]}}}
     config.set_cache_warmup_enabled(False)
     config.set_deck_browser_show_collection_size(False)

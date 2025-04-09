@@ -33,8 +33,5 @@ class ConfigUi:
         # noinspection PyUnresolvedReferences
         self.__dialog.show()
 
-    def on_theme_changed(self):
-        self.__dialog.on_theme_changed()
-
     def __del__(self):
         log.debug(f"{self.__class__.__name__} was deleted")

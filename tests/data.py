@@ -54,8 +54,8 @@ class Colors:
     red: ColorName = ColorName("Red")
     green: ColorName = ColorName("Green")
     light_yellow: ColorName = ColorName("LightYellow")
-    olive_drab: ColorName = ColorName("OliveDrab")
-    sandy_brown: ColorName = ColorName("SandyBrown")
+    dark_green: ColorName = ColorName("DarkGreen")
+    saddle_brown: ColorName = ColorName("SaddleBrown")
     maroon: ColorName = ColorName("Maroon")
 
 

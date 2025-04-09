@@ -26,12 +26,12 @@
         {
           "Max Size": "100 KB",
           "Light Theme Color": "PaleGreen",
-          "Dark Theme Color": "OliveDrab"
+          "Dark Theme Color": "DarkGreen"
         },
         {
           "Max Size": "1 MB",
           "Light Theme Color": "Orange",
-          "Dark Theme Color": "SandyBrown"
+          "Dark Theme Color": "SaddleBrown"
         },
         {
           "Max Size": null,
