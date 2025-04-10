@@ -58,6 +58,7 @@ from note_size.config.config_hooks import ConfigHooks
 from note_size.ui.deck_browser.deck_browser_hooks import DeckBrowserHooks
 from note_size.ui.browser.column.column_hooks import ColumnHooks
 from note_size.ui.browser.button.browser_hooks import BrowserHooks
+from note_size.ui.theme.theme_hooks import ThemeHooks
 from tests.data import Data
 
 
@@ -440,6 +441,14 @@ def browser_hooks(browser_button_manager: BrowserButtonManager, config: Config) 
     browser_hooks.remove_hooks()
 
 
+@pytest.fixture
+def theme_hooks(deck_browser_updater: DeckBrowserUpdater,
+                details_dialog: DetailsDialog) -> Generator[ThemeHooks, None, None]:
+    theme_hooks: ThemeHooks = ThemeHooks(deck_browser_updater, details_dialog)
+    yield theme_hooks
+    theme_hooks.remove_hooks()
+
+
 def assert_no_hooks() -> None:
     from aqt import gui_hooks
     assert gui_hooks.editor_did_init.count() == 0
@@ -460,6 +469,7 @@ def assert_no_hooks() -> None:
     assert gui_hooks.browser_will_show.count() == 0
     assert gui_hooks.deck_browser_will_render_content.count() == 0
     assert gui_hooks.webview_did_receive_js_message.count() == 0
+    assert gui_hooks.collection_did_load.count() == 1
 
     from anki import hooks
     assert hooks.notes_will_be_deleted.count() == 0
