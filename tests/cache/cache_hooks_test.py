@@ -1,5 +1,3 @@
-from typing import Generator
-
 import pytest
 from anki.collection import Collection
 from anki import hooks
@@ -8,22 +6,12 @@ from anki.notes import Note
 from aqt import gui_hooks
 
 from note_size.cache.cache_hooks import CacheHooks
-from note_size.cache.cache_initializer import CacheInitializer
-from note_size.cache.cache_manager import CacheManager
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.common.types import SizeType, FileSize, SizeBytes
 from tests.data import Data, MediaFiles
-
-
-@pytest.fixture
-def cache_hooks(cache_manager: CacheManager, cache_initializer: CacheInitializer,
-                updated_files_calculator: UpdatedFilesCalculator) -> Generator[CacheHooks, None, None]:
-    cache_hooks: CacheHooks = CacheHooks(cache_manager, cache_initializer, updated_files_calculator)
-    yield cache_hooks
-    cache_hooks.remove_hooks()
 
 
 def test_setup_hooks(cache_hooks: CacheHooks):

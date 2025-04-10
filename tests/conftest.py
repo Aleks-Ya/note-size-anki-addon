@@ -52,6 +52,12 @@ from note_size.ui.editor.button.editor_button_creator import EditorButtonCreator
 from note_size.ui.editor.button.editor_button_formatter import EditorButtonFormatter
 from note_size.ui.editor.button.editor_button_js import EditorButtonJs
 from note_size.ui.browser.column.item_id_sorter import ItemIdSorter
+from note_size.ui.editor.button.editor_button_hooks import EditorButtonHooks
+from note_size.cache.cache_hooks import CacheHooks
+from note_size.config.config_hooks import ConfigHooks
+from note_size.ui.deck_browser.deck_browser_hooks import DeckBrowserHooks
+from note_size.ui.browser.column.column_hooks import ColumnHooks
+from note_size.ui.browser.button.browser_hooks import BrowserHooks
 from tests.data import Data
 
 
@@ -384,3 +390,51 @@ def profiler(config: Config, settings: Settings) -> Profiler:
 @pytest.fixture
 def url_manager() -> UrlManager:
     return UrlManager()
+
+
+@pytest.fixture
+def editor_button_hooks(editor_button_creator: EditorButtonCreator, editor_button_js: EditorButtonJs,
+                        settings: Settings, config: Config) -> Generator[EditorButtonHooks, None, None]:
+    editor_button_hooks: EditorButtonHooks = EditorButtonHooks(
+        editor_button_creator, editor_button_js, settings, config)
+    yield editor_button_hooks
+    editor_button_hooks.remove_hooks()
+
+
+@pytest.fixture
+def cache_hooks(cache_manager: CacheManager, cache_initializer: CacheInitializer,
+                updated_files_calculator: UpdatedFilesCalculator) -> Generator[CacheHooks, None, None]:
+    cache_hooks: CacheHooks = CacheHooks(cache_manager, cache_initializer, updated_files_calculator)
+    yield cache_hooks
+    cache_hooks.remove_hooks()
+
+
+@pytest.fixture
+def config_hooks(config_ui: ConfigUi, desktop_services: QDesktopServices,
+                 url_manager: UrlManager) -> Generator[ConfigHooks, None, None]:
+    config_hooks: ConfigHooks = ConfigHooks(config_ui, desktop_services, url_manager)
+    yield config_hooks
+    config_hooks.remove_hooks()
+
+
+@pytest.fixture
+def deck_browser_hooks(deck_browser_updater: DeckBrowserUpdater,
+                       deck_browser_js: DeckBrowserJs) -> Generator[DeckBrowserHooks, None, None]:
+    deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(deck_browser_updater, deck_browser_js)
+    yield deck_browser_hooks
+    deck_browser_hooks.remove_hooks()
+
+
+@pytest.fixture
+def column_hooks(item_id_cache: ItemIdCache, size_str_cache: SizeStrCache, item_id_sorter: ItemIdSorter,
+                 config: Config) -> Generator[ColumnHooks, None, None]:
+    column_hooks: ColumnHooks = ColumnHooks(item_id_cache, size_str_cache, item_id_sorter, config)
+    yield column_hooks
+    column_hooks.remove_hooks()
+
+
+@pytest.fixture
+def browser_hooks(browser_button_manager: BrowserButtonManager, config: Config) -> Generator[BrowserHooks, None, None]:
+    browser_hooks: BrowserHooks = BrowserHooks(browser_button_manager, config)
+    yield browser_hooks
+    browser_hooks.remove_hooks()

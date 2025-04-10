@@ -1,19 +1,6 @@
-from typing import Generator
-
-import pytest
 from aqt import gui_hooks
 
 from note_size.ui.deck_browser.deck_browser_hooks import DeckBrowserHooks
-from note_size.ui.deck_browser.deck_browser_js import DeckBrowserJs
-from note_size.ui.deck_browser.deck_browser_updater import DeckBrowserUpdater
-
-
-@pytest.fixture
-def deck_browser_hooks(deck_browser_updater: DeckBrowserUpdater,
-                       deck_browser_js: DeckBrowserJs) -> Generator[DeckBrowserHooks, None, None]:
-    deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(deck_browser_updater, deck_browser_js)
-    yield deck_browser_hooks
-    deck_browser_hooks.remove_hooks()
 
 
 def test_setup_hooks(deck_browser_hooks: DeckBrowserHooks):
