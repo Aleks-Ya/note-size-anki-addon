@@ -7,26 +7,19 @@ from aqt.browser import Column, ItemId, CellRow, SearchContext
 from mock.mock import MagicMock
 
 from note_size.ui.browser.column.column_hooks import ColumnHooks
+from tests.conftest import assert_no_hooks
 from tests.data import Data
 
 
 def test_setup_hooks(td: Data, column_hooks: ColumnHooks):
-    assert gui_hooks.browser_did_fetch_columns.count() == 0
-    assert gui_hooks.browser_did_fetch_row.count() == 0
-    assert gui_hooks.browser_will_search.count() == 0
-    assert gui_hooks.browser_did_search.count() == 0
-
+    assert_no_hooks()
     column_hooks.setup_hooks()
     assert gui_hooks.browser_did_fetch_columns.count() == 1
     assert gui_hooks.browser_did_fetch_row.count() == 1
     assert gui_hooks.browser_will_search.count() == 1
     assert gui_hooks.browser_did_search.count() == 1
-
     column_hooks.remove_hooks()
-    assert gui_hooks.browser_did_fetch_columns.count() == 0
-    assert gui_hooks.browser_did_fetch_row.count() == 0
-    assert gui_hooks.browser_will_search.count() == 0
-    assert gui_hooks.browser_did_search.count() == 0
+    assert_no_hooks()
 
 
 def test_add_columns(column_hooks: ColumnHooks):

@@ -438,3 +438,29 @@ def browser_hooks(browser_button_manager: BrowserButtonManager, config: Config) 
     browser_hooks: BrowserHooks = BrowserHooks(browser_button_manager, config)
     yield browser_hooks
     browser_hooks.remove_hooks()
+
+
+def assert_no_hooks() -> None:
+    from aqt import gui_hooks
+    assert gui_hooks.editor_did_init.count() == 0
+    assert gui_hooks.editor_did_init_buttons.count() == 0
+    assert gui_hooks.editor_did_load_note.count() == 2
+    assert gui_hooks.editor_did_unfocus_field.count() == 0
+    assert gui_hooks.editor_did_fire_typing_timer.count() == 0
+    assert gui_hooks.webview_will_set_content.count() == 0
+    assert gui_hooks.add_cards_did_add_note.count() == 0
+    assert gui_hooks.media_sync_did_start_or_stop.count() == 0
+    assert gui_hooks.profile_did_open.count() == 1
+    assert gui_hooks.profile_will_close.count() == 1
+    assert gui_hooks.browser_did_fetch_columns.count() == 0
+    assert gui_hooks.browser_did_fetch_row.count() == 0
+    assert gui_hooks.browser_will_search.count() == 0
+    assert gui_hooks.browser_did_search.count() == 0
+    assert gui_hooks.main_window_did_init.count() == 0
+    assert gui_hooks.browser_will_show.count() == 0
+    assert gui_hooks.deck_browser_will_render_content.count() == 0
+    assert gui_hooks.webview_did_receive_js_message.count() == 0
+
+    from anki import hooks
+    assert hooks.notes_will_be_deleted.count() == 0
+    assert hooks.note_will_flush.count() == 0
