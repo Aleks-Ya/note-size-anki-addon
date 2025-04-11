@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pytest
 from anki.collection import Collection
+from aqt.theme import ThemeManager
 from bs4 import BeautifulSoup
 
 from note_size.cache.item_id_cache import ItemIdCache
@@ -14,8 +15,10 @@ from note_size.common.types import MediaFile, SizeBytes
 from tests.data import Data, Digits
 
 web_path: str = os.path.join("_addons", "1188705668", "ui", "web")
-info_png_path: str = os.path.join(web_path, "info_black.png")
-settings_png_path: str = os.path.join(web_path, "setting_black.png")
+info_black_png_path: str = os.path.join(web_path, "info_black.png")
+settings_black_png_path: str = os.path.join(web_path, "setting_black.png")
+info_white_png_path: str = os.path.join(web_path, "info_white.png")
+settings_white_png_path: str = os.path.join(web_path, "setting_white.png")
 
 
 def test_format_note_detailed_text(col: Collection, td: Data, deck_browser_formatter: DeckBrowserFormatter,
@@ -45,7 +48,7 @@ def test_format_note_detailed_text(col: Collection, td: Data, deck_browser_forma
             <span style='font-family:Consolas,monospace;display: inline-block;'>14</span>&nbsp;&nbsp;&nbsp;
             <span style="font-family:Consolas,monospace;display: inline-block;">B</span>
         <img height="12" onclick="pycmd(\'open-check-media-action\')"
-         src="{info_png_path}" style="margin-right: 0.2em;" 
+         src="{info_black_png_path}" style="margin-right: 0.2em;" 
          title="Click to show details"/>
          </span>
         <span style='margin-right: 0.5em;' 
@@ -54,7 +57,7 @@ def test_format_note_detailed_text(col: Collection, td: Data, deck_browser_forma
             <span style='font-family:Consolas,monospace;display: inline-block;'>13</span>&nbsp;&nbsp;&nbsp;
             <span style="font-family:Consolas,monospace;display: inline-block;">B</span>
         <img height="12" onclick="pycmd(\'open-check-media-action\')"
-         src="{info_png_path}" style="margin-right: 0.2em;" 
+         src="{info_black_png_path}" style="margin-right: 0.2em;" 
          title="Click to show details"/>
          </span>
         <span style='margin-right: 0.5em;' title='Total size of collection, media files, unused files and trash files'>
@@ -63,7 +66,7 @@ def test_format_note_detailed_text(col: Collection, td: Data, deck_browser_forma
             <span style="font-family:Consolas,monospace;display: inline-block;">KB</span>
         </span>
         <img height="12" onclick="pycmd('open-config-action')" 
-        src="{settings_png_path}" title="Open Configuration"/>
+        src="{settings_black_png_path}" title="Open Configuration"/>
     </div>
     """
     exp_soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
@@ -102,7 +105,7 @@ def test_item_id_cache_not_initialized(col: Collection, td: Data, deck_browser_f
             <span style='font-size: 80%'>⏳</span>
         </span>
         <img height="12" onclick="pycmd('open-config-action')" 
-        src="{settings_png_path}" title="Open Configuration"/>
+        src="{settings_black_png_path}" title="Open Configuration"/>
     </div>
     """
     exp: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
@@ -133,7 +136,7 @@ def test_empty_unused_and_trash(col: Collection, td: Data, deck_browser_formatte
             <span style='font-family:Consolas,monospace;display: inline-block;'>0</span>&nbsp;&nbsp;&nbsp;
             <span style="font-family:Consolas,monospace;display: inline-block;">B</span>
         <img height="12" onclick="pycmd(\'open-check-media-action\')"
-         src="{info_png_path}" style="margin-right: 0.2em;" 
+         src="{info_black_png_path}" style="margin-right: 0.2em;" 
          title="Click to show details"/>
          </span>
         <span style='margin-right: 0.5em;' 
@@ -142,7 +145,7 @@ def test_empty_unused_and_trash(col: Collection, td: Data, deck_browser_formatte
             <span style='font-family:Consolas,monospace;display: inline-block;'>0</span>&nbsp;&nbsp;&nbsp;
             <span style="font-family:Consolas,monospace;display: inline-block;">B</span>
         <img height="12" onclick="pycmd(\'open-check-media-action\')"
-         src="{info_png_path}" style="margin-right: 0.2em;" 
+         src="{info_black_png_path}" style="margin-right: 0.2em;" 
          title="Click to show details"/>
          </span>
         <span style='margin-right: 0.5em;' title='Total size of collection, media files, unused files and trash files'>
@@ -151,7 +154,63 @@ def test_empty_unused_and_trash(col: Collection, td: Data, deck_browser_formatte
             <span style="font-family:Consolas,monospace;display: inline-block;">KB</span>
         </span>
         <img height="12" onclick="pycmd('open-config-action')" 
-        src="{settings_png_path}" title="Open Configuration"/>
+        src="{settings_black_png_path}" title="Open Configuration"/>
+    </div>
+    """
+    exp_soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
+    act_soup: BeautifulSoup = BeautifulSoup(deck_browser_formatter.format_collection_size_html(), 'html.parser')
+    assert act_soup.prettify() == exp_soup.prettify()
+
+
+def test_format_note_detailed_text_night_mode(col: Collection, td: Data, deck_browser_formatter: DeckBrowserFormatter,
+                                              item_id_cache: ItemIdCache, media_trash_dir: Path, trash: Trash,
+                                              theme_manager: ThemeManager):
+    # noinspection PyArgumentList
+    theme_manager.set_night_mode(True)
+    item_id_cache.set_initialized(True)
+    td.write_file(MediaFile("unused_file.jpg"), "unused content")
+    trash_file: MediaFile = MediaFile("trashed_file.jpg")
+    td.write_file(trash_file, "trash content")
+    col.media.trash_files([trash_file])
+    td.create_note_with_files()
+    td.create_note_without_files()
+    exp_html: str = f"""
+    <div>
+        <span style='margin-right: 0.5em;' title='Size of 2 notes in file "{col.path}"'>
+            Collection:&nbsp;
+            <span style='font-family:Consolas,monospace;display: inline-block;'>4.0</span>&nbsp;&nbsp;&nbsp;
+            <span style="font-family:Consolas,monospace;display: inline-block;">KB</span>
+        </span>
+        <span style='margin-right: 0.5em;' 
+            title='Size of 3 media files (3 existing and 0 missing) used in 2 notes (not include Unused and Trash)\nFolder "{col.media.dir()}"'>
+            Media:&nbsp;
+            <span style='font-family:Consolas,monospace;display: inline-block;'>21</span>&nbsp;&nbsp;&nbsp;
+            <span style="font-family:Consolas,monospace;display: inline-block;">B</span>
+        </span>
+        <span style='margin-right: 0.5em;' title='Size of 1 media files not used in any notes (can be moved to Trash)'>
+            Unused:&nbsp;
+            <span style='font-family:Consolas,monospace;display: inline-block;'>14</span>&nbsp;&nbsp;&nbsp;
+            <span style="font-family:Consolas,monospace;display: inline-block;">B</span>
+        <img height="12" onclick="pycmd(\'open-check-media-action\')"
+         src="{info_white_png_path}" style="margin-right: 0.2em;" 
+         title="Click to show details"/>
+         </span>
+        <span style='margin-right: 0.5em;' 
+            title='Size of 1 media files in the Trash (can be emptied)\nFolder "{media_trash_dir}"'>
+            Trash:&nbsp;
+            <span style='font-family:Consolas,monospace;display: inline-block;'>13</span>&nbsp;&nbsp;&nbsp;
+            <span style="font-family:Consolas,monospace;display: inline-block;">B</span>
+        <img height="12" onclick="pycmd(\'open-check-media-action\')"
+         src="{info_white_png_path}" style="margin-right: 0.2em;" 
+         title="Click to show details"/>
+         </span>
+        <span style='margin-right: 0.5em;' title='Total size of collection, media files, unused files and trash files'>
+            Total:&nbsp;
+            <span style='font-family:Consolas,monospace;display: inline-block;'>4.0</span>
+            <span style="font-family:Consolas,monospace;display: inline-block;">KB</span>
+        </span>
+        <img height="12" onclick="pycmd('open-config-action')" 
+        src="{settings_white_png_path}" title="Open Configuration"/>
     </div>
     """
     exp_soup: BeautifulSoup = BeautifulSoup(exp_html, 'html.parser')
