@@ -43,6 +43,8 @@ class LevelParser:
     dark_theme_color_key: LevelParserKey = 'Dark Theme Color'
     min_size_key: LevelParserKey = 'Min Size'
     max_size_key: LevelParserKey = 'Max Size'
+    __default_light_theme_color: ColorName = ColorName("LightYellow")
+    __default_dark_theme_color: ColorName = ColorName("Yellow")
 
     def __init__(self, size_formatter: SizeFormatter) -> None:
         self.__size_formatter: SizeFormatter = size_formatter
@@ -62,8 +64,8 @@ class LevelParser:
             else:
                 previous_level[self.max_size_key] = "100 KB"
         new_level: LevelDict = LevelDict({
-            self.light_theme_color_key: ColorName("Yellow"),
-            self.dark_theme_color_key: ColorName("LightYellow"),
+            self.light_theme_color_key: self.__default_light_theme_color,
+            self.dark_theme_color_key: self.__default_dark_theme_color,
             self.max_size_key: None
         })
         levels.append(new_level)
@@ -86,8 +88,8 @@ class LevelParser:
         return level_list
 
     def __parse_level(self, level: LevelDict) -> Level:
-        light_theme_color: Optional[ColorName] = level.get(self.light_theme_color_key)
-        dark_theme_color: Optional[ColorName] = level.get(self.dark_theme_color_key)
+        light_theme_color: Optional[ColorName] = level.get(self.light_theme_color_key, self.__default_light_theme_color)
+        dark_theme_color: Optional[ColorName] = level.get(self.dark_theme_color_key, self.__default_dark_theme_color)
         min_size_opt: Optional[SizeStr] = SizeStr(level.get(self.min_size_key))
         max_size_opt: Optional[SizeStr] = SizeStr(level.get(self.max_size_key))
         min_size_bytes: SizeBytes = SizeFormatter.str_to_bytes(min_size_opt) if min_size_opt else 0

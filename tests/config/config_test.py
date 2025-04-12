@@ -29,7 +29,7 @@ def test_setters(td: Data):
             'Significant Digits': 2,
             "Color": {
                 "Enabled": True,
-                "Levels": [{"Light Theme Color": "PaleGreen", "Dark Theme Color": "DarkGreen", "Max Size": "100 KB"},
+                "Levels v2": [{"Light Theme Color": "PaleGreen", "Dark Theme Color": "DarkGreen", "Max Size": "100 KB"},
                            {"Light Theme Color": "Orange", "Dark Theme Color": "SaddleBrown", "Max Size": "1 MB"},
                            {"Light Theme Color": "LightCoral", "Dark Theme Color": "Maroon", "Max Size": None}]}}}
 
@@ -63,7 +63,7 @@ def test_setters(td: Data):
             'Significant Digits': 5,
             "Color": {
                 "Enabled": False,
-                "Levels": exp_color_levels}}}
+                "Levels v2": exp_color_levels}}}
 
     assert config.get_cache_warmup_enabled() == False
     assert config.get_store_cache_in_file_enabled() == False

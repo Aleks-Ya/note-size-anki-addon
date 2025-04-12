@@ -2,7 +2,7 @@ import json
 import logging
 from logging import Logger
 from pathlib import Path
-from typing import Any, Optional
+from typing import Optional
 
 from .config_listener import ConfigListener
 from ..config.level_parser import LevelDict
@@ -28,10 +28,10 @@ class Config:
     __key_2_browser_show_found_notes_size: str = 'Show Found Notes Size'
     __key_2_profiler_enabled: str = 'Enabled'
     __key_3_size_button_color_enabled: str = 'Enabled'
-    __key_3_size_button_levels: str = 'Levels'
+    __key_3_size_button_levels: str = 'Levels v2'
 
-    def __init__(self, config: dict[str, Any]):
-        self.__config: dict[str, Any] = config
+    def __init__(self, config: dict[str, any]):
+        self.__config: dict[str, any] = config
         self.__listeners: set[ConfigListener] = set()
         log.debug(f"{self.__class__.__name__} was instantiated")
 
@@ -43,16 +43,15 @@ class Config:
         return cls.from_path_updated(path, {})
 
     @classmethod
-    def from_path_updated(cls, path: Path, overwrites: dict[str, Any]) -> 'Config':
+    def from_path_updated(cls, path: Path, overwrites: dict[str, any]) -> 'Config':
         with Path(path).open() as config_file:
-            config_data: dict[str, Any] = json.load(config_file)
+            config_data: dict[str, any] = json.load(config_file)
         return cls(Config.join(config_data, overwrites))
 
     @staticmethod
-    def join(base: Optional[dict[str, Any]], actual: Optional[dict[str, Any]]) \
-            -> dict[str, Any]:
-        base: dict[str, Any] = dict(base if base else {})
-        actual: dict[str, Any] = actual if actual else {}
+    def join(base: Optional[dict[str, any]], actual: Optional[dict[str, any]]) -> dict[str, any]:
+        base: dict[str, any] = dict(base if base else {})
+        actual: dict[str, any] = actual if actual else {}
         for k, v in actual.items():
             if k in base:
                 if isinstance(v, dict):
@@ -133,7 +132,7 @@ class Config:
     def set_profiler_enabled(self, profiler_enabled: bool) -> None:
         self.__set(profiler_enabled, self.__key_1_profiler, self.__key_2_profiler_enabled)
 
-    def get_as_dict(self) -> dict[str, Any]:
+    def get_as_dict(self) -> dict[str, any]:
         return self.__config
 
     def add_listener(self, listener: ConfigListener) -> None:
@@ -145,8 +144,8 @@ class Config:
         for listener in self.__listeners:
             listener.on_config_changed()
 
-    def __set(self, value: Any, *keys: str) -> None:
-        d: dict[str, Any] = self.__config
+    def __set(self, value: any, *keys: str) -> None:
+        d: dict[str, any] = self.__config
         for index, key in enumerate(keys):
             is_last: bool = index == len(keys) - 1
             if is_last:

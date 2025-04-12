@@ -22,7 +22,7 @@
     "Significant Digits": 2,
     "Color": {
       "Enabled": true,
-      "Levels": [
+      "Levels v2": [
         {
           "Max Size": "100 KB",
           "Light Theme Color": "PaleGreen",
