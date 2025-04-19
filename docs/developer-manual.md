@@ -50,7 +50,7 @@ Run automated tests:
 
 Run all tests except performance tests: `pytest -m "not performance"`
 
-[Manual test cases](manual-test-cases.md)
+Manual test cases: `docs/manual-test-cases/*.feature`
 
 ## SonarQube
 
