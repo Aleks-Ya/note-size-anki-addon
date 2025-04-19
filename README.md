@@ -18,8 +18,10 @@ Screenshots:
 - [User Manual](docs/user-manual.md)
 - [Developer Manual](docs/developer-manual.md)
 
-## Quality metrics2
+## Quality metrics
 
-[![Unit-tests](https://github.com/Aleks-Ya/note-size-anki-addon/actions/workflows/python-app.yml/badge.svg)](https://github.com/Aleks-Ya/note-size-anki-addon/actions/workflows/python-app.yml)
+[![Unit-tests (Linux)](https://github.com/Aleks-Ya/note-size-anki-addon/actions/workflows/unit-tests-linux.yml/badge.svg)](https://github.com/Aleks-Ya/note-size-anki-addon/actions/workflows/unit-tests-linux.yml)
+[![Unit-tests (Windows)](https://github.com/Aleks-Ya/note-size-anki-addon/actions/workflows/unit-tests-windows.yml/badge.svg)](https://github.com/Aleks-Ya/note-size-anki-addon/actions/workflows/unit-tests-windows.yml)
+[![Unit-tests (MacOS)](https://github.com/Aleks-Ya/note-size-anki-addon/actions/workflows/unit-tests-mac.yml/badge.svg)](https://github.com/Aleks-Ya/note-size-anki-addon/actions/workflows/unit-tests-mac.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Aleks-Ya_note-size-anki-addon&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Aleks-Ya_note-size-anki-addon)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Aleks-Ya_note-size-anki-addon&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Aleks-Ya_note-size-anki-addon)
