@@ -76,7 +76,7 @@ class DistributionBuilder:
             "package": "1188705668",
             "author": "Alexey Yablokov",
             "min_point_version": 240401,
-            "max_point_version": 250200,
+            "max_point_version": 250201,
             "human_version": version,
             "homepage": "https://ankiweb.net/shared/info/1188705668",
             "mod": commit_epoch_sec
