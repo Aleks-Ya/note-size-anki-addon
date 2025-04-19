@@ -1,5 +1,10 @@
 # Changelog for "Note Size" Anki addon
 
+## [v2.10.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.10.0) - 2025-04-19
+
+1. __[FEATURE]__ Display revision log size
+2. __[FEATURE]__ Upgrade for Anki 25.2.1
+
 ## [v2.9.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.9.0) - 2025-04-12
 
 1. __[FEATURE]__ Dark theme support
