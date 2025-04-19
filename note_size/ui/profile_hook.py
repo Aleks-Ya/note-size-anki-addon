@@ -31,6 +31,7 @@ class ProfileHook:
         from ..calculator.size_formatter import SizeFormatter
         from ..calculator.updated_files_calculator import UpdatedFilesCalculator
         from ..calculator.used_files_calculator import UsedFilesCalculator
+        from ..calculator.db_size_calculator import DbSizeCalculator
         from ..cache.cache_hooks import CacheHooks
         from ..cache.cache_initializer import CacheInitializer
         from ..cache.item_id_cache import ItemIdCache
@@ -111,9 +112,10 @@ class ProfileHook:
                                                                task_manager, progress_manager, config)
         used_files_calculator: UsedFilesCalculator = UsedFilesCalculator(self.__collection_holder, size_calculator,
                                                                          media_cache)
+        db_size_calculator: DbSizeCalculator = DbSizeCalculator(self.__collection_holder)
         deck_browser_formatter: DeckBrowserFormatter = DeckBrowserFormatter(
             self.__collection_holder, item_id_cache, media_cache, trash, size_formatter, used_files_calculator,
-            theme_manager, config, settings)
+            db_size_calculator, theme_manager, config, settings)
         desktop_services: QDesktopServices = QDesktopServices()
         url_manager: UrlManager = UrlManager()
         config_ui: ConfigUi = ConfigUi(config, config_loader, logs, cache_initializer, desktop_services, level_parser,

@@ -16,6 +16,7 @@ from aqt.theme import ThemeManager
 from mock.mock import MagicMock
 from pytestqt.qtbot import QtBot
 
+from note_size.calculator.db_size_calculator import DbSizeCalculator
 from note_size.common.collection_holder import CollectionHolder
 
 utils.tr = MagicMock()
@@ -228,12 +229,17 @@ def trash(collection_holder: CollectionHolder) -> Trash:
 
 
 @pytest.fixture
+def db_size_calculator(collection_holder: CollectionHolder) -> DbSizeCalculator:
+    return DbSizeCalculator(collection_holder)
+
+
+@pytest.fixture
 def deck_browser_formatter(collection_holder: CollectionHolder, item_id_cache: ItemIdCache, media_cache: MediaCache,
-                           size_formatter: SizeFormatter, used_files_calculator: UsedFilesCalculator, trash: Trash,
-                           theme_manager: ThemeManager, config: Config,
-                           settings: Settings) -> DeckBrowserFormatter:
+                           size_formatter: SizeFormatter, used_files_calculator: UsedFilesCalculator,
+                           db_size_calculator: DbSizeCalculator, trash: Trash, theme_manager: ThemeManager,
+                           config: Config, settings: Settings) -> DeckBrowserFormatter:
     return DeckBrowserFormatter(collection_holder, item_id_cache, media_cache, trash, size_formatter,
-                                used_files_calculator, theme_manager, config, settings)
+                                used_files_calculator, db_size_calculator, theme_manager, config, settings)
 
 
 @pytest.fixture

@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup, Tag
 
 from .deck_browser_js import DeckBrowserJs
 from .trash import Trash
+from ...calculator.db_size_calculator import DbSizeCalculator
 from ...common.collection_holder import CollectionHolder
 from ...common.number_formatter import NumberFormatter
 from ...cache.item_id_cache import ItemIdCache
@@ -28,13 +29,14 @@ class DeckBrowserFormatter:
 
     def __init__(self, collection_holder: CollectionHolder, item_id_cache: ItemIdCache, media_cache: MediaCache,
                  trash: Trash, size_formatter: SizeFormatter, used_files_calculator: UsedFilesCalculator,
-                 theme_manager: ThemeManager, config: Config, settings: Settings):
+                 db_size_calculator: DbSizeCalculator, theme_manager: ThemeManager, config: Config, settings: Settings):
         self.__collection_holder: CollectionHolder = collection_holder
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__media_cache: MediaCache = media_cache
         self.__trash: Trash = trash
         self.__size_formatter: SizeFormatter = size_formatter
         self.__used_files_calculator: UsedFilesCalculator = used_files_calculator
+        self.__db_size_calculator: DbSizeCalculator = db_size_calculator
         self.__theme_manager: ThemeManager = theme_manager
         self.__config: Config = config
         self.__web_dir: str = os.path.join("_addons", settings.module_name, "ui", "web")
@@ -50,9 +52,14 @@ class DeckBrowserFormatter:
             used_files_size: SizeBytes = used_files.used_files_size
             unused_files_size, unused_files_number = self.__media_cache.get_unused_files_size(use_cache=True)
             trash_dir_size: SizeBytes = self.__trash.get_trash_dir_size()
+            rev_table_size: SizeBytes = self.__db_size_calculator.get_revision_log_size()
+            rev_table_count: int = self.__db_size_calculator.get_revision_log_count()
             trash_files_number: FilesNumber = self.__trash.get_trash_files_number()
             note_count: int = self.__collection_holder.col().note_count()
             note_number_str: str = NumberFormatter.with_thousands_separator(note_count)
+            significant_digits: SignificantDigits = self.__config.get_deck_browser_significant_digits()
+            rev_log_size_str: str = self.__size_formatter.bytes_to_str(rev_table_size, significant_digits)
+            rev_table_count_str: str = NumberFormatter.with_thousands_separator(rev_table_count)
             used_notes_numbers_str: str = NumberFormatter.with_thousands_separator(used_files.used_notes_numbers)
             used_files_number_str: str = NumberFormatter.with_thousands_separator(used_files.used_files_number)
             existing_files_number_str: str = NumberFormatter.with_thousands_separator(used_files.exist_files_number)
@@ -69,6 +76,8 @@ class DeckBrowserFormatter:
             trash_dir_size: Optional[SizeBytes] = None
             total_size: Optional[SizeBytes] = None
             note_number_str: str = self.__sand_clock
+            rev_log_size_str: str = self.__sand_clock
+            rev_table_count_str: str = self.__sand_clock
             used_notes_numbers_str: str = self.__sand_clock
             used_files_number_str: str = self.__sand_clock
             existing_files_number_str: str = self.__sand_clock
@@ -79,7 +88,8 @@ class DeckBrowserFormatter:
         trash_dir_path: Path = self.__trash.get_trash_dir_path()
         soup: BeautifulSoup = BeautifulSoup()
         div: Tag = soup.new_tag('div')
-        collection_title: str = f'Size of {note_number_str} notes in file "{collection_file_path}"'
+        collection_title: str = (f'Size of {note_number_str} notes in file "{collection_file_path}"\n'
+                                 f'Revision log size: {rev_log_size_str} ({rev_table_count_str} rows)')
         media_title: str = f'Size of {used_files_number_str} media files ' \
                            f'({existing_files_number_str} existing and {missing_files_number_str} missing) ' \
                            f'used in {used_notes_numbers_str} notes (not include Unused and Trash)\n' \
