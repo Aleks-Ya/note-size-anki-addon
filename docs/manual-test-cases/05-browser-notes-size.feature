@@ -9,4 +9,5 @@ Feature: Size of notes found in Browser
     Then "Notes Size Button" is displayed
 
     When I clicked "Notes Size Button"
+    Then "Progress Dialog" is displayed
     Then "Detail Dialog" is displayed

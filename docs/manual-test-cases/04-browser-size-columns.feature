@@ -2,11 +2,14 @@
 Feature: Size columns in Browser
 
   @smoke @browser @editor
-  Scenario: Show size of current note in Browser
+  Scenario: Sort notes by size
 
     Given I opened Browser
-    And I selected Note
-    Then "Note Size Button" is displayed
+    Then Column "Size" is displayed
+    Then Column "Size (texts)" is displayed
+    Then Column "Size (files)" is displayed
 
-    When I clicked "Note Size Button"
-    Then "Detail Dialog" is displayed
+    When I click on header of "Size" column
+    Then Notes are sorted by size
+    When I click on header of "Size" column
+    Then Notes are sorted by size in opposite direction
