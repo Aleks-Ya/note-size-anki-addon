@@ -1,7 +1,7 @@
 import json
 import os
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Any
 
 from aqt.addons import AddonManager
 
@@ -43,7 +43,7 @@ def test_default_values(config_loader: ConfigLoader, module_dir: Path):
 
 # Replace default values of all possible properties with actual values
 def test_actual_values_all(config_loader: ConfigLoader, module_dir: Path):
-    meta_json_config: dict[str, any] = {
+    meta_json_config: dict[str, Any] = {
         'Browser': {'Show Found Notes Size': True,
                     'Significant Digits': 2},
         'Cache': {'Store Cache In File Enabled': True,
@@ -88,7 +88,7 @@ def test_actual_values_partial(module_dir: Path, config_loader: ConfigLoader):
                               {"Light Theme Color": "LightCoral", "Dark Theme Color": "Maroon", "Max Size": None}]}}}
 
 
-# Remove any properties which are not present in "config.json"
+# Remove Any properties which are not present in "config.json"
 def test_delete_unused_properties(module_dir: Path, config_loader: ConfigLoader):
     __write_meta_json_config({
         'Logging': {'Logger Level': 'DEBUG', 'UNUSED LEVEL 2 STRING': 'Value 3'},
@@ -143,7 +143,7 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
                               {"Light Theme Color": "LightCoral", "Max Size": None}]}},
         'Unused Top': {'Property 1': 'Value 1'}
     }, module_dir)
-    config_origin: Optional[dict[str, any]] = addon_manager.getConfig(module_name)
+    config_origin: Optional[dict[str, Any]] = addon_manager.getConfig(module_name)
     assert config_origin == {
         'Browser': {'Show Found Notes Size': True,
                     'Significant Digits': 2},
@@ -180,7 +180,7 @@ def test_save_loaded_config(addon_manager: AddonManager, config_loader: ConfigLo
                 "Levels v2": [{"Light Theme Color": "PaleGreen", "Max Size": "100 KB"},
                               {"Light Theme Color": "Orange", "Max Size": "1 MB"},
                               {"Light Theme Color": "LightCoral", "Max Size": None}]}}}
-    config_saved: Optional[dict[str, any]] = addon_manager.getConfig(module_name)
+    config_saved: Optional[dict[str, Any]] = addon_manager.getConfig(module_name)
     assert config_saved == {
         'Browser': {'Show Found Notes Size': True,
                     'Significant Digits': 2},
@@ -255,7 +255,7 @@ def test_write_config(config_loader: ConfigLoader, module_dir: Path) -> None:
 def __write_meta_json_config(meta_json_config, module_dir: Path) -> None:
     module_dir.mkdir(exist_ok=True)
     meta_json: Path = module_dir.joinpath("meta.json")
-    meta_json_content: dict[str, dict[str, any]] = {
+    meta_json_content: dict[str, dict[str, Any]] = {
         "config": meta_json_config
     }
     with open(meta_json, 'w') as fp:

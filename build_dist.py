@@ -4,6 +4,7 @@ import shutil
 import subprocess
 from pathlib import Path
 from subprocess import CompletedProcess
+from typing import Any
 
 
 class DistributionBuilder:
@@ -71,7 +72,7 @@ class DistributionBuilder:
         tag: TagReference = repo.tag(version)
         commit: Commit = tag.commit if tag in repo.tags else repo.head.commit
         commit_epoch_sec: int = int(commit.committed_datetime.timestamp())
-        draft: dict[str, any] = {
+        draft: dict[str, Any] = {
             "name": f"Note Size - sort notes by size {version}",
             "package": "1188705668",
             "author": "Alexey Yablokov",
