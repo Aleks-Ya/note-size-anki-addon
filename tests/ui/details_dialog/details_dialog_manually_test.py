@@ -9,7 +9,7 @@ from note_size.common.types import MediaFile
 from tests.data import Data
 
 
-@pytest.mark.skip(reason="For manual running")
+@pytest.mark.skip("For manual running")
 def test_details_dialog_wide(details_dialog: DetailsDialog, td: Data, qtbot: QtBot):
     note: Note = td.create_note_with_files()
     media_file: MediaFile = MediaFile(
@@ -21,7 +21,7 @@ def test_details_dialog_wide(details_dialog: DetailsDialog, td: Data, qtbot: QtB
     qtbot.stop()
 
 
-@pytest.mark.skip(reason="For manual running")
+@pytest.mark.skip("For manual running")
 def test_details_dialog_narrow(details_dialog: DetailsDialog, td: Data, qtbot: QtBot):
     note: Note = td.create_note_with_files()
     details_dialog.show_note(note)
@@ -29,7 +29,7 @@ def test_details_dialog_narrow(details_dialog: DetailsDialog, td: Data, qtbot: Q
     qtbot.stop()
 
 
-@pytest.mark.skip(reason="For manual running")
+@pytest.mark.skip("For manual running")
 def test_details_dialog_no_files(details_dialog: DetailsDialog, td: Data, qtbot: QtBot):
     note: Note = td.create_note_without_files()
     details_dialog.show_note(note)
@@ -37,7 +37,7 @@ def test_details_dialog_no_files(details_dialog: DetailsDialog, td: Data, qtbot:
     qtbot.stop()
 
 
-@pytest.mark.skip(reason="For manual running")
+@pytest.mark.skip("For manual running")
 def test_details_dialog_wider_than_screen(details_dialog: DetailsDialog, td: Data, qtbot: QtBot):
     note: Note = td.create_note_with_files()
     length: int = 250
@@ -49,7 +49,7 @@ def test_details_dialog_wider_than_screen(details_dialog: DetailsDialog, td: Dat
     qtbot.stop()
 
 
-@pytest.mark.skip(reason="For manual running")
+@pytest.mark.skip("For manual running")
 def test_details_dialog_higher_than_screen(details_dialog: DetailsDialog, td: Data, qtbot: QtBot):
     note: Note = td.create_note_with_files()
     file_number: int = 50
@@ -62,7 +62,7 @@ def test_details_dialog_higher_than_screen(details_dialog: DetailsDialog, td: Da
     qtbot.stop()
 
 
-@pytest.mark.skip(reason="For manual running")
+@pytest.mark.skip("For manual running")
 def test_details_dialog_larger_than_screen(details_dialog: DetailsDialog, td: Data, qtbot: QtBot):
     note: Note = td.create_note_with_files()
     file_number: int = 50
@@ -76,7 +76,7 @@ def test_details_dialog_larger_than_screen(details_dialog: DetailsDialog, td: Da
     qtbot.stop()
 
 
-@pytest.mark.skip(reason="For manual running")
+@pytest.mark.skip("For manual running")
 def test_details_dialog_thousands_rows(details_dialog: DetailsDialog, td: Data, qtbot: QtBot):
     pid: int = os.getpid()
     note: Note = td.create_note_with_files()
