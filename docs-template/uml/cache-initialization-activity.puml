@@ -21,7 +21,7 @@ split
     endif
 split again
     -[hidden]->
-    :"Refresh cache" button;
+    :"Refresh cache now" button;
     :Delete cache file;
     :Empty ItemIdCache;
     :Empty MediaCache;
