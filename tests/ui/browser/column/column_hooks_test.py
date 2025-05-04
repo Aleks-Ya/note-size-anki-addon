@@ -6,9 +6,10 @@ from aqt import gui_hooks
 from aqt.browser import Column, ItemId, CellRow, SearchContext
 from mock.mock import MagicMock
 
+from note_size.common.collection_holder import CollectionHolder
 from note_size.ui.browser.column.column_hooks import ColumnHooks
 from tests.conftest import assert_no_hooks
-from tests.data import Data
+from tests.data import Data, DefaultFields
 
 
 def test_setup_hooks(td: Data, column_hooks: ColumnHooks):
@@ -81,7 +82,7 @@ def test_modify_row(td: Data, column_hooks: ColumnHooks):
     ]
 
 
-def test_sort_rows_by_column(td: Data, column_hooks: ColumnHooks):
+def test_sort_rows_by_column(td: Data, column_hooks: ColumnHooks, collection_holder: CollectionHolder):
     column_hooks.setup_hooks()
     note_big: Note = td.create_note_with_given_fields("big big big")
     note_medium: Note = td.create_note_with_given_fields("medium")
@@ -89,6 +90,12 @@ def test_sort_rows_by_column(td: Data, column_hooks: ColumnHooks):
     browser: MagicMock = MagicMock()
     column: Column = Column(key="note-size-total", notes_mode_label="Size")
     ids: Sequence[ItemId] = [note_medium.id, note_big.id, note_small.id]
-    search_context: SearchContext = SearchContext("", browser, column, False, ids)
+    search_context: SearchContext = SearchContext("", browser, column, False, ids=ids)
     gui_hooks.browser_did_search(search_context)
-    assert search_context.ids == [note_big.id, note_medium.id, note_small.id]
+    assert search_context.ids
+    act_notes: list[str] = [collection_holder.col().get_note(note_id)[DefaultFields.front_field_name]
+                            for note_id in search_context.ids]
+    exp_notes: list[str] = [note_big[DefaultFields.front_field_name],
+                            note_medium[DefaultFields.front_field_name],
+                            note_small[DefaultFields.front_field_name]]
+    assert act_notes == exp_notes
