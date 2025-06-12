@@ -1,18 +1,18 @@
-# The latest stable Anki version (25.2.1)
+# The latest stable Anki version (25.2.7)
 
 # https://pypi.org/project/anki/#history
-anki==25.2.1
+anki==25.2.7
 
 # https://pypi.org/project/aqt/#history
-aqt==25.2.1
+aqt==25.2.7
 
-# https://github.com/ankitects/anki/blob/25.02.1/python/requirements.qt6_6.in
+# https://github.com/ankitects/anki/blob/25.02.7/python/requirements.qt6_6.in
 pyqt6==6.6.1
 pyqt6-qt6==6.6.2
 pyqt6-webengine==6.6.0
 pyqt6-webengine-qt6==6.6.2
 pyqt6_sip==13.6.0
 
-# https://github.com/ankitects/anki/blob/25.02.1/python/requirements.anki.in
+# https://github.com/ankitects/anki/blob/25.02.7/python/requirements.anki.in
 beautifulsoup4==4.12.3
 requests[socks]==2.32.3
