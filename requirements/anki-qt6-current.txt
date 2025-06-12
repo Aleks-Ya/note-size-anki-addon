@@ -2,6 +2,8 @@
 
 # https://pypi.org/project/anki/#history
 anki==25.2.1
+
+# https://pypi.org/project/aqt/#history
 aqt==25.2.1
 
 # https://github.com/ankitects/anki/blob/25.02.1/python/requirements.qt6_6.in
