@@ -8,7 +8,7 @@ from aqt.browser import Browser, ItemId
 from aqt.progress import ProgressManager
 from aqt.qt import QPushButton
 
-from ...common.browser_helper import BrowserHelper
+from ..browser_helper import BrowserHelper
 from ....common.number_formatter import NumberFormatter
 from ...details_dialog.details_dialog import DetailsDialog
 from ...details_dialog.show_details_dialog_op import ShowDetailsDialogOp
@@ -56,7 +56,7 @@ class BrowserButton(QPushButton):
     def __show_notes_size(self, note_ids: Sequence[NoteId]) -> None:
         significant_digits: SignificantDigits = self.__config.get_size_button_significant_digits()
         size: SizeStr = self.__str_note_size_cache.get_notes_size_str(note_ids, SizeType.TOTAL, significant_digits,
-                                                                 use_cache=True)
+                                                                      use_cache=True)
         self.setText(size)
         note_ids_number: str = NumberFormatter.with_thousands_separator(len(note_ids))
         tooltip: str = (f"Size of {note_ids_number} notes\n"
@@ -69,7 +69,7 @@ class BrowserButton(QPushButton):
         note_ids: Sequence[NoteId] = self.__item_ids_to_note_ids(card_ids)
         significant_digits: SignificantDigits = self.__config.get_size_button_significant_digits()
         size: SizeStr = self.__str_note_size_cache.get_notes_size_str(note_ids, SizeType.TOTAL, significant_digits,
-                                                                 use_cache=True)
+                                                                      use_cache=True)
         self.setText(size)
         note_ids_number: str = NumberFormatter.with_thousands_separator(len(note_ids))
         card_ids_number: str = NumberFormatter.with_thousands_separator(len(card_ids))

@@ -9,7 +9,7 @@ from aqt.browser import Column, Cell, SearchContext
 from aqt.browser import ItemId, CellRow
 
 from .item_id_sorter import ItemIdSorter
-from ...common.browser_helper import BrowserHelper
+from ..browser_helper import BrowserHelper
 from ....cache.item_id_cache import ItemIdCache
 from ....cache.str_note_size_cache import StrNoteSizeCache
 from ....config.config import Config
@@ -92,7 +92,8 @@ class ColumnHooks:
             column_index: int = columns.index(column_key)
             cell: Cell = row.cells[column_index]
             significant_digits: SignificantDigits = self.__config.get_browser_significant_digits()
-            cell.text = self.__str_note_size_cache.get_note_size_str(note_id, size_type, significant_digits, use_cache=True)
+            cell.text = self.__str_note_size_cache.get_note_size_str(note_id, size_type, significant_digits,
+                                                                     use_cache=True)
 
     @staticmethod
     def __on_browser_will_search(context: SearchContext) -> None:
