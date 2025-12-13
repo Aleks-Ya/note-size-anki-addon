@@ -5,9 +5,9 @@ from pytestqt.qtbot import QtBot
 from PyQtPath.path_chain_pyqt6 import path
 
 from note_size.core.cache.cache_initializer import CacheInitializer
-from note_size.config.config import Config
-from note_size.config.settings import Settings
-from note_size.config.url_manager import UrlManager
+from note_size.core.config.config import Config
+from note_size.core.config.settings import Settings
+from note_size.core.config.url_manager import UrlManager
 from note_size.ui.config.cache_tab import CacheTab
 from note_size.ui.config.model_converter import ModelConverter
 from note_size.ui.config.ui_model import UiModel

@@ -1,8 +1,8 @@
 import os
 from pathlib import Path
 
-from note_size.config.config import Config
-from note_size.config.settings import Settings
+from note_size.core.config.config import Config
+from note_size.core.config.settings import Settings
 from note_size.core.profiler.profiler import Profiler
 
 

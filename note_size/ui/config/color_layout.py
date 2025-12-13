@@ -5,9 +5,9 @@ from aqt.qt import QVBoxLayout, QPushButton, Qt, QHBoxLayout, QDesktopServices
 from aqt.theme import ThemeManager
 
 from .color_table import ColorTable
-from ...config.level_parser import LevelParser
-from ...config.settings import Settings
-from ...config.url_manager import UrlType, UrlManager
+from ...core.config.level_parser import LevelParser
+from ...core.config.settings import Settings
+from ...core.config.url_manager import UrlType, UrlManager
 from .ui_model import UiModel
 from .widgets import GroupVBox, CheckboxWithInfo, InfoButton
 

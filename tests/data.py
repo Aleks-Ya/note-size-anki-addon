@@ -8,7 +8,7 @@ from anki.notes import Note
 from aqt import gui_hooks
 
 from note_size.core.common.collection_holder import CollectionHolder
-from note_size.config.config import Config
+from note_size.core.config.config import Config
 from note_size.core.common.types import MediaFile, FieldName, FieldContent, FileContent, SignificantDigits, ColorName
 
 

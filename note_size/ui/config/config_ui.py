@@ -6,11 +6,11 @@ from aqt.qt import QDesktopServices
 from aqt.theme import ThemeManager
 
 from ...core.cache.cache_initializer import CacheInitializer
-from ...config.config import Config
-from ...config.config_loader import ConfigLoader
-from ...config.level_parser import LevelParser
-from ...config.settings import Settings
-from ...config.url_manager import UrlManager
+from ...core.config.config import Config
+from ...core.config.config_loader import ConfigLoader
+from ...core.config.level_parser import LevelParser
+from ...core.config.settings import Settings
+from ...core.config.url_manager import UrlManager
 from ...core.log.logs import Logs
 from .config_dialog import ConfigDialog
 from .ui_model import UiModel

@@ -2,9 +2,9 @@ import pytest
 from aqt.qt import QDesktopServices
 from pytestqt.qtbot import QtBot
 
-from note_size.config.config import Config
-from note_size.config.settings import Settings
-from note_size.config.url_manager import UrlManager
+from note_size.core.config.config import Config
+from note_size.core.config.settings import Settings
+from note_size.core.config.url_manager import UrlManager
 from note_size.ui.config.deck_browser_tab import DeckBrowserTab
 from note_size.ui.config.model_converter import ModelConverter
 from note_size.ui.config.ui_model import UiModel

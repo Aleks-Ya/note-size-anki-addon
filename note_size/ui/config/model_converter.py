@@ -2,7 +2,7 @@ import logging
 from logging import Logger
 
 from .ui_model import UiModel
-from ...config.config import Config
+from ...core.config.config import Config
 
 log: Logger = logging.getLogger(__name__)
 

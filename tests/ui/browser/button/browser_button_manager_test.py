@@ -1,6 +1,6 @@
 from aqt.browser import Browser
 
-from note_size.config.config import Config
+from note_size.core.config.config import Config
 from note_size.ui.browser.button.browser_button import BrowserButton
 from note_size.ui.browser.button.browser_button_manager import BrowserButtonManager
 

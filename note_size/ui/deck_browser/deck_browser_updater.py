@@ -4,7 +4,7 @@ from logging import Logger
 from aqt.deckbrowser import DeckBrowser
 
 from .deck_browser_formatter import DeckBrowserFormatter
-from ...config.config import Config
+from ...core.config.config import Config
 
 log: Logger = logging.getLogger(__name__)
 

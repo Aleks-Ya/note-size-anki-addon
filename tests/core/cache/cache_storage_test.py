@@ -16,8 +16,8 @@ from note_size.core.cache.bytes_note_size_cache import BytesNoteSizeCache
 from note_size.core.cache.bytes_size_cache import BytesSizeCache
 from note_size.core.cache.updated_files_cache import UpdatedFilesCache
 from note_size.core.common.collection_holder import CollectionHolder
-from note_size.config.config import Config
-from note_size.config.settings import Settings
+from note_size.core.config.config import Config
+from note_size.core.config.settings import Settings
 from note_size.core.common.types import SizeType, FileType, FileSize, SizeBytes
 from note_size.core.cache.file_type_helper import FileTypeHelper
 from tests.data import Data, MediaFiles, Digits

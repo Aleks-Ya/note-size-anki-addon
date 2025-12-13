@@ -21,11 +21,11 @@ class ProfileHook:
         from aqt import ProfileManager
         from aqt.theme import ThemeManager
 
-        from ..config.config import Config
-        from ..config.config_loader import ConfigLoader
-        from ..config.settings import Settings
-        from ..config.level_parser import LevelParser
-        from ..config.url_manager import UrlManager
+        from ..core.config.config import Config
+        from ..core.config.config_loader import ConfigLoader
+        from ..core.config.settings import Settings
+        from ..core.config.level_parser import LevelParser
+        from ..core.config.url_manager import UrlManager
         from ..core.cache.cache_hooks import CacheHooks
         from ..core.cache.cache_initializer import CacheInitializer
         from ..core.cache.item_id_cache import ItemIdCache

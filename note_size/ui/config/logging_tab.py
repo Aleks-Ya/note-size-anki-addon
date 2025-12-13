@@ -3,8 +3,8 @@ from logging import Logger
 
 from aqt.qt import QVBoxLayout, QWidget, Qt, QUrl, QPushButton, QDesktopServices
 
-from ...config.settings import Settings
-from ...config.url_manager import UrlManager, UrlType
+from ...core.config.settings import Settings
+from ...core.config.url_manager import UrlManager, UrlType
 from .ui_model import UiModel
 from .widgets import TitledComboBoxLayout
 from ...core.log.logs import Logs

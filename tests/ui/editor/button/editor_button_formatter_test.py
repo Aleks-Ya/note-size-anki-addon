@@ -5,10 +5,10 @@ from aqt.theme import ThemeManager
 from note_size.core.cache.str_note_size_cache import StrNoteSizeCache
 from note_size.core.cache.bytes_size_cache import BytesSizeCache
 from note_size.core.common.collection_holder import CollectionHolder
-from note_size.config.config import Config
+from note_size.core.config.config import Config
 from note_size.core.cache.media_cache import MediaCache
 from note_size.core.cache.bytes_note_size_cache import BytesNoteSizeCache
-from note_size.config.level_parser import LevelParser
+from note_size.core.config.level_parser import LevelParser
 from note_size.ui.editor.button.editor_button_formatter import EditorButtonFormatter
 from note_size.ui.editor.button.editor_button_label import EditorButtonLabel
 from note_size.core.common.types import SizeBytes, SizeType, ColorName

@@ -5,7 +5,7 @@ from aqt.qt import QPushButton, QMargins, QIcon
 from aqt.theme import ThemeManager
 
 from ..config.config_ui import ConfigUi
-from ...config.settings import Settings
+from ...core.config.settings import Settings
 
 log: Logger = logging.getLogger(__name__)
 

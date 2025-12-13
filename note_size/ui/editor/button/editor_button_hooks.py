@@ -10,8 +10,8 @@ from aqt.qt import QWidget
 
 from .editor_button_creator import EditorButtonCreator
 from .editor_button_js import EditorButtonJs
-from ....config.config import Config
-from ....config.settings import Settings
+from ....core.config.config import Config
+from ....core.config.settings import Settings
 
 log: Logger = logging.getLogger(__name__)
 

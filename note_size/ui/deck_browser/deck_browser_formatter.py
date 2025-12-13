@@ -15,8 +15,8 @@ from ...core.common.number_formatter import NumberFormatter
 from ...core.cache.item_id_cache import ItemIdCache
 from ...core.cache.media_cache import MediaCache
 from ...core.calculator.used_files_calculator import UsedFilesCalculator, UsedFiles
-from ...config.config import Config
-from ...config.settings import Settings
+from ...core.config.config import Config
+from ...core.config.settings import Settings
 from ...core.common.types import SizeBytes, FilesNumber, SignificantDigits
 from ...core.cache.bytes_size_cache import BytesSizeCache
 

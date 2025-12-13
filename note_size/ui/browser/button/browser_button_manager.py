@@ -10,8 +10,8 @@ from .browser_button import BrowserButton
 from ...details_dialog.details_dialog import DetailsDialog
 from ....core.cache.item_id_cache import ItemIdCache
 from ....core.cache.str_note_size_cache import StrNoteSizeCache
-from ....config.config import Config
-from ....config.config_listener import ConfigListener
+from ....core.config.config import Config
+from ....core.config.config_listener import ConfigListener
 
 log: Logger = logging.getLogger(__name__)
 

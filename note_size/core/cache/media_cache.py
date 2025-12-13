@@ -8,7 +8,7 @@ from anki.media_pb2 import CheckMediaResponse
 
 from .cache import Cache
 from ..common.collection_holder import CollectionHolder
-from ...config.config import Config
+from ...core.config.config import Config
 from ..common.types import MediaFile, SizeBytes, FilesNumber, FileSize
 
 log: Logger = logging.getLogger(__name__)

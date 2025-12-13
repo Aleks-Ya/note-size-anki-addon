@@ -1,4 +1,4 @@
-from ...config.level_parser import LevelDict
+from ...core.config.level_parser import LevelDict
 
 
 class UiModel:

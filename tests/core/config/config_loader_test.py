@@ -5,10 +5,10 @@ from typing import Optional, Any
 
 from aqt.addons import AddonManager
 
-from note_size.config.config import Config
-from note_size.config.config_loader import ConfigLoader
+from note_size.core.config.config import Config
+from note_size.core.config.config_loader import ConfigLoader
 from note_size.core.common.types import SignificantDigits
-from note_size.config.level_parser import LevelDict, LevelParser
+from note_size.core.config.level_parser import LevelDict, LevelParser
 from tests.data import Colors
 
 

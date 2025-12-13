@@ -4,8 +4,8 @@ from logging import Logger
 from aqt.qt import QVBoxLayout, QWidget, Qt, QDesktopServices
 
 from .widgets import CheckboxWithInfo
-from ...config.settings import Settings
-from ...config.url_manager import UrlManager, UrlType
+from ...core.config.settings import Settings
+from ...core.config.url_manager import UrlManager, UrlType
 from .ui_model import UiModel
 
 log: Logger = logging.getLogger(__name__)

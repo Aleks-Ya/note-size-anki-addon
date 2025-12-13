@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 from requests import Response
 
-from note_size.config.url_manager import UrlManager, UrlType, URL
+from note_size.core.config.url_manager import UrlManager, UrlType, URL
 
 
 def test_get_all_urls(url_manager: UrlManager):

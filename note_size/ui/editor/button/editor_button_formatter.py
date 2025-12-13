@@ -6,8 +6,8 @@ from aqt.theme import ThemeManager
 
 from .editor_button_label import EditorButtonLabel
 from ....core.cache.str_note_size_cache import StrNoteSizeCache
-from ....config.config import Config
-from ....config.level_parser import Level, LevelParser
+from ....core.config.config import Config
+from ....core.config.level_parser import Level, LevelParser
 from ....core.common.types import SizeStr, SizeBytes, SizeType, SignificantDigits, ColorName
 from ....core.cache.bytes_note_size_cache import BytesNoteSizeCache
 from ....core.cache.bytes_size_cache import BytesSizeCache

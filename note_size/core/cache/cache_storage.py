@@ -6,7 +6,7 @@ from pathlib import Path
 from threading import RLock
 
 from .cache import Cache
-from ...config.settings import Settings
+from ...core.config.settings import Settings
 
 log: Logger = logging.getLogger(__name__)
 

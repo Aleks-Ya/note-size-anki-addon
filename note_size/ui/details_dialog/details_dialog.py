@@ -13,9 +13,9 @@ from .details_model_filler import DetailsModelFiller
 from .files_table import FilesTable
 from ...core.cache.bytes_note_size_cache import BytesNoteSizeCache
 from ...core.cache.bytes_size_cache import BytesSizeCache
-from ...config.config import Config
+from ...core.config.config import Config
 from ..config.config_ui import ConfigUi
-from ...config.settings import Settings
+from ...core.config.settings import Settings
 from ...core.cache.file_type_helper import FileTypeHelper
 
 log: Logger = logging.getLogger(__name__)

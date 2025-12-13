@@ -6,7 +6,7 @@ from aqt.qt import QTableWidget, QColorDialog, Qt, \
     QColor, QTableWidgetItem, QHeaderView
 from aqt.theme import ThemeManager
 
-from ...config.level_parser import Level, LevelParser, LevelDict
+from ...core.config.level_parser import Level, LevelParser, LevelDict
 from .ui_model import UiModel
 
 log: Logger = logging.getLogger(__name__)

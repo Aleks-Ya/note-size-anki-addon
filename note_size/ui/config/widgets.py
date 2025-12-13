@@ -6,7 +6,7 @@ from typing import Optional, Callable, Any
 from aqt.qt import QHBoxLayout, QLabel, Qt, QSpinBox, QComboBox, QGroupBox, QWidget, QVBoxLayout, QLayout, QPushButton, \
     QIcon, QCheckBox, QDesktopServices, QUrl, QSize
 
-from ...config.settings import Settings
+from ...core.config.settings import Settings
 
 log: Logger = logging.getLogger(__name__)
 

@@ -10,7 +10,7 @@ from ...core.common.number_formatter import NumberFormatter
 from ...core.cache.media_cache import MediaCache
 from ...core.cache.bytes_note_size_cache import BytesNoteSizeCache
 from ...core.cache.bytes_size_cache import BytesSizeCache
-from ...config.config import Config
+from ...core.config.config import Config
 from ...core.common.types import SizeStr, SizeBytes, MediaFile, SizeType, FileSize, SignificantDigits
 
 log: Logger = logging.getLogger(__name__)

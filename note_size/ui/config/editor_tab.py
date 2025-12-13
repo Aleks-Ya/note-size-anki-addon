@@ -6,9 +6,9 @@ from aqt.theme import ThemeManager
 
 from .color_layout import ColorLayout
 from .widgets import CheckboxWithInfo
-from ...config.level_parser import LevelParser
-from ...config.settings import Settings
-from ...config.url_manager import UrlManager, UrlType
+from ...core.config.level_parser import LevelParser
+from ...core.config.settings import Settings
+from ...core.config.url_manager import UrlManager, UrlType
 from .ui_model import UiModel
 
 log: Logger = logging.getLogger(__name__)

@@ -3,10 +3,10 @@ from aqt.qt import QDesktopServices
 from aqt.theme import ThemeManager
 from pytestqt.qtbot import QtBot
 
-from note_size.config.config import Config
-from note_size.config.level_parser import LevelParser
-from note_size.config.settings import Settings
-from note_size.config.url_manager import UrlManager
+from note_size.core.config.config import Config
+from note_size.core.config.level_parser import LevelParser
+from note_size.core.config.settings import Settings
+from note_size.core.config.url_manager import UrlManager
 from note_size.ui.config.editor_tab import EditorTab
 from note_size.ui.config.model_converter import ModelConverter
 from note_size.ui.config.ui_model import UiModel
