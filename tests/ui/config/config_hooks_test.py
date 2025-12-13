@@ -1,6 +1,6 @@
 from aqt import gui_hooks
 
-from note_size.config.config_hooks import ConfigHooks
+from note_size.ui.config.config_hooks import ConfigHooks
 from tests.conftest import assert_no_hooks
 
 

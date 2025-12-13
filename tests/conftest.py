@@ -33,7 +33,7 @@ from note_size.calculator.size_calculator import SizeCalculator
 from note_size.calculator.size_formatter import SizeFormatter
 from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
 from note_size.calculator.used_files_calculator import UsedFilesCalculator
-from note_size.config.config_hooks import ConfigHooks
+from note_size.ui.config.config_hooks import ConfigHooks
 from note_size.config.config import Config
 from note_size.config.config_loader import ConfigLoader
 from note_size.config.level_parser import LevelParser

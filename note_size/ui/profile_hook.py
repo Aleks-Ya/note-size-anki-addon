@@ -23,7 +23,7 @@ class ProfileHook:
 
         from ..config.config import Config
         from ..config.config_loader import ConfigLoader
-        from ..config.config_hooks import ConfigHooks
+        from .config.config_hooks import ConfigHooks
         from ..config.settings import Settings
         from ..config.level_parser import LevelParser
         from ..config.url_manager import UrlManager
