@@ -10,7 +10,7 @@ from ....config.config import Config
 from ....config.level_parser import Level, LevelParser
 from ....common.types import SizeStr, SizeBytes, SizeType, SignificantDigits, ColorName
 from ....calculator.size_calculator import SizeCalculator
-from ....calculator.bytes_size_cache import BytesSizeCache
+from ....cache.bytes_size_cache import BytesSizeCache
 
 log: Logger = logging.getLogger(__name__)
 

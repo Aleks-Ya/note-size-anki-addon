@@ -9,7 +9,7 @@ from aqt.theme import ThemeManager
 from ...cache.file_type_helper import FileTypeHelper
 from .icon_table_widget_item import IconTableWidgetItem
 from .size_table_widget_item import SizeTableWidgetItem
-from ...calculator.bytes_size_cache import BytesSizeCache
+from ...cache.bytes_size_cache import BytesSizeCache
 from ...config.config import Config
 from ...config.settings import Settings
 from ...common.types import MediaFile, SizeStr, FileType, FileSize, SignificantDigits, ColorName

@@ -18,7 +18,7 @@ from ...calculator.used_files_calculator import UsedFilesCalculator, UsedFiles
 from ...config.config import Config
 from ...config.settings import Settings
 from ...common.types import SizeBytes, FilesNumber, SignificantDigits
-from ...calculator.bytes_size_cache import BytesSizeCache
+from ...cache.bytes_size_cache import BytesSizeCache
 
 log: Logger = logging.getLogger(__name__)
 

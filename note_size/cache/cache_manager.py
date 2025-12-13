@@ -8,7 +8,7 @@ from .item_id_cache import ItemIdCache
 from .media_cache import MediaCache
 from .note_size_cache import NoteSizeCache
 from ..calculator.size_calculator import SizeCalculator
-from ..calculator.bytes_size_cache import BytesSizeCache
+from .bytes_size_cache import BytesSizeCache
 from ..calculator.updated_files_calculator import UpdatedFilesCalculator
 from .file_type_helper import FileTypeHelper
 

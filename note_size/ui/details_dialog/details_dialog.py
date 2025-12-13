@@ -12,7 +12,7 @@ from .details_model import DetailsModel
 from .details_model_filler import DetailsModelFiller
 from .files_table import FilesTable
 from ...calculator.size_calculator import SizeCalculator
-from ...calculator.bytes_size_cache import BytesSizeCache
+from ...cache.bytes_size_cache import BytesSizeCache
 from ...config.config import Config
 from ..config.config_ui import ConfigUi
 from ...config.settings import Settings

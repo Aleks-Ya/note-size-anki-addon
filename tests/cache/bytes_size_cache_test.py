@@ -2,7 +2,7 @@ import timeit
 
 import pytest
 
-from note_size.calculator.bytes_size_cache import BytesSizeCache
+from note_size.cache.bytes_size_cache import BytesSizeCache
 from note_size.common.types import SizeBytes, SizeStr, SignificantDigits
 from tests.data import Digits
 

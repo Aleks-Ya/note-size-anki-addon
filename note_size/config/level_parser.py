@@ -3,7 +3,7 @@ import sys
 from logging import Logger
 from typing import Optional, NewType
 
-from ..calculator.bytes_size_cache import BytesSizeCache
+from ..cache.bytes_size_cache import BytesSizeCache
 from ..common.types import SizeStr, SizeBytes, SignificantDigits, ColorName
 
 log: Logger = logging.getLogger(__name__)

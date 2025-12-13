@@ -2,7 +2,7 @@ import logging
 from logging import Logger
 from typing import Any
 
-from ..cache.cache import Cache
+from .cache import Cache
 from ..common.types import SizeStr, SizeBytes, SignificantDigits
 
 log: Logger = logging.getLogger(__name__)

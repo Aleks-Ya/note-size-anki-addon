@@ -30,7 +30,7 @@ from note_size.cache.note_size_cache import NoteSizeCache
 from note_size.cache.cache_hooks import CacheHooks
 from note_size.cache.file_type_helper import FileTypeHelper
 from note_size.calculator.size_calculator import SizeCalculator
-from note_size.calculator.bytes_size_cache import BytesSizeCache
+from note_size.cache.bytes_size_cache import BytesSizeCache
 from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
 from note_size.calculator.used_files_calculator import UsedFilesCalculator
 from note_size.ui.config.config_hooks import ConfigHooks

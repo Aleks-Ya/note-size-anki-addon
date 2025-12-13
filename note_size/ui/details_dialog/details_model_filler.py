@@ -9,7 +9,7 @@ from .details_model import DetailsModel
 from ...common.number_formatter import NumberFormatter
 from ...cache.media_cache import MediaCache
 from ...calculator.size_calculator import SizeCalculator
-from ...calculator.bytes_size_cache import BytesSizeCache
+from ...cache.bytes_size_cache import BytesSizeCache
 from ...config.config import Config
 from ...common.types import SizeStr, SizeBytes, MediaFile, SizeType, FileSize, SignificantDigits
 

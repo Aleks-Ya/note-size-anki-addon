@@ -6,7 +6,7 @@ from anki.notes import NoteId
 
 from .cache import Cache
 from ..calculator.size_calculator import SizeCalculator
-from ..calculator.bytes_size_cache import BytesSizeCache
+from .bytes_size_cache import BytesSizeCache
 from ..common.types import SizeStr, SizeBytes, SizeType, SignificantDigits
 
 log: Logger = logging.getLogger(__name__)
