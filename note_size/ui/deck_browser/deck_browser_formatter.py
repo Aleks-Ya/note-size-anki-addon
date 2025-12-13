@@ -9,12 +9,12 @@ from bs4 import BeautifulSoup, Tag
 
 from .deck_browser_js import DeckBrowserJs
 from .trash import Trash
-from ...calculator.db_size_calculator import DbSizeCalculator
+from ...core.calculator.db_size_calculator import DbSizeCalculator
 from ...core.common.collection_holder import CollectionHolder
 from ...core.common.number_formatter import NumberFormatter
 from ...cache.item_id_cache import ItemIdCache
 from ...cache.media_cache import MediaCache
-from ...calculator.used_files_calculator import UsedFilesCalculator, UsedFiles
+from ...core.calculator.used_files_calculator import UsedFilesCalculator, UsedFiles
 from ...config.config import Config
 from ...config.settings import Settings
 from ...core.common.types import SizeBytes, FilesNumber, SignificantDigits

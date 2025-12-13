@@ -37,8 +37,8 @@ class ProfileHook:
         from ..cache.bytes_note_size_cache import BytesNoteSizeCache
         from ..cache.bytes_size_cache import BytesSizeCache
         from ..cache.updated_files_cache import UpdatedFilesCache
-        from ..calculator.used_files_calculator import UsedFilesCalculator
-        from ..calculator.db_size_calculator import DbSizeCalculator
+        from ..core.calculator.used_files_calculator import UsedFilesCalculator
+        from ..core.calculator.db_size_calculator import DbSizeCalculator
         from ..core.log.logs import Logs
         from .config.config_hooks import ConfigHooks
         from .config.config_ui import ConfigUi

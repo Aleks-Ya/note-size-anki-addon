@@ -16,7 +16,7 @@ from aqt.theme import ThemeManager
 from mock.mock import MagicMock
 from pytestqt.qtbot import QtBot
 
-from note_size.calculator.db_size_calculator import DbSizeCalculator
+from note_size.core.calculator.db_size_calculator import DbSizeCalculator
 from note_size.core.common.collection_holder import CollectionHolder
 
 utils.tr = MagicMock()
@@ -32,7 +32,7 @@ from note_size.cache.file_type_helper import FileTypeHelper
 from note_size.cache.bytes_note_size_cache import BytesNoteSizeCache
 from note_size.cache.bytes_size_cache import BytesSizeCache
 from note_size.cache.updated_files_cache import UpdatedFilesCache
-from note_size.calculator.used_files_calculator import UsedFilesCalculator
+from note_size.core.calculator.used_files_calculator import UsedFilesCalculator
 from note_size.ui.config.config_hooks import ConfigHooks
 from note_size.config.config import Config
 from note_size.config.config_loader import ConfigLoader
