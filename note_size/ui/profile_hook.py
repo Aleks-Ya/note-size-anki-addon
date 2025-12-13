@@ -32,7 +32,7 @@ class ProfileHook:
         from ..cache.media_cache import MediaCache
         from ..cache.cache_storage import CacheStorage
         from ..cache.cache_manager import CacheManager
-        from ..cache.note_size_cache import NoteSizeCache
+        from ..cache.str_note_size_cache import StrNoteSizeCache
         from ..cache.file_type_helper import FileTypeHelper
         from ..cache.bytes_note_size_cache import BytesNoteSizeCache
         from ..cache.bytes_size_cache import BytesSizeCache
@@ -88,13 +88,13 @@ class ProfileHook:
         bytes_size_cache: BytesSizeCache = BytesSizeCache()
         item_id_cache: ItemIdCache = ItemIdCache(self.__collection_holder)
         item_id_sorter: ItemIdSorter = ItemIdSorter(item_id_cache, bytes_note_size_cache)
-        note_size_cache: NoteSizeCache = NoteSizeCache(bytes_note_size_cache, bytes_size_cache)
-        column_hooks: ColumnHooks = ColumnHooks(item_id_cache, note_size_cache, item_id_sorter, config)
+        str_note_size_cache: StrNoteSizeCache = StrNoteSizeCache(bytes_note_size_cache, bytes_size_cache)
+        column_hooks: ColumnHooks = ColumnHooks(item_id_cache, str_note_size_cache, item_id_sorter, config)
         column_hooks.setup_hooks()
         level_parser: LevelParser = LevelParser()
         theme_manager: ThemeManager = theme.theme_manager
         editor_button_formatter: EditorButtonFormatter = EditorButtonFormatter(
-            note_size_cache, bytes_note_size_cache, bytes_size_cache, level_parser, theme_manager, config)
+            str_note_size_cache, bytes_note_size_cache, bytes_size_cache, level_parser, theme_manager, config)
         trash: Trash = Trash(self.__collection_holder)
         current_cache_version: int = 1
         cache_storage: CacheStorage = CacheStorage(current_cache_version, settings)
@@ -103,7 +103,7 @@ class ProfileHook:
                                                                                   bytes_note_size_cache,
                                                                                   media_cache)
         cache_manager: CacheManager = CacheManager(
-            media_cache, item_id_cache, bytes_note_size_cache, bytes_size_cache, file_type_helper, note_size_cache,
+            media_cache, item_id_cache, bytes_note_size_cache, bytes_size_cache, file_type_helper, str_note_size_cache,
             updated_files_cache)
         deck_browser: DeckBrowser = mw.deckBrowser
         progress_manager: ProgressManager = mw.progress
@@ -139,7 +139,7 @@ class ProfileHook:
         config_hooks: ConfigHooks = ConfigHooks(config_ui, desktop_services, url_manager)
         config_hooks.setup_hooks()
         browser_button_manager: BrowserButtonManager = BrowserButtonManager(
-            item_id_cache, note_size_cache, details_dialog, progress_manager, config)
+            item_id_cache, str_note_size_cache, details_dialog, progress_manager, config)
         browser_hooks: BrowserHooks = BrowserHooks(browser_button_manager, config)
         browser_hooks.setup_hooks()
         theme_hooks: ThemeHooks = ThemeHooks(deck_browser_updater, details_dialog)

@@ -109,4 +109,4 @@ def __fill_cache(cache_manager: CacheManager, td: Data) -> None:
     cache_manager.get_item_id_cache().get_note_id_by_card_id(card.id)
     cache_manager.get_bytes_note_size_cache().get_note_size(card.nid, SizeType.TOTAL, use_cache=True)
     cache_manager.get_file_type_helper().get_file_type(MediaFiles.image, use_cache=True)
-    cache_manager.get_note_size_cache().get_note_size_str(card.nid, SizeType.TOTAL, Digits.one, use_cache=True)
+    cache_manager.get_str_note_size_cache().get_note_size_str(card.nid, SizeType.TOTAL, Digits.one, use_cache=True)

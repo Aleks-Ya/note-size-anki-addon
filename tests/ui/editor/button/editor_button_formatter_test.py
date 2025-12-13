@@ -2,7 +2,7 @@ from anki.collection import Collection
 from anki.notes import Note
 from aqt.theme import ThemeManager
 
-from note_size.cache.note_size_cache import NoteSizeCache
+from note_size.cache.str_note_size_cache import StrNoteSizeCache
 from note_size.cache.bytes_size_cache import BytesSizeCache
 from note_size.common.collection_holder import CollectionHolder
 from note_size.config.config import Config
@@ -49,9 +49,9 @@ def test_disabled_color(collection_holder: CollectionHolder, td: Data, bytes_siz
     config: Config = td.read_config_updated({'Size Button': {'Color': {'Enabled': False}}})
     media_cache: MediaCache = MediaCache(collection_holder, config)
     bytes_note_size_cache: BytesNoteSizeCache = BytesNoteSizeCache(collection_holder, media_cache)
-    note_size_cache: NoteSizeCache = NoteSizeCache(bytes_note_size_cache, bytes_size_cache)
+    str_note_size_cache: StrNoteSizeCache = StrNoteSizeCache(bytes_note_size_cache, bytes_size_cache)
     editor_button_formatter: EditorButtonFormatter = EditorButtonFormatter(
-        note_size_cache, bytes_note_size_cache, bytes_size_cache, level_parser, theme_manager, config)
+        str_note_size_cache, bytes_note_size_cache, bytes_size_cache, level_parser, theme_manager, config)
     assert editor_button_formatter.get_zero_size_label() == EditorButtonLabel("0 B", ColorName(""))
     note: Note = td.create_note_with_files()
     assert editor_button_formatter.get_add_mode_label(note) == EditorButtonLabel("143 B", ColorName(""))

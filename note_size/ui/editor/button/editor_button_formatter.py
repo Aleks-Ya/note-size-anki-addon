@@ -5,7 +5,7 @@ from anki.notes import NoteId, Note
 from aqt.theme import ThemeManager
 
 from .editor_button_label import EditorButtonLabel
-from ....cache.note_size_cache import NoteSizeCache
+from ....cache.str_note_size_cache import StrNoteSizeCache
 from ....config.config import Config
 from ....config.level_parser import Level, LevelParser
 from ....common.types import SizeStr, SizeBytes, SizeType, SignificantDigits, ColorName
@@ -16,9 +16,9 @@ log: Logger = logging.getLogger(__name__)
 
 
 class EditorButtonFormatter:
-    def __init__(self, note_size_cache: NoteSizeCache, bytes_note_size_cache: BytesNoteSizeCache, bytes_size_cache: BytesSizeCache,
+    def __init__(self, str_note_size_cache: StrNoteSizeCache, bytes_note_size_cache: BytesNoteSizeCache, bytes_size_cache: BytesSizeCache,
                  level_parser: LevelParser, theme_manager: ThemeManager, config: Config) -> None:
-        self.__note_size_cache: NoteSizeCache = note_size_cache
+        self.__str_note_size_cache: StrNoteSizeCache = str_note_size_cache
         self.__bytes_note_size_cache: BytesNoteSizeCache = bytes_note_size_cache
         self.__bytes_size_cache: BytesSizeCache = bytes_size_cache
         self.__level_parser: LevelParser = level_parser
@@ -47,7 +47,7 @@ class EditorButtonFormatter:
     def get_edit_mode_label(self, note_id: NoteId) -> EditorButtonLabel:
         size_bytes: SizeBytes = self.__bytes_note_size_cache.get_note_size(note_id, SizeType.TOTAL, use_cache=False)
         significant_digits: SignificantDigits = self.__config.get_size_button_significant_digits()
-        size_str: SizeStr = self.__note_size_cache.get_note_size_str(
+        size_str: SizeStr = self.__str_note_size_cache.get_note_size_str(
             note_id, SizeType.TOTAL, significant_digits, use_cache=False)
         color: ColorName = self.__get_color(size_bytes)
         label: EditorButtonLabel = EditorButtonLabel(f"{size_str}", color)

@@ -10,7 +10,7 @@ from aqt.taskman import TaskManager
 from .cache_manager import CacheManager
 from .cache_storage import CacheStorage
 from .item_id_cache import ItemIdCache
-from .note_size_cache import NoteSizeCache
+from .str_note_size_cache import StrNoteSizeCache
 from .bytes_note_size_cache import BytesNoteSizeCache
 from ..config.config import Config
 from ..common.types import SizeType, MediaFile, SignificantDigits
@@ -49,7 +49,7 @@ class CacheInitializerBackground:
         item_id_cache: ItemIdCache = self.__cache_manager.get_item_id_cache()
         bytes_note_size_cache: BytesNoteSizeCache = self.__cache_manager.get_bytes_note_size_cache()
         file_type_helper: FileTypeHelper = self.__cache_manager.get_file_type_helper()
-        note_size_cache: NoteSizeCache = self.__cache_manager.get_note_size_cache()
+        str_note_size_cache: StrNoteSizeCache = self.__cache_manager.get_str_note_size_cache()
         log.info(f"Cache initialization started: {item_id_cache.get_cache_size()}")
         start_time: datetime = datetime.now()
         self.__update_progress("Cache initializing", None, None)
@@ -66,9 +66,9 @@ class CacheInitializerBackground:
                 deck_browser_significant_digits: SignificantDigits = self.__config.get_deck_browser_significant_digits()
                 browser_significant_digits: SignificantDigits = self.__config.get_browser_significant_digits()
                 editor_significant_digits: SignificantDigits = self.__config.get_size_button_significant_digits()
-                note_size_cache.get_note_size_str(note_id, size_type, deck_browser_significant_digits, use_cache=True)
-                note_size_cache.get_note_size_str(note_id, size_type, browser_significant_digits, use_cache=True)
-                note_size_cache.get_note_size_str(note_id, size_type, editor_significant_digits, use_cache=True)
+                str_note_size_cache.get_note_size_str(note_id, size_type, deck_browser_significant_digits, use_cache=True)
+                str_note_size_cache.get_note_size_str(note_id, size_type, browser_significant_digits, use_cache=True)
+                str_note_size_cache.get_note_size_str(note_id, size_type, editor_significant_digits, use_cache=True)
                 note_files: set[MediaFile] = bytes_note_size_cache.get_note_files(note_id, use_cache=True)
                 for note_file in note_files:
                     file_type_helper.get_file_type(note_file, use_cache=True)

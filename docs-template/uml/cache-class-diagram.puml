@@ -40,7 +40,7 @@ package NoteSizeAddon {
         }
         class CacheInitializer
         class CacheStorage
-        class NoteSizeCache
+        class StrNoteSizeCache
     }
 
     package ui {
@@ -63,7 +63,7 @@ EditorButtonHooks --> EditorButtonFormatter
 
 ColumnHooks --> ItemIdCache #red
 ColumnHooks --> ItemIdSorter
-ColumnHooks --> NoteSizeCache
+ColumnHooks --> StrNoteSizeCache
 
 ItemIdSorter --> ItemIdCache #red
 ItemIdSorter --> BytesNoteSizeCache #orange
@@ -75,18 +75,18 @@ CacheManager --> MediaCache #green
 CacheManager --> ItemIdCache #red
 CacheManager --> BytesNoteSizeCache #orange
 CacheManager --> BytesSizeCache #brown
-CacheManager --> NoteSizeCache
+CacheManager --> StrNoteSizeCache
 
 CacheHooks --> ItemIdCache #red
 CacheHooks --> BytesNoteSizeCache #orange
 
-NoteSizeCache --> Collection
-NoteSizeCache --> BytesNoteSizeCache
-NoteSizeCache --> BytesSizeCache
+StrNoteSizeCache --> Collection
+StrNoteSizeCache --> BytesNoteSizeCache
+StrNoteSizeCache --> BytesSizeCache
 
 Collection --> SQLite
 
-EditorButtonFormatter --> NoteSizeCache
+EditorButtonFormatter --> StrNoteSizeCache
 EditorButtonFormatter --> BytesNoteSizeCache #orange
 EditorButtonFormatter --> BytesSizeCache #brown
 
