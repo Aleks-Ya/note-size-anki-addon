@@ -9,7 +9,7 @@ from aqt.theme import ThemeManager
 from ...cache.file_type_helper import FileTypeHelper
 from .icon_table_widget_item import IconTableWidgetItem
 from .size_table_widget_item import SizeTableWidgetItem
-from ...calculator.size_formatter import SizeFormatter
+from ...calculator.bytes_size_cache import BytesSizeCache
 from ...config.config import Config
 from ...config.settings import Settings
 from ...common.types import MediaFile, SizeStr, FileType, FileSize, SignificantDigits, ColorName
@@ -22,13 +22,13 @@ class FilesTable(QTableWidget):
     __filename_column: int = 1
     __size_column: int = 2
 
-    def __init__(self, file_type_helper: FileTypeHelper, size_formatter: SizeFormatter,
+    def __init__(self, file_type_helper: FileTypeHelper, bytes_size_cache: BytesSizeCache,
                  theme_manager: ThemeManager, config: Config, settings: Settings):
         super().__init__(parent=None)
         self.__theme_manager: ThemeManager = theme_manager
         self.__config: Config = config
         self.__file_type_helper: FileTypeHelper = file_type_helper
-        self.__size_formatter: SizeFormatter = size_formatter
+        self.__bytes_size_cache: BytesSizeCache = bytes_size_cache
         self.__items_dict: dict[int, dict[int, QTableWidgetItem]] = {}
         icons_dir: Path = settings.module_dir / "ui" / "details_dialog" / "icon"
         self.__icons: dict[FileType, QIcon] = {
@@ -68,7 +68,7 @@ class FilesTable(QTableWidget):
             filename_item.setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
 
             significant_digits: SignificantDigits = self.__config.get_browser_significant_digits()
-            size_str: SizeStr = self.__size_formatter.bytes_to_str(file_size.size, significant_digits)
+            size_str: SizeStr = self.__bytes_size_cache.bytes_to_str(file_size.size, significant_digits)
             size_item: SizeTableWidgetItem = SizeTableWidgetItem(media_file, file_size, size_str)
 
             self.__items_dict[row_index] = {}

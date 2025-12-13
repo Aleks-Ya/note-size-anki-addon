@@ -22,7 +22,7 @@ package NoteSizeAddon {
             note_files_cache: dict[NoteId, set[MediaFile]]
             note_file_sizes_cache: dict[NoteId, dict[MediaFile, SizeBytes]]
         }
-        class SizeFormatter #brown {
+        class BytesSizeCache #brown {
             bytes_to_str_cache: dict[SizeBytes, SizeStr]
         }
     }
@@ -74,7 +74,7 @@ CacheInitializer --> CacheStorage
 CacheManager --> MediaCache #green
 CacheManager --> ItemIdCache #red
 CacheManager --> SizeCalculator #orange
-CacheManager --> SizeFormatter #brown
+CacheManager --> BytesSizeCache #brown
 CacheManager --> NoteSizeCache
 
 CacheHooks --> ItemIdCache #red
@@ -82,17 +82,17 @@ CacheHooks --> SizeCalculator #orange
 
 NoteSizeCache --> Collection
 NoteSizeCache --> SizeCalculator
-NoteSizeCache --> SizeFormatter
+NoteSizeCache --> BytesSizeCache
 
 Collection --> SQLite
 
 EditorButtonFormatter --> NoteSizeCache
 EditorButtonFormatter --> SizeCalculator #orange
-EditorButtonFormatter --> SizeFormatter #brown
+EditorButtonFormatter --> BytesSizeCache #brown
 
 DeckBrowserFormatter --> ItemIdCache #red
 DeckBrowserFormatter --> MediaCache #green
-DeckBrowserFormatter --> SizeFormatter #brown
+DeckBrowserFormatter --> BytesSizeCache #brown
 
 SizeCalculator --> Collection
 SizeCalculator --> MediaCache #green

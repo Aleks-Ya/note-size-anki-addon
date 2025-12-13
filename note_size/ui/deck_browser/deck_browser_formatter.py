@@ -18,7 +18,7 @@ from ...calculator.used_files_calculator import UsedFilesCalculator, UsedFiles
 from ...config.config import Config
 from ...config.settings import Settings
 from ...common.types import SizeBytes, FilesNumber, SignificantDigits
-from ...calculator.size_formatter import SizeFormatter
+from ...calculator.bytes_size_cache import BytesSizeCache
 
 log: Logger = logging.getLogger(__name__)
 
@@ -28,13 +28,13 @@ class DeckBrowserFormatter:
     __sand_clock: str = "⏳"
 
     def __init__(self, collection_holder: CollectionHolder, item_id_cache: ItemIdCache, media_cache: MediaCache,
-                 trash: Trash, size_formatter: SizeFormatter, used_files_calculator: UsedFilesCalculator,
+                 trash: Trash, bytes_size_cache: BytesSizeCache, used_files_calculator: UsedFilesCalculator,
                  db_size_calculator: DbSizeCalculator, theme_manager: ThemeManager, config: Config, settings: Settings):
         self.__collection_holder: CollectionHolder = collection_holder
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__media_cache: MediaCache = media_cache
         self.__trash: Trash = trash
-        self.__size_formatter: SizeFormatter = size_formatter
+        self.__bytes_size_cache: BytesSizeCache = bytes_size_cache
         self.__used_files_calculator: UsedFilesCalculator = used_files_calculator
         self.__db_size_calculator: DbSizeCalculator = db_size_calculator
         self.__theme_manager: ThemeManager = theme_manager
@@ -58,7 +58,7 @@ class DeckBrowserFormatter:
             note_count: int = self.__collection_holder.col().note_count()
             note_number_str: str = NumberFormatter.with_thousands_separator(note_count)
             significant_digits: SignificantDigits = self.__config.get_deck_browser_significant_digits()
-            rev_log_size_str: str = self.__size_formatter.bytes_to_str(rev_table_size, significant_digits)
+            rev_log_size_str: str = self.__bytes_size_cache.bytes_to_str(rev_table_size, significant_digits)
             rev_table_count_str: str = NumberFormatter.with_thousands_separator(rev_table_count)
             used_notes_numbers_str: str = NumberFormatter.with_thousands_separator(used_files.used_notes_numbers)
             used_files_number_str: str = NumberFormatter.with_thousands_separator(used_files.used_files_number)
@@ -145,7 +145,7 @@ class DeckBrowserFormatter:
         if size is not None:
             separator: str = " "
             significant_digits: SignificantDigits = self.__config.get_deck_browser_significant_digits()
-            size_split: list[str] = self.__size_formatter.bytes_to_str(size, significant_digits,
+            size_split: list[str] = self.__bytes_size_cache.bytes_to_str(size, significant_digits,
                                                                        unit_separator=separator).split(separator)
             number: str = size_split[0]
             unit: str = size_split[1]

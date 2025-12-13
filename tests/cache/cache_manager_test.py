@@ -7,7 +7,7 @@ from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.cache.note_size_cache import NoteSizeCache
 from note_size.calculator.size_calculator import SizeCalculator
-from note_size.calculator.size_formatter import SizeFormatter
+from note_size.calculator.bytes_size_cache import BytesSizeCache
 from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
 from note_size.common.types import SizeType, SizeBytes
 from note_size.cache.file_type_helper import FileTypeHelper
@@ -17,13 +17,13 @@ from tests.data import Data, MediaFiles, Digits
 
 
 def test_get_caches(cache_manager: CacheManager, media_cache: MediaCache, item_id_cache: ItemIdCache,
-                    size_calculator: SizeCalculator, size_formatter: SizeFormatter, file_type_helper: FileTypeHelper,
+                    size_calculator: SizeCalculator, bytes_size_cache: BytesSizeCache, file_type_helper: FileTypeHelper,
                     note_size_cache: NoteSizeCache, updated_files_calculator: UpdatedFilesCalculator):
     assert len(cache_manager.get_caches()) == 7
     assert media_cache in cache_manager.get_caches()
     assert item_id_cache in cache_manager.get_caches()
     assert size_calculator in cache_manager.get_caches()
-    assert size_formatter in cache_manager.get_caches()
+    assert bytes_size_cache in cache_manager.get_caches()
     assert file_type_helper in cache_manager.get_caches()
     assert note_size_cache in cache_manager.get_caches()
     assert updated_files_calculator in cache_manager.get_caches()
@@ -53,12 +53,12 @@ def test_cache_initialized(cache_manager: CacheManager):
 
 
 def test_invalidate_caches(col: Collection, cache_manager: CacheManager, media_cache: MediaCache,
-                           item_id_cache: ItemIdCache, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
+                           item_id_cache: ItemIdCache, size_calculator: SizeCalculator, bytes_size_cache: BytesSizeCache,
                            file_type_helper: FileTypeHelper, note_size_cache: NoteSizeCache, td: Data):
     assert media_cache.get_cache_size() == 0
     assert item_id_cache.get_cache_size() == 0
     assert size_calculator.get_cache_size() == 0
-    assert size_formatter.get_cache_size() == 0
+    assert bytes_size_cache.get_cache_size() == 0
     assert file_type_helper.get_cache_size() == 0
     assert file_type_helper.get_cache_size() == 0
     assert note_size_cache.get_cache_size() == 0
@@ -67,7 +67,7 @@ def test_invalidate_caches(col: Collection, cache_manager: CacheManager, media_c
     assert media_cache.get_cache_size() > 0
     assert item_id_cache.get_cache_size() > 0
     assert size_calculator.get_cache_size() > 0
-    assert size_formatter.get_cache_size() > 0
+    assert bytes_size_cache.get_cache_size() > 0
     assert file_type_helper.get_cache_size() > 0
     assert note_size_cache.get_cache_size() > 0
 
@@ -75,7 +75,7 @@ def test_invalidate_caches(col: Collection, cache_manager: CacheManager, media_c
     assert media_cache.get_cache_size() == 0
     assert item_id_cache.get_cache_size() == 0
     assert size_calculator.get_cache_size() == 0
-    assert size_formatter.get_cache_size() == 0
+    assert bytes_size_cache.get_cache_size() == 0
     assert file_type_helper.get_cache_size() == 0
     assert note_size_cache.get_cache_size() == 0
 
@@ -96,8 +96,8 @@ def test_get_note_size_cache(cache_manager: CacheManager, note_size_cache: NoteS
     assert cache_manager.get_note_size_cache() == note_size_cache
 
 
-def test_get_size_formatter(cache_manager: CacheManager, size_formatter: SizeFormatter):
-    assert cache_manager.get_size_formatter() == size_formatter
+def test_get_bytes_size_cache(cache_manager: CacheManager, bytes_size_cache: BytesSizeCache):
+    assert cache_manager.get_bytes_size_cache() == bytes_size_cache
 
 
 def test_updated_files_calculator(cache_manager: CacheManager, updated_files_calculator: UpdatedFilesCalculator):
@@ -105,7 +105,7 @@ def test_updated_files_calculator(cache_manager: CacheManager, updated_files_cal
 
 
 def test_get_cache_size(cache_manager: CacheManager, media_cache: MediaCache,
-                        item_id_cache: ItemIdCache, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
+                        item_id_cache: ItemIdCache, size_calculator: SizeCalculator, bytes_size_cache: BytesSizeCache,
                         file_type_helper: FileTypeHelper, note_size_cache: NoteSizeCache, td: Data):
     assert cache_manager.get_cache_size() == 0
     __use_all_caches(cache_manager, td)
@@ -113,7 +113,7 @@ def test_get_cache_size(cache_manager: CacheManager, media_cache: MediaCache,
 
 
 def test_evict_note(col: Collection, cache_manager: CacheManager, media_cache: MediaCache,
-                    item_id_cache: ItemIdCache, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
+                    item_id_cache: ItemIdCache, size_calculator: SizeCalculator, bytes_size_cache: BytesSizeCache,
                     file_type_helper: FileTypeHelper, note_size_cache: NoteSizeCache, td: Data):
     assert cache_manager.get_cache_size() == 0
     card: Card = __use_all_caches(cache_manager, td)
@@ -128,6 +128,6 @@ def __use_all_caches(cache_manager: CacheManager, td: Data) -> Card:
     cache_manager.get_note_size_cache().get_note_size_str(card.nid, SizeType.TOTAL, Digits.one, use_cache=True)
     cache_manager.get_file_type_helper().get_file_type(MediaFiles.picture, use_cache=True)
     cache_manager.get_size_calculator().get_note_file_sizes(card.nid, use_cache=True)
-    cache_manager.get_size_formatter().bytes_to_str(SizeBytes(123), Digits.one, use_cache=True)
+    cache_manager.get_bytes_size_cache().bytes_to_str(SizeBytes(123), Digits.one, use_cache=True)
     cache_manager.get_updated_files_calculator().get_notes_having_updated_files()
     return card

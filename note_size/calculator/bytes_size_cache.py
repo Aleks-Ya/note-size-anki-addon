@@ -8,7 +8,7 @@ from ..common.types import SizeStr, SizeBytes, SignificantDigits
 log: Logger = logging.getLogger(__name__)
 
 
-class SizeFormatter(Cache):
+class BytesSizeCache(Cache):
 
     def __init__(self) -> None:
         super().__init__()

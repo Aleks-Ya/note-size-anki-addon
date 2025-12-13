@@ -2,7 +2,7 @@ import timeit
 
 import pytest
 
-from note_size.calculator.size_formatter import SizeFormatter
+from note_size.calculator.bytes_size_cache import BytesSizeCache
 from note_size.common.types import SizeBytes, SizeStr, SignificantDigits
 from tests.data import Digits
 
@@ -57,9 +57,9 @@ from tests.data import Digits
     (10254, Digits.two, '10 KB'),
     (10800, Digits.two, '11 KB'),
 ])
-def test_bytes_to_str(size_formatter: SizeFormatter, size_bytes: int, significant_digits: SignificantDigits,
+def test_bytes_to_str(bytes_size_cache: BytesSizeCache, size_bytes: int, significant_digits: SignificantDigits,
                       size_str: str):
-    assert size_formatter.bytes_to_str(SizeBytes(size_bytes), significant_digits) == SizeStr(size_str)
+    assert bytes_size_cache.bytes_to_str(SizeBytes(size_bytes), significant_digits) == SizeStr(size_str)
 
 
 @pytest.mark.parametrize("size_str,size_bytes", [
@@ -71,39 +71,39 @@ def test_bytes_to_str(size_formatter: SizeFormatter, size_bytes: int, significan
     ("1.5 MB", 1_572_864),
     ("1626.8 GB", 1_746_763_199_283),
 ])
-def test_str_to_bytes(size_formatter: SizeFormatter, size_str: str, size_bytes: int):
-    assert size_formatter.str_to_bytes(SizeStr(size_str)) == SizeBytes(size_bytes)
+def test_str_to_bytes(bytes_size_cache: BytesSizeCache, size_str: str, size_bytes: int):
+    assert bytes_size_cache.str_to_bytes(SizeStr(size_str)) == SizeBytes(size_bytes)
 
 
 @pytest.mark.performance
-def test_bytes_to_str_performance(size_formatter: SizeFormatter):
-    execution_time: float = timeit.timeit(lambda: __run_bytes_to_str(size_formatter), number=1)
+def test_bytes_to_str_performance(bytes_size_cache: BytesSizeCache):
+    execution_time: float = timeit.timeit(lambda: __run_bytes_to_str(bytes_size_cache), number=1)
     assert execution_time <= 0.5
 
 
-def __run_bytes_to_str(size_formatter: SizeFormatter):
+def __run_bytes_to_str(bytes_size_cache: BytesSizeCache):
     for i in range(0, 50_000):
-        size_formatter.bytes_to_str(SizeBytes(i), Digits.one)
+        bytes_size_cache.bytes_to_str(SizeBytes(i), Digits.one)
 
 
 @pytest.mark.performance
-def test_str_to_bytes_performance(size_formatter: SizeFormatter):
-    execution_time: float = timeit.timeit(lambda: __run_str_to_bytes(size_formatter), number=1)
+def test_str_to_bytes_performance(bytes_size_cache: BytesSizeCache):
+    execution_time: float = timeit.timeit(lambda: __run_str_to_bytes(bytes_size_cache), number=1)
     assert execution_time <= 0.5
 
 
-def test_get_cache_size(size_formatter: SizeFormatter):
-    assert size_formatter.get_cache_size() == 0
-    size_formatter.bytes_to_str(SizeBytes(0), Digits.one)
-    assert size_formatter.get_cache_size() == 1
-    size_formatter.bytes_to_str(SizeBytes(0), Digits.one)
-    assert size_formatter.get_cache_size() == 1
-    size_formatter.bytes_to_str(SizeBytes(1), Digits.one)
-    assert size_formatter.get_cache_size() == 2
-    size_formatter.invalidate_cache()
-    assert size_formatter.get_cache_size() == 0
+def test_get_cache_size(bytes_size_cache: BytesSizeCache):
+    assert bytes_size_cache.get_cache_size() == 0
+    bytes_size_cache.bytes_to_str(SizeBytes(0), Digits.one)
+    assert bytes_size_cache.get_cache_size() == 1
+    bytes_size_cache.bytes_to_str(SizeBytes(0), Digits.one)
+    assert bytes_size_cache.get_cache_size() == 1
+    bytes_size_cache.bytes_to_str(SizeBytes(1), Digits.one)
+    assert bytes_size_cache.get_cache_size() == 2
+    bytes_size_cache.invalidate_cache()
+    assert bytes_size_cache.get_cache_size() == 0
 
 
-def __run_str_to_bytes(size_formatter: SizeFormatter):
+def __run_str_to_bytes(bytes_size_cache: BytesSizeCache):
     for i in range(0, 100_000):
-        size_formatter.str_to_bytes(SizeStr(f"{i} B"))
+        bytes_size_cache.str_to_bytes(SizeStr(f"{i} B"))

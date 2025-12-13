@@ -8,7 +8,7 @@ from aqt.theme import ThemeManager
 from bs4 import BeautifulSoup
 
 from note_size.cache.item_id_cache import ItemIdCache
-from note_size.calculator.size_formatter import SizeFormatter
+from note_size.calculator.bytes_size_cache import BytesSizeCache
 from note_size.ui.deck_browser.deck_browser_formatter import DeckBrowserFormatter
 from note_size.ui.deck_browser.trash import Trash
 from note_size.common.types import MediaFile, SizeBytes
@@ -219,8 +219,8 @@ def test_format_note_detailed_text_night_mode(col: Collection, td: Data, deck_br
 
 
 @pytest.mark.performance
-def test_bytes_to_str_performance(size_formatter: SizeFormatter):
+def test_bytes_to_str_performance(bytes_size_cache: BytesSizeCache):
     size_bytes: SizeBytes = SizeBytes(123_456_789)
-    execution_time: float = timeit.timeit(lambda: size_formatter.bytes_to_str(size_bytes, Digits.one),
+    execution_time: float = timeit.timeit(lambda: bytes_size_cache.bytes_to_str(size_bytes, Digits.one),
                                           number=300_000)
     assert execution_time <= 1

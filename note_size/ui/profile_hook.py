@@ -35,7 +35,7 @@ class ProfileHook:
         from ..cache.note_size_cache import NoteSizeCache
         from ..cache.file_type_helper import FileTypeHelper
         from ..calculator.size_calculator import SizeCalculator
-        from ..calculator.size_formatter import SizeFormatter
+        from ..calculator.bytes_size_cache import BytesSizeCache
         from ..calculator.updated_files_calculator import UpdatedFilesCalculator
         from ..calculator.used_files_calculator import UsedFilesCalculator
         from ..calculator.db_size_calculator import DbSizeCalculator
@@ -85,16 +85,16 @@ class ProfileHook:
         logs.set_level(log_level)
         media_cache: MediaCache = MediaCache(self.__collection_holder, config)
         size_calculator: SizeCalculator = SizeCalculator(self.__collection_holder, media_cache)
-        size_formatter: SizeFormatter = SizeFormatter()
+        bytes_size_cache: BytesSizeCache = BytesSizeCache()
         item_id_cache: ItemIdCache = ItemIdCache(self.__collection_holder)
         item_id_sorter: ItemIdSorter = ItemIdSorter(item_id_cache, size_calculator)
-        note_size_cache: NoteSizeCache = NoteSizeCache(size_calculator, size_formatter)
+        note_size_cache: NoteSizeCache = NoteSizeCache(size_calculator, bytes_size_cache)
         column_hooks: ColumnHooks = ColumnHooks(item_id_cache, note_size_cache, item_id_sorter, config)
         column_hooks.setup_hooks()
-        level_parser: LevelParser = LevelParser(size_formatter)
+        level_parser: LevelParser = LevelParser(bytes_size_cache)
         theme_manager: ThemeManager = theme.theme_manager
         editor_button_formatter: EditorButtonFormatter = EditorButtonFormatter(
-            note_size_cache, size_calculator, size_formatter, level_parser, theme_manager, config)
+            note_size_cache, size_calculator, bytes_size_cache, level_parser, theme_manager, config)
         trash: Trash = Trash(self.__collection_holder)
         current_cache_version: int = 1
         cache_storage: CacheStorage = CacheStorage(current_cache_version, settings)
@@ -103,7 +103,7 @@ class ProfileHook:
                                                                                   size_calculator,
                                                                                   media_cache)
         cache_manager: CacheManager = CacheManager(
-            media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, note_size_cache,
+            media_cache, item_id_cache, size_calculator, bytes_size_cache, file_type_helper, note_size_cache,
             updated_files_calculator)
         deck_browser: DeckBrowser = mw.deckBrowser
         progress_manager: ProgressManager = mw.progress
@@ -114,16 +114,16 @@ class ProfileHook:
                                                                          media_cache)
         db_size_calculator: DbSizeCalculator = DbSizeCalculator(self.__collection_holder)
         deck_browser_formatter: DeckBrowserFormatter = DeckBrowserFormatter(
-            self.__collection_holder, item_id_cache, media_cache, trash, size_formatter, used_files_calculator,
+            self.__collection_holder, item_id_cache, media_cache, trash, bytes_size_cache, used_files_calculator,
             db_size_calculator, theme_manager, config, settings)
         desktop_services: QDesktopServices = QDesktopServices()
         url_manager: UrlManager = UrlManager()
         config_ui: ConfigUi = ConfigUi(config, config_loader, logs, cache_initializer, desktop_services, level_parser,
                                        url_manager, deck_browser, theme_manager, settings)
         details_model_filler: DetailsModelFiller = DetailsModelFiller(
-            size_calculator, size_formatter, media_cache, config)
+            size_calculator, bytes_size_cache, media_cache, config)
         details_dialog: DetailsDialog = DetailsDialog(
-            size_calculator, size_formatter, file_type_helper, details_model_filler, theme_manager, config_ui,
+            size_calculator, bytes_size_cache, file_type_helper, details_model_filler, theme_manager, config_ui,
             config, settings)
         editor_button_js: EditorButtonJs = EditorButtonJs(editor_button_formatter)
         editor_button_creator: EditorButtonCreator = EditorButtonCreator(editor_button_formatter, details_dialog)

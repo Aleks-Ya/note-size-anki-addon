@@ -10,17 +10,17 @@ from ....config.config import Config
 from ....config.level_parser import Level, LevelParser
 from ....common.types import SizeStr, SizeBytes, SizeType, SignificantDigits, ColorName
 from ....calculator.size_calculator import SizeCalculator
-from ....calculator.size_formatter import SizeFormatter
+from ....calculator.bytes_size_cache import BytesSizeCache
 
 log: Logger = logging.getLogger(__name__)
 
 
 class EditorButtonFormatter:
-    def __init__(self, note_size_cache: NoteSizeCache, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
+    def __init__(self, note_size_cache: NoteSizeCache, size_calculator: SizeCalculator, bytes_size_cache: BytesSizeCache,
                  level_parser: LevelParser, theme_manager: ThemeManager, config: Config) -> None:
         self.__note_size_cache: NoteSizeCache = note_size_cache
         self.__size_calculator: SizeCalculator = size_calculator
-        self.__size_formatter: SizeFormatter = size_formatter
+        self.__bytes_size_cache: BytesSizeCache = bytes_size_cache
         self.__level_parser: LevelParser = level_parser
         self.__theme_manager: ThemeManager = theme_manager
         self.__config: Config = config
@@ -29,7 +29,7 @@ class EditorButtonFormatter:
     def get_zero_size_label(self) -> EditorButtonLabel:
         size_bytes: SizeBytes = SizeBytes(0)
         significant_digits: SignificantDigits = self.__config.get_size_button_significant_digits()
-        size: SizeStr = self.__size_formatter.bytes_to_str(size_bytes, significant_digits)
+        size: SizeStr = self.__bytes_size_cache.bytes_to_str(size_bytes, significant_digits)
         color: ColorName = self.__get_color(size_bytes)
         label: EditorButtonLabel = EditorButtonLabel(f"{size}", color)
         log.debug(f"Zero size label was created: {label}")
@@ -38,7 +38,7 @@ class EditorButtonFormatter:
     def get_add_mode_label(self, note: Note) -> EditorButtonLabel:
         size_bytes: SizeBytes = self.__size_calculator.calculate_note_size(note, SizeType.TOTAL, use_cache=False)
         significant_digits: SignificantDigits = self.__config.get_size_button_significant_digits()
-        size_str: SizeStr = self.__size_formatter.bytes_to_str(size_bytes, significant_digits)
+        size_str: SizeStr = self.__bytes_size_cache.bytes_to_str(size_bytes, significant_digits)
         color: ColorName = self.__get_color(size_bytes)
         label: EditorButtonLabel = EditorButtonLabel(f"{size_str}", color)
         log.debug(f"Add mode label created for NoteId {note.id}: {label}")

@@ -36,7 +36,7 @@ package NoteSize {
         file_sizes(Note): dict[MediaFile, SizeBytes]
         sort_by_size_desc(dict[MediaFile, SizeBytes]): dict[MediaFile, SizeBytes]
     }
-    class SizeFormatter {
+    class BytesSizeCache {
         bytes_to_str(SizeBytes): SizeStr
         file_size_to_str(MediaFile, SizeBytes, max_length): tuple[ShortFilename, SizeStr]
     }
@@ -59,7 +59,7 @@ ButtonHooks --> ButtonFormatter
 
 ButtonFormatter --> ItemIdCache
 ButtonFormatter --> SizeCalculator
-ButtonFormatter --> SizeFormatter
+ButtonFormatter --> BytesSizeCache
 
 SizeCalculator --> MediaManager
 
@@ -68,7 +68,7 @@ ColumnHooks --> ItemIdCache
 
 ItemIdCache --> Collection
 ItemIdCache --> SizeCalculator
-ItemIdCache --> SizeFormatter
+ItemIdCache --> BytesSizeCache
 
 
 @enduml

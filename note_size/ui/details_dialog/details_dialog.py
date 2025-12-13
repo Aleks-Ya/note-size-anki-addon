@@ -12,7 +12,7 @@ from .details_model import DetailsModel
 from .details_model_filler import DetailsModelFiller
 from .files_table import FilesTable
 from ...calculator.size_calculator import SizeCalculator
-from ...calculator.size_formatter import SizeFormatter
+from ...calculator.bytes_size_cache import BytesSizeCache
 from ...config.config import Config
 from ..config.config_ui import ConfigUi
 from ...config.settings import Settings
@@ -28,12 +28,12 @@ class DetailsDialog(QDialog):
     __files_table_row: int = 3
     __button_box_row: int = 4
 
-    def __init__(self, size_calculator: SizeCalculator, size_formatter: SizeFormatter, file_type_helper: FileTypeHelper,
+    def __init__(self, size_calculator: SizeCalculator, bytes_size_cache: BytesSizeCache, file_type_helper: FileTypeHelper,
                  details_model_filler: DetailsModelFiller, theme_manager: ThemeManager,
                  config_ui: ConfigUi, config: Config, settings: Settings):
         super().__init__(parent=None)
         self.__size_calculator: SizeCalculator = size_calculator
-        self.__size_formatter: SizeFormatter = size_formatter
+        self.__bytes_size_cache: BytesSizeCache = bytes_size_cache
         self.__model: DetailsModel = DetailsModel()
         self.__details_model_filler: DetailsModelFiller = details_model_filler
         # noinspection PyUnresolvedReferences
@@ -42,7 +42,7 @@ class DetailsDialog(QDialog):
         self.__total_size_label: QLabel = self.__total_size_label()
         self.__texts_size_label: QLabel = QLabel()
         self.__files_size_label: QLabel = QLabel()
-        self.__files_table: FilesTable = FilesTable(file_type_helper, size_formatter, theme_manager, config, settings)
+        self.__files_table: FilesTable = FilesTable(file_type_helper, bytes_size_cache, theme_manager, config, settings)
 
         button_box: QDialogButtonBox = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
         # noinspection PyUnresolvedReferences

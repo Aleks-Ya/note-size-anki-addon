@@ -30,7 +30,7 @@ from note_size.cache.note_size_cache import NoteSizeCache
 from note_size.cache.cache_hooks import CacheHooks
 from note_size.cache.file_type_helper import FileTypeHelper
 from note_size.calculator.size_calculator import SizeCalculator
-from note_size.calculator.size_formatter import SizeFormatter
+from note_size.calculator.bytes_size_cache import BytesSizeCache
 from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
 from note_size.calculator.used_files_calculator import UsedFilesCalculator
 from note_size.ui.config.config_hooks import ConfigHooks
@@ -201,15 +201,15 @@ def item_id_sorter(item_id_cache: ItemIdCache, size_calculator: SizeCalculator) 
 
 
 @pytest.fixture
-def editor_button_formatter(config: Config, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
+def editor_button_formatter(config: Config, size_calculator: SizeCalculator, bytes_size_cache: BytesSizeCache,
                             note_size_cache: NoteSizeCache, level_parser: LevelParser,
                             theme_manager: ThemeManager) -> EditorButtonFormatter:
-    return EditorButtonFormatter(note_size_cache, size_calculator, size_formatter, level_parser, theme_manager, config)
+    return EditorButtonFormatter(note_size_cache, size_calculator, bytes_size_cache, level_parser, theme_manager, config)
 
 
 @pytest.fixture
-def size_formatter() -> SizeFormatter:
-    return SizeFormatter()
+def bytes_size_cache() -> BytesSizeCache:
+    return BytesSizeCache()
 
 
 @pytest.fixture
@@ -235,10 +235,10 @@ def db_size_calculator(collection_holder: CollectionHolder) -> DbSizeCalculator:
 
 @pytest.fixture
 def deck_browser_formatter(collection_holder: CollectionHolder, item_id_cache: ItemIdCache, media_cache: MediaCache,
-                           size_formatter: SizeFormatter, used_files_calculator: UsedFilesCalculator,
+                           bytes_size_cache: BytesSizeCache, used_files_calculator: UsedFilesCalculator,
                            db_size_calculator: DbSizeCalculator, trash: Trash, theme_manager: ThemeManager,
                            config: Config, settings: Settings) -> DeckBrowserFormatter:
-    return DeckBrowserFormatter(collection_holder, item_id_cache, media_cache, trash, size_formatter,
+    return DeckBrowserFormatter(collection_holder, item_id_cache, media_cache, trash, bytes_size_cache,
                                 used_files_calculator, db_size_calculator, theme_manager, config, settings)
 
 
@@ -310,11 +310,11 @@ def ui_model() -> UiModel:
 
 
 @pytest.fixture
-def details_dialog(qtbot: QtBot, size_calculator: SizeCalculator, size_formatter: SizeFormatter, config_ui: ConfigUi,
+def details_dialog(qtbot: QtBot, size_calculator: SizeCalculator, bytes_size_cache: BytesSizeCache, config_ui: ConfigUi,
                    config: Config, settings: Settings, ui_model: UiModel, theme_manager: ThemeManager,
                    file_type_helper: FileTypeHelper, details_model_filler: DetailsModelFiller) -> DetailsDialog:
     ModelConverter.apply_config_to_model(ui_model, config)
-    details_dialog: DetailsDialog = DetailsDialog(size_calculator, size_formatter, file_type_helper,
+    details_dialog: DetailsDialog = DetailsDialog(size_calculator, bytes_size_cache, file_type_helper,
                                                   details_model_filler, theme_manager, config_ui, config, settings)
     theme_manager.apply_style()
     qtbot.addWidget(details_dialog)
@@ -332,14 +332,14 @@ def file_type_helper() -> FileTypeHelper:
 
 
 @pytest.fixture
-def level_parser(size_formatter: SizeFormatter) -> LevelParser:
-    return LevelParser(size_formatter)
+def level_parser(bytes_size_cache: BytesSizeCache) -> LevelParser:
+    return LevelParser(bytes_size_cache)
 
 
 @pytest.fixture
-def details_model_filler(size_calculator: SizeCalculator, size_formatter: SizeFormatter,
+def details_model_filler(size_calculator: SizeCalculator, bytes_size_cache: BytesSizeCache,
                          media_cache: MediaCache, config: Config) -> DetailsModelFiller:
-    return DetailsModelFiller(size_calculator, size_formatter, media_cache, config)
+    return DetailsModelFiller(size_calculator, bytes_size_cache, media_cache, config)
 
 
 @pytest.fixture
@@ -366,15 +366,15 @@ def browser() -> Browser:
 
 @pytest.fixture
 def cache_manager(media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
-                  size_formatter: SizeFormatter, file_type_helper: FileTypeHelper,
+                  bytes_size_cache: BytesSizeCache, file_type_helper: FileTypeHelper,
                   note_size_cache: NoteSizeCache, updated_files_calculator: UpdatedFilesCalculator) -> CacheManager:
-    return CacheManager(media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, note_size_cache,
+    return CacheManager(media_cache, item_id_cache, size_calculator, bytes_size_cache, file_type_helper, note_size_cache,
                         updated_files_calculator)
 
 
 @pytest.fixture
-def note_size_cache(size_calculator: SizeCalculator, size_formatter: SizeFormatter) -> NoteSizeCache:
-    return NoteSizeCache(size_calculator, size_formatter)
+def note_size_cache(size_calculator: SizeCalculator, bytes_size_cache: BytesSizeCache) -> NoteSizeCache:
+    return NoteSizeCache(size_calculator, bytes_size_cache)
 
 
 @pytest.fixture

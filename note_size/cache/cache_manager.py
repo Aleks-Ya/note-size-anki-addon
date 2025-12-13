@@ -8,7 +8,7 @@ from .item_id_cache import ItemIdCache
 from .media_cache import MediaCache
 from .note_size_cache import NoteSizeCache
 from ..calculator.size_calculator import SizeCalculator
-from ..calculator.size_formatter import SizeFormatter
+from ..calculator.bytes_size_cache import BytesSizeCache
 from ..calculator.updated_files_calculator import UpdatedFilesCalculator
 from .file_type_helper import FileTypeHelper
 
@@ -17,16 +17,16 @@ log: Logger = logging.getLogger(__name__)
 
 class CacheManager:
     def __init__(self, media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
-                 size_formatter: SizeFormatter, file_type_helper: FileTypeHelper, note_size_cache: NoteSizeCache,
+                 bytes_size_cache: BytesSizeCache, file_type_helper: FileTypeHelper, note_size_cache: NoteSizeCache,
                  updated_files_calculator: UpdatedFilesCalculator) -> None:
         self.__media_cache: MediaCache = media_cache
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__size_calculator: SizeCalculator = size_calculator
-        self.__size_formatter: SizeFormatter = size_formatter
+        self.__bytes_size_cache: BytesSizeCache = bytes_size_cache
         self.__file_type_helper: FileTypeHelper = file_type_helper
         self.__note_size_cache: NoteSizeCache = note_size_cache
         self.__updated_files_calculator: UpdatedFilesCalculator = updated_files_calculator
-        self.__caches: list[Cache] = [self.__media_cache, self.__item_id_cache, self.__size_formatter,
+        self.__caches: list[Cache] = [self.__media_cache, self.__item_id_cache, self.__bytes_size_cache,
                                       self.__size_calculator, self.__file_type_helper, self.__note_size_cache,
                                       self.__updated_files_calculator]
         log.debug(f"{self.__class__.__name__} was instantiated")
@@ -70,8 +70,8 @@ class CacheManager:
     def get_note_size_cache(self) -> NoteSizeCache:
         return self.__note_size_cache
 
-    def get_size_formatter(self) -> SizeFormatter:
-        return self.__size_formatter
+    def get_bytes_size_cache(self) -> BytesSizeCache:
+        return self.__bytes_size_cache
 
     def get_updated_files_calculator(self) -> UpdatedFilesCalculator:
         return self.__updated_files_calculator
