@@ -3,7 +3,7 @@ from pathlib import Path
 
 from note_size.config.config import Config
 from note_size.config.settings import Settings
-from note_size.profiler.profiler import Profiler
+from note_size.core.profiler.profiler import Profiler
 
 
 def test_start_profiling_disabled(profiler: Profiler, settings: Settings, config: Config):

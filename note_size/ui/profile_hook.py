@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 from ..core.common.collection_holder import CollectionHolder
-from ..profiler.profiler import Profiler
+from ..core.profiler.profiler import Profiler
 
 
 class ProfileHook:
@@ -100,8 +100,8 @@ class ProfileHook:
         cache_storage: CacheStorage = CacheStorage(current_cache_version, settings)
         file_type_helper: FileTypeHelper = FileTypeHelper()
         updated_files_cache: UpdatedFilesCache = UpdatedFilesCache(self.__collection_holder,
-                                                                                  bytes_note_size_cache,
-                                                                                  media_cache)
+                                                                   bytes_note_size_cache,
+                                                                   media_cache)
         cache_manager: CacheManager = CacheManager(
             media_cache, item_id_cache, bytes_note_size_cache, bytes_size_cache, file_type_helper, str_note_size_cache,
             updated_files_cache)
@@ -110,7 +110,8 @@ class ProfileHook:
         task_manager: TaskManager = mw.taskman
         cache_initializer: CacheInitializer = CacheInitializer(mw, cache_manager, cache_storage, deck_browser,
                                                                task_manager, progress_manager, config)
-        used_files_calculator: UsedFilesCalculator = UsedFilesCalculator(self.__collection_holder, bytes_note_size_cache,
+        used_files_calculator: UsedFilesCalculator = UsedFilesCalculator(self.__collection_holder,
+                                                                         bytes_note_size_cache,
                                                                          media_cache)
         db_size_calculator: DbSizeCalculator = DbSizeCalculator(self.__collection_holder)
         deck_browser_formatter: DeckBrowserFormatter = DeckBrowserFormatter(
