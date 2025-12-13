@@ -132,7 +132,7 @@ class BytesNoteSizeCache(Cache):
 
     def get_notes_file_sizes(self, note_ids: Sequence[NoteId], use_cache: bool) -> dict[MediaFile, FileSize]:
         with self._lock:
-            file_sizes: dict[MediaFile, FileSize] = dict[MediaFile, FileSize]()
+            file_sizes: dict[MediaFile, FileSize] = {}
             for note_id in note_ids:
                 note_file_sizes: dict[MediaFile, FileSize] = self.get_note_file_sizes(note_id, use_cache)
                 file_sizes.update(note_file_sizes)
@@ -186,7 +186,7 @@ class BytesNoteSizeCache(Cache):
         return self.__collection_holder.col().media.files_in_str(note_type_id, field_content)
 
     def __calculate_note_file_sizes(self, files: set[MediaFile], use_cache=True) -> dict[MediaFile, FileSize]:
-        file_sizes: dict[MediaFile, FileSize] = dict[MediaFile, FileSize]()
+        file_sizes: dict[MediaFile, FileSize] = {}
         for media_file in files:
             file_sizes[media_file] = self.__media_cache.get_file_size(media_file, use_cache)
         return file_sizes

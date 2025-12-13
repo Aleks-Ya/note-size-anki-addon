@@ -40,7 +40,7 @@ class ItemIdCache(Cache):
 
     def evict_note(self, note_id: NoteId) -> None:
         with self._lock:
-            for cid, nid in list(self.__id_cache.items()):
+            for cid, nid in self.__id_cache.copy().items():
                 if nid == note_id and note_id in self.__id_cache:
                     del self.__id_cache[cid]
 
