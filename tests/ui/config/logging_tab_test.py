@@ -5,7 +5,7 @@ from pytestqt.qtbot import QtBot
 from note_size.config.config import Config
 from note_size.config.settings import Settings
 from note_size.config.url_manager import UrlManager
-from note_size.log.logs import Logs
+from note_size.core.log.logs import Logs
 from note_size.ui.config.logging_tab import LoggingTab
 from note_size.ui.config.model_converter import ModelConverter
 from note_size.ui.config.ui_model import UiModel

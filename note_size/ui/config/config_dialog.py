@@ -12,7 +12,7 @@ from ...cache.cache_initializer import CacheInitializer
 from ...config.config import Config
 from ...config.level_parser import LevelParser
 from ...config.url_manager import UrlManager
-from ...log.logs import Logs
+from ...core.log.logs import Logs
 from ...config.config_loader import ConfigLoader
 from .ui_model import UiModel
 from ...config.settings import Settings

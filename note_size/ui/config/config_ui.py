@@ -11,7 +11,7 @@ from ...config.config_loader import ConfigLoader
 from ...config.level_parser import LevelParser
 from ...config.settings import Settings
 from ...config.url_manager import UrlManager
-from ...log.logs import Logs
+from ...core.log.logs import Logs
 from .config_dialog import ConfigDialog
 from .ui_model import UiModel
 

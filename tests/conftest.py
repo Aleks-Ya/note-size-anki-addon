@@ -39,7 +39,7 @@ from note_size.config.config_loader import ConfigLoader
 from note_size.config.level_parser import LevelParser
 from note_size.config.settings import Settings
 from note_size.config.url_manager import UrlManager
-from note_size.log.logs import Logs
+from note_size.core.log.logs import Logs
 from note_size.profiler.profiler import Profiler
 from note_size.ui.browser.button.browser_button_manager import BrowserButtonManager
 from note_size.ui.config.config_ui import ConfigUi

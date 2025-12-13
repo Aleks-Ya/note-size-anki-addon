@@ -39,7 +39,7 @@ class ProfileHook:
         from ..cache.updated_files_cache import UpdatedFilesCache
         from ..calculator.used_files_calculator import UsedFilesCalculator
         from ..calculator.db_size_calculator import DbSizeCalculator
-        from ..log.logs import Logs
+        from ..core.log.logs import Logs
         from .config.config_hooks import ConfigHooks
         from .config.config_ui import ConfigUi
         from .deck_browser.deck_browser_js import DeckBrowserJs
