@@ -29,7 +29,7 @@ package NoteSize {
         get_add_mode_label(Note): ButtonLabel
         get_edit_mode_label(NoteId): ButtonLabel
     }
-    class SizeCalculator {
+    class BytesNoteSizeCache {
         calculate_note_size(Note): SizeBytes
         calculate_texts_size(Note): SizeBytes
         calculate_files_size(Note): SizeBytes
@@ -58,16 +58,16 @@ Init --> ButtonHooks
 ButtonHooks --> ButtonFormatter
 
 ButtonFormatter --> ItemIdCache
-ButtonFormatter --> SizeCalculator
+ButtonFormatter --> BytesNoteSizeCache
 ButtonFormatter --> BytesSizeCache
 
-SizeCalculator --> MediaManager
+BytesNoteSizeCache --> MediaManager
 
 ColumnHooks --> Collection
 ColumnHooks --> ItemIdCache
 
 ItemIdCache --> Collection
-ItemIdCache --> SizeCalculator
+ItemIdCache --> BytesNoteSizeCache
 ItemIdCache --> BytesSizeCache
 
 

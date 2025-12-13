@@ -10,7 +10,7 @@ from note_size.cache.cache_manager import CacheManager
 from note_size.cache.cache_storage import CacheStorage
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
-from note_size.calculator.size_calculator import SizeCalculator
+from note_size.calculator.bytes_note_size_cache import BytesNoteSizeCache
 from note_size.cache.bytes_size_cache import BytesSizeCache
 from note_size.config.config import Config
 from note_size.common.types import FileType, SizeType, FileSize, SizeBytes
@@ -26,7 +26,7 @@ def update_progress_callback(label: str, value: Optional[int], max_value: Option
 
 
 def test_initialize_caches(td: Data, col: Collection, cache_manager: CacheManager, media_cache: MediaCache,
-                           item_id_cache: ItemIdCache, size_calculator: SizeCalculator, bytes_size_cache: BytesSizeCache,
+                           item_id_cache: ItemIdCache, bytes_note_size_cache: BytesNoteSizeCache, bytes_size_cache: BytesSizeCache,
                            file_type_helper: FileTypeHelper, config: Config, cache_storage: CacheStorage,
                            task_manager: TaskManager, deck_browser: DeckBrowser):
     card1: Card = td.create_card_with_files()
@@ -34,7 +34,7 @@ def test_initialize_caches(td: Data, col: Collection, cache_manager: CacheManage
 
     assert not media_cache.is_initialized()
     assert not item_id_cache.is_initialized()
-    assert not size_calculator.is_initialized()
+    assert not bytes_note_size_cache.is_initialized()
     assert not bytes_size_cache.is_initialized()
     assert not file_type_helper.is_initialized()
 
@@ -46,7 +46,7 @@ def test_initialize_caches(td: Data, col: Collection, cache_manager: CacheManage
 
     assert media_cache.is_initialized()
     assert item_id_cache.is_initialized()
-    assert size_calculator.is_initialized()
+    assert bytes_note_size_cache.is_initialized()
     assert bytes_size_cache.is_initialized()
     assert file_type_helper.is_initialized()
 
@@ -55,7 +55,7 @@ def test_initialize_caches(td: Data, col: Collection, cache_manager: CacheManage
                                            MediaFiles.sound: FileSize(SizeBytes(5))}]
     assert item_id_cache.as_dict_list() == [{card1.id: card1.nid,
                                              card2.id: card2.nid}]
-    assert size_calculator.as_dict_list() == [{SizeType.TOTAL: {card1.nid: 144, card2.nid: 71},
+    assert bytes_note_size_cache.as_dict_list() == [{SizeType.TOTAL: {card1.nid: 144, card2.nid: 71},
                                                SizeType.TEXTS: {card1.nid: 123, card2.nid: 71},
                                                SizeType.FILES: {card1.nid: 21, card2.nid: 0}},
                                               {card1.nid: {MediaFiles.picture, MediaFiles.sound, MediaFiles.animation},
@@ -75,7 +75,7 @@ def test_initialize_caches(td: Data, col: Collection, cache_manager: CacheManage
 
 
 def test_update_progress(td: Data, col: Collection, cache_manager: CacheManager, media_cache: MediaCache,
-                         item_id_cache: ItemIdCache, size_calculator: SizeCalculator, bytes_size_cache: BytesSizeCache,
+                         item_id_cache: ItemIdCache, bytes_note_size_cache: BytesNoteSizeCache, bytes_size_cache: BytesSizeCache,
                          file_type_helper: FileTypeHelper, config: Config, cache_storage: CacheStorage,
                          task_manager: TaskManager, deck_browser: DeckBrowser):
     update_progress_step: int = 10

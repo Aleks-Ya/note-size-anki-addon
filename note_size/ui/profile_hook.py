@@ -34,7 +34,7 @@ class ProfileHook:
         from ..cache.cache_manager import CacheManager
         from ..cache.note_size_cache import NoteSizeCache
         from ..cache.file_type_helper import FileTypeHelper
-        from ..calculator.size_calculator import SizeCalculator
+        from ..calculator.bytes_note_size_cache import BytesNoteSizeCache
         from ..cache.bytes_size_cache import BytesSizeCache
         from ..cache.updated_files_cache import UpdatedFilesCache
         from ..calculator.used_files_calculator import UsedFilesCalculator
@@ -84,33 +84,33 @@ class ProfileHook:
         log.info(f"Set log level from Config: {log_level}")
         logs.set_level(log_level)
         media_cache: MediaCache = MediaCache(self.__collection_holder, config)
-        size_calculator: SizeCalculator = SizeCalculator(self.__collection_holder, media_cache)
+        bytes_note_size_cache: BytesNoteSizeCache = BytesNoteSizeCache(self.__collection_holder, media_cache)
         bytes_size_cache: BytesSizeCache = BytesSizeCache()
         item_id_cache: ItemIdCache = ItemIdCache(self.__collection_holder)
-        item_id_sorter: ItemIdSorter = ItemIdSorter(item_id_cache, size_calculator)
-        note_size_cache: NoteSizeCache = NoteSizeCache(size_calculator, bytes_size_cache)
+        item_id_sorter: ItemIdSorter = ItemIdSorter(item_id_cache, bytes_note_size_cache)
+        note_size_cache: NoteSizeCache = NoteSizeCache(bytes_note_size_cache, bytes_size_cache)
         column_hooks: ColumnHooks = ColumnHooks(item_id_cache, note_size_cache, item_id_sorter, config)
         column_hooks.setup_hooks()
         level_parser: LevelParser = LevelParser()
         theme_manager: ThemeManager = theme.theme_manager
         editor_button_formatter: EditorButtonFormatter = EditorButtonFormatter(
-            note_size_cache, size_calculator, bytes_size_cache, level_parser, theme_manager, config)
+            note_size_cache, bytes_note_size_cache, bytes_size_cache, level_parser, theme_manager, config)
         trash: Trash = Trash(self.__collection_holder)
         current_cache_version: int = 1
         cache_storage: CacheStorage = CacheStorage(current_cache_version, settings)
         file_type_helper: FileTypeHelper = FileTypeHelper()
         updated_files_cache: UpdatedFilesCache = UpdatedFilesCache(self.__collection_holder,
-                                                                                  size_calculator,
+                                                                                  bytes_note_size_cache,
                                                                                   media_cache)
         cache_manager: CacheManager = CacheManager(
-            media_cache, item_id_cache, size_calculator, bytes_size_cache, file_type_helper, note_size_cache,
+            media_cache, item_id_cache, bytes_note_size_cache, bytes_size_cache, file_type_helper, note_size_cache,
             updated_files_cache)
         deck_browser: DeckBrowser = mw.deckBrowser
         progress_manager: ProgressManager = mw.progress
         task_manager: TaskManager = mw.taskman
         cache_initializer: CacheInitializer = CacheInitializer(mw, cache_manager, cache_storage, deck_browser,
                                                                task_manager, progress_manager, config)
-        used_files_calculator: UsedFilesCalculator = UsedFilesCalculator(self.__collection_holder, size_calculator,
+        used_files_calculator: UsedFilesCalculator = UsedFilesCalculator(self.__collection_holder, bytes_note_size_cache,
                                                                          media_cache)
         db_size_calculator: DbSizeCalculator = DbSizeCalculator(self.__collection_holder)
         deck_browser_formatter: DeckBrowserFormatter = DeckBrowserFormatter(
@@ -121,9 +121,9 @@ class ProfileHook:
         config_ui: ConfigUi = ConfigUi(config, config_loader, logs, cache_initializer, desktop_services, level_parser,
                                        url_manager, deck_browser, theme_manager, settings)
         details_model_filler: DetailsModelFiller = DetailsModelFiller(
-            size_calculator, bytes_size_cache, media_cache, config)
+            bytes_note_size_cache, bytes_size_cache, media_cache, config)
         details_dialog: DetailsDialog = DetailsDialog(
-            size_calculator, bytes_size_cache, file_type_helper, details_model_filler, theme_manager, config_ui,
+            bytes_note_size_cache, bytes_size_cache, file_type_helper, details_model_filler, theme_manager, config_ui,
             config, settings)
         editor_button_js: EditorButtonJs = EditorButtonJs(editor_button_formatter)
         editor_button_creator: EditorButtonCreator = EditorButtonCreator(editor_button_formatter, details_dialog)

@@ -7,30 +7,30 @@ from anki.errors import NotFoundError
 from anki.notes import NoteId, Note
 
 from note_size.cache.item_id_cache import ItemIdCache
-from note_size.calculator.size_calculator import SizeCalculator
+from note_size.calculator.bytes_note_size_cache import BytesNoteSizeCache
 from note_size.common.types import SizeBytes, SizeType, MediaFile
 from tests import wait_until, wait_until_exception
-from tests.conftest import size_calculator
+from tests.conftest import bytes_note_size_cache
 from tests.data import Data, DefaultFields, MediaFiles, FileContents
 
 
-def test_get_note_size_bytes(td: Data, item_id_cache: ItemIdCache, size_calculator: SizeCalculator):
+def test_get_note_size_bytes(td: Data, item_id_cache: ItemIdCache, bytes_note_size_cache: BytesNoteSizeCache):
     exp_size_1: SizeBytes = SizeBytes(len(DefaultFields.front_field_content.encode()) +
                                       len(DefaultFields.back_field_content.encode()) +
                                       len(FileContents.picture) + len(FileContents.sound) +
                                       len(FileContents.animation))
     note: Note = td.create_note_with_files()
     note_id: NoteId = note.id
-    act_size_1: SizeBytes = size_calculator.get_note_size(note_id, SizeType.TOTAL, use_cache=False)
+    act_size_1: SizeBytes = bytes_note_size_cache.get_note_size(note_id, SizeType.TOTAL, use_cache=False)
     assert act_size_1 == exp_size_1
 
     content: str = 'updated'
     Data.update_front_field(note, content)
 
-    act_size_cached: SizeBytes = size_calculator.get_note_size(note_id, SizeType.TOTAL, use_cache=True)
+    act_size_cached: SizeBytes = bytes_note_size_cache.get_note_size(note_id, SizeType.TOTAL, use_cache=True)
     assert act_size_cached == exp_size_1
 
-    act_size_uncached: SizeBytes = size_calculator.get_note_size(note_id, SizeType.TOTAL, use_cache=False)
+    act_size_uncached: SizeBytes = bytes_note_size_cache.get_note_size(note_id, SizeType.TOTAL, use_cache=False)
     assert act_size_uncached == SizeBytes(len(content.encode()) +
                                           len(DefaultFields.back_field_content.encode()) +
                                           len(FileContents.picture) +
@@ -38,10 +38,10 @@ def test_get_note_size_bytes(td: Data, item_id_cache: ItemIdCache, size_calculat
 
 
 @pytest.mark.performance
-def test_get_note_size_bytes_performance(td: Data, item_id_cache: ItemIdCache, size_calculator: SizeCalculator):
+def test_get_note_size_bytes_performance(td: Data, item_id_cache: ItemIdCache, bytes_note_size_cache: BytesNoteSizeCache):
     note: Note = td.create_note_with_files()
     execution_time: float = timeit.timeit(
-        lambda: size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True),
+        lambda: bytes_note_size_cache.get_note_size(note.id, SizeType.TOTAL, use_cache=True),
         number=200_000)
     assert execution_time <= 1
 
@@ -74,29 +74,29 @@ def test_get_note_id_by_card_id(td: Data, col: Collection, item_id_cache: ItemId
     wait_until_exception(lambda: item_id_cache.get_note_id_by_card_id(card.id), NotFoundError)
 
 
-def test_get_note_files(td: Data, item_id_cache: ItemIdCache, size_calculator: SizeCalculator):
+def test_get_note_files(td: Data, item_id_cache: ItemIdCache, bytes_note_size_cache: BytesNoteSizeCache):
     note: Note = td.create_note_with_files()
     note_id: NoteId = note.id
-    files: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
+    files: set[MediaFile] = bytes_note_size_cache.get_note_files(note_id, use_cache=True)
     assert files == {MediaFiles.animation, MediaFiles.sound, MediaFiles.picture}
 
     Data.replace_in_front_field(note, '<img src="picture.jpg">', '')
-    files_cached: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
+    files_cached: set[MediaFile] = bytes_note_size_cache.get_note_files(note_id, use_cache=True)
     assert files_cached == {MediaFiles.animation, MediaFiles.sound, MediaFiles.picture}
-    files_uncached: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=False)
+    files_uncached: set[MediaFile] = bytes_note_size_cache.get_note_files(note_id, use_cache=False)
     assert files_uncached == {MediaFiles.sound, MediaFiles.picture, MediaFiles.animation}
 
 
-def test_get_used_files_size(td: Data, item_id_cache: ItemIdCache, size_calculator: SizeCalculator):
+def test_get_used_files_size(td: Data, item_id_cache: ItemIdCache, bytes_note_size_cache: BytesNoteSizeCache):
     note: Note = td.create_note_with_files()
     note_id: NoteId = note.id
-    files: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
+    files: set[MediaFile] = bytes_note_size_cache.get_note_files(note_id, use_cache=True)
     assert files == {MediaFiles.animation, MediaFiles.sound, MediaFiles.picture}
     Data.replace_in_front_field(note, '<img src="picture.jpg">', '')
-    files_cached: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
+    files_cached: set[MediaFile] = bytes_note_size_cache.get_note_files(note_id, use_cache=True)
     assert files_cached == {MediaFiles.animation, MediaFiles.picture, MediaFiles.sound}
 
-    files_uncached: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=False)
+    files_uncached: set[MediaFile] = bytes_note_size_cache.get_note_files(note_id, use_cache=False)
     assert files_uncached == {MediaFiles.sound, MediaFiles.picture, MediaFiles.animation}
 
 

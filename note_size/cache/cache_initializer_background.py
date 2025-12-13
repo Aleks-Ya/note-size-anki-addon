@@ -11,7 +11,7 @@ from .cache_manager import CacheManager
 from .cache_storage import CacheStorage
 from .item_id_cache import ItemIdCache
 from .note_size_cache import NoteSizeCache
-from ..calculator.size_calculator import SizeCalculator
+from ..calculator.bytes_note_size_cache import BytesNoteSizeCache
 from ..config.config import Config
 from ..common.types import SizeType, MediaFile, SignificantDigits
 from ..common.number_formatter import NumberFormatter
@@ -47,7 +47,7 @@ class CacheInitializerBackground:
 
     def __initialize_caches(self, col) -> int:
         item_id_cache: ItemIdCache = self.__cache_manager.get_item_id_cache()
-        size_calculator: SizeCalculator = self.__cache_manager.get_size_calculator()
+        bytes_note_size_cache: BytesNoteSizeCache = self.__cache_manager.get_bytes_note_size_cache()
         file_type_helper: FileTypeHelper = self.__cache_manager.get_file_type_helper()
         note_size_cache: NoteSizeCache = self.__cache_manager.get_note_size_cache()
         log.info(f"Cache initialization started: {item_id_cache.get_cache_size()}")
@@ -61,7 +61,7 @@ class CacheInitializerBackground:
                 log.info(f"User cancelled notes cache initialization at {processed_notes}")
                 return processed_notes
             self.__update_progress("Caching note sizes", processed_notes, note_number)
-            size_calculator.initialize_note_in_caches(note_id, note_type_id, fields)
+            bytes_note_size_cache.initialize_note_in_caches(note_id, note_type_id, fields)
             for size_type in SizeType:
                 deck_browser_significant_digits: SignificantDigits = self.__config.get_deck_browser_significant_digits()
                 browser_significant_digits: SignificantDigits = self.__config.get_browser_significant_digits()
@@ -69,7 +69,7 @@ class CacheInitializerBackground:
                 note_size_cache.get_note_size_str(note_id, size_type, deck_browser_significant_digits, use_cache=True)
                 note_size_cache.get_note_size_str(note_id, size_type, browser_significant_digits, use_cache=True)
                 note_size_cache.get_note_size_str(note_id, size_type, editor_significant_digits, use_cache=True)
-                note_files: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
+                note_files: set[MediaFile] = bytes_note_size_cache.get_note_files(note_id, use_cache=True)
                 for note_file in note_files:
                     file_type_helper.get_file_type(note_file, use_cache=True)
             processed_notes += 1

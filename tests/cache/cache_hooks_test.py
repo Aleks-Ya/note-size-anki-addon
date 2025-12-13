@@ -9,7 +9,7 @@ from note_size.cache.cache_hooks import CacheHooks
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.cache.updated_files_cache import UpdatedFilesCache
-from note_size.calculator.size_calculator import SizeCalculator
+from note_size.calculator.bytes_note_size_cache import BytesNoteSizeCache
 from note_size.common.types import SizeType, FileSize, SizeBytes
 from tests.conftest import assert_no_hooks
 from tests.data import Data, MediaFiles
@@ -29,20 +29,20 @@ def test_setup_hooks(cache_hooks: CacheHooks):
 
 
 def test_add_cards_did_add_note(cache_hooks: CacheHooks, td: Data, item_id_cache: ItemIdCache,
-                                size_calculator: SizeCalculator):
+                                bytes_note_size_cache: BytesNoteSizeCache):
     cache_hooks.setup_hooks()
     note: Note = td.create_note_with_files()
-    assert size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True) == 143
+    assert bytes_note_size_cache.get_note_size(note.id, SizeType.TOTAL, use_cache=True) == 143
 
 
 def test_notes_will_be_deleted(cache_hooks: CacheHooks, col: Collection, td: Data, item_id_cache: ItemIdCache,
-                               size_calculator: SizeCalculator):
+                               bytes_note_size_cache: BytesNoteSizeCache):
     cache_hooks.setup_hooks()
     note: Note = td.create_note_with_files()
-    assert size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True) == 143
+    assert bytes_note_size_cache.get_note_size(note.id, SizeType.TOTAL, use_cache=True) == 143
     col.remove_notes([note.id])
     with pytest.raises(NotFoundError):
-        size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True)
+        bytes_note_size_cache.get_note_size(note.id, SizeType.TOTAL, use_cache=True)
 
 
 def test_media_sync_did_start_or_stop(cache_hooks: CacheHooks, col: Collection, td: Data, media_cache: MediaCache,

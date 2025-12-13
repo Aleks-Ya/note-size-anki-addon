@@ -7,7 +7,7 @@ from anki.errors import NotFoundError
 from anki.notes import Note, NoteId
 from pytest import raises
 
-from note_size.calculator.size_calculator import SizeCalculator
+from note_size.calculator.bytes_note_size_cache import BytesNoteSizeCache
 from note_size.common.types import SizeBytes, MediaFile, SizeType, FileSize
 from tests.data import Data, DefaultFields, MediaFiles, FileContents
 
@@ -17,44 +17,44 @@ def note(td: Data) -> Note:
     return td.create_note_with_files()
 
 
-def test_calculate_note_size_text(size_calculator: SizeCalculator, note: Note):
-    act_size: SizeBytes = size_calculator.calculate_note_size(note, SizeType.TEXTS, use_cache=False)
+def test_calculate_note_size_text(bytes_note_size_cache: BytesNoteSizeCache, note: Note):
+    act_size: SizeBytes = bytes_note_size_cache.calculate_note_size(note, SizeType.TEXTS, use_cache=False)
     exp_size: SizeBytes = SizeBytes(len(DefaultFields.front_field_content.encode()) +
                                     len(DefaultFields.back_field_content.encode()))
     assert act_size == exp_size
 
 
-def test_calculate_note_size_text_unicode(size_calculator: SizeCalculator, td: Data):
+def test_calculate_note_size_text_unicode(bytes_note_size_cache: BytesNoteSizeCache, td: Data):
     note: Note = td.create_note_without_files()
     note[DefaultFields.front_field_name] = '∑￡'
     note[DefaultFields.back_field_name] = '∆∏∦'
-    size: SizeBytes = size_calculator.calculate_note_size(note, SizeType.TEXTS, use_cache=False)
+    size: SizeBytes = bytes_note_size_cache.calculate_note_size(note, SizeType.TEXTS, use_cache=False)
     assert size == SizeBytes(15)
 
 
-def test_calculate_note_size_non_ascii_character(size_calculator: SizeCalculator, td: Data):
+def test_calculate_note_size_non_ascii_character(bytes_note_size_cache: BytesNoteSizeCache, td: Data):
     note: Note = td.create_note_with_given_fields('A\u2068B\u2069C', '')
-    size: SizeBytes = size_calculator.calculate_note_size(note, SizeType.TEXTS, use_cache=False)
+    size: SizeBytes = bytes_note_size_cache.calculate_note_size(note, SizeType.TEXTS, use_cache=False)
     assert size == SizeBytes(9)
 
 
 @pytest.mark.performance
-def test_calculate_note_size_text_performance(size_calculator: SizeCalculator, note: Note):
+def test_calculate_note_size_text_performance(bytes_note_size_cache: BytesNoteSizeCache, note: Note):
     execution_time: float = timeit.timeit(
-        lambda: size_calculator.calculate_note_size(note, SizeType.TEXTS, use_cache=True), number=200_000)
+        lambda: bytes_note_size_cache.calculate_note_size(note, SizeType.TEXTS, use_cache=True), number=200_000)
     assert execution_time <= 1
 
 
-def test_calculate_note_size_files(size_calculator: SizeCalculator, note: Note):
-    act_size: SizeBytes = size_calculator.calculate_note_size(note, SizeType.FILES, use_cache=False)
+def test_calculate_note_size_files(bytes_note_size_cache: BytesNoteSizeCache, note: Note):
+    act_size: SizeBytes = bytes_note_size_cache.calculate_note_size(note, SizeType.FILES, use_cache=False)
     exp_size: SizeBytes = SizeBytes(len(FileContents.picture) +
                                     len(FileContents.sound) +
                                     len(FileContents.animation))
     assert act_size == exp_size
 
 
-def test_calculate_note_size_total(size_calculator: SizeCalculator, note: Note):
-    act_size: SizeBytes = size_calculator.calculate_note_size(note, SizeType.TOTAL, use_cache=False)
+def test_calculate_note_size_total(bytes_note_size_cache: BytesNoteSizeCache, note: Note):
+    act_size: SizeBytes = bytes_note_size_cache.calculate_note_size(note, SizeType.TOTAL, use_cache=False)
     exp_size: SizeBytes = SizeBytes(len(DefaultFields.front_field_content.encode()) +
                                     len(DefaultFields.back_field_content.encode()) +
                                     len(FileContents.picture) +
@@ -63,10 +63,10 @@ def test_calculate_note_size_total(size_calculator: SizeCalculator, note: Note):
     assert act_size == exp_size
 
 
-def test_calculate_note_size_total_missing_file(size_calculator: SizeCalculator, note: Note):
+def test_calculate_note_size_total_missing_file(bytes_note_size_cache: BytesNoteSizeCache, note: Note):
     content: str = 'Missing file: <img src="absents.png"> ￡'
     note[DefaultFields.front_field_name] = content
-    act_size: SizeBytes = size_calculator.calculate_note_size(note, SizeType.TOTAL, use_cache=False)
+    act_size: SizeBytes = bytes_note_size_cache.calculate_note_size(note, SizeType.TOTAL, use_cache=False)
     exp_size: SizeBytes = SizeBytes(len(content.encode()) +
                                     len(DefaultFields.back_field_content.encode()) +
                                     len(FileContents.picture) +
@@ -75,14 +75,14 @@ def test_calculate_note_size_total_missing_file(size_calculator: SizeCalculator,
 
 
 @pytest.mark.performance
-def test_calculate_note_size_total_performance(size_calculator: SizeCalculator, note: Note):
+def test_calculate_note_size_total_performance(bytes_note_size_cache: BytesNoteSizeCache, note: Note):
     execution_time: float = timeit.timeit(
-        lambda: size_calculator.calculate_note_size(note, SizeType.TOTAL, use_cache=True), number=200_000)
+        lambda: bytes_note_size_cache.calculate_note_size(note, SizeType.TOTAL, use_cache=True), number=200_000)
     assert execution_time <= 1
 
 
-def test_calculate_note_file_sizes(size_calculator: SizeCalculator, note: Note):
-    act_file_sizes: dict[MediaFile, FileSize] = size_calculator.calculate_note_file_sizes(note, use_cache=False)
+def test_calculate_note_file_sizes(bytes_note_size_cache: BytesNoteSizeCache, note: Note):
+    act_file_sizes: dict[MediaFile, FileSize] = bytes_note_size_cache.calculate_note_file_sizes(note, use_cache=False)
     exp_file_sizes: dict[MediaFile, FileSize] = {
         MediaFiles.picture: FileSize(SizeBytes(len(FileContents.picture))),
         MediaFiles.sound: FileSize(SizeBytes(len(FileContents.sound))),
@@ -91,13 +91,13 @@ def test_calculate_note_file_sizes(size_calculator: SizeCalculator, note: Note):
 
 
 @pytest.mark.performance
-def test_calculate_note_file_sizes_performance(size_calculator: SizeCalculator, note: Note):
-    execution_time: float = timeit.timeit(lambda: size_calculator.calculate_note_file_sizes(note, use_cache=True),
+def test_calculate_note_file_sizes_performance(bytes_note_size_cache: BytesNoteSizeCache, note: Note):
+    execution_time: float = timeit.timeit(lambda: bytes_note_size_cache.calculate_note_file_sizes(note, use_cache=True),
                                           number=200_000)
     assert execution_time <= 1
 
 
-def test_calculate_size_of_files(size_calculator: SizeCalculator, col: Collection):
+def test_calculate_size_of_files(bytes_note_size_cache: BytesNoteSizeCache, col: Collection):
     content1: bytes = b"first"
     content2: bytes = b"second"
     file1: MediaFile = MediaFile(col.media.write_data("file1.txt", content1))
@@ -105,44 +105,44 @@ def test_calculate_size_of_files(size_calculator: SizeCalculator, col: Collectio
     file2_duplicate: MediaFile = file2
     files: set[MediaFile] = {file1, file2, file2_duplicate}
 
-    size: SizeBytes = size_calculator.calculate_size_of_files(files, use_cache=True)
+    size: SizeBytes = bytes_note_size_cache.calculate_size_of_files(files, use_cache=True)
     exp_size: SizeBytes = SizeBytes(len(content1) + len(content2))
     assert size == exp_size
 
     col.media.trash_files([file2])
-    size_cached: SizeBytes = size_calculator.calculate_size_of_files(files, use_cache=True)
+    size_cached: SizeBytes = bytes_note_size_cache.calculate_size_of_files(files, use_cache=True)
     assert size_cached == exp_size
 
-    size_uncached: SizeBytes = size_calculator.calculate_size_of_files(files, use_cache=False)
+    size_uncached: SizeBytes = bytes_note_size_cache.calculate_size_of_files(files, use_cache=False)
     assert size_uncached == SizeBytes(len(content1))
 
 
 @pytest.mark.performance
-def test_calculate_note_files_performance(size_calculator: SizeCalculator, td: Data):
+def test_calculate_note_files_performance(bytes_note_size_cache: BytesNoteSizeCache, td: Data):
     note: Note = td.create_note_with_files()
-    execution_time: float = timeit.timeit(lambda: size_calculator.calculate_note_files(note, True), number=100_000)
+    execution_time: float = timeit.timeit(lambda: bytes_note_size_cache.calculate_note_files(note, True), number=100_000)
     assert execution_time <= 0.5
 
 
-def test_get_cache_size(size_calculator: SizeCalculator, td: Data):
-    assert size_calculator.get_cache_size() == 0
+def test_get_cache_size(bytes_note_size_cache: BytesNoteSizeCache, td: Data):
+    assert bytes_note_size_cache.get_cache_size() == 0
     note1: Note = td.create_note_with_files()
-    size_calculator.get_note_size(note1.id, SizeType.TOTAL, use_cache=True)
-    assert size_calculator.get_cache_size() == 5
-    size_calculator.get_note_size(note1.id, SizeType.TOTAL, use_cache=True)
-    assert size_calculator.get_cache_size() == 5
+    bytes_note_size_cache.get_note_size(note1.id, SizeType.TOTAL, use_cache=True)
+    assert bytes_note_size_cache.get_cache_size() == 5
+    bytes_note_size_cache.get_note_size(note1.id, SizeType.TOTAL, use_cache=True)
+    assert bytes_note_size_cache.get_cache_size() == 5
     note2: Note = td.create_note_without_files()
-    size_calculator.get_note_size(note2.id, SizeType.TEXTS, use_cache=True)
-    assert size_calculator.get_cache_size() == 6
-    size_calculator.evict_note(note1.id)
-    assert size_calculator.get_cache_size() == 1
-    size_calculator.invalidate_cache()
-    assert size_calculator.get_cache_size() == 0
+    bytes_note_size_cache.get_note_size(note2.id, SizeType.TEXTS, use_cache=True)
+    assert bytes_note_size_cache.get_cache_size() == 6
+    bytes_note_size_cache.evict_note(note1.id)
+    assert bytes_note_size_cache.get_cache_size() == 1
+    bytes_note_size_cache.invalidate_cache()
+    assert bytes_note_size_cache.get_cache_size() == 0
 
 
-def test_evict_note(size_calculator: SizeCalculator, td: Data):
-    assert size_calculator.get_cache_size() == 0
-    assert size_calculator.as_dict_list() == [{SizeType.TOTAL: {},
+def test_evict_note(bytes_note_size_cache: BytesNoteSizeCache, td: Data):
+    assert bytes_note_size_cache.get_cache_size() == 0
+    assert bytes_note_size_cache.as_dict_list() == [{SizeType.TOTAL: {},
                                                SizeType.TEXTS: {},
                                                SizeType.FILES: {}},
                                               {},
@@ -151,43 +151,43 @@ def test_evict_note(size_calculator: SizeCalculator, td: Data):
     note2: Note = td.create_note_without_files()
     nid1: NoteId = note1.id
     nid2: NoteId = note2.id
-    size_calculator.get_note_size(nid1, SizeType.TOTAL, use_cache=True)
-    size_calculator.get_note_size(nid1, SizeType.TOTAL, use_cache=True)
-    size_calculator.get_note_size(nid2, SizeType.TEXTS, use_cache=True)
-    assert size_calculator.get_cache_size() == 6
-    assert size_calculator.as_dict_list() == [{SizeType.TOTAL: {nid1: 143},
+    bytes_note_size_cache.get_note_size(nid1, SizeType.TOTAL, use_cache=True)
+    bytes_note_size_cache.get_note_size(nid1, SizeType.TOTAL, use_cache=True)
+    bytes_note_size_cache.get_note_size(nid2, SizeType.TEXTS, use_cache=True)
+    assert bytes_note_size_cache.get_cache_size() == 6
+    assert bytes_note_size_cache.as_dict_list() == [{SizeType.TOTAL: {nid1: 143},
                                                SizeType.TEXTS: {nid1: 122, nid2: 70},
                                                SizeType.FILES: {nid1: 21}},
                                               {nid1: {MediaFiles.animation, MediaFiles.sound, MediaFiles.picture}},
                                               {nid1: {MediaFiles.animation: FileSize(SizeBytes(9)),
                                                       MediaFiles.picture: FileSize(SizeBytes(7)),
                                                       MediaFiles.sound: FileSize(SizeBytes(5))}}]
-    size_calculator.evict_note(nid1)
-    assert size_calculator.get_cache_size() == 1
-    assert size_calculator.as_dict_list() == [{SizeType.TOTAL: {},
+    bytes_note_size_cache.evict_note(nid1)
+    assert bytes_note_size_cache.get_cache_size() == 1
+    assert bytes_note_size_cache.as_dict_list() == [{SizeType.TOTAL: {},
                                                SizeType.TEXTS: {nid2: 70},
                                                SizeType.FILES: {}},
                                               {},
                                               {}]
 
 
-def test_get_note_size(size_calculator: SizeCalculator, td: Data):
+def test_get_note_size(bytes_note_size_cache: BytesNoteSizeCache, td: Data):
     exp_size_1: SizeBytes = SizeBytes(len(DefaultFields.front_field_content.encode()) +
                                       len(DefaultFields.back_field_content.encode()) +
                                       len(FileContents.picture) + len(FileContents.sound) +
                                       len(FileContents.animation))
     note: Note = td.create_note_with_files()
     note_id: NoteId = note.id
-    act_size_1: SizeBytes = size_calculator.get_note_size(note_id, SizeType.TOTAL, use_cache=False)
+    act_size_1: SizeBytes = bytes_note_size_cache.get_note_size(note_id, SizeType.TOTAL, use_cache=False)
     assert act_size_1 == exp_size_1
 
     content: str = 'updated'
     Data.update_front_field(note, content)
 
-    act_size_cached: SizeBytes = size_calculator.get_note_size(note_id, SizeType.TOTAL, use_cache=True)
+    act_size_cached: SizeBytes = bytes_note_size_cache.get_note_size(note_id, SizeType.TOTAL, use_cache=True)
     assert act_size_cached == exp_size_1
 
-    act_size_uncached: SizeBytes = size_calculator.get_note_size(note_id, SizeType.TOTAL, use_cache=False)
+    act_size_uncached: SizeBytes = bytes_note_size_cache.get_note_size(note_id, SizeType.TOTAL, use_cache=False)
     assert act_size_uncached == SizeBytes(len(content.encode()) +
                                           len(DefaultFields.back_field_content.encode()) +
                                           len(FileContents.picture) +
@@ -195,49 +195,49 @@ def test_get_note_size(size_calculator: SizeCalculator, td: Data):
 
 
 @pytest.mark.performance
-def test_get_note_size_performance(size_calculator: SizeCalculator, td: Data):
+def test_get_note_size_performance(bytes_note_size_cache: BytesNoteSizeCache, td: Data):
     note: Note = td.create_note_with_files()
     execution_time: float = timeit.timeit(
-        lambda: size_calculator.get_note_size(note.id, SizeType.TOTAL, use_cache=True),
+        lambda: bytes_note_size_cache.get_note_size(note.id, SizeType.TOTAL, use_cache=True),
         number=200_000)
     assert execution_time <= 1
 
 
-def test_get_note_files(size_calculator: SizeCalculator, td: Data):
+def test_get_note_files(bytes_note_size_cache: BytesNoteSizeCache, td: Data):
     note: Note = td.create_note_with_files()
     note_id: NoteId = note.id
-    files: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
+    files: set[MediaFile] = bytes_note_size_cache.get_note_files(note_id, use_cache=True)
     assert files == {MediaFiles.animation, MediaFiles.sound, MediaFiles.picture}
 
     Data.replace_in_front_field(note, '<img src="picture.jpg">', '')
-    files_cached: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=True)
+    files_cached: set[MediaFile] = bytes_note_size_cache.get_note_files(note_id, use_cache=True)
     assert files_cached == {MediaFiles.animation, MediaFiles.sound, MediaFiles.picture}
-    files_uncached: set[MediaFile] = size_calculator.get_note_files(note_id, use_cache=False)
+    files_uncached: set[MediaFile] = bytes_note_size_cache.get_note_files(note_id, use_cache=False)
     assert files_uncached == {MediaFiles.sound, MediaFiles.picture, MediaFiles.animation}
 
 
-def test_get_note_files_absent(size_calculator: SizeCalculator, td: Data):
+def test_get_note_files_absent(bytes_note_size_cache: BytesNoteSizeCache, td: Data):
     with raises(NotFoundError):
         note_id: NoteId = NoteId(-1)
-        size_calculator.get_note_files(note_id, use_cache=True)
+        bytes_note_size_cache.get_note_files(note_id, use_cache=True)
 
 
-def test_get_notes_file_sizes(size_calculator: SizeCalculator, td: Data):
+def test_get_notes_file_sizes(bytes_note_size_cache: BytesNoteSizeCache, td: Data):
     note1: Note = td.create_note_with_files()
     note2: Note = td.create_note_without_files()
     note_ids: Sequence[NoteId] = [note1.id, note2.id]
-    file_sizes: dict[MediaFile, FileSize] = size_calculator.get_notes_file_sizes(note_ids, use_cache=True)
+    file_sizes: dict[MediaFile, FileSize] = bytes_note_size_cache.get_notes_file_sizes(note_ids, use_cache=True)
     assert file_sizes == {MediaFiles.animation: FileSize(SizeBytes(9)),
                           MediaFiles.picture: FileSize(SizeBytes(7)),
                           MediaFiles.sound: FileSize(SizeBytes(5))}
 
 
-def test_get_notes_size(size_calculator: SizeCalculator, td: Data):
+def test_get_notes_size(bytes_note_size_cache: BytesNoteSizeCache, td: Data):
     note1: Note = td.create_note_with_files()
     note2: Note = td.create_note_without_files()
     note1_reused_files: Note = td.create_note_with_files()
     note_ids: Sequence[NoteId] = [note1.id, note2.id, note1_reused_files.id]
-    act_size: SizeBytes = size_calculator.get_notes_size(note_ids, SizeType.TOTAL, use_cache=True)
+    act_size: SizeBytes = bytes_note_size_cache.get_notes_size(note_ids, SizeType.TOTAL, use_cache=True)
     exp_size_1: SizeBytes = SizeBytes(len(DefaultFields.front_field_content.encode()) +
                                       len(DefaultFields.back_field_content.encode()) +
                                       len(FileContents.picture) + len(FileContents.sound) +

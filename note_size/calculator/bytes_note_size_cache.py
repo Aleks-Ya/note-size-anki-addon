@@ -20,7 +20,7 @@ class _Caches:
     note_file_sizes_cache: dict[NoteId, dict[MediaFile, FileSize]] = {}
 
 
-class SizeCalculator(Cache):
+class BytesNoteSizeCache(Cache):
 
     def __init__(self, collection_holder: CollectionHolder, media_cache: MediaCache):
         super().__init__()

@@ -17,7 +17,7 @@ package Anki {
 package NoteSizeAddon {
 
     package calculator {
-        class SizeCalculator #orange {
+        class BytesNoteSizeCache #orange {
             size_caches: dict[SizeType, dict[NoteId, SizeBytes]]
             note_files_cache: dict[NoteId, set[MediaFile]]
             note_file_sizes_cache: dict[NoteId, dict[MediaFile, SizeBytes]]
@@ -66,41 +66,41 @@ ColumnHooks --> ItemIdSorter
 ColumnHooks --> NoteSizeCache
 
 ItemIdSorter --> ItemIdCache #red
-ItemIdSorter --> SizeCalculator #orange
+ItemIdSorter --> BytesNoteSizeCache #orange
 
 CacheInitializer --> CacheManager
 CacheInitializer --> CacheStorage
 
 CacheManager --> MediaCache #green
 CacheManager --> ItemIdCache #red
-CacheManager --> SizeCalculator #orange
+CacheManager --> BytesNoteSizeCache #orange
 CacheManager --> BytesSizeCache #brown
 CacheManager --> NoteSizeCache
 
 CacheHooks --> ItemIdCache #red
-CacheHooks --> SizeCalculator #orange
+CacheHooks --> BytesNoteSizeCache #orange
 
 NoteSizeCache --> Collection
-NoteSizeCache --> SizeCalculator
+NoteSizeCache --> BytesNoteSizeCache
 NoteSizeCache --> BytesSizeCache
 
 Collection --> SQLite
 
 EditorButtonFormatter --> NoteSizeCache
-EditorButtonFormatter --> SizeCalculator #orange
+EditorButtonFormatter --> BytesNoteSizeCache #orange
 EditorButtonFormatter --> BytesSizeCache #brown
 
 DeckBrowserFormatter --> ItemIdCache #red
 DeckBrowserFormatter --> MediaCache #green
 DeckBrowserFormatter --> BytesSizeCache #brown
 
-SizeCalculator --> Collection
-SizeCalculator --> MediaCache #green
+BytesNoteSizeCache --> Collection
+BytesNoteSizeCache --> MediaCache #green
 
 CacheStorage --> FileSystem
 
 ItemIdCache --> Collection
-ItemIdCache --> SizeCalculator #orange
+ItemIdCache --> BytesNoteSizeCache #orange
 ItemIdCache --> MediaCache #green
 
 MediaCache --> Collection

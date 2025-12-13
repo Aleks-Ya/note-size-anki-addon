@@ -8,18 +8,18 @@ from .cache import Cache
 from .media_cache import MediaCache
 from ..common.collection_holder import CollectionHolder
 from ..common.types import MediaFile
-from ..calculator.size_calculator import SizeCalculator
+from ..calculator.bytes_note_size_cache import BytesNoteSizeCache
 
 log: Logger = logging.getLogger(__name__)
 
 
 class UpdatedFilesCache(Cache):
 
-    def __init__(self, collection_holder: CollectionHolder, size_calculator: SizeCalculator,
+    def __init__(self, collection_holder: CollectionHolder, bytes_note_size_cache: BytesNoteSizeCache,
                  media_cache: MediaCache) -> None:
         super().__init__()
         self.__collection_holder: CollectionHolder = collection_holder
-        self.__size_calculator: SizeCalculator = size_calculator
+        self.__bytes_note_size_cache: BytesNoteSizeCache = bytes_note_size_cache
         self.__file_note_ids_cache: dict[MediaFile, set[NoteId]] = {}
         self.__media_cache: MediaCache = media_cache
         self.invalidate_cache()
@@ -67,7 +67,7 @@ class UpdatedFilesCache(Cache):
                 return self.__file_note_ids_cache[file]
             else:
                 for note_id in self.__collection_holder.col().db.list("select id from notes"):
-                    files: set[MediaFile] = self.__size_calculator.get_note_files(note_id, use_cache)
+                    files: set[MediaFile] = self.__bytes_note_size_cache.get_note_files(note_id, use_cache)
                     for note_file in files:
                         if note_file in self.__file_note_ids_cache:
                             self.__file_note_ids_cache[note_file].add(note_id)

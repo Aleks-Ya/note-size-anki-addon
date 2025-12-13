@@ -9,17 +9,17 @@ from ....cache.note_size_cache import NoteSizeCache
 from ....config.config import Config
 from ....config.level_parser import Level, LevelParser
 from ....common.types import SizeStr, SizeBytes, SizeType, SignificantDigits, ColorName
-from ....calculator.size_calculator import SizeCalculator
+from ....calculator.bytes_note_size_cache import BytesNoteSizeCache
 from ....cache.bytes_size_cache import BytesSizeCache
 
 log: Logger = logging.getLogger(__name__)
 
 
 class EditorButtonFormatter:
-    def __init__(self, note_size_cache: NoteSizeCache, size_calculator: SizeCalculator, bytes_size_cache: BytesSizeCache,
+    def __init__(self, note_size_cache: NoteSizeCache, bytes_note_size_cache: BytesNoteSizeCache, bytes_size_cache: BytesSizeCache,
                  level_parser: LevelParser, theme_manager: ThemeManager, config: Config) -> None:
         self.__note_size_cache: NoteSizeCache = note_size_cache
-        self.__size_calculator: SizeCalculator = size_calculator
+        self.__bytes_note_size_cache: BytesNoteSizeCache = bytes_note_size_cache
         self.__bytes_size_cache: BytesSizeCache = bytes_size_cache
         self.__level_parser: LevelParser = level_parser
         self.__theme_manager: ThemeManager = theme_manager
@@ -36,7 +36,7 @@ class EditorButtonFormatter:
         return label
 
     def get_add_mode_label(self, note: Note) -> EditorButtonLabel:
-        size_bytes: SizeBytes = self.__size_calculator.calculate_note_size(note, SizeType.TOTAL, use_cache=False)
+        size_bytes: SizeBytes = self.__bytes_note_size_cache.calculate_note_size(note, SizeType.TOTAL, use_cache=False)
         significant_digits: SignificantDigits = self.__config.get_size_button_significant_digits()
         size_str: SizeStr = self.__bytes_size_cache.bytes_to_str(size_bytes, significant_digits)
         color: ColorName = self.__get_color(size_bytes)
@@ -45,7 +45,7 @@ class EditorButtonFormatter:
         return label
 
     def get_edit_mode_label(self, note_id: NoteId) -> EditorButtonLabel:
-        size_bytes: SizeBytes = self.__size_calculator.get_note_size(note_id, SizeType.TOTAL, use_cache=False)
+        size_bytes: SizeBytes = self.__bytes_note_size_cache.get_note_size(note_id, SizeType.TOTAL, use_cache=False)
         significant_digits: SignificantDigits = self.__config.get_size_button_significant_digits()
         size_str: SizeStr = self.__note_size_cache.get_note_size_str(
             note_id, SizeType.TOTAL, significant_digits, use_cache=False)
