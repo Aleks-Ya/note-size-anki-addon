@@ -90,17 +90,20 @@ class EditorButtonHooks:
 
     def __refresh_size_button(self, editor: Optional[Editor]) -> None:
         log.debug("Refresh size button...")
-        if editor and editor.web:
-            if self.__config.get_size_button_enabled():
-                js: str = self.__editor_button_js.show_size_button_js(editor.note, editor.addMode)
-                editor.web.evalWithCallback(js, self.__eval_callback)
-                log.debug("Size button was refreshed")
+        try:
+            if editor and editor.web:
+                if self.__config.get_size_button_enabled():
+                    js: str = self.__editor_button_js.show_size_button_js(editor.note, editor.addMode)
+                    editor.web.evalWithCallback(js, self.__eval_callback)
+                    log.debug("Size button was refreshed")
+                else:
+                    js: str = self.__editor_button_js.hide_size_button_js()
+                    editor.web.evalWithCallback(js, self.__eval_callback)
+                    log.debug("Size button was hidden")
             else:
-                js: str = self.__editor_button_js.hide_size_button_js()
-                editor.web.evalWithCallback(js, self.__eval_callback)
-                log.debug("Size button was hidden")
-        else:
-            log.debug("Skip size button refresh as editor.web is empty")
+                log.debug("Skip size button refresh as editor.web is empty")
+        except Exception as e:
+            log.warning(f"Skip size button refresh because of error: {e}", exc_info=True)
 
     def __del__(self):
         log.debug(f"{self.__class__.__name__} was deleted")
