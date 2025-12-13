@@ -5,7 +5,7 @@ from aqt.qt import QVBoxLayout, QWidget, Qt, QPushButton, QDesktopServices
 
 from .widgets import CheckboxWithInfo
 from ...config.settings import Settings
-from ...cache.cache_initializer import CacheInitializer
+from ...core.cache.cache_initializer import CacheInitializer
 from ...config.url_manager import UrlManager, UrlType
 from .ui_model import UiModel
 

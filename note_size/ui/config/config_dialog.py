@@ -8,7 +8,7 @@ from aqt.theme import ThemeManager
 
 from .browser_tab import BrowserTab
 from .model_converter import ModelConverter
-from ...cache.cache_initializer import CacheInitializer
+from ...core.cache.cache_initializer import CacheInitializer
 from ...config.config import Config
 from ...config.level_parser import LevelParser
 from ...config.url_manager import UrlManager

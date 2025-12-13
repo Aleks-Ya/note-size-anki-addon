@@ -5,7 +5,7 @@ from logging import Logger
 from typing import Any
 
 from .cache import Cache
-from ..core.common.types import FileType, MediaFile
+from ..common.types import FileType, MediaFile
 
 log: Logger = logging.getLogger(__name__)
 

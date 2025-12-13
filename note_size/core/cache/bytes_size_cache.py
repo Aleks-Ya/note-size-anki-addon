@@ -3,8 +3,8 @@ from logging import Logger
 from typing import Any
 
 from .cache import Cache
-from ..core.common.size_formatter import SizeFormatter
-from ..core.common.types import SizeStr, SizeBytes, SignificantDigits
+from ..common.size_formatter import SizeFormatter
+from ..common.types import SizeStr, SizeBytes, SignificantDigits
 
 log: Logger = logging.getLogger(__name__)
 

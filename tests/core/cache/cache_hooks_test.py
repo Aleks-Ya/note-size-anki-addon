@@ -5,11 +5,11 @@ from anki.errors import NotFoundError
 from anki.notes import Note
 from aqt import gui_hooks
 
-from note_size.cache.cache_hooks import CacheHooks
-from note_size.cache.item_id_cache import ItemIdCache
-from note_size.cache.media_cache import MediaCache
-from note_size.cache.updated_files_cache import UpdatedFilesCache
-from note_size.cache.bytes_note_size_cache import BytesNoteSizeCache
+from note_size.core.cache.cache_hooks import CacheHooks
+from note_size.core.cache.item_id_cache import ItemIdCache
+from note_size.core.cache.media_cache import MediaCache
+from note_size.core.cache.updated_files_cache import UpdatedFilesCache
+from note_size.core.cache.bytes_note_size_cache import BytesNoteSizeCache
 from note_size.core.common.types import SizeType, FileSize, SizeBytes
 from tests.conftest import assert_no_hooks
 from tests.data import Data, MediaFiles

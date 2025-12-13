@@ -8,8 +8,8 @@ from anki.notes import Note, NoteId
 from .note_helper import NoteHelper
 from .cache import Cache
 from .media_cache import MediaCache
-from ..core.common.collection_holder import CollectionHolder
-from ..core.common.types import SizeBytes, MediaFile, SizeType, FileSize
+from ..common.collection_holder import CollectionHolder
+from ..common.types import SizeBytes, MediaFile, SizeType, FileSize
 
 log: Logger = logging.getLogger(__name__)
 

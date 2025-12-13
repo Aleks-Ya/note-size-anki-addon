@@ -26,17 +26,17 @@ class ProfileHook:
         from ..config.settings import Settings
         from ..config.level_parser import LevelParser
         from ..config.url_manager import UrlManager
-        from ..cache.cache_hooks import CacheHooks
-        from ..cache.cache_initializer import CacheInitializer
-        from ..cache.item_id_cache import ItemIdCache
-        from ..cache.media_cache import MediaCache
-        from ..cache.cache_storage import CacheStorage
-        from ..cache.cache_manager import CacheManager
-        from ..cache.str_note_size_cache import StrNoteSizeCache
-        from ..cache.file_type_helper import FileTypeHelper
-        from ..cache.bytes_note_size_cache import BytesNoteSizeCache
-        from ..cache.bytes_size_cache import BytesSizeCache
-        from ..cache.updated_files_cache import UpdatedFilesCache
+        from ..core.cache.cache_hooks import CacheHooks
+        from ..core.cache.cache_initializer import CacheInitializer
+        from ..core.cache.item_id_cache import ItemIdCache
+        from ..core.cache.media_cache import MediaCache
+        from ..core.cache.cache_storage import CacheStorage
+        from ..core.cache.cache_manager import CacheManager
+        from ..core.cache.str_note_size_cache import StrNoteSizeCache
+        from ..core.cache.file_type_helper import FileTypeHelper
+        from ..core.cache.bytes_note_size_cache import BytesNoteSizeCache
+        from ..core.cache.bytes_size_cache import BytesSizeCache
+        from ..core.cache.updated_files_cache import UpdatedFilesCache
         from ..core.calculator.used_files_calculator import UsedFilesCalculator
         from ..core.calculator.db_size_calculator import DbSizeCalculator
         from ..core.log.logs import Logs

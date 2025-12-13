@@ -2,9 +2,9 @@ from pathlib import Path
 
 from anki.cards import Card
 
-from note_size.cache.cache_initializer import CacheInitializer
-from note_size.cache.cache_manager import CacheManager
-from note_size.cache.cache_storage import CacheStorage
+from note_size.core.cache.cache_initializer import CacheInitializer
+from note_size.core.cache.cache_manager import CacheManager
+from note_size.core.cache.cache_storage import CacheStorage
 from note_size.config.config import Config
 from note_size.config.settings import Settings
 from note_size.core.common.types import SizeType

@@ -21,17 +21,17 @@ from note_size.core.common.collection_holder import CollectionHolder
 
 utils.tr = MagicMock()
 from aqt.deckbrowser import DeckBrowser
-from note_size.cache.cache_initializer import CacheInitializer
-from note_size.cache.cache_manager import CacheManager
-from note_size.cache.cache_storage import CacheStorage
-from note_size.cache.item_id_cache import ItemIdCache
-from note_size.cache.media_cache import MediaCache
-from note_size.cache.str_note_size_cache import StrNoteSizeCache
-from note_size.cache.cache_hooks import CacheHooks
-from note_size.cache.file_type_helper import FileTypeHelper
-from note_size.cache.bytes_note_size_cache import BytesNoteSizeCache
-from note_size.cache.bytes_size_cache import BytesSizeCache
-from note_size.cache.updated_files_cache import UpdatedFilesCache
+from note_size.core.cache.cache_initializer import CacheInitializer
+from note_size.core.cache.cache_manager import CacheManager
+from note_size.core.cache.cache_storage import CacheStorage
+from note_size.core.cache.item_id_cache import ItemIdCache
+from note_size.core.cache.media_cache import MediaCache
+from note_size.core.cache.str_note_size_cache import StrNoteSizeCache
+from note_size.core.cache.cache_hooks import CacheHooks
+from note_size.core.cache.file_type_helper import FileTypeHelper
+from note_size.core.cache.bytes_note_size_cache import BytesNoteSizeCache
+from note_size.core.cache.bytes_size_cache import BytesSizeCache
+from note_size.core.cache.updated_files_cache import UpdatedFilesCache
 from note_size.core.calculator.used_files_calculator import UsedFilesCalculator
 from note_size.ui.config.config_hooks import ConfigHooks
 from note_size.config.config import Config

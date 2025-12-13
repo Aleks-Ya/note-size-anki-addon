@@ -4,8 +4,8 @@ import pytest
 from anki.errors import NotFoundError
 from anki.notes import NoteId, Note
 
-from note_size.cache.str_note_size_cache import StrNoteSizeCache
-from note_size.cache.bytes_note_size_cache import BytesNoteSizeCache
+from note_size.core.cache.str_note_size_cache import StrNoteSizeCache
+from note_size.core.cache.bytes_note_size_cache import BytesNoteSizeCache
 from note_size.core.common.types import SizeBytes, SizeStr, SizeType, MediaFile
 from tests.conftest import bytes_note_size_cache
 from tests.data import Data, DefaultFields, MediaFiles, FileContents, Digits

@@ -5,7 +5,7 @@ from aqt.deckbrowser import DeckBrowser
 from aqt.qt import QDesktopServices
 from aqt.theme import ThemeManager
 
-from ...cache.cache_initializer import CacheInitializer
+from ...core.cache.cache_initializer import CacheInitializer
 from ...config.config import Config
 from ...config.config_loader import ConfigLoader
 from ...config.level_parser import LevelParser

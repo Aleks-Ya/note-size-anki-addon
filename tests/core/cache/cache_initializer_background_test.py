@@ -5,16 +5,16 @@ from anki.collection import Collection
 from aqt.deckbrowser import DeckBrowser
 from aqt.taskman import TaskManager
 
-from note_size.cache.cache_initializer_background import CacheInitializerBackground
-from note_size.cache.cache_manager import CacheManager
-from note_size.cache.cache_storage import CacheStorage
-from note_size.cache.item_id_cache import ItemIdCache
-from note_size.cache.media_cache import MediaCache
-from note_size.cache.bytes_note_size_cache import BytesNoteSizeCache
-from note_size.cache.bytes_size_cache import BytesSizeCache
+from note_size.core.cache.cache_initializer_background import CacheInitializerBackground
+from note_size.core.cache.cache_manager import CacheManager
+from note_size.core.cache.cache_storage import CacheStorage
+from note_size.core.cache.item_id_cache import ItemIdCache
+from note_size.core.cache.media_cache import MediaCache
+from note_size.core.cache.bytes_note_size_cache import BytesNoteSizeCache
+from note_size.core.cache.bytes_size_cache import BytesSizeCache
 from note_size.config.config import Config
 from note_size.core.common.types import FileType, SizeType, FileSize, SizeBytes
-from note_size.cache.file_type_helper import FileTypeHelper
+from note_size.core.cache.file_type_helper import FileTypeHelper
 from tests.conftest import cache_manager
 from tests.data import Data, MediaFiles, Digits
 

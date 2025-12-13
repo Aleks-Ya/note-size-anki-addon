@@ -12,13 +12,13 @@ from .trash import Trash
 from ...core.calculator.db_size_calculator import DbSizeCalculator
 from ...core.common.collection_holder import CollectionHolder
 from ...core.common.number_formatter import NumberFormatter
-from ...cache.item_id_cache import ItemIdCache
-from ...cache.media_cache import MediaCache
+from ...core.cache.item_id_cache import ItemIdCache
+from ...core.cache.media_cache import MediaCache
 from ...core.calculator.used_files_calculator import UsedFilesCalculator, UsedFiles
 from ...config.config import Config
 from ...config.settings import Settings
 from ...core.common.types import SizeBytes, FilesNumber, SignificantDigits
-from ...cache.bytes_size_cache import BytesSizeCache
+from ...core.cache.bytes_size_cache import BytesSizeCache
 
 log: Logger = logging.getLogger(__name__)
 

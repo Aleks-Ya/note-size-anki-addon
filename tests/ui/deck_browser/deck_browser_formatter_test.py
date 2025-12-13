@@ -7,8 +7,8 @@ from anki.collection import Collection
 from aqt.theme import ThemeManager
 from bs4 import BeautifulSoup
 
-from note_size.cache.item_id_cache import ItemIdCache
-from note_size.cache.bytes_size_cache import BytesSizeCache
+from note_size.core.cache.item_id_cache import ItemIdCache
+from note_size.core.cache.bytes_size_cache import BytesSizeCache
 from note_size.ui.deck_browser.deck_browser_formatter import DeckBrowserFormatter
 from note_size.ui.deck_browser.trash import Trash
 from note_size.core.common.types import MediaFile, SizeBytes

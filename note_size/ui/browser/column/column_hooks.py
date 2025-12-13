@@ -10,8 +10,8 @@ from aqt.browser import ItemId, CellRow
 
 from .item_id_sorter import ItemIdSorter
 from ..browser_helper import BrowserHelper
-from ....cache.item_id_cache import ItemIdCache
-from ....cache.str_note_size_cache import StrNoteSizeCache
+from ....core.cache.item_id_cache import ItemIdCache
+from ....core.cache.str_note_size_cache import StrNoteSizeCache
 from ....config.config import Config
 from ....core.common.types import SizeType, SignificantDigits
 

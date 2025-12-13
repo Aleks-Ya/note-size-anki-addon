@@ -5,12 +5,12 @@ from anki.notes import NoteId, Note
 from aqt.theme import ThemeManager
 
 from .editor_button_label import EditorButtonLabel
-from ....cache.str_note_size_cache import StrNoteSizeCache
+from ....core.cache.str_note_size_cache import StrNoteSizeCache
 from ....config.config import Config
 from ....config.level_parser import Level, LevelParser
 from ....core.common.types import SizeStr, SizeBytes, SizeType, SignificantDigits, ColorName
-from ....cache.bytes_note_size_cache import BytesNoteSizeCache
-from ....cache.bytes_size_cache import BytesSizeCache
+from ....core.cache.bytes_note_size_cache import BytesNoteSizeCache
+from ....core.cache.bytes_size_cache import BytesSizeCache
 
 log: Logger = logging.getLogger(__name__)
 

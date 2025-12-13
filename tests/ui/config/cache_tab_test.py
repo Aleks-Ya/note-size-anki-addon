@@ -4,7 +4,7 @@ from aqt.qt import Qt, QDesktopServices
 from pytestqt.qtbot import QtBot
 from PyQtPath.path_chain_pyqt6 import path
 
-from note_size.cache.cache_initializer import CacheInitializer
+from note_size.core.cache.cache_initializer import CacheInitializer
 from note_size.config.config import Config
 from note_size.config.settings import Settings
 from note_size.config.url_manager import UrlManager

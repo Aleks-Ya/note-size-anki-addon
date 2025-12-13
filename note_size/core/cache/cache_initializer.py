@@ -9,7 +9,7 @@ from aqt.taskman import TaskManager
 from .cache_initializer_op import CacheInitializerOp
 from .cache_manager import CacheManager
 from .cache_storage import CacheStorage
-from ..config.config import Config
+from ...config.config import Config
 
 log: Logger = logging.getLogger(__name__)
 

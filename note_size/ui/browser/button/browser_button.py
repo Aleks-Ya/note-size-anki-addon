@@ -12,8 +12,8 @@ from ..browser_helper import BrowserHelper
 from ....core.common.number_formatter import NumberFormatter
 from ...details_dialog.details_dialog import DetailsDialog
 from ...details_dialog.show_details_dialog_op import ShowDetailsDialogOp
-from ....cache.item_id_cache import ItemIdCache
-from ....cache.str_note_size_cache import StrNoteSizeCache
+from ....core.cache.item_id_cache import ItemIdCache
+from ....core.cache.str_note_size_cache import StrNoteSizeCache
 from ....config.config import Config
 from ....core.common.types import SizeType, SizeStr, SignificantDigits
 

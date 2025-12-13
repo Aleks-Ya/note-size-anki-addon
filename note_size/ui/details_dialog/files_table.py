@@ -6,10 +6,10 @@ from aqt import colors, props
 from aqt.qt import QTableWidget, Qt, QTableWidgetItem, QIcon, QHeaderView
 from aqt.theme import ThemeManager
 
-from ...cache.file_type_helper import FileTypeHelper
+from ...core.cache.file_type_helper import FileTypeHelper
 from .icon_table_widget_item import IconTableWidgetItem
 from .size_table_widget_item import SizeTableWidgetItem
-from ...cache.bytes_size_cache import BytesSizeCache
+from ...core.cache.bytes_size_cache import BytesSizeCache
 from ...config.config import Config
 from ...config.settings import Settings
 from ...core.common.types import MediaFile, SizeStr, FileType, FileSize, SignificantDigits, ColorName

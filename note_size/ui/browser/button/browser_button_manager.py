@@ -8,8 +8,8 @@ from aqt.progress import ProgressManager
 
 from .browser_button import BrowserButton
 from ...details_dialog.details_dialog import DetailsDialog
-from ....cache.item_id_cache import ItemIdCache
-from ....cache.str_note_size_cache import StrNoteSizeCache
+from ....core.cache.item_id_cache import ItemIdCache
+from ....core.cache.str_note_size_cache import StrNoteSizeCache
 from ....config.config import Config
 from ....config.config_listener import ConfigListener
 
