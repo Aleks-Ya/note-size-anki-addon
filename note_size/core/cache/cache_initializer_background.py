@@ -12,7 +12,7 @@ from .cache_storage import CacheStorage
 from .item_id_cache import ItemIdCache
 from .str_note_size_cache import StrNoteSizeCache
 from .bytes_note_size_cache import BytesNoteSizeCache
-from ...core.config.config import Config
+from ..config.config import Config
 from ..common.types import SizeType, MediaFile, SignificantDigits
 from ..common.number_formatter import NumberFormatter
 from .file_type_helper import FileTypeHelper

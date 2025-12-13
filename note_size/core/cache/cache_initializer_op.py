@@ -12,7 +12,7 @@ from aqt.utils import showInfo, show_critical
 from .cache_initializer_background import CacheInitializerBackground
 from .cache_manager import CacheManager
 from .cache_storage import CacheStorage
-from ...core.config.config import Config
+from ..config.config import Config
 from ..common.number_formatter import NumberFormatter
 
 log: Logger = logging.getLogger(__name__)

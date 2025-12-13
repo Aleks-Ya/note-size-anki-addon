@@ -3,10 +3,10 @@ from logging import Logger
 
 from anki.notes import NoteId
 
-from ...core.cache.media_cache import MediaCache
+from ..cache.media_cache import MediaCache
 from ..common.collection_holder import CollectionHolder
 from ..common.types import SizeBytes, MediaFile, FilesNumber, NotesNumber
-from ...core.cache.bytes_note_size_cache import BytesNoteSizeCache
+from ..cache.bytes_note_size_cache import BytesNoteSizeCache
 
 log: Logger = logging.getLogger(__name__)
 

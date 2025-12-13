@@ -5,8 +5,8 @@ from logging import Logger
 from pathlib import Path
 from pstats import Stats, SortKey
 
-from ...core.config.config import Config
-from ...core.config.settings import Settings
+from ..config.config import Config
+from ..config.settings import Settings
 
 log: Logger = logging.getLogger(__name__)
 

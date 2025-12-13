@@ -2,7 +2,7 @@ import logging
 from logging import Logger, FileHandler, Formatter
 from pathlib import Path
 
-from ...core.config.settings import Settings
+from ..config.settings import Settings
 
 
 class Logs:
