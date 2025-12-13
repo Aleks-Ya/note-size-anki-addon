@@ -91,7 +91,7 @@ class ProfileHook:
         note_size_cache: NoteSizeCache = NoteSizeCache(size_calculator, bytes_size_cache)
         column_hooks: ColumnHooks = ColumnHooks(item_id_cache, note_size_cache, item_id_sorter, config)
         column_hooks.setup_hooks()
-        level_parser: LevelParser = LevelParser(bytes_size_cache)
+        level_parser: LevelParser = LevelParser()
         theme_manager: ThemeManager = theme.theme_manager
         editor_button_formatter: EditorButtonFormatter = EditorButtonFormatter(
             note_size_cache, size_calculator, bytes_size_cache, level_parser, theme_manager, config)

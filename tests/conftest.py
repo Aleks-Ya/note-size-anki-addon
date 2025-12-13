@@ -204,7 +204,8 @@ def item_id_sorter(item_id_cache: ItemIdCache, size_calculator: SizeCalculator) 
 def editor_button_formatter(config: Config, size_calculator: SizeCalculator, bytes_size_cache: BytesSizeCache,
                             note_size_cache: NoteSizeCache, level_parser: LevelParser,
                             theme_manager: ThemeManager) -> EditorButtonFormatter:
-    return EditorButtonFormatter(note_size_cache, size_calculator, bytes_size_cache, level_parser, theme_manager, config)
+    return EditorButtonFormatter(note_size_cache, size_calculator, bytes_size_cache, level_parser, theme_manager,
+                                 config)
 
 
 @pytest.fixture
@@ -332,8 +333,8 @@ def file_type_helper() -> FileTypeHelper:
 
 
 @pytest.fixture
-def level_parser(bytes_size_cache: BytesSizeCache) -> LevelParser:
-    return LevelParser(bytes_size_cache)
+def level_parser() -> LevelParser:
+    return LevelParser()
 
 
 @pytest.fixture
@@ -368,7 +369,8 @@ def browser() -> Browser:
 def cache_manager(media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
                   bytes_size_cache: BytesSizeCache, file_type_helper: FileTypeHelper,
                   note_size_cache: NoteSizeCache, updated_files_calculator: UpdatedFilesCalculator) -> CacheManager:
-    return CacheManager(media_cache, item_id_cache, size_calculator, bytes_size_cache, file_type_helper, note_size_cache,
+    return CacheManager(media_cache, item_id_cache, size_calculator, bytes_size_cache, file_type_helper,
+                        note_size_cache,
                         updated_files_calculator)
 
 

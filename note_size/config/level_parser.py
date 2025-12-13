@@ -3,7 +3,7 @@ import sys
 from logging import Logger
 from typing import Optional, NewType
 
-from ..cache.bytes_size_cache import BytesSizeCache
+from ..common.size_formatter import SizeFormatter
 from ..common.types import SizeStr, SizeBytes, SignificantDigits, ColorName
 
 log: Logger = logging.getLogger(__name__)
@@ -46,8 +46,7 @@ class LevelParser:
     __default_light_theme_color: ColorName = ColorName("LightYellow")
     __default_dark_theme_color: ColorName = ColorName("Yellow")
 
-    def __init__(self, bytes_size_cache: BytesSizeCache) -> None:
-        self.__bytes_size_cache: BytesSizeCache = bytes_size_cache
+    def __init__(self) -> None:
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def add_level(self, levels: list[LevelDict]) -> None:
@@ -56,9 +55,9 @@ class LevelParser:
             if len(levels) > 1:
                 penultimate_level: LevelDict = levels[len(levels) - 2]
                 penultimate_max_size_str: SizeStr = SizeStr(penultimate_level[self.max_size_key])
-                penultimate_max_size_bytes: SizeBytes = BytesSizeCache.str_to_bytes(penultimate_max_size_str)
+                penultimate_max_size_bytes: SizeBytes = SizeFormatter.str_to_bytes(penultimate_max_size_str)
                 new_previous_level_size_bytes: SizeBytes = SizeBytes(penultimate_max_size_bytes * 2)
-                new_previous_level_size_str: SizeStr = self.__bytes_size_cache.bytes_to_str(
+                new_previous_level_size_str: SizeStr = SizeFormatter.bytes_to_str(
                     new_previous_level_size_bytes, SignificantDigits(0))
                 previous_level[self.max_size_key] = new_previous_level_size_str
             else:
@@ -92,8 +91,8 @@ class LevelParser:
         dark_theme_color: Optional[ColorName] = level.get(self.dark_theme_color_key, self.__default_dark_theme_color)
         min_size_opt: Optional[SizeStr] = SizeStr(level.get(self.min_size_key))
         max_size_opt: Optional[SizeStr] = SizeStr(level.get(self.max_size_key))
-        min_size_bytes: SizeBytes = BytesSizeCache.str_to_bytes(min_size_opt) if min_size_opt else 0
-        max_size_bytes: SizeBytes = BytesSizeCache.str_to_bytes(max_size_opt) if max_size_opt \
+        min_size_bytes: SizeBytes = SizeFormatter.str_to_bytes(min_size_opt) if min_size_opt else 0
+        max_size_bytes: SizeBytes = SizeFormatter.str_to_bytes(max_size_opt) if max_size_opt \
             else sys.maxsize
         min_size_str: SizeStr = min_size_opt if min_size_opt else '0 B'
         max_size_str: SizeStr = max_size_opt if max_size_opt else '∞'
