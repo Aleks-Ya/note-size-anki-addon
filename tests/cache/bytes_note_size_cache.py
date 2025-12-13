@@ -7,7 +7,7 @@ from anki.errors import NotFoundError
 from anki.notes import Note, NoteId
 from pytest import raises
 
-from note_size.calculator.bytes_note_size_cache import BytesNoteSizeCache
+from note_size.cache.bytes_note_size_cache import BytesNoteSizeCache
 from note_size.common.types import SizeBytes, MediaFile, SizeType, FileSize
 from tests.data import Data, DefaultFields, MediaFiles, FileContents
 
@@ -120,7 +120,8 @@ def test_calculate_size_of_files(bytes_note_size_cache: BytesNoteSizeCache, col:
 @pytest.mark.performance
 def test_calculate_note_files_performance(bytes_note_size_cache: BytesNoteSizeCache, td: Data):
     note: Note = td.create_note_with_files()
-    execution_time: float = timeit.timeit(lambda: bytes_note_size_cache.calculate_note_files(note, True), number=100_000)
+    execution_time: float = timeit.timeit(lambda: bytes_note_size_cache.calculate_note_files(note, True),
+                                          number=100_000)
     assert execution_time <= 0.5
 
 
@@ -143,10 +144,10 @@ def test_get_cache_size(bytes_note_size_cache: BytesNoteSizeCache, td: Data):
 def test_evict_note(bytes_note_size_cache: BytesNoteSizeCache, td: Data):
     assert bytes_note_size_cache.get_cache_size() == 0
     assert bytes_note_size_cache.as_dict_list() == [{SizeType.TOTAL: {},
-                                               SizeType.TEXTS: {},
-                                               SizeType.FILES: {}},
-                                              {},
-                                              {}]
+                                                     SizeType.TEXTS: {},
+                                                     SizeType.FILES: {}},
+                                                    {},
+                                                    {}]
     note1: Note = td.create_note_with_files()
     note2: Note = td.create_note_without_files()
     nid1: NoteId = note1.id
@@ -156,19 +157,20 @@ def test_evict_note(bytes_note_size_cache: BytesNoteSizeCache, td: Data):
     bytes_note_size_cache.get_note_size(nid2, SizeType.TEXTS, use_cache=True)
     assert bytes_note_size_cache.get_cache_size() == 6
     assert bytes_note_size_cache.as_dict_list() == [{SizeType.TOTAL: {nid1: 143},
-                                               SizeType.TEXTS: {nid1: 122, nid2: 70},
-                                               SizeType.FILES: {nid1: 21}},
-                                              {nid1: {MediaFiles.animation, MediaFiles.sound, MediaFiles.picture}},
-                                              {nid1: {MediaFiles.animation: FileSize(SizeBytes(9)),
-                                                      MediaFiles.picture: FileSize(SizeBytes(7)),
-                                                      MediaFiles.sound: FileSize(SizeBytes(5))}}]
+                                                     SizeType.TEXTS: {nid1: 122, nid2: 70},
+                                                     SizeType.FILES: {nid1: 21}},
+                                                    {nid1: {MediaFiles.animation, MediaFiles.sound,
+                                                            MediaFiles.picture}},
+                                                    {nid1: {MediaFiles.animation: FileSize(SizeBytes(9)),
+                                                            MediaFiles.picture: FileSize(SizeBytes(7)),
+                                                            MediaFiles.sound: FileSize(SizeBytes(5))}}]
     bytes_note_size_cache.evict_note(nid1)
     assert bytes_note_size_cache.get_cache_size() == 1
     assert bytes_note_size_cache.as_dict_list() == [{SizeType.TOTAL: {},
-                                               SizeType.TEXTS: {nid2: 70},
-                                               SizeType.FILES: {}},
-                                              {},
-                                              {}]
+                                                     SizeType.TEXTS: {nid2: 70},
+                                                     SizeType.FILES: {}},
+                                                    {},
+                                                    {}]
 
 
 def test_get_note_size(bytes_note_size_cache: BytesNoteSizeCache, td: Data):

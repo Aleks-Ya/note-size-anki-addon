@@ -5,7 +5,7 @@ from typing import Sequence, Any
 from anki.notes import NoteId
 
 from .cache import Cache
-from ..calculator.bytes_note_size_cache import BytesNoteSizeCache
+from .bytes_note_size_cache import BytesNoteSizeCache
 from .bytes_size_cache import BytesSizeCache
 from ..common.types import SizeStr, SizeBytes, SizeType, SignificantDigits
 

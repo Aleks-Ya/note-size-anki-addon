@@ -8,7 +8,7 @@ from .cache import Cache
 from .media_cache import MediaCache
 from ..common.collection_holder import CollectionHolder
 from ..common.types import MediaFile
-from ..calculator.bytes_note_size_cache import BytesNoteSizeCache
+from .bytes_note_size_cache import BytesNoteSizeCache
 
 log: Logger = logging.getLogger(__name__)
 

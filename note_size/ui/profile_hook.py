@@ -34,7 +34,7 @@ class ProfileHook:
         from ..cache.cache_manager import CacheManager
         from ..cache.note_size_cache import NoteSizeCache
         from ..cache.file_type_helper import FileTypeHelper
-        from ..calculator.bytes_note_size_cache import BytesNoteSizeCache
+        from ..cache.bytes_note_size_cache import BytesNoteSizeCache
         from ..cache.bytes_size_cache import BytesSizeCache
         from ..cache.updated_files_cache import UpdatedFilesCache
         from ..calculator.used_files_calculator import UsedFilesCalculator

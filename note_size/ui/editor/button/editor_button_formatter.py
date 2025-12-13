@@ -9,7 +9,7 @@ from ....cache.note_size_cache import NoteSizeCache
 from ....config.config import Config
 from ....config.level_parser import Level, LevelParser
 from ....common.types import SizeStr, SizeBytes, SizeType, SignificantDigits, ColorName
-from ....calculator.bytes_note_size_cache import BytesNoteSizeCache
+from ....cache.bytes_note_size_cache import BytesNoteSizeCache
 from ....cache.bytes_size_cache import BytesSizeCache
 
 log: Logger = logging.getLogger(__name__)

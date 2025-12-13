@@ -7,7 +7,7 @@ from note_size.cache.bytes_size_cache import BytesSizeCache
 from note_size.common.collection_holder import CollectionHolder
 from note_size.config.config import Config
 from note_size.cache.media_cache import MediaCache
-from note_size.calculator.bytes_note_size_cache import BytesNoteSizeCache
+from note_size.cache.bytes_note_size_cache import BytesNoteSizeCache
 from note_size.config.level_parser import LevelParser
 from note_size.ui.editor.button.editor_button_formatter import EditorButtonFormatter
 from note_size.ui.editor.button.editor_button_label import EditorButtonLabel

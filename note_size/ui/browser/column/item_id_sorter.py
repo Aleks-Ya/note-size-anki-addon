@@ -7,7 +7,7 @@ from anki.notes import NoteId
 from aqt.browser import ItemId
 
 from ....cache.item_id_cache import ItemIdCache
-from ....calculator.bytes_note_size_cache import BytesNoteSizeCache
+from ....cache.bytes_note_size_cache import BytesNoteSizeCache
 from ....common.types import SizeBytes, SizeType
 
 log: Logger = logging.getLogger(__name__)

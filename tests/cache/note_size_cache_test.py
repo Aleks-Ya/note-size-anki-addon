@@ -5,7 +5,7 @@ from anki.errors import NotFoundError
 from anki.notes import NoteId, Note
 
 from note_size.cache.note_size_cache import NoteSizeCache
-from note_size.calculator.bytes_note_size_cache import BytesNoteSizeCache
+from note_size.cache.bytes_note_size_cache import BytesNoteSizeCache
 from note_size.common.types import SizeBytes, SizeStr, SizeType, MediaFile
 from tests.conftest import bytes_note_size_cache
 from tests.data import Data, DefaultFields, MediaFiles, FileContents, Digits

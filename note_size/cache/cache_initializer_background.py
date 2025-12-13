@@ -11,7 +11,7 @@ from .cache_manager import CacheManager
 from .cache_storage import CacheStorage
 from .item_id_cache import ItemIdCache
 from .note_size_cache import NoteSizeCache
-from ..calculator.bytes_note_size_cache import BytesNoteSizeCache
+from .bytes_note_size_cache import BytesNoteSizeCache
 from ..config.config import Config
 from ..common.types import SizeType, MediaFile, SignificantDigits
 from ..common.number_formatter import NumberFormatter

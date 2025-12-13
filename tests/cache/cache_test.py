@@ -1,4 +1,4 @@
-from note_size.calculator.bytes_note_size_cache import BytesNoteSizeCache
+from note_size.cache.bytes_note_size_cache import BytesNoteSizeCache
 from tests.conftest import bytes_note_size_cache
 
 

@@ -12,7 +12,7 @@ from note_size.cache.cache_storage import CacheStorage
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
 from note_size.cache.note_size_cache import NoteSizeCache
-from note_size.calculator.bytes_note_size_cache import BytesNoteSizeCache
+from note_size.cache.bytes_note_size_cache import BytesNoteSizeCache
 from note_size.cache.bytes_size_cache import BytesSizeCache
 from note_size.cache.updated_files_cache import UpdatedFilesCache
 from note_size.common.collection_holder import CollectionHolder

@@ -7,7 +7,7 @@ from anki.errors import NotFoundError
 from anki.notes import NoteId, Note
 
 from note_size.cache.item_id_cache import ItemIdCache
-from note_size.calculator.bytes_note_size_cache import BytesNoteSizeCache
+from note_size.cache.bytes_note_size_cache import BytesNoteSizeCache
 from note_size.common.types import SizeBytes, SizeType, MediaFile
 from tests import wait_until, wait_until_exception
 from tests.conftest import bytes_note_size_cache
