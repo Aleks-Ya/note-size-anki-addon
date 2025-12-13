@@ -1,0 +1,64 @@
+@startuml
+skinparam linetype ortho
+top to bottom direction
+skinparam ArrowColor Red
+
+title Package diagram
+
+package note_size {
+    package core {
+        package cache {}
+        package calculator {}
+        package common {}
+        package config {}
+        package log {}
+        package profiler {}
+    }
+    package ui {
+        package browser {
+            package button {}
+            package column {}
+        }
+        package config as config_ui {}
+        package deck_browser {}
+        package details_dialog {}
+        package editor {
+            package button {}
+            package column {}
+        }
+        package theme {}
+        package web {}
+    }
+}
+
+cache --> common
+cache --> config
+
+calculator --> common
+calculator --> cache
+
+config --> common
+
+log --> config
+
+profiler --> config
+
+ui --> common
+ui --> profiler
+ui --> config
+ui --> cache
+ui --> calculator
+ui --> log
+
+theme --> details_dialog
+theme --> deck_browser
+
+details_dialog --> config_ui
+
+browser --> details_dialog
+
+deck_browser --> config_ui
+
+editor --> details_dialog
+
+@enduml
