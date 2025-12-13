@@ -4,8 +4,8 @@ from typing import Optional, Any
 
 from aqt.addons import AddonManager
 
-from ..config.config import Config
-from ..config.settings import Settings
+from .config import Config
+from .settings import Settings
 
 log: Logger = logging.getLogger(__name__)
 

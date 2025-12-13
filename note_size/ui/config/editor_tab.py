@@ -9,7 +9,7 @@ from .widgets import CheckboxWithInfo
 from ...config.level_parser import LevelParser
 from ...config.settings import Settings
 from ...config.url_manager import UrlManager, UrlType
-from ...ui.config.ui_model import UiModel
+from .ui_model import UiModel
 
 log: Logger = logging.getLogger(__name__)
 

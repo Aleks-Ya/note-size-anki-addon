@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Optional, Any
 
 from .config_listener import ConfigListener
-from ..config.level_parser import LevelDict
+from .level_parser import LevelDict
 from ..common.types import SignificantDigits
 
 log: Logger = logging.getLogger(__name__)

@@ -7,7 +7,7 @@ from aqt.browser import Browser
 from aqt.progress import ProgressManager
 
 from .browser_button import BrowserButton
-from ....ui.details_dialog.details_dialog import DetailsDialog
+from ...details_dialog.details_dialog import DetailsDialog
 from ....cache.item_id_cache import ItemIdCache
 from ....cache.size_str_cache import SizeStrCache
 from ....config.config import Config

@@ -5,8 +5,8 @@ from aqt.qt import QVBoxLayout, QWidget, Qt, QUrl, QPushButton, QDesktopServices
 
 from ...config.settings import Settings
 from ...config.url_manager import UrlManager, UrlType
-from ...ui.config.ui_model import UiModel
-from ...ui.config.widgets import TitledComboBoxLayout
+from .ui_model import UiModel
+from .widgets import TitledComboBoxLayout
 from ...log.logs import Logs
 
 log: Logger = logging.getLogger(__name__)

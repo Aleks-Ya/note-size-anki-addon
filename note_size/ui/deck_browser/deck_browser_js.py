@@ -6,7 +6,7 @@ from aqt import mw
 from aqt.mediacheck import check_media_db
 
 from ...config.config import Config
-from ...ui.config.config_ui import ConfigUi
+from ..config.config_ui import ConfigUi
 
 log: Logger = logging.getLogger(__name__)
 

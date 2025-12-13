@@ -23,15 +23,9 @@ class ProfileHook:
 
         from ..config.config import Config
         from ..config.config_loader import ConfigLoader
-        from .config.config_hooks import ConfigHooks
         from ..config.settings import Settings
         from ..config.level_parser import LevelParser
         from ..config.url_manager import UrlManager
-        from ..calculator.size_calculator import SizeCalculator
-        from ..calculator.size_formatter import SizeFormatter
-        from ..calculator.updated_files_calculator import UpdatedFilesCalculator
-        from ..calculator.used_files_calculator import UsedFilesCalculator
-        from ..calculator.db_size_calculator import DbSizeCalculator
         from ..cache.cache_hooks import CacheHooks
         from ..cache.cache_initializer import CacheInitializer
         from ..cache.item_id_cache import ItemIdCache
@@ -40,24 +34,30 @@ class ProfileHook:
         from ..cache.cache_manager import CacheManager
         from ..cache.size_str_cache import SizeStrCache
         from ..cache.file_type_helper import FileTypeHelper
+        from ..calculator.size_calculator import SizeCalculator
+        from ..calculator.size_formatter import SizeFormatter
+        from ..calculator.updated_files_calculator import UpdatedFilesCalculator
+        from ..calculator.used_files_calculator import UsedFilesCalculator
+        from ..calculator.db_size_calculator import DbSizeCalculator
+        from ..log.logs import Logs
+        from .config.config_hooks import ConfigHooks
+        from .config.config_ui import ConfigUi
         from .deck_browser.deck_browser_js import DeckBrowserJs
         from .deck_browser.deck_browser_updater import DeckBrowserUpdater
-        from ..log.logs import Logs
-        from ..ui.config.config_ui import ConfigUi
-        from ..ui.deck_browser.deck_browser_formatter import DeckBrowserFormatter
-        from ..ui.deck_browser.deck_browser_hooks import DeckBrowserHooks
-        from ..ui.deck_browser.trash import Trash
-        from ..ui.details_dialog.details_dialog import DetailsDialog
-        from ..ui.details_dialog.details_model_filler import DetailsModelFiller
-        from ..ui.editor.button.editor_button_formatter import EditorButtonFormatter
-        from ..ui.editor.button.editor_button_hooks import EditorButtonHooks
-        from ..ui.browser.column.column_hooks import ColumnHooks
-        from ..ui.browser.column.item_id_sorter import ItemIdSorter
-        from ..ui.editor.button.editor_button_js import EditorButtonJs
-        from ..ui.editor.button.editor_button_creator import EditorButtonCreator
-        from ..ui.browser.button.browser_hooks import BrowserHooks
-        from ..ui.browser.button.browser_button_manager import BrowserButtonManager
-        from ..ui.theme.theme_hooks import ThemeHooks
+        from .deck_browser.deck_browser_formatter import DeckBrowserFormatter
+        from .deck_browser.deck_browser_hooks import DeckBrowserHooks
+        from .deck_browser.trash import Trash
+        from .details_dialog.details_dialog import DetailsDialog
+        from .details_dialog.details_model_filler import DetailsModelFiller
+        from .editor.button.editor_button_formatter import EditorButtonFormatter
+        from .editor.button.editor_button_hooks import EditorButtonHooks
+        from .editor.button.editor_button_js import EditorButtonJs
+        from .editor.button.editor_button_creator import EditorButtonCreator
+        from .browser.column.column_hooks import ColumnHooks
+        from .browser.column.item_id_sorter import ItemIdSorter
+        from .browser.button.browser_hooks import BrowserHooks
+        from .browser.button.browser_button_manager import BrowserButtonManager
+        from .theme.theme_hooks import ThemeHooks
 
         profile_manager: ProfileManager = mw.pm
         if self.__initialized:

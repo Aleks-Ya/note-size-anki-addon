@@ -8,8 +8,8 @@ from .color_table import ColorTable
 from ...config.level_parser import LevelParser
 from ...config.settings import Settings
 from ...config.url_manager import UrlType, UrlManager
-from ...ui.config.ui_model import UiModel
-from ...ui.config.widgets import GroupVBox, CheckboxWithInfo, InfoButton
+from .ui_model import UiModel
+from .widgets import GroupVBox, CheckboxWithInfo, InfoButton
 
 log: Logger = logging.getLogger(__name__)
 

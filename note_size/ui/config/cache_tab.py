@@ -7,7 +7,7 @@ from .widgets import CheckboxWithInfo
 from ...config.settings import Settings
 from ...cache.cache_initializer import CacheInitializer
 from ...config.url_manager import UrlManager, UrlType
-from ...ui.config.ui_model import UiModel
+from .ui_model import UiModel
 
 log: Logger = logging.getLogger(__name__)
 
