@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           brew update
-          brew install python cairo pango
+          brew install cairo pango
           pip install --upgrade pip tox
       - name: Tox
         run: tox
