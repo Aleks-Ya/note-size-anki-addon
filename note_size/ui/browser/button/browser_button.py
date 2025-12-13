@@ -13,7 +13,7 @@ from ....common.number_formatter import NumberFormatter
 from ...details_dialog.details_dialog import DetailsDialog
 from ...details_dialog.show_details_dialog_op import ShowDetailsDialogOp
 from ....cache.item_id_cache import ItemIdCache
-from ....cache.size_str_cache import SizeStrCache
+from ....cache.note_size_cache import NoteSizeCache
 from ....config.config import Config
 from ....common.types import SizeType, SizeStr, SignificantDigits
 
@@ -22,11 +22,11 @@ log: Logger = logging.getLogger(__name__)
 
 class BrowserButton(QPushButton):
 
-    def __init__(self, item_id_cache: ItemIdCache, size_str_cache: SizeStrCache, details_dialog: DetailsDialog,
+    def __init__(self, item_id_cache: ItemIdCache, note_size_cache: NoteSizeCache, details_dialog: DetailsDialog,
                  browser: Browser, progress_manager: ProgressManager, config: Config) -> None:
         super().__init__()
         self.__item_id_cache: ItemIdCache = item_id_cache
-        self.__size_str_cache: SizeStrCache = size_str_cache
+        self.__note_size_cache: NoteSizeCache = note_size_cache
         self.__details_dialog: DetailsDialog = details_dialog
         self.__browser: Browser = browser
         self.__progress_manager: ProgressManager = progress_manager
@@ -55,7 +55,7 @@ class BrowserButton(QPushButton):
 
     def __show_notes_size(self, note_ids: Sequence[NoteId]) -> None:
         significant_digits: SignificantDigits = self.__config.get_size_button_significant_digits()
-        size: SizeStr = self.__size_str_cache.get_notes_size_str(note_ids, SizeType.TOTAL, significant_digits,
+        size: SizeStr = self.__note_size_cache.get_notes_size_str(note_ids, SizeType.TOTAL, significant_digits,
                                                                  use_cache=True)
         self.setText(size)
         note_ids_number: str = NumberFormatter.with_thousands_separator(len(note_ids))
@@ -68,7 +68,7 @@ class BrowserButton(QPushButton):
     def __show_cards_size(self, card_ids: Sequence[CardId]) -> None:
         note_ids: Sequence[NoteId] = self.__item_ids_to_note_ids(card_ids)
         significant_digits: SignificantDigits = self.__config.get_size_button_significant_digits()
-        size: SizeStr = self.__size_str_cache.get_notes_size_str(note_ids, SizeType.TOTAL, significant_digits,
+        size: SizeStr = self.__note_size_cache.get_notes_size_str(note_ids, SizeType.TOTAL, significant_digits,
                                                                  use_cache=True)
         self.setText(size)
         note_ids_number: str = NumberFormatter.with_thousands_separator(len(note_ids))

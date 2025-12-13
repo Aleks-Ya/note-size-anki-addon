@@ -26,7 +26,7 @@ from note_size.cache.cache_manager import CacheManager
 from note_size.cache.cache_storage import CacheStorage
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
-from note_size.cache.size_str_cache import SizeStrCache
+from note_size.cache.note_size_cache import NoteSizeCache
 from note_size.cache.cache_hooks import CacheHooks
 from note_size.cache.file_type_helper import FileTypeHelper
 from note_size.calculator.size_calculator import SizeCalculator
@@ -202,9 +202,9 @@ def item_id_sorter(item_id_cache: ItemIdCache, size_calculator: SizeCalculator) 
 
 @pytest.fixture
 def editor_button_formatter(config: Config, size_calculator: SizeCalculator, size_formatter: SizeFormatter,
-                            size_str_cache: SizeStrCache, level_parser: LevelParser,
+                            note_size_cache: NoteSizeCache, level_parser: LevelParser,
                             theme_manager: ThemeManager) -> EditorButtonFormatter:
-    return EditorButtonFormatter(size_str_cache, size_calculator, size_formatter, level_parser, theme_manager, config)
+    return EditorButtonFormatter(note_size_cache, size_calculator, size_formatter, level_parser, theme_manager, config)
 
 
 @pytest.fixture
@@ -354,9 +354,9 @@ def editor_button_creator(editor_button_formatter: EditorButtonFormatter,
 
 
 @pytest.fixture
-def browser_button_manager(item_id_cache: ItemIdCache, size_str_cache: SizeStrCache, details_dialog: DetailsDialog,
+def browser_button_manager(item_id_cache: ItemIdCache, note_size_cache: NoteSizeCache, details_dialog: DetailsDialog,
                            progress_manager: ProgressManager, config: Config) -> BrowserButtonManager:
-    return BrowserButtonManager(item_id_cache, size_str_cache, details_dialog, progress_manager, config)
+    return BrowserButtonManager(item_id_cache, note_size_cache, details_dialog, progress_manager, config)
 
 
 @pytest.fixture
@@ -367,14 +367,14 @@ def browser() -> Browser:
 @pytest.fixture
 def cache_manager(media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
                   size_formatter: SizeFormatter, file_type_helper: FileTypeHelper,
-                  size_str_cache: SizeStrCache, updated_files_calculator: UpdatedFilesCalculator) -> CacheManager:
-    return CacheManager(media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, size_str_cache,
+                  note_size_cache: NoteSizeCache, updated_files_calculator: UpdatedFilesCalculator) -> CacheManager:
+    return CacheManager(media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, note_size_cache,
                         updated_files_calculator)
 
 
 @pytest.fixture
-def size_str_cache(size_calculator: SizeCalculator, size_formatter: SizeFormatter) -> SizeStrCache:
-    return SizeStrCache(size_calculator, size_formatter)
+def note_size_cache(size_calculator: SizeCalculator, size_formatter: SizeFormatter) -> NoteSizeCache:
+    return NoteSizeCache(size_calculator, size_formatter)
 
 
 @pytest.fixture
@@ -433,9 +433,9 @@ def deck_browser_hooks(deck_browser_updater: DeckBrowserUpdater,
 
 
 @pytest.fixture
-def column_hooks(item_id_cache: ItemIdCache, size_str_cache: SizeStrCache, item_id_sorter: ItemIdSorter,
+def column_hooks(item_id_cache: ItemIdCache, note_size_cache: NoteSizeCache, item_id_sorter: ItemIdSorter,
                  config: Config) -> Generator[ColumnHooks, None, None]:
-    column_hooks: ColumnHooks = ColumnHooks(item_id_cache, size_str_cache, item_id_sorter, config)
+    column_hooks: ColumnHooks = ColumnHooks(item_id_cache, note_size_cache, item_id_sorter, config)
     yield column_hooks
     column_hooks.remove_hooks()
 

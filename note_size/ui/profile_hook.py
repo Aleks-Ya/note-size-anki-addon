@@ -32,7 +32,7 @@ class ProfileHook:
         from ..cache.media_cache import MediaCache
         from ..cache.cache_storage import CacheStorage
         from ..cache.cache_manager import CacheManager
-        from ..cache.size_str_cache import SizeStrCache
+        from ..cache.note_size_cache import NoteSizeCache
         from ..cache.file_type_helper import FileTypeHelper
         from ..calculator.size_calculator import SizeCalculator
         from ..calculator.size_formatter import SizeFormatter
@@ -88,13 +88,13 @@ class ProfileHook:
         size_formatter: SizeFormatter = SizeFormatter()
         item_id_cache: ItemIdCache = ItemIdCache(self.__collection_holder)
         item_id_sorter: ItemIdSorter = ItemIdSorter(item_id_cache, size_calculator)
-        size_str_cache: SizeStrCache = SizeStrCache(size_calculator, size_formatter)
-        column_hooks: ColumnHooks = ColumnHooks(item_id_cache, size_str_cache, item_id_sorter, config)
+        note_size_cache: NoteSizeCache = NoteSizeCache(size_calculator, size_formatter)
+        column_hooks: ColumnHooks = ColumnHooks(item_id_cache, note_size_cache, item_id_sorter, config)
         column_hooks.setup_hooks()
         level_parser: LevelParser = LevelParser(size_formatter)
         theme_manager: ThemeManager = theme.theme_manager
         editor_button_formatter: EditorButtonFormatter = EditorButtonFormatter(
-            size_str_cache, size_calculator, size_formatter, level_parser, theme_manager, config)
+            note_size_cache, size_calculator, size_formatter, level_parser, theme_manager, config)
         trash: Trash = Trash(self.__collection_holder)
         current_cache_version: int = 1
         cache_storage: CacheStorage = CacheStorage(current_cache_version, settings)
@@ -103,7 +103,7 @@ class ProfileHook:
                                                                                   size_calculator,
                                                                                   media_cache)
         cache_manager: CacheManager = CacheManager(
-            media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, size_str_cache,
+            media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, note_size_cache,
             updated_files_calculator)
         deck_browser: DeckBrowser = mw.deckBrowser
         progress_manager: ProgressManager = mw.progress
@@ -139,7 +139,7 @@ class ProfileHook:
         config_hooks: ConfigHooks = ConfigHooks(config_ui, desktop_services, url_manager)
         config_hooks.setup_hooks()
         browser_button_manager: BrowserButtonManager = BrowserButtonManager(
-            item_id_cache, size_str_cache, details_dialog, progress_manager, config)
+            item_id_cache, note_size_cache, details_dialog, progress_manager, config)
         browser_hooks: BrowserHooks = BrowserHooks(browser_button_manager, config)
         browser_hooks.setup_hooks()
         theme_hooks: ThemeHooks = ThemeHooks(deck_browser_updater, details_dialog)

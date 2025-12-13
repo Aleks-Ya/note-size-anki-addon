@@ -11,7 +11,7 @@ from note_size.cache.cache import Cache
 from note_size.cache.cache_storage import CacheStorage
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
-from note_size.cache.size_str_cache import SizeStrCache
+from note_size.cache.note_size_cache import NoteSizeCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.calculator.size_formatter import SizeFormatter
 from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
@@ -26,7 +26,7 @@ from tests.data import Data, MediaFiles, Digits
 def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, collection_holder: CollectionHolder,
                                item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
                                size_formatter: SizeFormatter, file_type_helper: FileTypeHelper,
-                               size_str_cache: SizeStrCache, updated_files_calculator: UpdatedFilesCalculator,
+                               note_size_cache: NoteSizeCache, updated_files_calculator: UpdatedFilesCalculator,
                                config: Config, settings: Settings, media_cache: MediaCache):
     card1: Card = td.create_card_with_files()
     card2: Card = td.create_card_without_files()
@@ -40,12 +40,12 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, collection
 
     file_type_helper.get_file_type(MediaFiles.image, use_cache=True)
 
-    size_str_cache.get_note_size_str(card1.nid, SizeType.TOTAL, Digits.one, use_cache=True)
-    size_str_cache.get_note_size_str(card2.nid, SizeType.TEXTS, Digits.one, use_cache=True)
-    size_str_cache.get_note_size_str(card2.nid, SizeType.FILES, Digits.one, use_cache=True)
+    note_size_cache.get_note_size_str(card1.nid, SizeType.TOTAL, Digits.one, use_cache=True)
+    note_size_cache.get_note_size_str(card2.nid, SizeType.TEXTS, Digits.one, use_cache=True)
+    note_size_cache.get_note_size_str(card2.nid, SizeType.FILES, Digits.one, use_cache=True)
 
     cache_storage.save_caches_to_file(
-        [media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, size_str_cache,
+        [media_cache, item_id_cache, size_calculator, size_formatter, file_type_helper, note_size_cache,
          updated_files_calculator])
 
     media_cache_2: MediaCache = MediaCache(collection_holder, config)
@@ -53,12 +53,12 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, collection
     size_calculator_2: SizeCalculator = SizeCalculator(collection_holder, media_cache_2)
     size_formatter_2: SizeFormatter = SizeFormatter()
     file_type_helper_2: FileTypeHelper = FileTypeHelper()
-    size_str_cache_2: SizeStrCache = SizeStrCache(size_calculator_2, size_formatter_2)
+    note_size_cache_2: NoteSizeCache = NoteSizeCache(size_calculator_2, size_formatter_2)
     updated_files_calculator_2: UpdatedFilesCalculator = UpdatedFilesCalculator(collection_holder, size_calculator_2,
                                                                                 media_cache_2)
     assert item_id_cache_2.as_dict_list() == [{}]
     read_success: bool = cache_storage.read_caches_from_file(
-        [media_cache_2, item_id_cache_2, size_calculator_2, size_formatter_2, file_type_helper_2, size_str_cache_2,
+        [media_cache_2, item_id_cache_2, size_calculator_2, size_formatter_2, file_type_helper_2, note_size_cache_2,
          updated_files_calculator_2])
     assert read_success
     assert media_cache_2.as_dict_list() == [{MediaFiles.animation: FileSize(SizeBytes(9)),
@@ -80,7 +80,7 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, collection
                                                 SizeBytes(70): {Digits.one: '70 B'},
                                                 SizeBytes(143): {Digits.one: '143 B'}}]
     assert file_type_helper_2.as_dict_list() == [{MediaFiles.image: FileType.IMAGE}]
-    assert size_str_cache_2.as_dict_list() == [{SizeType.TOTAL: {card1.nid: {Digits.one: '143 B'}},
+    assert note_size_cache_2.as_dict_list() == [{SizeType.TOTAL: {card1.nid: {Digits.one: '143 B'}},
                                                 SizeType.TEXTS: {card2.nid: {Digits.one: '70 B'}},
                                                 SizeType.FILES: {card2.nid: {Digits.one: '0 B'}}}]
 

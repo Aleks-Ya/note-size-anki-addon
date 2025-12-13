@@ -11,7 +11,7 @@ from aqt.browser import ItemId, CellRow
 from .item_id_sorter import ItemIdSorter
 from ...common.browser_helper import BrowserHelper
 from ....cache.item_id_cache import ItemIdCache
-from ....cache.size_str_cache import SizeStrCache
+from ....cache.note_size_cache import NoteSizeCache
 from ....config.config import Config
 from ....common.types import SizeType, SignificantDigits
 
@@ -29,10 +29,10 @@ class ColumnHooks:
     __column_files_label: str = "Size (files)"
     __column_files_tooltip: str = "Note size (files only, texts are not included)"
 
-    def __init__(self, item_id_cache: ItemIdCache, size_str_cache: SizeStrCache, item_id_sorter: ItemIdSorter,
+    def __init__(self, item_id_cache: ItemIdCache, note_size_cache: NoteSizeCache, item_id_sorter: ItemIdSorter,
                  config: Config) -> None:
         self.__item_id_cache: ItemIdCache = item_id_cache
-        self.__size_str_cache: SizeStrCache = size_str_cache
+        self.__note_size_cache: NoteSizeCache = note_size_cache
         self.__item_id_sorter: ItemIdSorter = item_id_sorter
         self.__config: Config = config
         self.__hook_browser_did_fetch_columns: Callable[[dict[str, Column]], None] = ColumnHooks.__add_custom_column
@@ -92,7 +92,7 @@ class ColumnHooks:
             column_index: int = columns.index(column_key)
             cell: Cell = row.cells[column_index]
             significant_digits: SignificantDigits = self.__config.get_browser_significant_digits()
-            cell.text = self.__size_str_cache.get_note_size_str(note_id, size_type, significant_digits, use_cache=True)
+            cell.text = self.__note_size_cache.get_note_size_str(note_id, size_type, significant_digits, use_cache=True)
 
     @staticmethod
     def __on_browser_will_search(context: SearchContext) -> None:

@@ -32,7 +32,7 @@ package NoteSizeAddon {
         class CacheHooks
         class ItemIdCache #red {
             id_cache: dict[CardId, NoteId]
-            size_str_caches: dict[SizeType, dict[NoteId, SizeStr]]
+            note_size_caches: dict[SizeType, dict[NoteId, SizeStr]]
             file_note_ids_cache: dict[MediaFile, set[NoteId]]
         }
         class MediaCache #green {
@@ -40,7 +40,7 @@ package NoteSizeAddon {
         }
         class CacheInitializer
         class CacheStorage
-        class SizeStrCache
+        class NoteSizeCache
     }
 
     package ui {
@@ -63,7 +63,7 @@ EditorButtonHooks --> EditorButtonFormatter
 
 ColumnHooks --> ItemIdCache #red
 ColumnHooks --> ItemIdSorter
-ColumnHooks --> SizeStrCache
+ColumnHooks --> NoteSizeCache
 
 ItemIdSorter --> ItemIdCache #red
 ItemIdSorter --> SizeCalculator #orange
@@ -75,18 +75,18 @@ CacheManager --> MediaCache #green
 CacheManager --> ItemIdCache #red
 CacheManager --> SizeCalculator #orange
 CacheManager --> SizeFormatter #brown
-CacheManager --> SizeStrCache
+CacheManager --> NoteSizeCache
 
 CacheHooks --> ItemIdCache #red
 CacheHooks --> SizeCalculator #orange
 
-SizeStrCache --> Collection
-SizeStrCache --> SizeCalculator
-SizeStrCache --> SizeFormatter
+NoteSizeCache --> Collection
+NoteSizeCache --> SizeCalculator
+NoteSizeCache --> SizeFormatter
 
 Collection --> SQLite
 
-EditorButtonFormatter --> SizeStrCache
+EditorButtonFormatter --> NoteSizeCache
 EditorButtonFormatter --> SizeCalculator #orange
 EditorButtonFormatter --> SizeFormatter #brown
 
