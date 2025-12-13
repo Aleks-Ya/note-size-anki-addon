@@ -8,7 +8,7 @@ from note_size.cache.media_cache import MediaCache
 from note_size.cache.note_size_cache import NoteSizeCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.cache.bytes_size_cache import BytesSizeCache
-from note_size.calculator.updated_files_cache import UpdatedFilesCache
+from note_size.cache.updated_files_cache import UpdatedFilesCache
 from note_size.common.types import SizeType, SizeBytes
 from note_size.cache.file_type_helper import FileTypeHelper
 from tests import wait_until

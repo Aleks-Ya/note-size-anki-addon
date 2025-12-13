@@ -9,7 +9,7 @@ from .media_cache import MediaCache
 from .note_size_cache import NoteSizeCache
 from ..calculator.size_calculator import SizeCalculator
 from .bytes_size_cache import BytesSizeCache
-from ..calculator.updated_files_cache import UpdatedFilesCache
+from .updated_files_cache import UpdatedFilesCache
 from .file_type_helper import FileTypeHelper
 
 log: Logger = logging.getLogger(__name__)

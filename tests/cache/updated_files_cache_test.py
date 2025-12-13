@@ -1,7 +1,7 @@
 from anki.notes import Note, NoteId
 
 from note_size.cache.media_cache import MediaCache
-from note_size.calculator.updated_files_cache import UpdatedFilesCache
+from note_size.cache.updated_files_cache import UpdatedFilesCache
 from note_size.common.types import FileContent
 from tests.data import Data, DefaultFields, MediaFiles, FileContents
 
@@ -63,20 +63,20 @@ def test_evict_note(updated_files_cache: UpdatedFilesCache, td: Data):
     td.write_file(MediaFiles.picture, "new content")
     updated_files_cache.get_notes_having_updated_files()
     assert updated_files_cache.as_dict_list() == [{MediaFiles.animation: {note1.id},
-                                                        MediaFiles.image: {note2.id},
-                                                        MediaFiles.movie: {note3.id},
-                                                        MediaFiles.photo: {note3.id},
-                                                        MediaFiles.picture: {note1.id, note2.id},
-                                                        MediaFiles.sound: {note1.id, note2.id},
-                                                        MediaFiles.video: {note2.id}}]
+                                                   MediaFiles.image: {note2.id},
+                                                   MediaFiles.movie: {note3.id},
+                                                   MediaFiles.photo: {note3.id},
+                                                   MediaFiles.picture: {note1.id, note2.id},
+                                                   MediaFiles.sound: {note1.id, note2.id},
+                                                   MediaFiles.video: {note2.id}}]
     updated_files_cache.evict_note(note1.id)
     assert updated_files_cache.as_dict_list() == [{MediaFiles.animation: set(),
-                                                        MediaFiles.image: {note2.id},
-                                                        MediaFiles.movie: {note3.id},
-                                                        MediaFiles.photo: {note3.id},
-                                                        MediaFiles.picture: {note2.id},
-                                                        MediaFiles.sound: {note2.id},
-                                                        MediaFiles.video: {note2.id}}]
+                                                   MediaFiles.image: {note2.id},
+                                                   MediaFiles.movie: {note3.id},
+                                                   MediaFiles.photo: {note3.id},
+                                                   MediaFiles.picture: {note2.id},
+                                                   MediaFiles.sound: {note2.id},
+                                                   MediaFiles.video: {note2.id}}]
 
 
 def test_initialized(updated_files_cache: UpdatedFilesCache):

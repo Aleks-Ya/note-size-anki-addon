@@ -8,7 +8,7 @@ from aqt import gui_hooks
 from note_size.cache.cache_hooks import CacheHooks
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
-from note_size.calculator.updated_files_cache import UpdatedFilesCache
+from note_size.cache.updated_files_cache import UpdatedFilesCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.common.types import SizeType, FileSize, SizeBytes
 from tests.conftest import assert_no_hooks

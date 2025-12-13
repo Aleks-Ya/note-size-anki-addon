@@ -14,7 +14,7 @@ from note_size.cache.media_cache import MediaCache
 from note_size.cache.note_size_cache import NoteSizeCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.cache.bytes_size_cache import BytesSizeCache
-from note_size.calculator.updated_files_cache import UpdatedFilesCache
+from note_size.cache.updated_files_cache import UpdatedFilesCache
 from note_size.common.collection_holder import CollectionHolder
 from note_size.config.config import Config
 from note_size.config.settings import Settings

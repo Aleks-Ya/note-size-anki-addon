@@ -10,7 +10,7 @@ from aqt import gui_hooks
 
 from .cache_initializer import CacheInitializer
 from .cache_manager import CacheManager
-from ..calculator.updated_files_cache import UpdatedFilesCache
+from .updated_files_cache import UpdatedFilesCache
 
 log: Logger = logging.getLogger(__name__)
 

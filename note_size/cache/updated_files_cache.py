@@ -4,11 +4,11 @@ from typing import Any
 
 from anki.notes import NoteId
 
-from ..cache.cache import Cache
-from ..cache.media_cache import MediaCache
+from .cache import Cache
+from .media_cache import MediaCache
 from ..common.collection_holder import CollectionHolder
 from ..common.types import MediaFile
-from .size_calculator import SizeCalculator
+from ..calculator.size_calculator import SizeCalculator
 
 log: Logger = logging.getLogger(__name__)
 
