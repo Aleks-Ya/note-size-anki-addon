@@ -19,7 +19,7 @@ from note_size.common.collection_holder import CollectionHolder
 from note_size.config.config import Config
 from note_size.config.settings import Settings
 from note_size.common.types import SizeType, FileType, FileSize, SizeBytes
-from note_size.ui.details_dialog.file_type_helper import FileTypeHelper
+from note_size.cache.file_type_helper import FileTypeHelper
 from tests.data import Data, MediaFiles, Digits
 
 

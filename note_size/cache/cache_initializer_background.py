@@ -15,7 +15,7 @@ from ..calculator.size_calculator import SizeCalculator
 from ..config.config import Config
 from ..common.types import SizeType, MediaFile, SignificantDigits
 from ..common.number_formatter import NumberFormatter
-from ..ui.details_dialog.file_type_helper import FileTypeHelper
+from .file_type_helper import FileTypeHelper
 
 log: Logger = logging.getLogger(__name__)
 

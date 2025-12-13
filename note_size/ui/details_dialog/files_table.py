@@ -6,7 +6,7 @@ from aqt import colors, props
 from aqt.qt import QTableWidget, Qt, QTableWidgetItem, QIcon, QHeaderView
 from aqt.theme import ThemeManager
 
-from .file_type_helper import FileTypeHelper
+from ...cache.file_type_helper import FileTypeHelper
 from .icon_table_widget_item import IconTableWidgetItem
 from .size_table_widget_item import SizeTableWidgetItem
 from ...calculator.size_formatter import SizeFormatter

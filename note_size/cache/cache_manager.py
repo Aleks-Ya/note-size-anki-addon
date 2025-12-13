@@ -10,7 +10,7 @@ from .size_str_cache import SizeStrCache
 from ..calculator.size_calculator import SizeCalculator
 from ..calculator.size_formatter import SizeFormatter
 from ..calculator.updated_files_calculator import UpdatedFilesCalculator
-from ..ui.details_dialog.file_type_helper import FileTypeHelper
+from .file_type_helper import FileTypeHelper
 
 log: Logger = logging.getLogger(__name__)
 

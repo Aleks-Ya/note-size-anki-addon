@@ -39,6 +39,7 @@ class ProfileHook:
         from ..cache.cache_storage import CacheStorage
         from ..cache.cache_manager import CacheManager
         from ..cache.size_str_cache import SizeStrCache
+        from ..cache.file_type_helper import FileTypeHelper
         from .deck_browser.deck_browser_js import DeckBrowserJs
         from .deck_browser.deck_browser_updater import DeckBrowserUpdater
         from ..log.logs import Logs
@@ -48,7 +49,6 @@ class ProfileHook:
         from ..ui.deck_browser.trash import Trash
         from ..ui.details_dialog.details_dialog import DetailsDialog
         from ..ui.details_dialog.details_model_filler import DetailsModelFiller
-        from ..ui.details_dialog.file_type_helper import FileTypeHelper
         from ..ui.editor.button.editor_button_formatter import EditorButtonFormatter
         from ..ui.editor.button.editor_button_hooks import EditorButtonHooks
         from ..ui.browser.column.column_hooks import ColumnHooks

@@ -16,7 +16,7 @@ from ...calculator.size_formatter import SizeFormatter
 from ...config.config import Config
 from ..config.config_ui import ConfigUi
 from ...config.settings import Settings
-from .file_type_helper import FileTypeHelper
+from ...cache.file_type_helper import FileTypeHelper
 
 log: Logger = logging.getLogger(__name__)
 
