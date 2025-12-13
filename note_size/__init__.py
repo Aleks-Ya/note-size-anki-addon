@@ -1,6 +1,6 @@
 from aqt import gui_hooks
 
-from .common.collection_holder import CollectionHolder
+from .core.common.collection_holder import CollectionHolder
 from .ui.profile_hook import ProfileHook
 
 collection_holder: CollectionHolder = CollectionHolder()

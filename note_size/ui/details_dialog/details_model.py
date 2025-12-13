@@ -1,4 +1,4 @@
-from ...common.types import MediaFile, FileSize
+from ...core.common.types import MediaFile, FileSize
 
 
 class DetailsModel:

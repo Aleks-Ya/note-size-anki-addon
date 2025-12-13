@@ -9,7 +9,7 @@ from note_size.cache.str_note_size_cache import StrNoteSizeCache
 from note_size.cache.bytes_note_size_cache import BytesNoteSizeCache
 from note_size.cache.bytes_size_cache import BytesSizeCache
 from note_size.cache.updated_files_cache import UpdatedFilesCache
-from note_size.common.types import SizeType, SizeBytes
+from note_size.core.common.types import SizeType, SizeBytes
 from note_size.cache.file_type_helper import FileTypeHelper
 from tests import wait_until
 from tests.conftest import item_id_cache

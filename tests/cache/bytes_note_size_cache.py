@@ -8,7 +8,7 @@ from anki.notes import Note, NoteId
 from pytest import raises
 
 from note_size.cache.bytes_note_size_cache import BytesNoteSizeCache
-from note_size.common.types import SizeBytes, MediaFile, SizeType, FileSize
+from note_size.core.common.types import SizeBytes, MediaFile, SizeType, FileSize
 from tests.data import Data, DefaultFields, MediaFiles, FileContents
 
 

@@ -3,7 +3,7 @@ from logging import Logger
 from pathlib import Path
 from typing import Optional
 
-from ..common.collection_holder import CollectionHolder
+from ..core.common.collection_holder import CollectionHolder
 from ..profiler.profiler import Profiler
 
 

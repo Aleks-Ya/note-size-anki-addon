@@ -2,8 +2,8 @@ import logging
 from logging import Logger
 from pathlib import Path
 
-from ...common.collection_holder import CollectionHolder
-from ...common.types import FilesNumber, SizeBytes
+from ...core.common.collection_holder import CollectionHolder
+from ...core.common.types import FilesNumber, SizeBytes
 
 log: Logger = logging.getLogger(__name__)
 

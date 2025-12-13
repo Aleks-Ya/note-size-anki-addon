@@ -3,8 +3,8 @@ import sys
 from logging import Logger
 from typing import Optional, NewType
 
-from ..common.size_formatter import SizeFormatter
-from ..common.types import SizeStr, SizeBytes, SignificantDigits, ColorName
+from ..core.common.size_formatter import SizeFormatter
+from ..core.common.types import SizeStr, SizeBytes, SignificantDigits, ColorName
 
 log: Logger = logging.getLogger(__name__)
 

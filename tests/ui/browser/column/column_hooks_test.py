@@ -6,7 +6,7 @@ from aqt import gui_hooks
 from aqt.browser import Column, ItemId, CellRow, SearchContext
 from mock.mock import MagicMock
 
-from note_size.common.collection_holder import CollectionHolder
+from note_size.core.common.collection_holder import CollectionHolder
 from note_size.ui.browser.column.column_hooks import ColumnHooks
 from tests.conftest import assert_no_hooks
 from tests.data import Data, DefaultFields

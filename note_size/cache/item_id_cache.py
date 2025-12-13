@@ -6,7 +6,7 @@ from anki.cards import CardId, Card
 from anki.notes import NoteId
 
 from .cache import Cache
-from ..common.collection_holder import CollectionHolder
+from ..core.common.collection_holder import CollectionHolder
 
 log: Logger = logging.getLogger(__name__)
 

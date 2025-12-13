@@ -11,7 +11,7 @@ from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.bytes_size_cache import BytesSizeCache
 from note_size.ui.deck_browser.deck_browser_formatter import DeckBrowserFormatter
 from note_size.ui.deck_browser.trash import Trash
-from note_size.common.types import MediaFile, SizeBytes
+from note_size.core.common.types import MediaFile, SizeBytes
 from tests.data import Data, Digits
 
 web_path: str = os.path.join("_addons", "1188705668", "ui", "web")

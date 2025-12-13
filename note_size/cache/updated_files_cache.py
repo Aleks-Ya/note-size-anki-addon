@@ -6,8 +6,8 @@ from anki.notes import NoteId
 
 from .cache import Cache
 from .media_cache import MediaCache
-from ..common.collection_holder import CollectionHolder
-from ..common.types import MediaFile
+from ..core.common.collection_holder import CollectionHolder
+from ..core.common.types import MediaFile
 from .bytes_note_size_cache import BytesNoteSizeCache
 
 log: Logger = logging.getLogger(__name__)

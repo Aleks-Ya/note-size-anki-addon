@@ -1,7 +1,7 @@
 import sys
 
 from note_size.config.level_parser import LevelParser, Level, LevelDict
-from note_size.common.types import SizeBytes, SizeStr
+from note_size.core.common.types import SizeBytes, SizeStr
 from tests.data import Colors
 
 

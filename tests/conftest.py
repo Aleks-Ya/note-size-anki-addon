@@ -17,7 +17,7 @@ from mock.mock import MagicMock
 from pytestqt.qtbot import QtBot
 
 from note_size.calculator.db_size_calculator import DbSizeCalculator
-from note_size.common.collection_holder import CollectionHolder
+from note_size.core.common.collection_holder import CollectionHolder
 
 utils.tr = MagicMock()
 from aqt.deckbrowser import DeckBrowser

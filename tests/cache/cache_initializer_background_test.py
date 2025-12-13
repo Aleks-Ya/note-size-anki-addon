@@ -13,7 +13,7 @@ from note_size.cache.media_cache import MediaCache
 from note_size.cache.bytes_note_size_cache import BytesNoteSizeCache
 from note_size.cache.bytes_size_cache import BytesSizeCache
 from note_size.config.config import Config
-from note_size.common.types import FileType, SizeType, FileSize, SizeBytes
+from note_size.core.common.types import FileType, SizeType, FileSize, SizeBytes
 from note_size.cache.file_type_helper import FileTypeHelper
 from tests.conftest import cache_manager
 from tests.data import Data, MediaFiles, Digits

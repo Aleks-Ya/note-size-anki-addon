@@ -12,7 +12,7 @@ from .size_table_widget_item import SizeTableWidgetItem
 from ...cache.bytes_size_cache import BytesSizeCache
 from ...config.config import Config
 from ...config.settings import Settings
-from ...common.types import MediaFile, SizeStr, FileType, FileSize, SignificantDigits, ColorName
+from ...core.common.types import MediaFile, SizeStr, FileType, FileSize, SignificantDigits, ColorName
 
 log: Logger = logging.getLogger(__name__)
 

@@ -6,12 +6,12 @@ from typing import Sequence
 from anki.notes import Note, NoteId
 
 from .details_model import DetailsModel
-from ...common.number_formatter import NumberFormatter
+from ...core.common.number_formatter import NumberFormatter
 from ...cache.media_cache import MediaCache
 from ...cache.bytes_note_size_cache import BytesNoteSizeCache
 from ...cache.bytes_size_cache import BytesSizeCache
 from ...config.config import Config
-from ...common.types import SizeStr, SizeBytes, MediaFile, SizeType, FileSize, SignificantDigits
+from ...core.common.types import SizeStr, SizeBytes, MediaFile, SizeType, FileSize, SignificantDigits
 
 log: Logger = logging.getLogger(__name__)
 

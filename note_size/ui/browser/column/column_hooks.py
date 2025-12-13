@@ -13,7 +13,7 @@ from ..browser_helper import BrowserHelper
 from ....cache.item_id_cache import ItemIdCache
 from ....cache.str_note_size_cache import StrNoteSizeCache
 from ....config.config import Config
-from ....common.types import SizeType, SignificantDigits
+from ....core.common.types import SizeType, SignificantDigits
 
 log: Logger = logging.getLogger(__name__)
 

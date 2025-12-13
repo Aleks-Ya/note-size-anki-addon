@@ -2,8 +2,8 @@ import timeit
 
 import pytest
 
-from note_size.common.size_formatter import SizeFormatter
-from note_size.common.types import SizeBytes, SizeStr, SignificantDigits
+from note_size.core.common.size_formatter import SizeFormatter
+from note_size.core.common.types import SizeBytes, SizeStr, SignificantDigits
 from tests.data import Digits
 
 

@@ -1,7 +1,7 @@
 import logging
 from logging import Logger
 
-from ....common.types import ColorName
+from ....core.common.types import ColorName
 
 log: Logger = logging.getLogger(__name__)
 
