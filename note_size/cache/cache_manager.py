@@ -9,7 +9,7 @@ from .media_cache import MediaCache
 from .note_size_cache import NoteSizeCache
 from ..calculator.size_calculator import SizeCalculator
 from .bytes_size_cache import BytesSizeCache
-from ..calculator.updated_files_calculator import UpdatedFilesCalculator
+from ..calculator.updated_files_cache import UpdatedFilesCache
 from .file_type_helper import FileTypeHelper
 
 log: Logger = logging.getLogger(__name__)
@@ -18,17 +18,17 @@ log: Logger = logging.getLogger(__name__)
 class CacheManager:
     def __init__(self, media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
                  bytes_size_cache: BytesSizeCache, file_type_helper: FileTypeHelper, note_size_cache: NoteSizeCache,
-                 updated_files_calculator: UpdatedFilesCalculator) -> None:
+                 updated_files_cache: UpdatedFilesCache) -> None:
         self.__media_cache: MediaCache = media_cache
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__size_calculator: SizeCalculator = size_calculator
         self.__bytes_size_cache: BytesSizeCache = bytes_size_cache
         self.__file_type_helper: FileTypeHelper = file_type_helper
         self.__note_size_cache: NoteSizeCache = note_size_cache
-        self.__updated_files_calculator: UpdatedFilesCalculator = updated_files_calculator
+        self.__updated_files_cache: UpdatedFilesCache = updated_files_cache
         self.__caches: list[Cache] = [self.__media_cache, self.__item_id_cache, self.__bytes_size_cache,
                                       self.__size_calculator, self.__file_type_helper, self.__note_size_cache,
-                                      self.__updated_files_calculator]
+                                      self.__updated_files_cache]
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def get_caches(self) -> list[Cache]:
@@ -56,7 +56,7 @@ class CacheManager:
         self.__item_id_cache.evict_note(note_id)
         self.__size_calculator.evict_note(note_id)
         self.__note_size_cache.evict_note(note_id)
-        self.__updated_files_calculator.evict_note(note_id)
+        self.__updated_files_cache.evict_note(note_id)
 
     def get_item_id_cache(self) -> ItemIdCache:
         return self.__item_id_cache
@@ -73,8 +73,8 @@ class CacheManager:
     def get_bytes_size_cache(self) -> BytesSizeCache:
         return self.__bytes_size_cache
 
-    def get_updated_files_calculator(self) -> UpdatedFilesCalculator:
-        return self.__updated_files_calculator
+    def get_updated_files_cache(self) -> UpdatedFilesCache:
+        return self.__updated_files_cache
 
     def __del__(self):
         log.debug(f"{self.__class__.__name__} was deleted")

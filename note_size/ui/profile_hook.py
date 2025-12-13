@@ -36,7 +36,7 @@ class ProfileHook:
         from ..cache.file_type_helper import FileTypeHelper
         from ..calculator.size_calculator import SizeCalculator
         from ..cache.bytes_size_cache import BytesSizeCache
-        from ..calculator.updated_files_calculator import UpdatedFilesCalculator
+        from ..calculator.updated_files_cache import UpdatedFilesCache
         from ..calculator.used_files_calculator import UsedFilesCalculator
         from ..calculator.db_size_calculator import DbSizeCalculator
         from ..log.logs import Logs
@@ -99,12 +99,12 @@ class ProfileHook:
         current_cache_version: int = 1
         cache_storage: CacheStorage = CacheStorage(current_cache_version, settings)
         file_type_helper: FileTypeHelper = FileTypeHelper()
-        updated_files_calculator: UpdatedFilesCalculator = UpdatedFilesCalculator(self.__collection_holder,
+        updated_files_cache: UpdatedFilesCache = UpdatedFilesCache(self.__collection_holder,
                                                                                   size_calculator,
                                                                                   media_cache)
         cache_manager: CacheManager = CacheManager(
             media_cache, item_id_cache, size_calculator, bytes_size_cache, file_type_helper, note_size_cache,
-            updated_files_calculator)
+            updated_files_cache)
         deck_browser: DeckBrowser = mw.deckBrowser
         progress_manager: ProgressManager = mw.progress
         task_manager: TaskManager = mw.taskman
@@ -134,7 +134,7 @@ class ProfileHook:
         deck_browser_updater: DeckBrowserUpdater = DeckBrowserUpdater(deck_browser, deck_browser_formatter, config)
         deck_browser_hooks: DeckBrowserHooks = DeckBrowserHooks(deck_browser_updater, deck_browser_js)
         deck_browser_hooks.setup_hooks()
-        cache_hooks: CacheHooks = CacheHooks(cache_manager, cache_initializer, updated_files_calculator)
+        cache_hooks: CacheHooks = CacheHooks(cache_manager, cache_initializer, updated_files_cache)
         cache_hooks.setup_hooks()
         config_hooks: ConfigHooks = ConfigHooks(config_ui, desktop_services, url_manager)
         config_hooks.setup_hooks()

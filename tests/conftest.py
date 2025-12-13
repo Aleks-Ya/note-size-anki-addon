@@ -31,7 +31,7 @@ from note_size.cache.cache_hooks import CacheHooks
 from note_size.cache.file_type_helper import FileTypeHelper
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.cache.bytes_size_cache import BytesSizeCache
-from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
+from note_size.calculator.updated_files_cache import UpdatedFilesCache
 from note_size.calculator.used_files_calculator import UsedFilesCalculator
 from note_size.ui.config.config_hooks import ConfigHooks
 from note_size.config.config import Config
@@ -368,10 +368,10 @@ def browser() -> Browser:
 @pytest.fixture
 def cache_manager(media_cache: MediaCache, item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
                   bytes_size_cache: BytesSizeCache, file_type_helper: FileTypeHelper,
-                  note_size_cache: NoteSizeCache, updated_files_calculator: UpdatedFilesCalculator) -> CacheManager:
+                  note_size_cache: NoteSizeCache, updated_files_cache: UpdatedFilesCache) -> CacheManager:
     return CacheManager(media_cache, item_id_cache, size_calculator, bytes_size_cache, file_type_helper,
                         note_size_cache,
-                        updated_files_calculator)
+                        updated_files_cache)
 
 
 @pytest.fixture
@@ -386,9 +386,9 @@ def used_files_calculator(collection_holder: CollectionHolder, size_calculator: 
 
 
 @pytest.fixture
-def updated_files_calculator(collection_holder: CollectionHolder, size_calculator: SizeCalculator,
-                             media_cache: MediaCache) -> UpdatedFilesCalculator:
-    return UpdatedFilesCalculator(collection_holder, size_calculator, media_cache)
+def updated_files_cache(collection_holder: CollectionHolder, size_calculator: SizeCalculator,
+                             media_cache: MediaCache) -> UpdatedFilesCache:
+    return UpdatedFilesCache(collection_holder, size_calculator, media_cache)
 
 
 @pytest.fixture
@@ -412,8 +412,8 @@ def editor_button_hooks(editor_button_creator: EditorButtonCreator, editor_butto
 
 @pytest.fixture
 def cache_hooks(cache_manager: CacheManager, cache_initializer: CacheInitializer,
-                updated_files_calculator: UpdatedFilesCalculator) -> Generator[CacheHooks, None, None]:
-    cache_hooks: CacheHooks = CacheHooks(cache_manager, cache_initializer, updated_files_calculator)
+                updated_files_cache: UpdatedFilesCache) -> Generator[CacheHooks, None, None]:
+    cache_hooks: CacheHooks = CacheHooks(cache_manager, cache_initializer, updated_files_cache)
     yield cache_hooks
     cache_hooks.remove_hooks()
 

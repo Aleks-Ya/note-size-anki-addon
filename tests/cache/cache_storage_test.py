@@ -14,7 +14,7 @@ from note_size.cache.media_cache import MediaCache
 from note_size.cache.note_size_cache import NoteSizeCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.cache.bytes_size_cache import BytesSizeCache
-from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
+from note_size.calculator.updated_files_cache import UpdatedFilesCache
 from note_size.common.collection_holder import CollectionHolder
 from note_size.config.config import Config
 from note_size.config.settings import Settings
@@ -26,7 +26,7 @@ from tests.data import Data, MediaFiles, Digits
 def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, collection_holder: CollectionHolder,
                                item_id_cache: ItemIdCache, size_calculator: SizeCalculator,
                                bytes_size_cache: BytesSizeCache, file_type_helper: FileTypeHelper,
-                               note_size_cache: NoteSizeCache, updated_files_calculator: UpdatedFilesCalculator,
+                               note_size_cache: NoteSizeCache, updated_files_cache: UpdatedFilesCache,
                                config: Config, settings: Settings, media_cache: MediaCache):
     card1: Card = td.create_card_with_files()
     card2: Card = td.create_card_without_files()
@@ -46,7 +46,7 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, collection
 
     cache_storage.save_caches_to_file(
         [media_cache, item_id_cache, size_calculator, bytes_size_cache, file_type_helper, note_size_cache,
-         updated_files_calculator])
+         updated_files_cache])
 
     media_cache_2: MediaCache = MediaCache(collection_holder, config)
     item_id_cache_2: ItemIdCache = ItemIdCache(collection_holder)
@@ -54,12 +54,12 @@ def test_write_read_cache_file(cache_storage: CacheStorage, td: Data, collection
     bytes_size_cache_2: BytesSizeCache = BytesSizeCache()
     file_type_helper_2: FileTypeHelper = FileTypeHelper()
     note_size_cache_2: NoteSizeCache = NoteSizeCache(size_calculator_2, bytes_size_cache_2)
-    updated_files_calculator_2: UpdatedFilesCalculator = UpdatedFilesCalculator(collection_holder, size_calculator_2,
+    updated_files_cache_2: UpdatedFilesCache = UpdatedFilesCache(collection_holder, size_calculator_2,
                                                                                 media_cache_2)
     assert item_id_cache_2.as_dict_list() == [{}]
     read_success: bool = cache_storage.read_caches_from_file(
         [media_cache_2, item_id_cache_2, size_calculator_2, bytes_size_cache_2, file_type_helper_2, note_size_cache_2,
-         updated_files_calculator_2])
+         updated_files_cache_2])
     assert read_success
     assert media_cache_2.as_dict_list() == [{MediaFiles.animation: FileSize(SizeBytes(9)),
                                              MediaFiles.picture: FileSize(SizeBytes(7)),

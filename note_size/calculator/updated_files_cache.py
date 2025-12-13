@@ -13,7 +13,7 @@ from .size_calculator import SizeCalculator
 log: Logger = logging.getLogger(__name__)
 
 
-class UpdatedFilesCalculator(Cache):
+class UpdatedFilesCache(Cache):
 
     def __init__(self, collection_holder: CollectionHolder, size_calculator: SizeCalculator,
                  media_cache: MediaCache) -> None:

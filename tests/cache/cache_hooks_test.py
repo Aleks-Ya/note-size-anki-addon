@@ -8,7 +8,7 @@ from aqt import gui_hooks
 from note_size.cache.cache_hooks import CacheHooks
 from note_size.cache.item_id_cache import ItemIdCache
 from note_size.cache.media_cache import MediaCache
-from note_size.calculator.updated_files_calculator import UpdatedFilesCalculator
+from note_size.calculator.updated_files_cache import UpdatedFilesCache
 from note_size.calculator.size_calculator import SizeCalculator
 from note_size.common.types import SizeType, FileSize, SizeBytes
 from tests.conftest import assert_no_hooks
@@ -46,7 +46,7 @@ def test_notes_will_be_deleted(cache_hooks: CacheHooks, col: Collection, td: Dat
 
 
 def test_media_sync_did_start_or_stop(cache_hooks: CacheHooks, col: Collection, td: Data, media_cache: MediaCache,
-                                      updated_files_calculator: UpdatedFilesCalculator):
+                                      updated_files_cache: UpdatedFilesCache):
     cache_hooks.setup_hooks()
     td.create_note_with_files()
     original_file_size: FileSize = FileSize(SizeBytes(7))
@@ -58,10 +58,10 @@ def test_media_sync_did_start_or_stop(cache_hooks: CacheHooks, col: Collection, 
     gui_hooks.media_sync_did_start_or_stop(True)
     assert media_cache.get_file_size(MediaFiles.picture, use_cache=True) == original_file_size
 
-    assert not updated_files_calculator.is_initialized()
+    assert not updated_files_cache.is_initialized()
     gui_hooks.media_sync_did_start_or_stop(False)
     assert media_cache.get_file_size(MediaFiles.picture, use_cache=True) == original_file_size
 
-    updated_files_calculator.set_initialized(True)
+    updated_files_cache.set_initialized(True)
     gui_hooks.media_sync_did_start_or_stop(False)
     assert media_cache.get_file_size(MediaFiles.picture, use_cache=True) == FileSize(SizeBytes(len(new_content)))
