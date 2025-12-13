@@ -1,6 +1,6 @@
 from anki.notes import Note, NoteId
 
-from note_size.calculator.note_helper import NoteHelper
+from note_size.cache.note_helper import NoteHelper
 from tests.data import Data
 
 

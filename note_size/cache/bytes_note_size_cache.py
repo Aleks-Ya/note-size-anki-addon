@@ -5,7 +5,7 @@ from typing import Any, Sequence
 from anki.models import NotetypeId
 from anki.notes import Note, NoteId
 
-from ..calculator.note_helper import NoteHelper
+from .note_helper import NoteHelper
 from .cache import Cache
 from .media_cache import MediaCache
 from ..common.collection_holder import CollectionHolder
