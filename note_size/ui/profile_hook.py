@@ -47,7 +47,6 @@ class ProfileHook:
         from .deck_browser.deck_browser_formatter import DeckBrowserFormatter
         from .deck_browser.deck_browser_hooks import DeckBrowserHooks
         from .deck_browser.trash import Trash
-        from .details_dialog.details_dialog import DetailsDialog
         from .details_dialog.details_model_filler import DetailsModelFiller
         from .details_dialog.details_dialog_factory import DetailsDialogFactory
         from .editor.button.editor_button_formatter import EditorButtonFormatter
@@ -140,13 +139,11 @@ class ProfileHook:
         cache_hooks.setup_hooks()
         config_hooks: ConfigHooks = ConfigHooks(config_ui, desktop_services, url_manager)
         config_hooks.setup_hooks()
-        browser_button_details_dialog: DetailsDialog = details_dialog_factory.get_browser_button_details_dialog()
         browser_button_manager: BrowserButtonManager = BrowserButtonManager(
-            item_id_cache, str_note_size_cache, browser_button_details_dialog, progress_manager, config)
+            item_id_cache, str_note_size_cache, details_dialog_factory, progress_manager, config)
         browser_hooks: BrowserHooks = BrowserHooks(browser_button_manager, config)
         browser_hooks.setup_hooks()
-        theme_hooks: ThemeHooks = ThemeHooks(
-            deck_browser_updater, details_dialog_factory, browser_button_details_dialog)
+        theme_hooks: ThemeHooks = ThemeHooks(deck_browser_updater, details_dialog_factory)
         theme_hooks.setup_hooks()
 
     def shutdown(self):

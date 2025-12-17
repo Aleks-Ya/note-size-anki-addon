@@ -319,11 +319,6 @@ def editor_button_details_dialog(details_dialog_factory: DetailsDialogFactory) -
 
 
 @pytest.fixture
-def browser_button_details_dialog(details_dialog_factory: DetailsDialogFactory) -> DetailsDialog:
-    return details_dialog_factory.get_browser_button_details_dialog()
-
-
-@pytest.fixture
 def theme_manager() -> ThemeManager:
     return ThemeManager()
 
@@ -365,10 +360,10 @@ def editor_button_creator(editor_button_formatter: EditorButtonFormatter,
 
 @pytest.fixture
 def browser_button_manager(item_id_cache: ItemIdCache, str_note_size_cache: StrNoteSizeCache,
-                           browser_button_details_dialog: DetailsDialog, progress_manager: ProgressManager,
+                           details_dialog_factory: DetailsDialogFactory, progress_manager: ProgressManager,
                            config: Config) -> BrowserButtonManager:
     return BrowserButtonManager(
-        item_id_cache, str_note_size_cache, browser_button_details_dialog, progress_manager, config)
+        item_id_cache, str_note_size_cache, details_dialog_factory, progress_manager, config)
 
 
 @pytest.fixture
@@ -462,9 +457,9 @@ def browser_hooks(browser_button_manager: BrowserButtonManager, config: Config) 
 
 
 @pytest.fixture
-def theme_hooks(deck_browser_updater: DeckBrowserUpdater, details_dialog_factory: DetailsDialogFactory,
-                browser_button_details_dialog: DetailsDialog) -> Generator[ThemeHooks, None, None]:
-    theme_hooks: ThemeHooks = ThemeHooks(deck_browser_updater, details_dialog_factory, browser_button_details_dialog)
+def theme_hooks(deck_browser_updater: DeckBrowserUpdater,
+                details_dialog_factory: DetailsDialogFactory) -> Generator[ThemeHooks, None, None]:
+    theme_hooks: ThemeHooks = ThemeHooks(deck_browser_updater, details_dialog_factory)
     yield theme_hooks
     theme_hooks.remove_hooks()
 
