@@ -307,15 +307,15 @@ def editor_edit_mode(mw: AnkiQt) -> Editor:
 
 
 @pytest.fixture
-def ui_model() -> UiModel:
-    return UiModel()
+def ui_model(config: Config) -> UiModel:
+    ui_model: UiModel = UiModel()
+    ModelConverter.apply_config_to_model(ui_model, config)
+    return ui_model
 
 
 def __create_details_dialog(qtbot: QtBot, bytes_size_cache: BytesSizeCache, config_ui: ConfigUi, config: Config,
-                            settings: Settings, ui_model: UiModel, theme_manager: ThemeManager,
-                            file_type_helper: FileTypeHelper,
+                            settings: Settings, theme_manager: ThemeManager, file_type_helper: FileTypeHelper,
                             details_model_filler: DetailsModelFiller) -> DetailsDialog:
-    ModelConverter.apply_config_to_model(ui_model, config)
     details_dialog: DetailsDialog = DetailsDialog(
         bytes_size_cache, file_type_helper, details_model_filler, theme_manager, config_ui, config, settings)
     theme_manager.apply_style()
@@ -328,7 +328,7 @@ def editor_button_details_dialog(qtbot: QtBot, bytes_size_cache: BytesSizeCache,
                                  settings: Settings, ui_model: UiModel, theme_manager: ThemeManager,
                                  file_type_helper: FileTypeHelper,
                                  details_model_filler: DetailsModelFiller) -> DetailsDialog:
-    return __create_details_dialog(qtbot, bytes_size_cache, config_ui, config, settings, ui_model, theme_manager,
+    return __create_details_dialog(qtbot, bytes_size_cache, config_ui, config, settings, theme_manager,
                                    file_type_helper, details_model_filler)
 
 
@@ -337,7 +337,7 @@ def browser_button_details_dialog(qtbot: QtBot, bytes_size_cache: BytesSizeCache
                                   settings: Settings, ui_model: UiModel, theme_manager: ThemeManager,
                                   file_type_helper: FileTypeHelper,
                                   details_model_filler: DetailsModelFiller) -> DetailsDialog:
-    return __create_details_dialog(qtbot, bytes_size_cache, config_ui, config, settings, ui_model, theme_manager,
+    return __create_details_dialog(qtbot, bytes_size_cache, config_ui, config, settings, theme_manager,
                                    file_type_helper, details_model_filler)
 
 
