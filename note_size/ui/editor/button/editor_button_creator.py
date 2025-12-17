@@ -6,16 +6,16 @@ from aqt.editor import Editor
 from aqt.qt import QWidget
 
 from .editor_button_formatter import EditorButtonFormatter
-from ...details_dialog.details_dialog import DetailsDialog
+from ...details_dialog.details_dialog_factory import DetailsDialogFactory
 
 log: Logger = logging.getLogger(__name__)
 
 
 class EditorButtonCreator:
     def __init__(self, editor_button_formatter: EditorButtonFormatter,
-                 editor_button_details_dialog: DetailsDialog) -> None:
+                 details_dialog_factory: DetailsDialogFactory) -> None:
         self.__editor_button_formatter: EditorButtonFormatter = editor_button_formatter
-        self.__editor_button_details_dialog: DetailsDialog = editor_button_details_dialog
+        self.__details_dialog_factory: DetailsDialogFactory = details_dialog_factory
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def create_size_button(self, editor: Editor) -> str:
@@ -36,7 +36,7 @@ class EditorButtonCreator:
         if note:
             log.debug(f"Show details dialog for NoteId: {note.id}")
             parent: QWidget = editor.parentWindow.parent()
-            self.__editor_button_details_dialog.show_note(note, parent)
+            self.__details_dialog_factory.get_editor_button_details_dialog().show_note(note, parent)
 
     def __del__(self):
         log.debug(f"{self.__class__.__name__} was deleted")

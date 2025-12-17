@@ -126,9 +126,8 @@ class ProfileHook:
             bytes_note_size_cache, bytes_size_cache, media_cache, config)
         details_dialog_factory: DetailsDialogFactory = DetailsDialogFactory(
             bytes_size_cache, file_type_helper, details_model_filler, theme_manager, config_ui, config, settings)
-        editor_button_details_dialog: DetailsDialog = details_dialog_factory.get_editor_button_details_dialog()
         editor_button_creator: EditorButtonCreator = EditorButtonCreator(
-            editor_button_formatter, editor_button_details_dialog)
+            editor_button_formatter, details_dialog_factory)
         editor_button_js: EditorButtonJs = EditorButtonJs(editor_button_formatter)
         editor_button_hooks: EditorButtonHooks = EditorButtonHooks(
             editor_button_creator, editor_button_js, settings, config)
@@ -147,7 +146,7 @@ class ProfileHook:
         browser_hooks: BrowserHooks = BrowserHooks(browser_button_manager, config)
         browser_hooks.setup_hooks()
         theme_hooks: ThemeHooks = ThemeHooks(
-            deck_browser_updater, editor_button_details_dialog, browser_button_details_dialog)
+            deck_browser_updater, details_dialog_factory, browser_button_details_dialog)
         theme_hooks.setup_hooks()
 
     def shutdown(self):

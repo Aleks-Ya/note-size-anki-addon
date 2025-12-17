@@ -60,6 +60,7 @@ from note_size.ui.browser.column.column_hooks import ColumnHooks
 from note_size.ui.browser.button.browser_hooks import BrowserHooks
 from note_size.ui.theme.theme_hooks import ThemeHooks
 from tests.data import Data
+from note_size.ui.details_dialog.details_dialog_factory import DetailsDialogFactory
 
 
 @pytest.fixture
@@ -344,14 +345,22 @@ def details_model_filler(bytes_note_size_cache: BytesNoteSizeCache, bytes_size_c
 
 
 @pytest.fixture
+def details_dialog_factory(bytes_size_cache: BytesSizeCache, config_ui: ConfigUi, config: Config,
+                           settings: Settings, theme_manager: ThemeManager, file_type_helper: FileTypeHelper,
+                           details_model_filler: DetailsModelFiller) -> DetailsDialogFactory:
+    return DetailsDialogFactory(
+        bytes_size_cache, file_type_helper, details_model_filler, theme_manager, config_ui, config, settings)
+
+
+@pytest.fixture
 def editor_button_js(editor_button_formatter: EditorButtonFormatter) -> EditorButtonJs:
     return EditorButtonJs(editor_button_formatter)
 
 
 @pytest.fixture
 def editor_button_creator(editor_button_formatter: EditorButtonFormatter,
-                          editor_button_details_dialog: DetailsDialog) -> EditorButtonCreator:
-    return EditorButtonCreator(editor_button_formatter, editor_button_details_dialog)
+                          details_dialog_factory: DetailsDialogFactory) -> EditorButtonCreator:
+    return EditorButtonCreator(editor_button_formatter, details_dialog_factory)
 
 
 @pytest.fixture
@@ -453,10 +462,9 @@ def browser_hooks(browser_button_manager: BrowserButtonManager, config: Config) 
 
 
 @pytest.fixture
-def theme_hooks(deck_browser_updater: DeckBrowserUpdater, editor_button_details_dialog: DetailsDialog,
+def theme_hooks(deck_browser_updater: DeckBrowserUpdater, details_dialog_factory: DetailsDialogFactory,
                 browser_button_details_dialog: DetailsDialog) -> Generator[ThemeHooks, None, None]:
-    theme_hooks: ThemeHooks = ThemeHooks(
-        deck_browser_updater, editor_button_details_dialog, browser_button_details_dialog)
+    theme_hooks: ThemeHooks = ThemeHooks(deck_browser_updater, details_dialog_factory, browser_button_details_dialog)
     yield theme_hooks
     theme_hooks.remove_hooks()
 
