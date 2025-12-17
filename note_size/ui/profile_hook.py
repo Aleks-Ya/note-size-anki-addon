@@ -49,6 +49,7 @@ class ProfileHook:
         from .deck_browser.trash import Trash
         from .details_dialog.details_dialog import DetailsDialog
         from .details_dialog.details_model_filler import DetailsModelFiller
+        from .details_dialog.details_dialog_factory import DetailsDialogFactory
         from .editor.button.editor_button_formatter import EditorButtonFormatter
         from .editor.button.editor_button_hooks import EditorButtonHooks
         from .editor.button.editor_button_js import EditorButtonJs
@@ -123,8 +124,9 @@ class ProfileHook:
                                        url_manager, deck_browser, theme_manager, settings)
         details_model_filler: DetailsModelFiller = DetailsModelFiller(
             bytes_note_size_cache, bytes_size_cache, media_cache, config)
-        editor_button_details_dialog: DetailsDialog = DetailsDialog(
+        details_dialog_factory: DetailsDialogFactory = DetailsDialogFactory(
             bytes_size_cache, file_type_helper, details_model_filler, theme_manager, config_ui, config, settings)
+        editor_button_details_dialog: DetailsDialog = details_dialog_factory.get_editor_button_details_dialog()
         editor_button_creator: EditorButtonCreator = EditorButtonCreator(
             editor_button_formatter, editor_button_details_dialog)
         editor_button_js: EditorButtonJs = EditorButtonJs(editor_button_formatter)
@@ -139,8 +141,7 @@ class ProfileHook:
         cache_hooks.setup_hooks()
         config_hooks: ConfigHooks = ConfigHooks(config_ui, desktop_services, url_manager)
         config_hooks.setup_hooks()
-        browser_button_details_dialog: DetailsDialog = DetailsDialog(
-            bytes_size_cache, file_type_helper, details_model_filler, theme_manager, config_ui, config, settings)
+        browser_button_details_dialog: DetailsDialog = details_dialog_factory.get_browser_button_details_dialog()
         browser_button_manager: BrowserButtonManager = BrowserButtonManager(
             item_id_cache, str_note_size_cache, browser_button_details_dialog, progress_manager, config)
         browser_hooks: BrowserHooks = BrowserHooks(browser_button_manager, config)

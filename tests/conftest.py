@@ -14,7 +14,6 @@ from aqt.progress import ProgressManager
 from aqt.taskman import TaskManager
 from aqt.theme import ThemeManager
 from mock.mock import MagicMock
-from pytestqt.qtbot import QtBot
 
 from note_size.core.calculator.db_size_calculator import DbSizeCalculator
 from note_size.core.common.collection_holder import CollectionHolder
@@ -313,32 +312,14 @@ def ui_model(config: Config) -> UiModel:
     return ui_model
 
 
-def __create_details_dialog(qtbot: QtBot, bytes_size_cache: BytesSizeCache, config_ui: ConfigUi, config: Config,
-                            settings: Settings, theme_manager: ThemeManager, file_type_helper: FileTypeHelper,
-                            details_model_filler: DetailsModelFiller) -> DetailsDialog:
-    details_dialog: DetailsDialog = DetailsDialog(
-        bytes_size_cache, file_type_helper, details_model_filler, theme_manager, config_ui, config, settings)
-    theme_manager.apply_style()
-    qtbot.addWidget(details_dialog)
-    return details_dialog
+@pytest.fixture
+def editor_button_details_dialog(details_dialog_factory: DetailsDialogFactory) -> DetailsDialog:
+    return details_dialog_factory.get_editor_button_details_dialog()
 
 
 @pytest.fixture
-def editor_button_details_dialog(qtbot: QtBot, bytes_size_cache: BytesSizeCache, config_ui: ConfigUi, config: Config,
-                                 settings: Settings, ui_model: UiModel, theme_manager: ThemeManager,
-                                 file_type_helper: FileTypeHelper,
-                                 details_model_filler: DetailsModelFiller) -> DetailsDialog:
-    return __create_details_dialog(qtbot, bytes_size_cache, config_ui, config, settings, theme_manager,
-                                   file_type_helper, details_model_filler)
-
-
-@pytest.fixture
-def browser_button_details_dialog(qtbot: QtBot, bytes_size_cache: BytesSizeCache, config_ui: ConfigUi, config: Config,
-                                  settings: Settings, ui_model: UiModel, theme_manager: ThemeManager,
-                                  file_type_helper: FileTypeHelper,
-                                  details_model_filler: DetailsModelFiller) -> DetailsDialog:
-    return __create_details_dialog(qtbot, bytes_size_cache, config_ui, config, settings, theme_manager,
-                                   file_type_helper, details_model_filler)
+def browser_button_details_dialog(details_dialog_factory: DetailsDialogFactory) -> DetailsDialog:
+    return details_dialog_factory.get_browser_button_details_dialog()
 
 
 @pytest.fixture
