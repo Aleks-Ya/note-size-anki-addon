@@ -123,10 +123,11 @@ class ProfileHook:
                                        url_manager, deck_browser, theme_manager, settings)
         details_model_filler: DetailsModelFiller = DetailsModelFiller(
             bytes_note_size_cache, bytes_size_cache, media_cache, config)
-        details_dialog: DetailsDialog = DetailsDialog(
+        editor_button_details_dialog: DetailsDialog = DetailsDialog(
             bytes_size_cache, file_type_helper, details_model_filler, theme_manager, config_ui, config, settings)
+        editor_button_creator: EditorButtonCreator = EditorButtonCreator(
+            editor_button_formatter, editor_button_details_dialog)
         editor_button_js: EditorButtonJs = EditorButtonJs(editor_button_formatter)
-        editor_button_creator: EditorButtonCreator = EditorButtonCreator(editor_button_formatter, details_dialog)
         editor_button_hooks: EditorButtonHooks = EditorButtonHooks(
             editor_button_creator, editor_button_js, settings, config)
         editor_button_hooks.setup_hooks()
@@ -138,11 +139,14 @@ class ProfileHook:
         cache_hooks.setup_hooks()
         config_hooks: ConfigHooks = ConfigHooks(config_ui, desktop_services, url_manager)
         config_hooks.setup_hooks()
+        browser_button_details_dialog: DetailsDialog = DetailsDialog(
+            bytes_size_cache, file_type_helper, details_model_filler, theme_manager, config_ui, config, settings)
         browser_button_manager: BrowserButtonManager = BrowserButtonManager(
-            item_id_cache, str_note_size_cache, details_dialog, progress_manager, config)
+            item_id_cache, str_note_size_cache, browser_button_details_dialog, progress_manager, config)
         browser_hooks: BrowserHooks = BrowserHooks(browser_button_manager, config)
         browser_hooks.setup_hooks()
-        theme_hooks: ThemeHooks = ThemeHooks(deck_browser_updater, details_dialog)
+        theme_hooks: ThemeHooks = ThemeHooks(
+            deck_browser_updater, editor_button_details_dialog, browser_button_details_dialog)
         theme_hooks.setup_hooks()
 
     def shutdown(self):

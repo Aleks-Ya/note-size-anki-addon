@@ -12,9 +12,11 @@ log: Logger = logging.getLogger(__name__)
 
 class ThemeHooks:
 
-    def __init__(self, deck_browser_updater: DeckBrowserUpdater, details_dialog: DetailsDialog) -> None:
+    def __init__(self, deck_browser_updater: DeckBrowserUpdater, editor_button_details_dialog: DetailsDialog,
+                 browser_button_details_dialog: DetailsDialog) -> None:
         self.__deck_browser_updater: DeckBrowserUpdater = deck_browser_updater
-        self.__details_dialog: DetailsDialog = details_dialog
+        self.__editor_button_details_dialog: DetailsDialog = editor_button_details_dialog
+        self.__browser_button_details_dialog: DetailsDialog = browser_button_details_dialog
         self.__hook_theme_did_changed: Callable[[], None] = self.__theme_did_changed
         log.debug(f"{self.__class__.__name__} was instantiated")
 
@@ -29,4 +31,5 @@ class ThemeHooks:
     def __theme_did_changed(self) -> None:
         log.debug("Theme did changed")
         self.__deck_browser_updater.on_theme_changed()
-        self.__details_dialog.on_theme_changed()
+        self.__editor_button_details_dialog.on_theme_changed()
+        self.__browser_button_details_dialog.on_theme_changed()

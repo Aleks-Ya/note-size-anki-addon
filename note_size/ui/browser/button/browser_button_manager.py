@@ -18,12 +18,13 @@ log: Logger = logging.getLogger(__name__)
 
 class BrowserButtonManager(ConfigListener):
 
-    def __init__(self, item_id_cache: ItemIdCache, str_note_size_cache: StrNoteSizeCache, details_dialog: DetailsDialog,
-                 progress_manager: ProgressManager, config: Config) -> None:
+    def __init__(self, item_id_cache: ItemIdCache, str_note_size_cache: StrNoteSizeCache,
+                 browser_button_details_dialog: DetailsDialog, progress_manager: ProgressManager,
+                 config: Config) -> None:
         super().__init__()
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__str_note_size_cache: StrNoteSizeCache = str_note_size_cache
-        self.__details_dialog: DetailsDialog = details_dialog
+        self.__browser_button_details_dialog: DetailsDialog = browser_button_details_dialog
         self.__progress_manager: ProgressManager = progress_manager
         self.__config: Config = config
         self.__button: Optional[BrowserButton] = None
@@ -31,8 +32,9 @@ class BrowserButtonManager(ConfigListener):
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def create_browser_button(self, browser: Browser) -> BrowserButton:
-        self.__button = BrowserButton(self.__item_id_cache, self.__str_note_size_cache, self.__details_dialog,
-                                      browser, self.__progress_manager, self.__config)
+        self.__button = BrowserButton(self.__item_id_cache, self.__str_note_size_cache,
+                                      self.__browser_button_details_dialog, browser, self.__progress_manager,
+                                      self.__config)
         return self.__button
 
     def get_current_button(self) -> BrowserButton:

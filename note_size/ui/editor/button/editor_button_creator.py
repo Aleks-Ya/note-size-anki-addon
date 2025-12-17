@@ -12,9 +12,10 @@ log: Logger = logging.getLogger(__name__)
 
 
 class EditorButtonCreator:
-    def __init__(self, editor_button_formatter: EditorButtonFormatter, details_dialog: DetailsDialog) -> None:
+    def __init__(self, editor_button_formatter: EditorButtonFormatter,
+                 editor_button_details_dialog: DetailsDialog) -> None:
         self.__editor_button_formatter: EditorButtonFormatter = editor_button_formatter
-        self.__details_dialog: DetailsDialog = details_dialog
+        self.__editor_button_details_dialog: DetailsDialog = editor_button_details_dialog
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def create_size_button(self, editor: Editor) -> str:
@@ -35,7 +36,7 @@ class EditorButtonCreator:
         if note:
             log.debug(f"Show details dialog for NoteId: {note.id}")
             parent: QWidget = editor.parentWindow.parent()
-            self.__details_dialog.show_note(note, parent)
+            self.__editor_button_details_dialog.show_note(note, parent)
 
     def __del__(self):
         log.debug(f"{self.__class__.__name__} was deleted")

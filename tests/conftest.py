@@ -311,16 +311,34 @@ def ui_model() -> UiModel:
     return UiModel()
 
 
-@pytest.fixture
-def details_dialog(qtbot: QtBot, bytes_size_cache: BytesSizeCache, config_ui: ConfigUi, config: Config,
-                   settings: Settings, ui_model: UiModel, theme_manager: ThemeManager, file_type_helper: FileTypeHelper,
-                   details_model_filler: DetailsModelFiller) -> DetailsDialog:
+def __create_details_dialog(qtbot: QtBot, bytes_size_cache: BytesSizeCache, config_ui: ConfigUi, config: Config,
+                            settings: Settings, ui_model: UiModel, theme_manager: ThemeManager,
+                            file_type_helper: FileTypeHelper,
+                            details_model_filler: DetailsModelFiller) -> DetailsDialog:
     ModelConverter.apply_config_to_model(ui_model, config)
     details_dialog: DetailsDialog = DetailsDialog(
         bytes_size_cache, file_type_helper, details_model_filler, theme_manager, config_ui, config, settings)
     theme_manager.apply_style()
     qtbot.addWidget(details_dialog)
     return details_dialog
+
+
+@pytest.fixture
+def editor_button_details_dialog(qtbot: QtBot, bytes_size_cache: BytesSizeCache, config_ui: ConfigUi, config: Config,
+                                 settings: Settings, ui_model: UiModel, theme_manager: ThemeManager,
+                                 file_type_helper: FileTypeHelper,
+                                 details_model_filler: DetailsModelFiller) -> DetailsDialog:
+    return __create_details_dialog(qtbot, bytes_size_cache, config_ui, config, settings, ui_model, theme_manager,
+                                   file_type_helper, details_model_filler)
+
+
+@pytest.fixture
+def browser_button_details_dialog(qtbot: QtBot, bytes_size_cache: BytesSizeCache, config_ui: ConfigUi, config: Config,
+                                  settings: Settings, ui_model: UiModel, theme_manager: ThemeManager,
+                                  file_type_helper: FileTypeHelper,
+                                  details_model_filler: DetailsModelFiller) -> DetailsDialog:
+    return __create_details_dialog(qtbot, bytes_size_cache, config_ui, config, settings, ui_model, theme_manager,
+                                   file_type_helper, details_model_filler)
 
 
 @pytest.fixture
@@ -351,15 +369,16 @@ def editor_button_js(editor_button_formatter: EditorButtonFormatter) -> EditorBu
 
 @pytest.fixture
 def editor_button_creator(editor_button_formatter: EditorButtonFormatter,
-                          details_dialog: DetailsDialog) -> EditorButtonCreator:
-    return EditorButtonCreator(editor_button_formatter, details_dialog)
+                          editor_button_details_dialog: DetailsDialog) -> EditorButtonCreator:
+    return EditorButtonCreator(editor_button_formatter, editor_button_details_dialog)
 
 
 @pytest.fixture
 def browser_button_manager(item_id_cache: ItemIdCache, str_note_size_cache: StrNoteSizeCache,
-                           details_dialog: DetailsDialog,
-                           progress_manager: ProgressManager, config: Config) -> BrowserButtonManager:
-    return BrowserButtonManager(item_id_cache, str_note_size_cache, details_dialog, progress_manager, config)
+                           browser_button_details_dialog: DetailsDialog, progress_manager: ProgressManager,
+                           config: Config) -> BrowserButtonManager:
+    return BrowserButtonManager(
+        item_id_cache, str_note_size_cache, browser_button_details_dialog, progress_manager, config)
 
 
 @pytest.fixture
@@ -453,9 +472,10 @@ def browser_hooks(browser_button_manager: BrowserButtonManager, config: Config) 
 
 
 @pytest.fixture
-def theme_hooks(deck_browser_updater: DeckBrowserUpdater,
-                details_dialog: DetailsDialog) -> Generator[ThemeHooks, None, None]:
-    theme_hooks: ThemeHooks = ThemeHooks(deck_browser_updater, details_dialog)
+def theme_hooks(deck_browser_updater: DeckBrowserUpdater, editor_button_details_dialog: DetailsDialog,
+                browser_button_details_dialog: DetailsDialog) -> Generator[ThemeHooks, None, None]:
+    theme_hooks: ThemeHooks = ThemeHooks(
+        deck_browser_updater, editor_button_details_dialog, browser_button_details_dialog)
     yield theme_hooks
     theme_hooks.remove_hooks()
 
