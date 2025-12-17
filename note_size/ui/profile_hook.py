@@ -124,8 +124,7 @@ class ProfileHook:
         details_model_filler: DetailsModelFiller = DetailsModelFiller(
             bytes_note_size_cache, bytes_size_cache, media_cache, config)
         details_dialog: DetailsDialog = DetailsDialog(
-            bytes_note_size_cache, bytes_size_cache, file_type_helper, details_model_filler, theme_manager, config_ui,
-            config, settings)
+            bytes_size_cache, file_type_helper, details_model_filler, theme_manager, config_ui, config, settings)
         editor_button_js: EditorButtonJs = EditorButtonJs(editor_button_formatter)
         editor_button_creator: EditorButtonCreator = EditorButtonCreator(editor_button_formatter, details_dialog)
         editor_button_hooks: EditorButtonHooks = EditorButtonHooks(

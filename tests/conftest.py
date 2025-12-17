@@ -204,7 +204,8 @@ def item_id_sorter(item_id_cache: ItemIdCache, bytes_note_size_cache: BytesNoteS
 def editor_button_formatter(config: Config, bytes_note_size_cache: BytesNoteSizeCache, bytes_size_cache: BytesSizeCache,
                             str_note_size_cache: StrNoteSizeCache, level_parser: LevelParser,
                             theme_manager: ThemeManager) -> EditorButtonFormatter:
-    return EditorButtonFormatter(str_note_size_cache, bytes_note_size_cache, bytes_size_cache, level_parser, theme_manager,
+    return EditorButtonFormatter(str_note_size_cache, bytes_note_size_cache, bytes_size_cache, level_parser,
+                                 theme_manager,
                                  config)
 
 
@@ -311,12 +312,12 @@ def ui_model() -> UiModel:
 
 
 @pytest.fixture
-def details_dialog(qtbot: QtBot, bytes_note_size_cache: BytesNoteSizeCache, bytes_size_cache: BytesSizeCache, config_ui: ConfigUi,
-                   config: Config, settings: Settings, ui_model: UiModel, theme_manager: ThemeManager,
-                   file_type_helper: FileTypeHelper, details_model_filler: DetailsModelFiller) -> DetailsDialog:
+def details_dialog(qtbot: QtBot, bytes_size_cache: BytesSizeCache, config_ui: ConfigUi, config: Config,
+                   settings: Settings, ui_model: UiModel, theme_manager: ThemeManager, file_type_helper: FileTypeHelper,
+                   details_model_filler: DetailsModelFiller) -> DetailsDialog:
     ModelConverter.apply_config_to_model(ui_model, config)
-    details_dialog: DetailsDialog = DetailsDialog(bytes_note_size_cache, bytes_size_cache, file_type_helper,
-                                                  details_model_filler, theme_manager, config_ui, config, settings)
+    details_dialog: DetailsDialog = DetailsDialog(
+        bytes_size_cache, file_type_helper, details_model_filler, theme_manager, config_ui, config, settings)
     theme_manager.apply_style()
     qtbot.addWidget(details_dialog)
     return details_dialog
@@ -355,7 +356,8 @@ def editor_button_creator(editor_button_formatter: EditorButtonFormatter,
 
 
 @pytest.fixture
-def browser_button_manager(item_id_cache: ItemIdCache, str_note_size_cache: StrNoteSizeCache, details_dialog: DetailsDialog,
+def browser_button_manager(item_id_cache: ItemIdCache, str_note_size_cache: StrNoteSizeCache,
+                           details_dialog: DetailsDialog,
                            progress_manager: ProgressManager, config: Config) -> BrowserButtonManager:
     return BrowserButtonManager(item_id_cache, str_note_size_cache, details_dialog, progress_manager, config)
 
@@ -375,7 +377,8 @@ def cache_manager(media_cache: MediaCache, item_id_cache: ItemIdCache, bytes_not
 
 
 @pytest.fixture
-def str_note_size_cache(bytes_note_size_cache: BytesNoteSizeCache, bytes_size_cache: BytesSizeCache) -> StrNoteSizeCache:
+def str_note_size_cache(bytes_note_size_cache: BytesNoteSizeCache,
+                        bytes_size_cache: BytesSizeCache) -> StrNoteSizeCache:
     return StrNoteSizeCache(bytes_note_size_cache, bytes_size_cache)
 
 
@@ -387,7 +390,7 @@ def used_files_calculator(collection_holder: CollectionHolder, bytes_note_size_c
 
 @pytest.fixture
 def updated_files_cache(collection_holder: CollectionHolder, bytes_note_size_cache: BytesNoteSizeCache,
-                             media_cache: MediaCache) -> UpdatedFilesCache:
+                        media_cache: MediaCache) -> UpdatedFilesCache:
     return UpdatedFilesCache(collection_holder, bytes_note_size_cache, media_cache)
 
 

@@ -11,7 +11,6 @@ from .configuration_button import ConfigurationButton
 from .details_model import DetailsModel
 from .details_model_filler import DetailsModelFiller
 from .files_table import FilesTable
-from ...core.cache.bytes_note_size_cache import BytesNoteSizeCache
 from ...core.cache.bytes_size_cache import BytesSizeCache
 from ...core.config.config import Config
 from ..config.config_ui import ConfigUi
@@ -28,12 +27,10 @@ class DetailsDialog(QDialog):
     __files_table_row: int = 3
     __button_box_row: int = 4
 
-    def __init__(self, bytes_note_size_cache: BytesNoteSizeCache, bytes_size_cache: BytesSizeCache, file_type_helper: FileTypeHelper,
+    def __init__(self, bytes_size_cache: BytesSizeCache, file_type_helper: FileTypeHelper,
                  details_model_filler: DetailsModelFiller, theme_manager: ThemeManager,
                  config_ui: ConfigUi, config: Config, settings: Settings):
         super().__init__(parent=None)
-        self.__bytes_note_size_cache: BytesNoteSizeCache = bytes_note_size_cache
-        self.__bytes_size_cache: BytesSizeCache = bytes_size_cache
         self.__model: DetailsModel = DetailsModel()
         self.__details_model_filler: DetailsModelFiller = details_model_filler
         # noinspection PyUnresolvedReferences
