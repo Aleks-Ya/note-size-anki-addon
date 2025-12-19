@@ -74,6 +74,7 @@ def profile_manager(base_dir: Path, profile_name: str) -> ProfileManager:
     pm: ProfileManager = ProfileManager(base=anki_base_dir)
     pm.setupMeta()
     pm.create(profile_name)
+    pm.setLang("en")
     pm.openProfile(profile_name)
     pm.save()
     return pm
