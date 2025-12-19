@@ -246,9 +246,7 @@ def deck_browser_formatter(collection_holder: CollectionHolder, item_id_cache: I
 
 
 @pytest.fixture
-def addon_manager(addons_dir: Path) -> AddonManager:
-    mw: MagicMock = MagicMock()
-    mw.pm.addonFolder.return_value = addons_dir
+def addon_manager(mw: AnkiQt) -> AddonManager:
     return AddonManager(mw)
 
 
