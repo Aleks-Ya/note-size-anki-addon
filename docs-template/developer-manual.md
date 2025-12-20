@@ -1,13 +1,10 @@
 # Developer manual
 
 **Table of content**
-
 <!--TOC-->
-
 ---
 
 ## Setup Python virtual environment
-
 1. Install Tox:
     1. Install PIPX: `pip install pipx`
     2. Install Tox: `pipx install tox`
@@ -21,13 +18,10 @@
        `pip install -U pip -r requirements/anki-qt6-current.txt -r requirements/dev.txt -r requirements/tests.txt`
 
 ## Logs
-
 See [Logging Level](configuration.md#logging)
 
 ## Tests
-
 Run automated tests:
-
 1. Prerequisites: [Setup Python virtual environment](#setup-python-virtual-environment)
 2. Activate virtual environment: `pyenv activate note-size-anki-addon`
 3. Run tests:
@@ -40,36 +34,30 @@ Run all tests except performance tests: `pytest -m "not performance"`
 Manual test cases: `docs/manual-test-cases/*.feature`
 
 ## SonarQube
-
 Report at [SonarCloud](https://sonarcloud.io/project/overview?id=Aleks-Ya_note-size-anki-addon)
 
 Scan locally:
-
 1. Prepare once
     1. Install Sonar Scanner: `brew install sonar-scanner`
     2. Find config file `sonar-scanner.properties`: `sonar-scanner -v`
     3. Add token to `sonar-scanner.properties`: `sonar.token=XXX`
 2. Execute
-    1. Generate coverage report: `tox`
+    1. Generate a coverage report: `tox`
     2. Run Scanner: `sonar-scanner`
     3. See report at https://sonarcloud.io/project/overview?id=Aleks-Ya_note-size-anki-addon
 
-## Local deploy
-
+## Deploy locally
 Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
 
 ## Build
-
 1. Build ZIP: `./build_dist.sh` (includes unit-tests)
 2. Output: `./dist/note-size-X.X-X.zip`
 
 ## Execute GitHub Actions locally
-
 1. Install `act`: `brew install act`
 2. Run: `act`
 
 ## Render documentation
-
 1. Install: `pip install md-toc`
 2. Edit documentation in `docs-template` folder
 3. Update documentation: `./render_docs.sh`
@@ -77,7 +65,6 @@ Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
 5. Commit `docs` folder
 
 ## Release
-
 1. Update `CHANGELOG.md` manually
 2. Update documentation: `./render_docs.sh`
 3. CI:
@@ -97,7 +84,6 @@ Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
 9. Notify the Anki Forum support thread: https://forums.ankiweb.net/t/note-size-addon-support/46001
 
 ## Profiler
-
 1. Enable profiler: `Profiler.Enabled = true` in `Anki2/addons21/1188705668/meta.json`
 2. Restart Anki
 3. Close Anki
