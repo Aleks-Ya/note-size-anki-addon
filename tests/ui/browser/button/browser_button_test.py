@@ -1,3 +1,6 @@
+from typing import Optional
+
+import pytest
 from anki.cards import Card
 from anki.collection import Collection
 from anki.notes import Note
@@ -7,6 +10,11 @@ from mock.mock import MagicMock
 from note_size.ui.browser.button.browser_button import BrowserButton
 from note_size.ui.browser.button.browser_button_manager import BrowserButtonManager
 from tests.data import Data
+
+
+@pytest.fixture
+def browser() -> Optional[Browser]:
+    return MagicMock()
 
 
 def test_show_notes_size(browser_button_manager: BrowserButtonManager, td: Data, browser: Browser):

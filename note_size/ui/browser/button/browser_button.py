@@ -9,8 +9,8 @@ from aqt.progress import ProgressManager
 from aqt.qt import QPushButton
 
 from ..browser_helper import BrowserHelper
+from ...details_dialog.details_dialog_factory import DetailsDialogFactory
 from ....core.common.number_formatter import NumberFormatter
-from ...details_dialog.details_dialog import DetailsDialog
 from ...details_dialog.show_details_dialog_op import ShowDetailsDialogOp
 from ....core.cache.item_id_cache import ItemIdCache
 from ....core.cache.str_note_size_cache import StrNoteSizeCache
@@ -23,12 +23,12 @@ log: Logger = logging.getLogger(__name__)
 class BrowserButton(QPushButton):
 
     def __init__(self, item_id_cache: ItemIdCache, str_note_size_cache: StrNoteSizeCache,
-                 browser_button_details_dialog: DetailsDialog, browser: Browser, progress_manager: ProgressManager,
+                 details_dialog_factory: DetailsDialogFactory, browser: Browser, progress_manager: ProgressManager,
                  config: Config) -> None:
         super().__init__()
         self.__item_id_cache: ItemIdCache = item_id_cache
         self.__str_note_size_cache: StrNoteSizeCache = str_note_size_cache
-        self.__browser_button_details_dialog: DetailsDialog = browser_button_details_dialog
+        self.__details_dialog_factory: DetailsDialogFactory = details_dialog_factory
         self.__browser: Browser = browser
         self.__progress_manager: ProgressManager = progress_manager
         self.__config: Config = config
@@ -85,7 +85,8 @@ class BrowserButton(QPushButton):
         self.show_items_size(self.__current_item_ids)
         note_ids: Sequence[NoteId] = self.__item_ids_to_note_ids(self.__current_item_ids)
         op: ShowDetailsDialogOp = ShowDetailsDialogOp(
-            self.__browser_button_details_dialog, note_ids, self.__progress_manager, self.__browser)
+            self.__details_dialog_factory.get_browser_button_details_dialog(self.__browser),
+            note_ids, self.__progress_manager, self.__browser)
         op.run()
         log.debug("Browser size button click finished")
 

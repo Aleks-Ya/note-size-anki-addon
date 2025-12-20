@@ -40,7 +40,7 @@ class ShowDetailsDialogOp:
 
     def __on_success(self, count: int) -> None:
         log.debug(f"Notes shown successfully: {count}")
-        self.__details_dialog.show_notes(self.__parent.parent())
+        self.__details_dialog.show_notes()
 
     @staticmethod
     def __on_failure(e: Exception) -> None:

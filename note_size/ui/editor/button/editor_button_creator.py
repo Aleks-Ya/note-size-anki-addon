@@ -35,8 +35,11 @@ class EditorButtonCreator:
         note: Note = editor.note
         if note:
             log.debug(f"Show details dialog for NoteId: {note.id}")
-            parent: QWidget = editor.parentWindow.parent()
-            self.__details_dialog_factory.get_editor_button_details_dialog().show_note(note, parent)
+            parent: QWidget = editor.widget
+            if editor.addMode:
+                self.__details_dialog_factory.get_add_cards_browser_editor_button_details_dialog(parent).show_note(note)
+            else:
+                self.__details_dialog_factory.get_browser_editor_button_details_dialog(parent).show_note(note)
 
     def __del__(self):
         log.debug(f"{self.__class__.__name__} was deleted")

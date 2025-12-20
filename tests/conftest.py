@@ -314,7 +314,7 @@ def ui_model(config: Config) -> UiModel:
 
 @pytest.fixture
 def editor_button_details_dialog(details_dialog_factory: DetailsDialogFactory) -> DetailsDialog:
-    return details_dialog_factory.get_editor_button_details_dialog()
+    return details_dialog_factory.get_browser_editor_button_details_dialog(None)
 
 
 @pytest.fixture

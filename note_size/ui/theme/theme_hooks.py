@@ -29,5 +29,5 @@ class ThemeHooks:
     def __theme_did_changed(self) -> None:
         log.debug("Theme did changed")
         self.__deck_browser_updater.on_theme_changed()
-        self.__details_dialog_factory.get_editor_button_details_dialog().on_theme_changed()
-        self.__details_dialog_factory.get_browser_button_details_dialog().on_theme_changed()
+        for details_dialog in self.__details_dialog_factory.get_all_details_dialogs():
+            details_dialog.on_theme_changed()

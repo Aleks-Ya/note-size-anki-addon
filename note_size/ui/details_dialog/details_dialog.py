@@ -27,10 +27,10 @@ class DetailsDialog(QDialog):
     __files_table_row: int = 3
     __button_box_row: int = 4
 
-    def __init__(self, bytes_size_cache: BytesSizeCache, file_type_helper: FileTypeHelper,
+    def __init__(self, parent: Optional[QWidget], bytes_size_cache: BytesSizeCache, file_type_helper: FileTypeHelper,
                  details_model_filler: DetailsModelFiller, theme_manager: ThemeManager,
                  config_ui: ConfigUi, config: Config, settings: Settings):
-        super().__init__(parent=None)
+        super().__init__(parent=parent)
         self.__model: DetailsModel = DetailsModel()
         self.__details_model_filler: DetailsModelFiller = details_model_filler
         # noinspection PyUnresolvedReferences
@@ -66,10 +66,10 @@ class DetailsDialog(QDialog):
         self.setSizeGripEnabled(True)
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def show_note(self, note: Note, parent: Optional[QWidget] = None) -> None:
+    def show_note(self, note: Note) -> None:
         self.__model = self.__details_model_filler.prepare_note_model(note)
         self.__files_table.prepare_items(self.__model.file_sizes)
-        self.__show_model(parent)
+        self.__show_model()
 
     def prepare_show_notes(self, note_ids: Sequence[NoteId]) -> None:
         log.debug(f"Start showing notes: {len(note_ids)}")
@@ -80,10 +80,10 @@ class DetailsDialog(QDialog):
         duration_sec: int = round((end_time - start_time).total_seconds())
         log.info(f"Data preparation for showing notes finished: duration_sec={duration_sec}")
 
-    def show_notes(self, parent: Optional[QWidget] = None) -> None:
+    def show_notes(self) -> None:
         log.debug("Start showing notes")
         start_time: datetime = datetime.now()
-        self.__show_model(parent)
+        self.__show_model()
         end_time: datetime = datetime.now()
         duration_sec: int = round((end_time - start_time).total_seconds())
         log.info(f"Showing notes finished: duration_sec={duration_sec}")
@@ -106,9 +106,7 @@ class DetailsDialog(QDialog):
         label.setFont(font)
         return label
 
-    def __show_model(self, parent: Optional[QWidget]) -> None:
-        log.debug(f"Set details dialog parent: {parent}")
-        self.setParent(parent)
+    def __show_model(self) -> None:
         start_time: datetime = datetime.now()
         self.__total_size_label.setText(self.__model.total_note_size_text)
         self.__texts_size_label.setText(self.__model.texts_note_size_text)

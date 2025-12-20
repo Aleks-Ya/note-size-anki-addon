@@ -1,9 +1,15 @@
+from typing import Optional
+
+import pytest
 from aqt.browser import Browser
 
 from note_size.core.config.config import Config
 from note_size.ui.browser.button.browser_button import BrowserButton
 from note_size.ui.browser.button.browser_button_manager import BrowserButtonManager
 
+@pytest.fixture
+def browser() -> Optional[Browser]:
+    return None
 
 def test_create_browser_button(browser_button_manager: BrowserButtonManager, browser: Browser):
     button: BrowserButton = browser_button_manager.create_browser_button(browser)
