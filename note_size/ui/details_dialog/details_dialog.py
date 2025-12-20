@@ -63,6 +63,7 @@ class DetailsDialog(QDialog):
 
         self.setLayout(layout)
         self.setMinimumSize(300, 200)
+        self.setSizeGripEnabled(True)
         log.debug(f"{self.__class__.__name__} was instantiated")
 
     def show_note(self, note: Note, parent: Optional[QWidget] = None) -> None:
