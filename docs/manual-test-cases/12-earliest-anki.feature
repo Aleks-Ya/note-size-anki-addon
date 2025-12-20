@@ -1,7 +1,7 @@
 #noinspection CucumberUndefinedStep
 Feature: Using earliest Anki version 24.4.1
 
-  @smoke @browser @editor
+  @S1201 @smoke @browser @editor
   Scenario: Use in Anki 24.4.1
 
     Given I opened Anki 24.4.1 Qt5

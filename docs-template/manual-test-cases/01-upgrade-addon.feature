@@ -1,7 +1,7 @@
 #noinspection CucumberUndefinedStep
 Feature: Upgrade addon from previous version
 
-  @smoke
+  @S0101 @smoke
   Scenario: Install addon over previous version
 
     Given I deleted addon

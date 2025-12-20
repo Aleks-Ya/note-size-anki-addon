@@ -1,8 +1,8 @@
 #noinspection CucumberUndefinedStep
 Feature: Use Windows OS
 
-  @smoke @browser @editor
-  Scenario: Run addon on Windows 10
+  @S1101 @smoke @browser @editor
+  Scenario: Run addon on Windows 11
 
     Given I deleted addon
     And I installed previous version by ID 1188705668

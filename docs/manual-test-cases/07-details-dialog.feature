@@ -1,12 +1,12 @@
 #noinspection CucumberUndefinedStep
 Feature: Details Dialog functionality
 
-  @smoke @browser @editor
+  @S0701 @smoke @browser @editor
   Scenario: Using Details Dialog
 
     Given I opened Browser
     And I clicked "Notes Size Button"
-    Then "Detail Dialog" is displayed
+    Then "Details Dialog" is displayed
 
     When I click "File" column
     Then Files are sorted by filename
@@ -16,6 +16,8 @@ Feature: Details Dialog functionality
 
     When I click "Configuration" icon
     Then "Configuration Dialog" has opened
+    When I click Cancel button
+    Then "Configuration Dialog" has closed
 
     When I click "Close" button
     Then "Details Dialog" has closed
