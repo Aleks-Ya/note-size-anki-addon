@@ -116,9 +116,11 @@ class DeckBrowserFormatter:
             icon_file: str = "info_white.png"
         else:
             icon_file: str = "info_black.png"
+        icon_path: str = os.path.join(self.__web_dir, icon_file)
+        log.debug(f"Media icon path: {icon_path}")
         details_icon: Tag = soup.new_tag('img', attrs={
             "title": 'Click to show details',
-            "src": os.path.join(self.__web_dir, icon_file),
+            "src": icon_path,
             "height": "12",
             "onclick": f"pycmd('{DeckBrowserJs.open_check_media_action}')",
             "style": "margin-right: 0.2em;"
@@ -130,9 +132,11 @@ class DeckBrowserFormatter:
             icon_file: str = "setting_white.png"
         else:
             icon_file: str = "setting_black.png"
+        icon_path: str = os.path.join(self.__web_dir, icon_file)
+        log.debug(f"Configuration icon path: {icon_path}")
         config_icon: Tag = soup.new_tag('img', attrs={
             "title": 'Open Configuration',
-            "src": os.path.join(self.__web_dir, icon_file),
+            "src": icon_path,
             "height": "12",
             "onclick": f"pycmd('{DeckBrowserJs.open_config_action}')"
         })
@@ -146,7 +150,7 @@ class DeckBrowserFormatter:
             separator: str = " "
             significant_digits: SignificantDigits = self.__config.get_deck_browser_significant_digits()
             size_split: list[str] = self.__bytes_size_cache.bytes_to_str(size, significant_digits,
-                                                                       unit_separator=separator).split(separator)
+                                                                         unit_separator=separator).split(separator)
             number: str = size_split[0]
             unit: str = size_split[1]
             number_span: Tag = soup.new_tag('span', attrs={"style": DeckBrowserFormatter.__code_style})
