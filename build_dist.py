@@ -1,3 +1,4 @@
+from argparse import ArgumentParser, Namespace
 import json
 import os
 import shutil
@@ -9,9 +10,11 @@ from typing import Any
 
 class DistributionBuilder:
 
-    def __init__(self):
+    def __init__(self, skip_unit_tests: bool, skip_integration_tests: bool):
         self.project_dir: Path = Path(__file__).parent
         self.build_dir: Path = Path(self.project_dir, 'dist')
+        self.skip_unit_tests: bool = skip_unit_tests
+        self.skip_integration_tests: bool = skip_integration_tests
         if self.build_dir.exists():
             shutil.rmtree(self.build_dir)
 
@@ -20,26 +23,30 @@ class DistributionBuilder:
         self.__run_integration_tests()
         self.__package_zip()
 
-    @staticmethod
-    def __run_unit_tests() -> None:
-        print("Running unit tests...")
-        result: CompletedProcess[str] = subprocess.run(['tox'], capture_output=True, text=True)
-        if result.returncode != 0:
-            print(result.stderr)
-            print(result.stdout)
-            raise SystemExit(result.returncode)
+    def __run_unit_tests(self) -> None:
+        if not self.skip_unit_tests:
+            print("Running unit tests...")
+            result: CompletedProcess[str] = subprocess.run(['tox'], capture_output=True, text=True)
+            if result.returncode != 0:
+                print(result.stderr)
+                print(result.stdout)
+                raise SystemExit(result.returncode)
+        else:
+            print("Skipping unit tests")
 
-    @staticmethod
-    def __run_integration_tests() -> None:
-        print("Running integration tests...")
-        result: CompletedProcess[str] = subprocess.run(
-            ['tox', '--', 'tests', '-m', 'integration'], capture_output=True, text=True)
-        if result.returncode == 5:
-            print("No integration tests found")
-        elif result.returncode != 0:
-            print(result.stderr)
-            print(result.stdout)
-            raise SystemExit(result.returncode)
+    def __run_integration_tests(self) -> None:
+        if not self.skip_integration_tests:
+            print("Running integration tests...")
+            result: CompletedProcess[str] = subprocess.run(
+                ['tox', '--', 'tests', '-m', 'integration'], capture_output=True, text=True)
+            if result.returncode == 5:
+                print("No integration tests found")
+            elif result.returncode != 0:
+                print(result.stderr)
+                print(result.stdout)
+                raise SystemExit(result.returncode)
+        else:
+            print("Skipping integration tests")
 
     def __package_zip(self) -> None:
         print("Packaging...")
@@ -93,6 +100,17 @@ class DistributionBuilder:
         with open(version_file, 'r') as f:
             return f.read().strip()
 
+    @staticmethod
+    def parse_arguments() -> Namespace:
+        parser: ArgumentParser = ArgumentParser()
+        parser.add_argument('--skip_unit_tests', action='store_true')
+        parser.add_argument('--skip_integration_tests', action='store_true')
+        return parser.parse_args()
 
-dist_builder: DistributionBuilder = DistributionBuilder()
+
+args: Namespace = DistributionBuilder.parse_arguments()
+dist_builder: DistributionBuilder = DistributionBuilder(
+    skip_unit_tests=args.skip_unit_tests,
+    skip_integration_tests=args.skip_integration_tests
+)
 dist_builder.build()
