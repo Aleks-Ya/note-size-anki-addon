@@ -13,6 +13,7 @@ class Settings:
         self.module_dir: Path = module_dir
         self.module_name: str = module_name
         self.logs_folder: Path = logs_folder
+        self.addon_version: str = module_dir.joinpath('version.txt').read_text()
         self.__profile_manager: ProfileManager = profile_manager
         self.__caches_dir: Path = self.module_dir / "caches"
         self.__caches_dir.mkdir(parents=True, exist_ok=True)

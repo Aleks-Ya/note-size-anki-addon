@@ -73,7 +73,7 @@ class ProfileHook:
                                       profile_manager)
         logs: Logs = Logs(settings)
         log: Logger = logs.root_logger()
-        log.info(f"NoteSize addon version: {settings.module_dir.joinpath('version.txt').read_text()}")
+        log.info(f"NoteSize addon version: {settings.addon_version}")
         config_loader: ConfigLoader = ConfigLoader(mw.addonManager, settings)
         config: Config = config_loader.load_config()
 
