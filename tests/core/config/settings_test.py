@@ -8,4 +8,4 @@ def test_to_string(settings: Settings, module_dir: Path):
 
 
 def test_addon_version(settings: Settings):
-    assert settings.addon_version == "2.11.0"
+    assert settings.addon_version == "2.12.0"
