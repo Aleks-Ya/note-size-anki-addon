@@ -35,7 +35,6 @@ See [Logging Level](configuration.md#logging)
 
 ## Tests
 Run automated tests:
-
 1. Prerequisites: [Setup Python virtual environment](#setup-python-virtual-environment)
 2. Activate virtual environment: `pyenv activate note-size-anki-addon`
 3. Run tests:
@@ -51,7 +50,6 @@ Manual test cases: `docs/manual-test-cases/*.feature`
 Report at [SonarCloud](https://sonarcloud.io/project/overview?id=Aleks-Ya_note-size-anki-addon)
 
 Scan locally:
-
 1. Prepare once
     1. Install Sonar Scanner: `brew install sonar-scanner`
     2. Find config file `sonar-scanner.properties`: `sonar-scanner -v`
@@ -65,7 +63,9 @@ Scan locally:
 Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
 
 ## Build
-1. Build ZIP: `./build_dist.sh` (includes unit-tests)
+1. Build ZIP:
+    1. With tests: `./build_dist.sh`
+    2. Skip tests: `./build_dist_skip_tests.sh`
 2. Output: `./dist/note-size-X.X-X.zip`
 
 ## Execute GitHub Actions locally

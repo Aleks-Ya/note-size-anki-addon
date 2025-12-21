@@ -1,5 +1,9 @@
 # Changelog for "Note Size" Anki addon
 
+## [v2.12.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.12.0) - 2025-12-21
+1. __[FEATURE]__ Show the addon version in the Addon Configuration window
+2. __[BUG]__ Notes Size dialog displayed in the background on Windows
+
 ## [v2.11.0](https://github.com/Aleks-Ya/note-size-anki-addon/releases/tag/v2.11.0) - 2025-12-14
 1. __[BUG]__ CollectionNotOpen error during collection export
 2. __[MISC]__ Update dependencies to Anki 25.09
