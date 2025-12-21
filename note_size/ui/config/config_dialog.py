@@ -37,7 +37,7 @@ class ConfigDialog(QDialog):
         self.__deck_browser: DeckBrowser = deck_browser
         ModelConverter.apply_config_to_model(model, config)
         # noinspection PyUnresolvedReferences
-        self.setWindowTitle('"Note Size" addon configuration')
+        self.setWindowTitle(f'"Note Size" addon configuration v{settings.addon_version}')
 
         self.__deck_browser_tab: DeckBrowserTab = DeckBrowserTab(self.__model, desktop_services, url_manager, settings)
         self.__browser_tab: BrowserTab = BrowserTab(self.__model, desktop_services, url_manager, settings)
