@@ -33,33 +33,56 @@ class DetailsDialogFactory:
         self.__browser_button_details_dialog: Optional[DetailsDialog] = None
         log.debug(f"{self.__class__.__name__} was instantiated")
 
-    def get_add_cards_browser_editor_button_details_dialog(self, parent: Optional[QWidget]) -> DetailsDialog:
-        if not self.__add_cards_editor_button_details_dialog:
-            self.__add_cards_editor_button_details_dialog = DetailsDialog(
-                parent, self.__bytes_size_cache, self.__file_type_helper, self.__details_model_filler,
-                self.__theme_manager, self.__config_ui, self.__config, self.__settings)
+    def get_add_cards_editor_button_details_dialog(self, parent: Optional[QWidget]) -> DetailsDialog:
+        if self.__add_cards_editor_button_details_dialog:
+            self.__add_cards_editor_button_details_dialog.close()
+        self.__add_cards_editor_button_details_dialog = self.__create_details_dialog(parent)
+        # noinspection PyUnresolvedReferences
+        self.__add_cards_editor_button_details_dialog.finished.connect(
+            self.__close_add_cards_editor_button_details_dialog)
         return self.__add_cards_editor_button_details_dialog
 
     def get_browser_editor_button_details_dialog(self, parent: Optional[QWidget]) -> DetailsDialog:
-        if not self.__browser_editor_button_details_dialog:
-            self.__browser_editor_button_details_dialog = DetailsDialog(
-                parent, self.__bytes_size_cache, self.__file_type_helper, self.__details_model_filler,
-                self.__theme_manager, self.__config_ui, self.__config, self.__settings)
+        if self.__browser_editor_button_details_dialog:
+            self.__browser_editor_button_details_dialog.close()
+        self.__browser_editor_button_details_dialog = self.__create_details_dialog(parent)
+        # noinspection PyUnresolvedReferences
+        self.__browser_editor_button_details_dialog.finished.connect(self.__close_browser_editor_button_details_dialog)
         return self.__browser_editor_button_details_dialog
 
     def get_browser_button_details_dialog(self, parent: Optional[QWidget]) -> DetailsDialog:
-        if not self.__browser_button_details_dialog:
-            self.__browser_button_details_dialog = DetailsDialog(
-                parent, self.__bytes_size_cache, self.__file_type_helper, self.__details_model_filler,
-                self.__theme_manager, self.__config_ui, self.__config, self.__settings)
+        if self.__browser_button_details_dialog:
+            self.__browser_button_details_dialog.close()
+        self.__browser_button_details_dialog = self.__create_details_dialog(parent)
+        # noinspection PyUnresolvedReferences
+        self.__browser_button_details_dialog.finished.connect(self.__close_browser_button_details_dialog)
         return self.__browser_button_details_dialog
 
-    def get_all_details_dialogs(self) -> list[DetailsDialog]:
+    def on_theme_changed(self) -> None:
+        log.debug("On theme changed")
         all_dialogs: list[Optional[DetailsDialog]] = [self.__add_cards_editor_button_details_dialog,
                                                       self.__browser_editor_button_details_dialog,
                                                       self.__browser_button_details_dialog]
         all_present_dialogs: list[DetailsDialog] = [dialog for dialog in all_dialogs if dialog is not None]
-        return all_present_dialogs
+        for details_dialog in all_present_dialogs:
+            details_dialog.on_theme_changed()
+
+    def __create_details_dialog(self, parent: Optional[QWidget]) -> DetailsDialog:
+        return DetailsDialog(
+            parent, self.__bytes_size_cache, self.__file_type_helper, self.__details_model_filler, self.__theme_manager,
+            self.__config_ui, self.__config, self.__settings)
+
+    def __close_add_cards_editor_button_details_dialog(self) -> None:
+        log.debug("Removing closed add_cards_editor_button_details_dialog")
+        self.__add_cards_editor_button_details_dialog = None
+
+    def __close_browser_editor_button_details_dialog(self) -> None:
+        log.debug("Removing closed browser_editor_button_details_dialog")
+        self.__browser_editor_button_details_dialog = None
+
+    def __close_browser_button_details_dialog(self) -> None:
+        log.debug("Removing closed browser_button_details_dialog")
+        self.__browser_button_details_dialog = None
 
     def __del__(self):
         log.debug(f"{self.__class__.__name__} was deleted")

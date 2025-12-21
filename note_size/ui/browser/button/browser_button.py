@@ -9,6 +9,7 @@ from aqt.progress import ProgressManager
 from aqt.qt import QPushButton
 
 from ..browser_helper import BrowserHelper
+from ...details_dialog.details_dialog import DetailsDialog
 from ...details_dialog.details_dialog_factory import DetailsDialogFactory
 from ....core.common.number_formatter import NumberFormatter
 from ...details_dialog.show_details_dialog_op import ShowDetailsDialogOp
@@ -84,9 +85,8 @@ class BrowserButton(QPushButton):
         log.debug("Browser size button clicked")
         self.show_items_size(self.__current_item_ids)
         note_ids: Sequence[NoteId] = self.__item_ids_to_note_ids(self.__current_item_ids)
-        op: ShowDetailsDialogOp = ShowDetailsDialogOp(
-            self.__details_dialog_factory.get_browser_button_details_dialog(self.__browser),
-            note_ids, self.__progress_manager, self.__browser)
+        details_dialog: DetailsDialog = self.__details_dialog_factory.get_browser_button_details_dialog(self.__browser)
+        op: ShowDetailsDialogOp = ShowDetailsDialogOp(details_dialog, note_ids, self.__progress_manager, self.__browser)
         op.run()
         log.debug("Browser size button click finished")
 
