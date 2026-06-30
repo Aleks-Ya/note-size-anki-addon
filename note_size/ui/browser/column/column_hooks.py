@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 import logging
 from logging import Logger
-from typing import Sequence, Optional, Callable, Union
+from typing import Sequence, Optional, Callable
 
 from anki.collection import BrowserColumns
 from anki.notes import NoteId
@@ -36,7 +38,7 @@ class ColumnHooks:
         self.__item_id_sorter: ItemIdSorter = item_id_sorter
         self.__config: Config = config
         self.__hook_browser_did_fetch_columns: Callable[[dict[str, Column]], None] = ColumnHooks.__add_custom_column
-        self.__hook_browser_did_fetch_row: Callable[[Union[int, NoteId], bool, CellRow, Sequence[str]], None] = \
+        self.__hook_browser_did_fetch_row: Callable[[int | NoteId, bool, CellRow, Sequence[str]], None] = \
             self.__modify_row
         self.__hook_browser_will_search: Callable[[SearchContext], None] = ColumnHooks.__on_browser_will_search
         self.__hook_browser_did_search: Callable[[SearchContext], None] = self.__on_browser_did_search
