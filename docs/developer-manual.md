@@ -11,6 +11,7 @@
 - [Build](#build)
 - [Execute GitHub Actions locally](#execute-github-actions-locally)
 - [Render documentation](#render-documentation)
+- [Snapshot version](#snapshot-version)
 - [Release](#release)
 - [Profiler](#profiler)
 
@@ -23,12 +24,12 @@
     2. Install Tox: `pipx install tox`
 2. Install PyEnv: `brew install pyenv pyenv-virtualenv`
 3. Create virtual environment:
-    1. `pyenv install 3.13.13`
-    2. `pyenv virtualenv 3.13.13 note-size-anki-addon`
+    1. `pyenv install 3.9.18`
+    2. `pyenv virtualenv 3.9.18 note-size-anki-addon`
 4. Install Anki packages
     1. Activate virtual environment: `pyenv activate note-size-anki-addon`
     2. Install packages:
-       `pip install -U pip -r requirements/anki-qt6-current.txt -r requirements/dev.txt -r requirements/tests.txt`
+       `pip install -U pip -r requirements/anki-current.txt -r requirements/dev.txt -r requirements/tests.txt`
 
 ## Logs
 See [Logging Level](configuration.md#logging)
@@ -40,11 +41,11 @@ Run automated tests:
 3. Run tests:
     1. Unit tests (without integration tests): `tox`
     2. Integration tests: `tox -- tests -m integration`
-    3. Unit tests for given environment: `tox -e anki-qt6-earliest`
+    3. Unit tests for given environment: `tox -e anki-earliest`
 
 Run all tests except performance tests: `pytest -m "not performance"`
 
-Manual test cases: `docs/manual-test-cases/*.feature`
+Manual test cases: `tests/manual-test-cases/*.feature`
 
 ## SonarQube
 Report at [SonarCloud](https://sonarcloud.io/project/overview?id=Aleks-Ya_note-size-anki-addon)
@@ -65,7 +66,7 @@ Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
 ## Build
 1. Build ZIP:
     1. With tests: `./build_dist.sh`
-    2. Skip tests: `./build_dist_skip_tests.sh`
+    2. Skip tests: `./build_dist.sh --skip-tests`
 2. Output: `./dist/note-size-X.X-X.zip`
 
 ## Execute GitHub Actions locally
@@ -79,6 +80,11 @@ Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
 4. Output docs: `docs` folder
 5. Commit `docs` folder
 
+## Snapshot version
+Create a snapshot (dev) version while working on the next release:
+- Start snapshot: `bump-my-version bump dev -v` (e.g. `2.12.0` → `2.12.0.dev0`)
+- Iterate snapshot: `bump-my-version bump dev -v` (e.g. `2.12.0.dev0` → `2.12.0.dev1`)
+
 ## Release
 1. Update `CHANGELOG.md` manually
 2. Update documentation: `./render_docs.sh`
@@ -87,9 +93,10 @@ Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
     2. Check GitHub actions: https://github.com/Aleks-Ya/note-size-anki-addon/actions
     3. Check SonarQube warnings: https://sonarcloud.io/project/overview?id=Aleks-Ya_note-size-anki-addon
 4. Increment version:
-    1. Major: `bump-my-version bump major -v`
-    2. Minor: `bump-my-version bump minor -v`
-    3. Patch: `bump-my-version bump patch -v`
+    1. Note: bumping from a snapshot (e.g. `2.12.0.dev1`) drops the dev suffix automatically
+    2. Major: `bump-my-version bump major -v`
+    3. Minor: `bump-my-version bump minor -v`
+    4. Patch: `bump-my-version bump patch -v`
 5. Build ZIP: `./build_dist.sh`
     1. Install and test on the earliest Anki version (Qt5)
     2. Install and test on the current Anki version (Qt6)
