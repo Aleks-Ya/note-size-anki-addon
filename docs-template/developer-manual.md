@@ -31,7 +31,7 @@ Run automated tests:
 
 Run all tests except performance tests: `pytest -m "not performance"`
 
-Manual test cases: `docs/manual-test-cases/*.feature`
+Manual test cases: `tests/manual-test-cases/*.feature`
 
 ## SonarQube
 Report at [SonarCloud](https://sonarcloud.io/project/overview?id=Aleks-Ya_note-size-anki-addon)
