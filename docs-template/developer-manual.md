@@ -52,7 +52,7 @@ Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
 ## Build
 1. Build ZIP:
     1. With tests: `./build_dist.sh`
-    2. Skip tests: `./build_dist_skip_tests.sh`
+    2. Skip tests: `./build_dist.sh --skip-tests`
 2. Output: `./dist/note-size-X.X-X.zip`
 
 ## Execute GitHub Actions locally
