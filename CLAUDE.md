@@ -15,9 +15,9 @@ Note Size is an Anki addon (ID: 1188705668) that displays the size of collection
 tox
 
 # Run tests for a specific environment
-tox -e anki-qt6-current
-tox -e anki-qt6-earliest
-tox -e anki-qt6-beta
+tox -e anki-current
+tox -e anki-earliest
+tox -e anki-beta
 
 # Run a single test file or test (within an active venv)
 pytest tests/calculator/test_size_calculator.py

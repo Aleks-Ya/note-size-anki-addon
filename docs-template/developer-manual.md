@@ -15,7 +15,7 @@
 4. Install Anki packages
     1. Activate virtual environment: `pyenv activate note-size-anki-addon`
     2. Install packages:
-       `pip install -U pip -r requirements/anki-qt6-current.txt -r requirements/dev.txt -r requirements/tests.txt`
+       `pip install -U pip -r requirements/anki-current.txt -r requirements/dev.txt -r requirements/tests.txt`
 
 ## Logs
 See [Logging Level](configuration.md#logging)
@@ -27,7 +27,7 @@ Run automated tests:
 3. Run tests:
     1. Unit tests (without integration tests): `tox`
     2. Integration tests: `tox -- tests -m integration`
-    3. Unit tests for given environment: `tox -e anki-qt6-earliest`
+    3. Unit tests for given environment: `tox -e anki-earliest`
 
 Run all tests except performance tests: `pytest -m "not performance"`
 
