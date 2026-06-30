@@ -66,6 +66,11 @@ Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
 4. Output docs: `docs` folder
 5. Commit `docs` folder
 
+## Snapshot version
+Create a snapshot (dev) version while working on the next release:
+- Start snapshot: `bump-my-version bump dev -v` (e.g. `2.12.0` → `2.12.0.dev0`)
+- Iterate snapshot: `bump-my-version bump dev -v` (e.g. `2.12.0.dev0` → `2.12.0.dev1`)
+
 ## Release
 1. Update `CHANGELOG.md` manually
 2. Update documentation: `./render_docs.sh`
@@ -74,9 +79,10 @@ Run: `./deploy_locally.sh ~/.local/share/Anki2/addons21/1188705668`
     2. Check GitHub actions: https://github.com/Aleks-Ya/note-size-anki-addon/actions
     3. Check SonarQube warnings: https://sonarcloud.io/project/overview?id=Aleks-Ya_note-size-anki-addon
 4. Increment version:
-    1. Major: `bump-my-version bump major -v`
-    2. Minor: `bump-my-version bump minor -v`
-    3. Patch: `bump-my-version bump patch -v`
+    1. Note: bumping from a snapshot (e.g. `2.12.0.dev1`) drops the dev suffix automatically
+    2. Major: `bump-my-version bump major -v`
+    3. Minor: `bump-my-version bump minor -v`
+    4. Patch: `bump-my-version bump patch -v`
 5. Build ZIP: `./build_dist.sh`
     1. Install and test on the earliest Anki version (Qt5)
     2. Install and test on the current Anki version (Qt6)
